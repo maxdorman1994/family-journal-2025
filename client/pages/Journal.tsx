@@ -87,11 +87,27 @@ export default function Journal() {
     }
   ];
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTag, setSelectedTag] = useState("");
-  const [hoveredEntry, setHoveredEntry] = useState<number | null>(null);
-  const [isNewEntryFormOpen, setIsNewEntryFormOpen] = useState(false);
-  const [entries, setEntries] = useState(journalEntriesData);
+  const [entries, setEntries] = useState<JournalEntry[]>(journalEntriesData);
+
+  // Load entries from Supabase on mount, fallback to local data
+  useEffect(() => {
+    loadJournalEntries();
+  }, []);
+
+  const loadJournalEntries = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const supabaseEntries = await getJournalEntries();
+      setEntries(supabaseEntries);
+    } catch (error) {
+      console.warn('Failed to load from Supabase, using local data:', error);
+      setError('Using local data - Supabase not configured');
+      setEntries(journalEntriesData);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const stats = [
     {
