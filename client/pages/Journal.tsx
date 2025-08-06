@@ -103,6 +103,11 @@ export default function Journal() {
       milesTraveled: parseInt(entryData.milesTraveled) || 0,
       parking: entryData.parking || "Not specified",
       dogFriendly: entryData.dogFriendly,
+      paidActivity: entryData.paidActivity,
+      adultTickets: entryData.adultTickets,
+      childTickets: entryData.childTickets,
+      otherTickets: entryData.otherTickets,
+      petNotes: entryData.petNotes,
       content: entryData.content,
       photos: entryData.photos.map(() => "/placeholder.svg"), // In a real app, you'd upload these
       tags: entryData.tags
