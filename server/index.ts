@@ -29,5 +29,11 @@ export function createServer() {
   app.get("/api/photos/placeholder/:photoId", getPlaceholderPhoto);
   app.get("/api/photos", listPhotos);
 
+  // R2 configuration status
+  app.get("/api/photos/status", (_req, res) => {
+    const status = getR2Status();
+    res.json(status);
+  });
+
   return app;
 }
