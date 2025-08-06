@@ -28,6 +28,7 @@ export function createServer() {
   app.post("/api/photos/upload", uploadPhotoMiddleware, uploadPhoto);
   app.get("/api/photos/placeholder/:photoId", getPlaceholderPhoto);
   app.get("/api/photos", listPhotos);
+  app.delete("/api/photos/:imageId", deletePhoto);
 
   // R2 configuration status
   app.get("/api/photos/status", (_req, res) => {
