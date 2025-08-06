@@ -10,6 +10,8 @@ export default function Journal() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
   const [hoveredEntry, setHoveredEntry] = useState<number | null>(null);
+  const [isNewEntryFormOpen, setIsNewEntryFormOpen] = useState(false);
+  const [entries, setEntries] = useState(journalEntriesData);
 
   const journalEntries = [
     {
