@@ -91,18 +91,10 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
     }
   };
 
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
+  const handlePhotosChange = (photos: ProcessedPhoto[]) => {
     setFormData(prev => ({
       ...prev,
-      photos: [...prev.photos, ...files].slice(0, 8) // Max 8 photos
-    }));
-  };
-
-  const removePhoto = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      photos: prev.photos.filter((_, i) => i !== index)
+      photos
     }));
   };
 
