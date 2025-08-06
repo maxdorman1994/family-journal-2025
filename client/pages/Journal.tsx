@@ -214,9 +214,24 @@ export default function Journal() {
             Our Scottish Journey
           </span>
         </h1>
-        <p className="text-xl text-muted-foreground mb-8">
+        <p className="text-xl text-muted-foreground mb-4">
           Capturing memories, one adventure at a time
         </p>
+
+        {/* Status Indicator */}
+        {error && (
+          <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800 max-w-md mx-auto">
+            {error}
+          </div>
+        )}
+
+        {isLoading && (
+          <div className="mb-6 flex items-center justify-center text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            Loading journal entries...
+          </div>
+        )}
+
         <Button
           size="lg"
           className="bg-gradient-to-r from-vibrant-blue to-scotland-loch hover:from-vibrant-blue/90 hover:to-scotland-loch/90"
