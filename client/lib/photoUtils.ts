@@ -32,19 +32,39 @@ const defaultCompressionOptions: CompressionOptions = {
  */
 export async function convertHeicToJpeg(file: File): Promise<File> {
   try {
+    console.log(`Starting HEIC conversion for: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+
     const convertedBlob = await heic2any({
       blob: file,
       toType: 'image/jpeg',
       quality: 0.9
     }) as Blob;
 
-    return new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpg'), {
+    const convertedFile = new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpg'), {
       type: 'image/jpeg',
       lastModified: Date.now()
     });
+
+    console.log(`HEIC conversion successful: ${file.name} -> ${convertedFile.name}`);
+    return convertedFile;
   } catch (error) {
-    console.error('HEIC conversion failed:', error);
-    throw new Error(`Failed to convert HEIC image: ${file.name}`);
+    console.error('HEIC conversion failed for:', file.name);
+    console.error('Error details:', error);
+
+    // Extract more detailed error information
+    let errorMessage = 'Unknown HEIC conversion error';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'object' && error !== null) {
+      errorMessage = JSON.stringify(error);
+    } else {
+      errorMessage = String(error);
+    }
+
+    console.error('Detailed error:', errorMessage);
+
+    // Throw a more informative error
+    throw new Error(`HEIC conversion failed for ${file.name}: ${errorMessage}. Try using a JPEG/PNG version of this photo.`);
   }
 }
 
