@@ -95,6 +95,16 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Scottish Adventure Colors - Dark Mode */
+    --vibrant-blue: 220 70% 65%;
+    --vibrant-pink: 330 70% 70%;
+    --vibrant-teal: 180 60% 65%;
+    --scotland-thistle: 281 55% 70%;
+    --scotland-loch: 199 75% 60%;
+    --scotland-heather: 314 40% 75%;
+    --scotland-mist: 210 15% 25%;
+    --scotland-forest: 120 30% 50%;
   }
 }
 
