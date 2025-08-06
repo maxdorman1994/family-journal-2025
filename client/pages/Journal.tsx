@@ -243,7 +243,7 @@ export default function Journal() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -258,6 +258,23 @@ export default function Journal() {
             </Card>
           );
         })}
+      </div>
+
+      {/* Configuration Status */}
+      <div className="text-center mb-12">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-600">
+          {error ? (
+            <>
+              <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+              Local Mode
+            </>
+          ) : (
+            <>
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Cloud Sync Active
+            </>
+          )}
+        </div>
       </div>
 
       {/* Search and Filter Section */}
