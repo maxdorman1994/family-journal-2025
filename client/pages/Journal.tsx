@@ -13,7 +13,7 @@ export default function Journal() {
   const [isNewEntryFormOpen, setIsNewEntryFormOpen] = useState(false);
   const [entries, setEntries] = useState(journalEntriesData);
 
-  const journalEntries = [
+  const journalEntriesData = [
     {
       id: 1,
       title: "Ben Nevis Summit - Our Greatest Challenge Yet!",
@@ -34,7 +34,7 @@ export default function Journal() {
       date: "Sunday 28 July 2025",
       location: "Balloch, West Dunbartonshire",
       weather: "⛅ Partly Cloudy",
-      mood: "😌 Peaceful",
+      mood: "�� Peaceful",
       milesTraveled: 45,
       parking: "£5",
       dogFriendly: true,
