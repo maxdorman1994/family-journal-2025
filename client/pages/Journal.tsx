@@ -56,6 +56,11 @@ export default function Journal() {
       milesTraveled: 123,
       parking: "£12",
       dogFriendly: false,
+      paidActivity: true,
+      adultTickets: "2 × £17.50",
+      childTickets: "1 × £10.50",
+      otherTickets: "",
+      petNotes: "",
       content: "Despite the Scottish drizzle, Edinburgh Castle was absolutely magical. The history here is incredible - you can really feel the centuries of stories within these ancient walls. The views over Edinburgh from the castle are spectacular...",
       photos: ["/placeholder.svg", "/placeholder.svg"],
       tags: ["History", "Culture", "City", "Castle", "Education"]
