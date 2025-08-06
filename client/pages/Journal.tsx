@@ -269,21 +269,45 @@ export default function Journal() {
                     </div>
 
                     {/* Travel Info */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 p-4 bg-scotland-mist/30 rounded-lg">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Route className="mr-2 h-4 w-4 text-vibrant-blue" />
-                        <span className="font-medium">{entry.milesTraveled} miles traveled</span>
+                    <div className="space-y-3 mb-4 p-4 bg-scotland-mist/30 rounded-lg">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Route className="mr-2 h-4 w-4 text-vibrant-blue" />
+                          <span className="font-medium">{entry.milesTraveled} miles traveled</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Car className="mr-2 h-4 w-4 text-scotland-forest" />
+                          <span className="font-medium">Parking: {entry.parking}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Dog className="mr-2 h-4 w-4 text-vibrant-pink" />
+                          <span className="font-medium">
+                            {entry.dogFriendly ? "🐕 Dog friendly" : "❌ No dogs"}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Car className="mr-2 h-4 w-4 text-scotland-forest" />
-                        <span className="font-medium">Parking: {entry.parking}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Dog className="mr-2 h-4 w-4 text-vibrant-pink" />
-                        <span className="font-medium">
-                          {entry.dogFriendly ? "🐕 Dog friendly" : "❌ No dogs"}
-                        </span>
-                      </div>
+
+                      {/* Pet Notes */}
+                      {entry.dogFriendly && entry.petNotes && (
+                        <div className="text-sm text-gray-600 italic border-l-2 border-vibrant-pink pl-3">
+                          <span className="font-medium">Pet info: </span>{entry.petNotes}
+                        </div>
+                      )}
+
+                      {/* Ticket Information */}
+                      {entry.paidActivity && (entry.adultTickets || entry.childTickets || entry.otherTickets) && (
+                        <div className="text-sm text-gray-600 border-l-2 border-vibrant-blue pl-3">
+                          <span className="font-medium flex items-center mb-1">
+                            <Ticket className="mr-1 h-3 w-3" />
+                            Tickets:
+                          </span>
+                          <div className="space-y-1">
+                            {entry.adultTickets && <div>Adults: {entry.adultTickets}</div>}
+                            {entry.childTickets && <div>Children: {entry.childTickets}</div>}
+                            {entry.otherTickets && <div>Other: {entry.otherTickets}</div>}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Photos Grid */}
