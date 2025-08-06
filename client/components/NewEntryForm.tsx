@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Upload, MapPin, Calendar, Cloud, Heart, Route, Car, Dog, Tag, Camera, Plus } from "lucide-react";
+import { X, Upload, MapPin, Calendar, Cloud, Heart, Route, Car, Dog, Tag, Camera, Plus, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
