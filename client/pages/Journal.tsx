@@ -7,12 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import NewEntryForm from "@/components/NewEntryForm";
 
 export default function Journal() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTag, setSelectedTag] = useState("");
-  const [hoveredEntry, setHoveredEntry] = useState<number | null>(null);
-  const [isNewEntryFormOpen, setIsNewEntryFormOpen] = useState(false);
-  const [entries, setEntries] = useState(journalEntriesData);
-
   const journalEntriesData = [
     {
       id: 1,
