@@ -18,6 +18,11 @@ export default function Journal() {
       milesTraveled: 87,
       parking: "Free",
       dogFriendly: true,
+      paidActivity: false,
+      adultTickets: "",
+      childTickets: "",
+      otherTickets: "",
+      petNotes: "Dogs allowed off-lead on mountain paths, keep on lead near car park",
       content: "What an incredible day! After months of training, we finally conquered Ben Nevis. The views from the summit were absolutely breathtaking - you could see for miles across the Scottish Highlands. Little Alex was such a trooper, and Bonnie loved every minute of it...",
       photos: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
       tags: ["Mountain", "Challenge", "Family", "Views", "Achievement"]
