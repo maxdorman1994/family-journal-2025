@@ -28,20 +28,20 @@ const CLOUDFLARE_IMAGES_TOKEN = process.env.CLOUDFLARE_IMAGES_TOKEN || "";
 const CLOUDFLARE_IMAGES_URL = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/images/v1`;
 
 /**
- * Generate a unique filename for the uploaded photo
+ * Generate a unique ID for the uploaded photo
  */
-function generatePhotoKey(originalName: string, photoId: string): string {
+function generatePhotoId(originalName: string, photoId: string): string {
   const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  const extension = path.extname(originalName).toLowerCase();
   const safeName = originalName
     .replace(/[^a-zA-Z0-9.-]/g, '_')
-    .replace(/_+/g, '_');
-  
-  return `journal/${timestamp}/${photoId}_${safeName}${extension}`;
+    .replace(/_+/g, '_')
+    .toLowerCase();
+
+  return `wee-adventure-${timestamp}-${photoId}-${safeName}`;
 }
 
 /**
- * Upload a single photo to Cloudflare R2
+ * Upload a single photo to Cloudflare Images
  */
 export const uploadPhoto: RequestHandler = async (req, res) => {
   try {
@@ -50,56 +50,71 @@ export const uploadPhoto: RequestHandler = async (req, res) => {
     }
 
     const { originalName, photoId } = req.body;
-    
+
     if (!originalName || !photoId) {
       return res.status(400).json({ error: "Missing required fields: originalName, photoId" });
     }
 
-    // Check if R2 is configured
-    if (!process.env.CLOUDFLARE_R2_ENDPOINT || !process.env.CLOUDFLARE_R2_ACCESS_KEY_ID) {
-      console.warn("Cloudflare R2 not configured, using local storage simulation");
+    // Check if Cloudflare Images is configured
+    if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_IMAGES_TOKEN) {
+      console.warn("Cloudflare Images not configured, using local storage simulation");
       // For development, return a placeholder URL
       const localUrl = `/api/photos/placeholder/${photoId}`;
-      return res.json({ 
+      return res.json({
         url: localUrl,
-        message: "Photo uploaded to local storage (R2 not configured)"
+        message: "Photo uploaded to local storage (Cloudflare Images not configured)"
       });
     }
 
-    const photoKey = generatePhotoKey(originalName, photoId);
-    
-    // Upload to Cloudflare R2
-    const command = new PutObjectCommand({
-      Bucket: BUCKET_NAME,
-      Key: photoKey,
-      Body: req.file.buffer,
-      ContentType: req.file.mimetype,
-      Metadata: {
-        originalName: originalName,
-        photoId: photoId,
-        uploadDate: new Date().toISOString(),
+    const customId = generatePhotoId(originalName, photoId);
+
+    // Create FormData for Cloudflare Images API
+    const formData = new FormData();
+    formData.append('file', new Blob([req.file.buffer], { type: req.file.mimetype }), originalName);
+    formData.append('id', customId);
+    formData.append('metadata', JSON.stringify({
+      originalName: originalName,
+      photoId: photoId,
+      uploadDate: new Date().toISOString(),
+      journalApp: 'wee-adventure'
+    }));
+
+    // Upload to Cloudflare Images
+    const response = await fetch(CLOUDFLARE_IMAGES_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${CLOUDFLARE_IMAGES_TOKEN}`,
       },
+      body: formData,
     });
 
-    await r2Client.send(command);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.errors?.[0]?.message || `Cloudflare Images API error: ${response.statusText}`);
+    }
 
-    // Construct the public URL
-    const publicUrl = PUBLIC_URL_BASE 
-      ? `${PUBLIC_URL_BASE}/${photoKey}`
-      : `https://${BUCKET_NAME}.r2.dev/${photoKey}`;
+    const data = await response.json();
 
-    console.log(`Photo uploaded successfully: ${photoKey} -> ${publicUrl}`);
+    if (!data.success) {
+      throw new Error(data.errors?.[0]?.message || 'Upload failed');
+    }
 
-    res.json({ 
-      url: publicUrl,
-      key: photoKey,
-      message: "Photo uploaded successfully"
+    // Get the delivery URL - Cloudflare Images provides multiple variants
+    const deliveryUrl = data.result.variants[0]; // Use first variant (original)
+
+    console.log(`Photo uploaded successfully to Cloudflare Images: ${customId} -> ${deliveryUrl}`);
+
+    res.json({
+      url: deliveryUrl,
+      id: customId,
+      variants: data.result.variants,
+      message: "Photo uploaded successfully to Cloudflare Images"
     });
 
   } catch (error) {
     console.error("Photo upload error:", error);
-    res.status(500).json({ 
-      error: error instanceof Error ? error.message : "Failed to upload photo" 
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Failed to upload photo"
     });
   }
 };
