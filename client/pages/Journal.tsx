@@ -125,7 +125,11 @@ export default function Journal() {
         <p className="text-xl text-muted-foreground mb-8">
           Capturing memories, one adventure at a time
         </p>
-        <Button size="lg" className="bg-gradient-to-r from-vibrant-blue to-scotland-loch hover:from-vibrant-blue/90 hover:to-scotland-loch/90">
+        <Button
+          size="lg"
+          className="bg-gradient-to-r from-vibrant-blue to-scotland-loch hover:from-vibrant-blue/90 hover:to-scotland-loch/90"
+          onClick={() => setIsNewEntryFormOpen(true)}
+        >
           <Plus className="mr-2 h-5 w-5" />
           New Entry
         </Button>
