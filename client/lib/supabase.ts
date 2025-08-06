@@ -11,7 +11,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Create Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Database types
+// Database types for Supabase tables
 export interface JournalEntry {
   id: string;
   title: string;
@@ -29,7 +29,7 @@ export interface JournalEntry {
   other_tickets: string;
   pet_notes: string;
   tags: string[];
-  photos: string[]; // Array of Supabase Storage URLs
+  photos: string[]; // Array of Cloudflare R2 URLs
   created_at?: string;
   updated_at?: string;
 }
@@ -41,12 +41,12 @@ export interface ProcessedPhoto {
   preview: string;
   isProcessing: boolean;
   uploadProgress: number;
-  supabaseUrl?: string;
+  cloudflareUrl?: string; // R2 URL, not Supabase
   error?: string;
 }
 
-// Supabase Storage bucket name
-export const PHOTO_BUCKET = 'journal-photos';
+// Note: Photos are stored in Cloudflare R2, not Supabase Storage
+// Supabase only stores the R2 URLs in the database
 
 /**
  * Check if Supabase is properly configured
