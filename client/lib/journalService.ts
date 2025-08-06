@@ -29,6 +29,10 @@ export interface CreateJournalEntryData {
  * Create a new journal entry in Supabase
  */
 export async function createJournalEntry(data: CreateJournalEntryData): Promise<JournalEntry> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+  }
+
   try {
     const { data: entry, error } = await supabase
       .from('journal_entries')
