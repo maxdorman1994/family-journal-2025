@@ -1,9 +1,30 @@
 import { useState } from "react";
-import { Search, Filter, Plus, BookOpen, MapPin, Heart, Calendar, Route, Car, Dog, Edit, Trash2, Printer, Ticket } from "lucide-react";
+import {
+  Search,
+  Filter,
+  Plus,
+  BookOpen,
+  MapPin,
+  Heart,
+  Calendar,
+  Route,
+  Car,
+  Dog,
+  Edit,
+  Trash2,
+  Printer,
+  Ticket,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import NewEntryForm from "@/components/NewEntryForm";
 
 export default function Journal() {
@@ -22,10 +43,17 @@ export default function Journal() {
       adultTickets: "",
       childTickets: "",
       otherTickets: "",
-      petNotes: "Dogs allowed off-lead on mountain paths, keep on lead near car park",
-      content: "What an incredible day! After months of training, we finally conquered Ben Nevis. The views from the summit were absolutely breathtaking - you could see for miles across the Scottish Highlands. Little Alex was such a trooper, and Bonnie loved every minute of it...",
-      photos: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-      tags: ["Mountain", "Challenge", "Family", "Views", "Achievement"]
+      petNotes:
+        "Dogs allowed off-lead on mountain paths, keep on lead near car park",
+      content:
+        "What an incredible day! After months of training, we finally conquered Ben Nevis. The views from the summit were absolutely breathtaking - you could see for miles across the Scottish Highlands. Little Alex was such a trooper, and Bonnie loved every minute of it...",
+      photos: [
+        "/placeholder.svg",
+        "/placeholder.svg",
+        "/placeholder.svg",
+        "/placeholder.svg",
+      ],
+      tags: ["Mountain", "Challenge", "Family", "Views", "Achievement"],
     },
     {
       id: 2,
@@ -41,10 +69,12 @@ export default function Journal() {
       adultTickets: "",
       childTickets: "",
       otherTickets: "",
-      petNotes: "Dogs welcome on beach and walking paths, water bowls available at visitor center",
-      content: "A perfect family day by the beautiful Loch Lomond. We found the most amazing spot for our picnic with stunning views across the water. The kids (and Bonnie) had so much fun skipping stones and exploring the shoreline...",
+      petNotes:
+        "Dogs welcome on beach and walking paths, water bowls available at visitor center",
+      content:
+        "A perfect family day by the beautiful Loch Lomond. We found the most amazing spot for our picnic with stunning views across the water. The kids (and Bonnie) had so much fun skipping stones and exploring the shoreline...",
       photos: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-      tags: ["Lake", "Family", "Relaxing", "Nature", "Picnic"]
+      tags: ["Lake", "Family", "Relaxing", "Nature", "Picnic"],
     },
     {
       id: 3,
@@ -61,10 +91,11 @@ export default function Journal() {
       childTickets: "1 × £10.50",
       otherTickets: "",
       petNotes: "",
-      content: "Despite the Scottish drizzle, Edinburgh Castle was absolutely magical. The history here is incredible - you can really feel the centuries of stories within these ancient walls. The views over Edinburgh from the castle are spectacular...",
+      content:
+        "Despite the Scottish drizzle, Edinburgh Castle was absolutely magical. The history here is incredible - you can really feel the centuries of stories within these ancient walls. The views over Edinburgh from the castle are spectacular...",
       photos: ["/placeholder.svg", "/placeholder.svg"],
-      tags: ["History", "Culture", "City", "Castle", "Education"]
-    }
+      tags: ["History", "Culture", "City", "Castle", "Education"],
+    },
   ];
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,27 +109,29 @@ export default function Journal() {
       icon: BookOpen,
       count: 6,
       label: "Journal Entries",
-      gradient: "from-vibrant-blue to-scotland-loch"
+      gradient: "from-vibrant-blue to-scotland-loch",
     },
     {
       icon: MapPin,
       count: 6,
       label: "Places Visited",
-      gradient: "from-scotland-forest to-vibrant-teal"
+      gradient: "from-scotland-forest to-vibrant-teal",
     },
     {
       icon: Heart,
       count: 19,
       label: "Memory Tags",
-      gradient: "from-vibrant-pink to-scotland-heather"
-    }
+      gradient: "from-vibrant-pink to-scotland-heather",
+    },
   ];
 
-  const filteredEntries = entries.filter(entry => {
-    const matchesSearch = entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         entry.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         entry.content.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTag = !selectedTag || selectedTag === "all" || entry.tags.includes(selectedTag);
+  const filteredEntries = entries.filter((entry) => {
+    const matchesSearch =
+      entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      entry.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      entry.content.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesTag =
+      !selectedTag || selectedTag === "all" || entry.tags.includes(selectedTag);
     return matchesSearch && matchesTag;
   });
 
@@ -106,11 +139,11 @@ export default function Journal() {
     const newEntry = {
       id: entries.length + 1,
       title: entryData.title,
-      date: new Date(entryData.date).toLocaleDateString('en-GB', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
+      date: new Date(entryData.date).toLocaleDateString("en-GB", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
       }),
       location: entryData.location,
       weather: entryData.weather,
@@ -124,16 +157,17 @@ export default function Journal() {
       otherTickets: entryData.otherTickets,
       petNotes: entryData.petNotes,
       content: entryData.content,
-      photos: entryData.photos.map((photo: any) =>
-        photo.cloudflareUrl || photo.preview || "/placeholder.svg"
+      photos: entryData.photos.map(
+        (photo: any) =>
+          photo.cloudflareUrl || photo.preview || "/placeholder.svg",
       ),
-      tags: entryData.tags
+      tags: entryData.tags,
     };
 
-    setEntries(prev => [newEntry, ...prev]);
+    setEntries((prev) => [newEntry, ...prev]);
   };
 
-  const allTags = Array.from(new Set(entries.flatMap(entry => entry.tags)));
+  const allTags = Array.from(new Set(entries.flatMap((entry) => entry.tags)));
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -162,13 +196,22 @@ export default function Journal() {
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm border-scotland-thistle/20">
+            <Card
+              key={index}
+              className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm border-scotland-thistle/20"
+            >
               <CardContent className="p-6">
-                <div className={`w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r ${stat.gradient} flex items-center justify-center`}>
+                <div
+                  className={`w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r ${stat.gradient} flex items-center justify-center`}
+                >
                   <Icon className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-3xl font-bold text-gray-800 mb-2">{stat.count}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-3xl font-bold text-gray-800 mb-2">
+                  {stat.count}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {stat.label}
+                </div>
               </CardContent>
             </Card>
           );
@@ -196,8 +239,10 @@ export default function Journal() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All tags</SelectItem>
-                {allTags.map(tag => (
-                  <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                {allTags.map((tag) => (
+                  <SelectItem key={tag} value={tag}>
+                    {tag}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -207,7 +252,14 @@ export default function Journal() {
               <Calendar className="mr-1 h-4 w-4" />
               📅 Newest First
             </div>
-            <Button variant="outline" size="sm" onClick={() => { setSearchTerm(""); setSelectedTag("all"); }}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedTag("all");
+              }}
+            >
               Clear Filters
             </Button>
           </div>
@@ -227,7 +279,7 @@ export default function Journal() {
 
               {/* Entry Card */}
               <div className="ml-20">
-                <Card 
+                <Card
                   className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-white/90 backdrop-blur-sm border-scotland-thistle/20 cursor-pointer"
                   onMouseEnter={() => setHoveredEntry(entry.id)}
                   onMouseLeave={() => setHoveredEntry(null)}
@@ -236,14 +288,18 @@ export default function Journal() {
                     {/* Entry Header */}
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-2xl font-bold text-gray-800 mb-2">{entry.title}</h3>
-                        <p className="text-lg text-muted-foreground mb-1">{entry.date}</p>
+                        <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                          {entry.title}
+                        </h3>
+                        <p className="text-lg text-muted-foreground mb-1">
+                          {entry.date}
+                        </p>
                         <p className="text-vibrant-blue font-medium flex items-center">
                           <MapPin className="mr-1 h-4 w-4" />
                           {entry.location}
                         </p>
                       </div>
-                      
+
                       {/* Action Buttons (appear on hover) */}
                       {hoveredEntry === entry.id && (
                         <div className="flex gap-2">
@@ -275,16 +331,22 @@ export default function Journal() {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="flex items-center text-sm text-gray-600">
                           <Route className="mr-2 h-4 w-4 text-vibrant-blue" />
-                          <span className="font-medium">{entry.milesTraveled} miles traveled</span>
+                          <span className="font-medium">
+                            {entry.milesTraveled} miles traveled
+                          </span>
                         </div>
                         <div className="flex items-center text-sm text-gray-600">
                           <Car className="mr-2 h-4 w-4 text-scotland-forest" />
-                          <span className="font-medium">Parking: {entry.parking}</span>
+                          <span className="font-medium">
+                            Parking: {entry.parking}
+                          </span>
                         </div>
                         <div className="flex items-center text-sm text-gray-600">
                           <Dog className="mr-2 h-4 w-4 text-vibrant-pink" />
                           <span className="font-medium">
-                            {entry.dogFriendly ? "🐕 Dog friendly" : "❌ No dogs"}
+                            {entry.dogFriendly
+                              ? "🐕 Dog friendly"
+                              : "❌ No dogs"}
                           </span>
                         </div>
                       </div>
@@ -292,30 +354,43 @@ export default function Journal() {
                       {/* Pet Notes */}
                       {entry.dogFriendly && entry.petNotes && (
                         <div className="text-sm text-gray-600 italic border-l-2 border-vibrant-pink pl-3">
-                          <span className="font-medium">Pet info: </span>{entry.petNotes}
+                          <span className="font-medium">Pet info: </span>
+                          {entry.petNotes}
                         </div>
                       )}
 
                       {/* Ticket Information */}
-                      {entry.paidActivity && (entry.adultTickets || entry.childTickets || entry.otherTickets) && (
-                        <div className="text-sm text-gray-600 border-l-2 border-vibrant-blue pl-3">
-                          <span className="font-medium flex items-center mb-1">
-                            <Ticket className="mr-1 h-3 w-3" />
-                            Tickets:
-                          </span>
-                          <div className="space-y-1">
-                            {entry.adultTickets && <div>Adults: {entry.adultTickets}</div>}
-                            {entry.childTickets && <div>Children: {entry.childTickets}</div>}
-                            {entry.otherTickets && <div>Other: {entry.otherTickets}</div>}
+                      {entry.paidActivity &&
+                        (entry.adultTickets ||
+                          entry.childTickets ||
+                          entry.otherTickets) && (
+                          <div className="text-sm text-gray-600 border-l-2 border-vibrant-blue pl-3">
+                            <span className="font-medium flex items-center mb-1">
+                              <Ticket className="mr-1 h-3 w-3" />
+                              Tickets:
+                            </span>
+                            <div className="space-y-1">
+                              {entry.adultTickets && (
+                                <div>Adults: {entry.adultTickets}</div>
+                              )}
+                              {entry.childTickets && (
+                                <div>Children: {entry.childTickets}</div>
+                              )}
+                              {entry.otherTickets && (
+                                <div>Other: {entry.otherTickets}</div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
                     </div>
 
                     {/* Photos Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                       {entry.photos.map((photo, photoIndex) => (
-                        <div key={photoIndex} className="aspect-square rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer">
+                        <div
+                          key={photoIndex}
+                          className="aspect-square rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer"
+                        >
                           <img
                             src={photo}
                             alt={`Photo ${photoIndex + 1}`}
@@ -361,8 +436,12 @@ export default function Journal() {
       {filteredEntries.length === 0 && (
         <div className="text-center py-12">
           <BookOpen className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">No entries found</h3>
-          <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            No entries found
+          </h3>
+          <p className="text-muted-foreground">
+            Try adjusting your search or filter criteria
+          </p>
         </div>
       )}
 

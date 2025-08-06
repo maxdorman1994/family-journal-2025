@@ -11,7 +11,7 @@ export default function MunroBagging() {
         "Difficulty ratings and route recommendations",
         "Photo galleries from each Munro summit",
         "Weather conditions and best times to visit",
-        "Training tips and preparation guides"
+        "Training tips and preparation guides",
       ]}
     />
   );

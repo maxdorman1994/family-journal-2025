@@ -1,14 +1,21 @@
 import React, { useState, useCallback, useRef } from "react";
-import { Upload, X, AlertCircle, CheckCircle, Loader2, Image as ImageIcon } from "lucide-react";
+import {
+  Upload,
+  X,
+  AlertCircle,
+  CheckCircle,
+  Loader2,
+  Image as ImageIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { 
-  processPhotos, 
-  uploadPhotoToCloudflare, 
-  validatePhotoFile, 
+import {
+  processPhotos,
+  uploadPhotoToCloudflare,
+  validatePhotoFile,
   cleanupPreviewUrls,
-  ProcessedPhoto 
+  ProcessedPhoto,
 } from "@/lib/photoUtils";
 
 interface PhotoUploadProps {
@@ -18,77 +25,86 @@ interface PhotoUploadProps {
   className?: string;
 }
 
-export default function PhotoUpload({ 
-  photos, 
-  onPhotosChange, 
-  maxPhotos = 8, 
-  className = "" 
+export default function PhotoUpload({
+  photos,
+  onPhotosChange,
+  maxPhotos = 8,
+  className = "",
 }: PhotoUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFiles = useCallback(async (files: FileList | null) => {
-    if (!files || files.length === 0) return;
+  const handleFiles = useCallback(
+    async (files: FileList | null) => {
+      if (!files || files.length === 0) return;
 
-    const remainingSlots = maxPhotos - photos.length;
-    if (remainingSlots <= 0) {
-      alert(`Maximum ${maxPhotos} photos allowed`);
-      return;
-    }
-
-    const filesToProcess = Array.from(files).slice(0, remainingSlots);
-    
-    // Validate files
-    const validFiles: File[] = [];
-    const errors: string[] = [];
-
-    filesToProcess.forEach(file => {
-      const validation = validatePhotoFile(file);
-      if (validation.valid) {
-        validFiles.push(file);
-      } else {
-        errors.push(`${file.name}: ${validation.error}`);
+      const remainingSlots = maxPhotos - photos.length;
+      if (remainingSlots <= 0) {
+        alert(`Maximum ${maxPhotos} photos allowed`);
+        return;
       }
-    });
 
-    if (errors.length > 0) {
-      alert(`Some files were skipped:\n${errors.join('\n')}`);
-    }
+      const filesToProcess = Array.from(files).slice(0, remainingSlots);
 
-    if (validFiles.length === 0) return;
+      // Validate files
+      const validFiles: File[] = [];
+      const errors: string[] = [];
 
-    setIsProcessing(true);
+      filesToProcess.forEach((file) => {
+        const validation = validatePhotoFile(file);
+        if (validation.valid) {
+          validFiles.push(file);
+        } else {
+          errors.push(`${file.name}: ${validation.error}`);
+        }
+      });
 
-    try {
-      console.log(`Processing ${validFiles.length} photos...`);
-      const processedPhotos = await processPhotos(validFiles);
-      
-      // Add processed photos to the list
-      onPhotosChange([...photos, ...processedPhotos]);
-      
-      console.log(`Successfully processed ${processedPhotos.length} photos`);
-    } catch (error) {
-      console.error('Error processing photos:', error);
-      alert('Failed to process some photos. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [photos, onPhotosChange, maxPhotos]);
+      if (errors.length > 0) {
+        alert(`Some files were skipped:\n${errors.join("\n")}`);
+      }
 
-  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    handleFiles(e.target.files);
-    // Reset input value to allow selecting the same files again
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  }, [handleFiles]);
+      if (validFiles.length === 0) return;
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    handleFiles(e.dataTransfer.files);
-  }, [handleFiles]);
+      setIsProcessing(true);
+
+      try {
+        console.log(`Processing ${validFiles.length} photos...`);
+        const processedPhotos = await processPhotos(validFiles);
+
+        // Add processed photos to the list
+        onPhotosChange([...photos, ...processedPhotos]);
+
+        console.log(`Successfully processed ${processedPhotos.length} photos`);
+      } catch (error) {
+        console.error("Error processing photos:", error);
+        alert("Failed to process some photos. Please try again.");
+      } finally {
+        setIsProcessing(false);
+      }
+    },
+    [photos, onPhotosChange, maxPhotos],
+  );
+
+  const handleFileInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleFiles(e.target.files);
+      // Reset input value to allow selecting the same files again
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    },
+    [handleFiles],
+  );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      handleFiles(e.dataTransfer.files);
+    },
+    [handleFiles],
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -100,68 +116,79 @@ export default function PhotoUpload({
     setIsDragging(false);
   }, []);
 
-  const removePhoto = useCallback((photoId: string) => {
-    const photoToRemove = photos.find(p => p.id === photoId);
-    if (photoToRemove && photoToRemove.preview.startsWith('blob:')) {
-      URL.revokeObjectURL(photoToRemove.preview);
-    }
-    onPhotosChange(photos.filter(photo => photo.id !== photoId));
-  }, [photos, onPhotosChange]);
+  const removePhoto = useCallback(
+    (photoId: string) => {
+      const photoToRemove = photos.find((p) => p.id === photoId);
+      if (photoToRemove && photoToRemove.preview.startsWith("blob:")) {
+        URL.revokeObjectURL(photoToRemove.preview);
+      }
+      onPhotosChange(photos.filter((photo) => photo.id !== photoId));
+    },
+    [photos, onPhotosChange],
+  );
 
-  const uploadPhoto = useCallback(async (photo: ProcessedPhoto) => {
-    if (photo.cloudflareUrl || photo.isProcessing) return;
+  const uploadPhoto = useCallback(
+    async (photo: ProcessedPhoto) => {
+      if (photo.cloudflareUrl || photo.isProcessing) return;
 
-    const updatedPhotos = photos.map(p => 
-      p.id === photo.id 
-        ? { ...p, isProcessing: true, uploadProgress: 0 }
-        : p
-    );
-    onPhotosChange(updatedPhotos);
+      const updatedPhotos = photos.map((p) =>
+        p.id === photo.id ? { ...p, isProcessing: true, uploadProgress: 0 } : p,
+      );
+      onPhotosChange(updatedPhotos);
 
-    try {
-      const cloudflareUrl = await uploadPhotoToCloudflare(photo, (progress) => {
-        const updatedPhotos = photos.map(p => 
-          p.id === photo.id 
-            ? { ...p, uploadProgress: progress }
-            : p
+      try {
+        const cloudflareUrl = await uploadPhotoToCloudflare(
+          photo,
+          (progress) => {
+            const updatedPhotos = photos.map((p) =>
+              p.id === photo.id ? { ...p, uploadProgress: progress } : p,
+            );
+            onPhotosChange(updatedPhotos);
+          },
         );
-        onPhotosChange(updatedPhotos);
-      });
 
-      const finalUpdatedPhotos = photos.map(p => 
-        p.id === photo.id 
-          ? { ...p, isProcessing: false, uploadProgress: 100, cloudflareUrl }
-          : p
-      );
-      onPhotosChange(finalUpdatedPhotos);
+        const finalUpdatedPhotos = photos.map((p) =>
+          p.id === photo.id
+            ? { ...p, isProcessing: false, uploadProgress: 100, cloudflareUrl }
+            : p,
+        );
+        onPhotosChange(finalUpdatedPhotos);
 
-      console.log(`Photo uploaded: ${photo.originalFile.name} -> ${cloudflareUrl}`);
-    } catch (error) {
-      console.error('Upload failed:', error);
-      const errorUpdatedPhotos = photos.map(p => 
-        p.id === photo.id 
-          ? { 
-              ...p, 
-              isProcessing: false, 
-              uploadProgress: 0, 
-              error: error instanceof Error ? error.message : 'Upload failed' 
-            }
-          : p
-      );
-      onPhotosChange(errorUpdatedPhotos);
-    }
-  }, [photos, onPhotosChange]);
+        console.log(
+          `Photo uploaded: ${photo.originalFile.name} -> ${cloudflareUrl}`,
+        );
+      } catch (error) {
+        console.error("Upload failed:", error);
+        const errorUpdatedPhotos = photos.map((p) =>
+          p.id === photo.id
+            ? {
+                ...p,
+                isProcessing: false,
+                uploadProgress: 0,
+                error: error instanceof Error ? error.message : "Upload failed",
+              }
+            : p,
+        );
+        onPhotosChange(errorUpdatedPhotos);
+      }
+    },
+    [photos, onPhotosChange],
+  );
 
   const uploadAllPhotos = useCallback(async () => {
-    const photosToUpload = photos.filter(p => !p.cloudflareUrl && !p.isProcessing && !p.error);
-    
+    const photosToUpload = photos.filter(
+      (p) => !p.cloudflareUrl && !p.isProcessing && !p.error,
+    );
+
     for (const photo of photosToUpload) {
       await uploadPhoto(photo);
     }
   }, [photos, uploadPhoto]);
 
   const canAddMore = photos.length < maxPhotos;
-  const hasPhotosToUpload = photos.some(p => !p.cloudflareUrl && !p.isProcessing && !p.error);
+  const hasPhotosToUpload = photos.some(
+    (p) => !p.cloudflareUrl && !p.isProcessing && !p.error,
+  );
 
   return (
     <div className={className}>
@@ -176,17 +203,22 @@ export default function PhotoUpload({
                   alt="Upload preview"
                   className="w-full h-full object-cover"
                 />
-                
+
                 {/* Processing overlay */}
                 {photo.isProcessing && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                     <div className="text-white text-center">
                       <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
                       <div className="text-xs">
-                        {photo.uploadProgress > 0 ? `${photo.uploadProgress}%` : 'Processing...'}
+                        {photo.uploadProgress > 0
+                          ? `${photo.uploadProgress}%`
+                          : "Processing..."}
                       </div>
                       {photo.uploadProgress > 0 && (
-                        <Progress value={photo.uploadProgress} className="w-16 h-1 mt-1" />
+                        <Progress
+                          value={photo.uploadProgress}
+                          className="w-16 h-1 mt-1"
+                        />
                       )}
                     </div>
                   </div>
@@ -218,27 +250,33 @@ export default function PhotoUpload({
                 </Button>
 
                 {/* Upload button for individual photos */}
-                {!photo.cloudflareUrl && !photo.isProcessing && !photo.error && (
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    className="absolute bottom-1 left-1 h-6 text-xs px-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => uploadPhoto(photo)}
-                  >
-                    Upload
-                  </Button>
-                )}
+                {!photo.cloudflareUrl &&
+                  !photo.isProcessing &&
+                  !photo.error && (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="absolute bottom-1 left-1 h-6 text-xs px-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => uploadPhoto(photo)}
+                    >
+                      Upload
+                    </Button>
+                  )}
               </div>
 
               {/* File info */}
               <div className="p-2 bg-gray-50">
-                <div className="text-xs font-medium truncate">{photo.originalFile.name}</div>
+                <div className="text-xs font-medium truncate">
+                  {photo.originalFile.name}
+                </div>
                 <div className="text-xs text-gray-500">
                   {(photo.file.size / 1024 / 1024).toFixed(2)}MB
                   {photo.file.size !== photo.originalFile.size && (
                     <span className="text-green-600">
-                      {' '}(compressed from {(photo.originalFile.size / 1024 / 1024).toFixed(2)}MB)
+                      {" "}
+                      (compressed from{" "}
+                      {(photo.originalFile.size / 1024 / 1024).toFixed(2)}MB)
                     </span>
                   )}
                 </div>
@@ -252,11 +290,11 @@ export default function PhotoUpload({
 
         {/* Upload area */}
         {canAddMore && (
-          <Card 
+          <Card
             className={`border-2 border-dashed transition-colors cursor-pointer ${
-              isDragging 
-                ? 'border-vibrant-blue bg-vibrant-blue/10' 
-                : 'border-scotland-thistle/50 hover:border-vibrant-blue'
+              isDragging
+                ? "border-vibrant-blue bg-vibrant-blue/10"
+                : "border-scotland-thistle/50 hover:border-vibrant-blue"
             }`}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
@@ -291,11 +329,11 @@ export default function PhotoUpload({
       {photos.length > 0 && (
         <div className="flex gap-2 justify-between items-center">
           <div className="text-xs text-muted-foreground">
-            {photos.length}/{maxPhotos} photos • 
-            {photos.filter(p => p.cloudflareUrl).length} uploaded • 
-            Supports HEIC, JPEG, PNG, WebP
+            {photos.length}/{maxPhotos} photos •
+            {photos.filter((p) => p.cloudflareUrl).length} uploaded • Supports
+            HEIC, JPEG, PNG, WebP
           </div>
-          
+
           {hasPhotosToUpload && (
             <Button
               type="button"
@@ -323,7 +361,7 @@ export default function PhotoUpload({
 
       {/* Help text */}
       <p className="text-xs text-muted-foreground mt-2">
-        📱 iPhone HEIC photos will be automatically converted and compressed. 
+        📱 iPhone HEIC photos will be automatically converted and compressed.
         Max {maxPhotos} photos, up to 50MB each. Drag & drop or click to upload.
       </p>
     </div>

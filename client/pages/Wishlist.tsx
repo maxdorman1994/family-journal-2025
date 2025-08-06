@@ -11,7 +11,7 @@ export default function Wishlist() {
         "Budget estimates and saving progress",
         "Research notes and recommendations",
         "Seasonal planning and best times to visit",
-        "Family votes on next adventures"
+        "Family votes on next adventures",
       ]}
     />
   );

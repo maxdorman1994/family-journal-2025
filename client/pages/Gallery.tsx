@@ -7,10 +7,10 @@ export default function Gallery() {
       description="Browse through all our beautiful Scottish adventure photos organized by location, date, and tags."
       suggestions={[
         "Interactive photo grid with filtering options",
-        "Photo albums organized by trip or location", 
+        "Photo albums organized by trip or location",
         "Lightbox view with photo details and stories",
         "Map view showing where photos were taken",
-        "Download and sharing capabilities"
+        "Download and sharing capabilities",
       ]}
     />
   );

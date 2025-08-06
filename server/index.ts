@@ -2,7 +2,12 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
-import { uploadPhoto, uploadPhotoMiddleware, getPlaceholderPhoto, listPhotos } from "./routes/photos";
+import {
+  uploadPhoto,
+  uploadPhotoMiddleware,
+  getPlaceholderPhoto,
+  listPhotos,
+} from "./routes/photos";
 import { logR2Status } from "./utils/r2Config";
 
 export function createServer() {

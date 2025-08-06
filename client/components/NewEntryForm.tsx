@@ -1,11 +1,36 @@
 import { useState } from "react";
-import { X, Upload, MapPin, Calendar, Cloud, Heart, Route, Car, Dog, Tag, Camera, Plus, Ticket } from "lucide-react";
+import {
+  X,
+  Upload,
+  MapPin,
+  Calendar,
+  Cloud,
+  Heart,
+  Route,
+  Car,
+  Dog,
+  Tag,
+  Camera,
+  Plus,
+  Ticket,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import PhotoUpload from "@/components/PhotoUpload";
 import { ProcessedPhoto, cleanupPreviewUrls } from "@/lib/photoUtils";
@@ -24,7 +49,7 @@ const weatherOptions = [
   { value: "🌦️ Showers", label: "🌦️ Showers" },
   { value: "❄️ Snow", label: "❄️ Snow" },
   { value: "🌫️ Foggy", label: "🌫️ Foggy" },
-  { value: "💨 Windy", label: "💨 Windy" }
+  { value: "💨 Windy", label: "💨 Windy" },
 ];
 
 const moodOptions = [
@@ -35,19 +60,39 @@ const moodOptions = [
   { value: "😊 Content", label: "😊 Content" },
   { value: "🥰 Loved", label: "🥰 Loved" },
   { value: "😴 Tired", label: "😴 Tired" },
-  { value: "🤗 Blessed", label: "🤗 Blessed" }
+  { value: "🤗 Blessed", label: "🤗 Blessed" },
 ];
 
 const commonTags = [
-  "Mountain", "Lake", "City", "Family", "Challenge", "Views", "History", 
-  "Culture", "Nature", "Relaxing", "Adventure", "Castle", "Forest", 
-  "Beach", "Island", "Village", "Hiking", "Photography", "Wildlife"
+  "Mountain",
+  "Lake",
+  "City",
+  "Family",
+  "Challenge",
+  "Views",
+  "History",
+  "Culture",
+  "Nature",
+  "Relaxing",
+  "Adventure",
+  "Castle",
+  "Forest",
+  "Beach",
+  "Island",
+  "Village",
+  "Hiking",
+  "Photography",
+  "Wildlife",
 ];
 
-export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryFormProps) {
+export default function NewEntryForm({
+  isOpen,
+  onClose,
+  onSubmit,
+}: NewEntryFormProps) {
   const [formData, setFormData] = useState({
     title: "",
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split("T")[0],
     location: "",
     weather: "",
     mood: "",
@@ -61,26 +106,26 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
     petNotes: "",
     content: "",
     tags: [] as string[],
-    photos: [] as ProcessedPhoto[]
+    photos: [] as ProcessedPhoto[],
   });
 
   const [customTag, setCustomTag] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   const handleTagToggle = (tag: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      tags: prev.tags.includes(tag) 
-        ? prev.tags.filter(t => t !== tag)
-        : [...prev.tags, tag]
+      tags: prev.tags.includes(tag)
+        ? prev.tags.filter((t) => t !== tag)
+        : [...prev.tags, tag],
     }));
   };
 
@@ -92,21 +137,22 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
   };
 
   const handlePhotosChange = (photos: ProcessedPhoto[]) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      photos
+      photos,
     }));
   };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.location.trim()) newErrors.location = "Location is required";
-    if (!formData.content.trim()) newErrors.content = "Adventure story is required";
+    if (!formData.content.trim())
+      newErrors.content = "Adventure story is required";
     if (!formData.weather) newErrors.weather = "Weather is required";
     if (!formData.mood) newErrors.mood = "Mood is required";
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -122,7 +168,7 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
       // Reset form
       setFormData({
         title: "",
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString().split("T")[0],
         location: "",
         weather: "",
         mood: "",
@@ -136,7 +182,7 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
         petNotes: "",
         content: "",
         tags: [],
-        photos: []
+        photos: [],
       });
       onClose();
     }
@@ -144,11 +190,11 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB', { 
-      weekday: 'long', 
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric' 
+    return date.toLocaleDateString("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     });
   };
 
@@ -167,14 +213,18 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
           {/* Title and Date */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Adventure Title *</label>
+              <label className="block text-sm font-medium mb-2">
+                Adventure Title *
+              </label>
               <Input
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
                 placeholder="e.g., Ben Nevis Summit - Our Greatest Challenge Yet!"
                 className={errors.title ? "border-red-500" : ""}
               />
-              {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+              {errors.title && (
+                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Date</label>
@@ -205,42 +255,58 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
                 className={`pl-10 ${errors.location ? "border-red-500" : ""}`}
               />
             </div>
-            {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+            {errors.location && (
+              <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+            )}
           </div>
 
           {/* Weather and Mood */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Weather *</label>
-              <Select value={formData.weather} onValueChange={(value) => handleInputChange("weather", value)}>
-                <SelectTrigger className={errors.weather ? "border-red-500" : ""}>
+              <label className="block text-sm font-medium mb-2">
+                Weather *
+              </label>
+              <Select
+                value={formData.weather}
+                onValueChange={(value) => handleInputChange("weather", value)}
+              >
+                <SelectTrigger
+                  className={errors.weather ? "border-red-500" : ""}
+                >
                   <SelectValue placeholder="Select weather" />
                 </SelectTrigger>
                 <SelectContent>
-                  {weatherOptions.map(option => (
+                  {weatherOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {errors.weather && <p className="text-red-500 text-sm mt-1">{errors.weather}</p>}
+              {errors.weather && (
+                <p className="text-red-500 text-sm mt-1">{errors.weather}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Mood *</label>
-              <Select value={formData.mood} onValueChange={(value) => handleInputChange("mood", value)}>
+              <Select
+                value={formData.mood}
+                onValueChange={(value) => handleInputChange("mood", value)}
+              >
                 <SelectTrigger className={errors.mood ? "border-red-500" : ""}>
                   <SelectValue placeholder="Select mood" />
                 </SelectTrigger>
                 <SelectContent>
-                  {moodOptions.map(option => (
+                  {moodOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {errors.mood && <p className="text-red-500 text-sm mt-1">{errors.mood}</p>}
+              {errors.mood && (
+                <p className="text-red-500 text-sm mt-1">{errors.mood}</p>
+              )}
             </div>
           </div>
 
@@ -256,19 +322,27 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
               {/* Basic Travel Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Miles Traveled</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Miles Traveled
+                  </label>
                   <Input
                     type="number"
                     value={formData.milesTraveled}
-                    onChange={(e) => handleInputChange("milesTraveled", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("milesTraveled", e.target.value)
+                    }
                     placeholder="e.g., 87"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Parking</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Parking
+                  </label>
                   <Input
                     value={formData.parking}
-                    onChange={(e) => handleInputChange("parking", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("parking", e.target.value)
+                    }
                     placeholder="e.g., Free or £5"
                   />
                 </div>
@@ -280,9 +354,14 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
                   <Checkbox
                     id="paidActivity"
                     checked={formData.paidActivity}
-                    onCheckedChange={(checked) => handleInputChange("paidActivity", checked)}
+                    onCheckedChange={(checked) =>
+                      handleInputChange("paidActivity", checked)
+                    }
                   />
-                  <label htmlFor="paidActivity" className="text-sm font-medium flex items-center">
+                  <label
+                    htmlFor="paidActivity"
+                    className="text-sm font-medium flex items-center"
+                  >
                     <Ticket className="mr-1 h-4 w-4 text-vibrant-blue" />
                     Paid Activity
                   </label>
@@ -291,26 +370,38 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
                 {formData.paidActivity && (
                   <div className="ml-6 grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-white/50 rounded-lg border border-scotland-thistle/20">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Adult Tickets</label>
+                      <label className="block text-sm font-medium mb-2">
+                        Adult Tickets
+                      </label>
                       <Input
                         value={formData.adultTickets}
-                        onChange={(e) => handleInputChange("adultTickets", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("adultTickets", e.target.value)
+                        }
                         placeholder="e.g., £12 each or 2 × £12"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Child Tickets</label>
+                      <label className="block text-sm font-medium mb-2">
+                        Child Tickets
+                      </label>
                       <Input
                         value={formData.childTickets}
-                        onChange={(e) => handleInputChange("childTickets", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("childTickets", e.target.value)
+                        }
                         placeholder="e.g., £6 each or 1 × £6"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Other Tickets</label>
+                      <label className="block text-sm font-medium mb-2">
+                        Other Tickets
+                      </label>
                       <Input
                         value={formData.otherTickets}
-                        onChange={(e) => handleInputChange("otherTickets", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("otherTickets", e.target.value)
+                        }
                         placeholder="e.g., Senior £8 or Family £30"
                       />
                     </div>
@@ -324,9 +415,14 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
                   <Checkbox
                     id="dogFriendly"
                     checked={formData.dogFriendly}
-                    onCheckedChange={(checked) => handleInputChange("dogFriendly", checked)}
+                    onCheckedChange={(checked) =>
+                      handleInputChange("dogFriendly", checked)
+                    }
                   />
-                  <label htmlFor="dogFriendly" className="text-sm font-medium flex items-center">
+                  <label
+                    htmlFor="dogFriendly"
+                    className="text-sm font-medium flex items-center"
+                  >
                     <Dog className="mr-1 h-4 w-4 text-vibrant-pink" />
                     Pet-friendly location
                   </label>
@@ -334,14 +430,19 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
 
                 {formData.dogFriendly && (
                   <div className="ml-6">
-                    <label className="block text-sm font-medium mb-2">Pet Notes & Requirements</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Pet Notes & Requirements
+                    </label>
                     <Input
                       value={formData.petNotes}
-                      onChange={(e) => handleInputChange("petNotes", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("petNotes", e.target.value)
+                      }
                       placeholder="e.g., Dogs must be kept on leads, £2 dog entry fee, water bowls available"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      Note any special requirements, restrictions, or facilities for pets
+                      Note any special requirements, restrictions, or facilities
+                      for pets
                     </p>
                   </div>
                 )}
@@ -376,8 +477,11 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-                {commonTags.map(tag => (
-                  <label key={tag} className="flex items-center space-x-2 cursor-pointer">
+                {commonTags.map((tag) => (
+                  <label
+                    key={tag}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
                     <Checkbox
                       checked={formData.tags.includes(tag)}
                       onCheckedChange={() => handleTagToggle(tag)}
@@ -386,13 +490,15 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
                   </label>
                 ))}
               </div>
-              
+
               <div className="flex gap-2">
                 <Input
                   value={customTag}
                   onChange={(e) => setCustomTag(e.target.value)}
                   placeholder="Add custom tag..."
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomTag())}
+                  onKeyPress={(e) =>
+                    e.key === "Enter" && (e.preventDefault(), addCustomTag())
+                  }
                 />
                 <Button type="button" variant="outline" onClick={addCustomTag}>
                   <Plus className="h-4 w-4" />
@@ -401,7 +507,7 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
 
               {formData.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-4">
-                  {formData.tags.map(tag => (
+                  {formData.tags.map((tag) => (
                     <span
                       key={tag}
                       className="px-2 py-1 bg-scotland-thistle/20 text-scotland-thistle text-sm rounded-full cursor-pointer hover:bg-scotland-thistle/30 transition-colors"
@@ -417,7 +523,9 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
 
           {/* Adventure Story */}
           <div>
-            <label className="block text-sm font-medium mb-2">Adventure Story *</label>
+            <label className="block text-sm font-medium mb-2">
+              Adventure Story *
+            </label>
             <Textarea
               value={formData.content}
               onChange={(e) => handleInputChange("content", e.target.value)}
@@ -425,9 +533,12 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
               rows={6}
               className={errors.content ? "border-red-500" : ""}
             />
-            {errors.content && <p className="text-red-500 text-sm mt-1">{errors.content}</p>}
+            {errors.content && (
+              <p className="text-red-500 text-sm mt-1">{errors.content}</p>
+            )}
             <p className="text-xs text-muted-foreground mt-1">
-              Share the full story of your adventure. This will be the heart of your journal entry.
+              Share the full story of your adventure. This will be the heart of
+              your journal entry.
             </p>
           </div>
 
@@ -436,8 +547,8 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="bg-gradient-to-r from-vibrant-blue to-scotland-loch hover:from-vibrant-blue/90 hover:to-scotland-loch/90"
             >
               Save Adventure

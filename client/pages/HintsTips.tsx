@@ -11,7 +11,7 @@ export default function HintsTips() {
         "Weather preparation and what to pack",
         "Local recommendations from fellow travelers",
         "Budget-friendly adventure ideas",
-        "Photography tips for capturing memories"
+        "Photography tips for capturing memories",
       ]}
     />
   );

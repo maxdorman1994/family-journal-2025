@@ -5,18 +5,22 @@ This guide walks you through setting up Cloudflare R2 storage for your "A Wee Ad
 ## 🏗️ Step 1: Create Cloudflare R2 Bucket
 
 ### 1.1 Access Cloudflare Dashboard
+
 1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/)
 2. Log in to your account (create one if needed)
 3. Navigate to **R2 Object Storage** in the sidebar
 
 ### 1.2 Create Your Bucket
+
 1. Click **"Create bucket"**
 2. **Bucket name**: `wee-adventure-photos` (or your preferred name)
 3. **Location**: Choose closest to your users (e.g., "Eastern North America", "Western Europe")
 4. Click **"Create bucket"**
 
 ### 1.3 Configure Public Access (Optional)
+
 To make photos accessible via direct URLs:
+
 1. Go to your bucket settings
 2. Click **"Settings"** tab
 3. Under **"Public access"**, click **"Allow Access"**
@@ -25,20 +29,25 @@ To make photos accessible via direct URLs:
 ## 🔐 Step 2: Create API Credentials
 
 ### 2.1 Create R2 API Token
+
 1. In Cloudflare dashboard, go to **"My Profile"** (top right)
 2. Click **"API Tokens"** tab
 3. Click **"Create Token"**
 4. Use **"Custom token"** template
 
 ### 2.2 Configure Token Permissions
+
 Set these permissions:
+
 - **Zone**: `Zone:Read` (if using custom domain)
 - **Account**: `Cloudflare Images:Edit`, `R2:Edit`
 - **Account Resources**: Include your account
 - **Zone Resources**: Include specific zones (if applicable)
 
 ### 2.3 Get Account Information
+
 You'll need:
+
 - **Account ID**: Found on right sidebar of any Cloudflare page
 - **Access Key ID**: Generated when creating R2 token
 - **Secret Access Key**: Generated when creating R2 token
@@ -47,6 +56,7 @@ You'll need:
 ## ⚙️ Step 3: Configure Environment Variables
 
 ### 3.1 Production Environment Variables
+
 Set these in your production environment:
 
 ```bash
@@ -61,6 +71,7 @@ CLOUDFLARE_R2_PUBLIC_URL=https://photos.your-domain.com
 ```
 
 ### 3.2 Development Environment
+
 For local development, create a `.env` file:
 
 ```bash
@@ -73,18 +84,21 @@ CLOUDFLARE_R2_PUBLIC_URL=https://photos.your-domain.com
 ```
 
 ### 3.3 Using Builder.io Environment Variables
+
 In Builder.io projects, set environment variables via:
+
 1. DevServerControl tool (for current session)
 2. Project settings (for permanent storage)
 
 ```javascript
 // Example: Setting via DevServerControl
-DevServerControl.set_env_variable(["CLOUDFLARE_R2_ACCESS_KEY_ID", "your-key"])
+DevServerControl.set_env_variable(["CLOUDFLARE_R2_ACCESS_KEY_ID", "your-key"]);
 ```
 
 ## 🔄 Step 4: How Cross-Device Sync Works
 
 ### 4.1 Photo Upload Flow
+
 ```
 📱 Device A (iPhone) → 🔄 HEIC Conversion → 📉 Compression → ☁️ R2 Storage
                                                                     ↓
@@ -94,6 +108,7 @@ DevServerControl.set_env_variable(["CLOUDFLARE_R2_ACCESS_KEY_ID", "your-key"])
 ### 4.2 Technical Implementation
 
 #### Photo Processing Pipeline:
+
 1. **Upload**: User selects photos on any device
 2. **Convert**: HEIC → JPEG (if needed)
 3. **Compress**: Reduce size while maintaining quality
@@ -102,6 +117,7 @@ DevServerControl.set_env_variable(["CLOUDFLARE_R2_ACCESS_KEY_ID", "your-key"])
 6. **Sync**: Other devices fetch from same R2 URLs
 
 #### File Organization:
+
 ```
 R2 Bucket: wee-adventure-photos/
 ├── journal/
@@ -115,6 +131,7 @@ R2 Bucket: wee-adventure-photos/
 ```
 
 ### 4.3 Cross-Device Access
+
 1. **Device Independence**: Photos stored in cloud, not locally
 2. **URL-Based Access**: Each photo has unique R2 URL
 3. **Automatic Sync**: New entries appear on all devices
@@ -123,6 +140,7 @@ R2 Bucket: wee-adventure-photos/
 ## 🌐 Step 5: Custom Domain (Optional)
 
 ### 5.1 Set Up Custom Domain
+
 For branded URLs like `https://photos.wee-adventure.com`:
 
 1. **Add Custom Domain** in R2 bucket settings
@@ -133,6 +151,7 @@ For branded URLs like `https://photos.wee-adventure.com`:
 3. **SSL Certificate**: Cloudflare handles automatically
 
 ### 5.2 Update Environment Variable
+
 ```bash
 CLOUDFLARE_R2_PUBLIC_URL=https://photos.wee-adventure.com
 ```
@@ -140,18 +159,21 @@ CLOUDFLARE_R2_PUBLIC_URL=https://photos.wee-adventure.com
 ## 🔧 Step 6: Testing & Verification
 
 ### 6.1 Test Upload
+
 1. Open journal in browser
 2. Click "New Entry"
 3. Upload a photo (try HEIC if you have iPhone)
 4. Check R2 bucket for uploaded file
 
 ### 6.2 Test Cross-Device Sync
+
 1. Create entry with photos on Device A
 2. Open journal on Device B
 3. Verify photos display correctly
 4. Check browser Network tab for R2 URLs
 
 ### 6.3 Monitor Usage
+
 - **R2 Dashboard**: Monitor storage usage and requests
 - **Analytics**: Track upload success rates
 - **Costs**: R2 pricing is very competitive
@@ -159,12 +181,14 @@ CLOUDFLARE_R2_PUBLIC_URL=https://photos.wee-adventure.com
 ## 💰 Cost Estimation
 
 ### Cloudflare R2 Pricing (as of 2024):
+
 - **Storage**: $0.015/GB/month
 - **Class A Operations** (uploads): $4.50/million requests
 - **Class B Operations** (downloads): $0.36/million requests
 - **Egress**: Free (major advantage over AWS S3)
 
 ### Example Family Usage:
+
 - **500 photos/month** × 1MB each = 500MB storage
 - **Monthly cost**: ~$0.008 (less than 1 penny!)
 - **Annual cost**: ~$0.10 for storage + minimal operation costs
@@ -172,6 +196,7 @@ CLOUDFLARE_R2_PUBLIC_URL=https://photos.wee-adventure.com
 ## 🛠️ Advanced Configuration
 
 ### Environment-Specific Buckets
+
 ```bash
 # Production
 CLOUDFLARE_R2_BUCKET_NAME=wee-adventure-photos
@@ -184,6 +209,7 @@ CLOUDFLARE_R2_BUCKET_NAME=wee-adventure-photos-dev
 ```
 
 ### Backup Strategy
+
 1. **Automatic Backup**: R2 has built-in durability
 2. **Cross-Region**: Consider multiple regions for global families
 3. **Local Backup**: Export feature for local photo backup
@@ -200,21 +226,25 @@ CLOUDFLARE_R2_BUCKET_NAME=wee-adventure-photos-dev
 ### Common Issues:
 
 #### "Access Denied" Errors
+
 - Check API token permissions
 - Verify account ID in endpoint URL
 - Ensure bucket name matches exactly
 
 #### Photos Not Loading
+
 - Check CORS configuration
 - Verify public access settings
 - Test R2 URLs directly in browser
 
 #### Upload Failures
+
 - Check file size limits (50MB max)
 - Verify supported file types
 - Monitor network connectivity
 
 #### Development vs Production
+
 - Use different bucket names
 - Environment variable configuration
 - Local fallback when R2 not configured
