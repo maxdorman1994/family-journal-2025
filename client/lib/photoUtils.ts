@@ -99,12 +99,29 @@ export async function compressImage(
 export async function processPhoto(file: File): Promise<ProcessedPhoto> {
   const id = uuidv4();
   let processedFile = file;
-  
+  let conversionAttempted = false;
+
   try {
     // Convert HEIC to JPEG if needed
     if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-      console.log(`Converting HEIC file: ${file.name}`);
-      processedFile = await convertHeicToJpeg(file);
+      console.log(`Attempting HEIC conversion for: ${file.name}`);
+      conversionAttempted = true;
+
+      try {
+        processedFile = await convertHeicToJpeg(file);
+        console.log(`HEIC conversion successful for: ${file.name}`);
+      } catch (heicError) {
+        console.warn(`HEIC conversion failed for ${file.name}, using original file:`, heicError);
+
+        // Fallback: treat as regular image file and attempt compression
+        // This allows the user to still upload the file, even if HEIC conversion fails
+        processedFile = new File([file], file.name.replace(/\.heic$/i, '.jpg'), {
+          type: 'image/jpeg', // Assume it might work as JPEG
+          lastModified: file.lastModified
+        });
+
+        // If that doesn't work, we'll catch it in the outer try-catch
+      }
     }
 
     // Compress the image
@@ -114,7 +131,7 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
     // Create preview URL
     const preview = URL.createObjectURL(compressedFile);
 
-    console.log(`Photo processed: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) -> ${compressedFile.name} (${(compressedFile.size / 1024 / 1024).toFixed(2)}MB)`);
+    console.log(`Photo processed successfully: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) -> ${compressedFile.name} (${(compressedFile.size / 1024 / 1024).toFixed(2)}MB)`);
 
     return {
       id,
@@ -122,19 +139,37 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
       originalFile: file,
       preview,
       isProcessing: false,
-      uploadProgress: 0
+      uploadProgress: 0,
+      ...(conversionAttempted && {
+        error: processedFile === file ? 'HEIC conversion failed, but file may still upload' : undefined
+      })
     };
   } catch (error) {
-    console.error('Photo processing failed:', error);
-    return {
-      id,
-      file,
-      originalFile: file,
-      preview: URL.createObjectURL(file),
-      isProcessing: false,
-      uploadProgress: 0,
-      error: error instanceof Error ? error.message : 'Unknown processing error'
-    };
+    console.error('Photo processing failed completely:', error);
+
+    // Final fallback: return the original file with error message
+    try {
+      const fallbackPreview = URL.createObjectURL(file);
+      return {
+        id,
+        file,
+        originalFile: file,
+        preview: fallbackPreview,
+        isProcessing: false,
+        uploadProgress: 0,
+        error: `Processing failed: ${error instanceof Error ? error.message : 'Unknown error'}. File may still upload as-is.`
+      };
+    } catch (previewError) {
+      return {
+        id,
+        file,
+        originalFile: file,
+        preview: '/placeholder.svg',
+        isProcessing: false,
+        uploadProgress: 0,
+        error: 'Photo processing and preview failed. Please try a different image format.'
+      };
+    }
   }
 }
 
