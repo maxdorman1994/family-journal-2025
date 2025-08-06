@@ -254,7 +254,7 @@ export async function uploadPhotoToCloudflare(
 /**
  * Validate file type and size for Cloudflare Images
  */
-export function validatePhotoFile(file: File): { valid: boolean; error?: string } {
+export function validatePhotoFile(file: File): { valid: boolean; error?: string; warning?: string } {
   const maxSize = 10 * 1024 * 1024; // 10MB limit for Cloudflare Images
   const allowedTypes = [
     'image/jpeg',
@@ -280,6 +280,14 @@ export function validatePhotoFile(file: File): { valid: boolean; error?: string 
     return {
       valid: false,
       error: 'Unsupported file type. Please use JPEG, PNG, WebP, HEIC, GIF, or SVG images'
+    };
+  }
+
+  // Add warning for HEIC files
+  if (file.type === 'image/heic' || fileExtension === '.heic') {
+    return {
+      valid: true,
+      warning: 'HEIC file detected. If conversion fails, consider converting to JPEG first.'
     };
   }
 
