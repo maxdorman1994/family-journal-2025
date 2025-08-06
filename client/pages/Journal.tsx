@@ -319,6 +319,13 @@ export default function Journal() {
           <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
         </div>
       )}
+
+      {/* New Entry Form */}
+      <NewEntryForm
+        isOpen={isNewEntryFormOpen}
+        onClose={() => setIsNewEntryFormOpen(false)}
+        onSubmit={handleNewEntry}
+      />
     </div>
   );
 }
