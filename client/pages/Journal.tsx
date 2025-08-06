@@ -80,7 +80,7 @@ export default function Journal() {
     const matchesSearch = entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          entry.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          entry.content.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTag = !selectedTag || entry.tags.includes(selectedTag);
+    const matchesTag = !selectedTag || selectedTag === "all" || entry.tags.includes(selectedTag);
     return matchesSearch && matchesTag;
   });
 
