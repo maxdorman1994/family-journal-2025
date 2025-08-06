@@ -1,4 +1,4 @@
-import { supabase, JournalEntry } from './supabase';
+import { supabase, JournalEntry, isSupabaseConfigured } from './supabase';
 
 /**
  * Supabase Journal Service
