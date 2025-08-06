@@ -57,6 +57,15 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Scottish-themed colors
+        "vibrant-blue": "hsl(var(--vibrant-blue))",
+        "vibrant-pink": "hsl(var(--vibrant-pink))",
+        "vibrant-teal": "hsl(var(--vibrant-teal))",
+        "scotland-thistle": "hsl(var(--scotland-thistle))",
+        "scotland-loch": "hsl(var(--scotland-loch))",
+        "scotland-heather": "hsl(var(--scotland-heather))",
+        "scotland-mist": "hsl(var(--scotland-mist))",
+        "scotland-forest": "hsl(var(--scotland-forest))",
       },
       borderRadius: {
         lg: "var(--radius)",
