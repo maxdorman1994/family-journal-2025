@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import PhotoUpload from "@/components/PhotoUpload";
+import { ProcessedPhoto, cleanupPreviewUrls } from "@/lib/photoUtils";
 
 interface NewEntryFormProps {
   isOpen: boolean;
