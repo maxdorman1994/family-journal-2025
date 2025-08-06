@@ -197,32 +197,34 @@ export async function uploadPhotoToCloudflare(
 }
 
 /**
- * Validate file type and size
+ * Validate file type and size for Cloudflare Images
  */
 export function validatePhotoFile(file: File): { valid: boolean; error?: string } {
-  const maxSize = 50 * 1024 * 1024; // 50MB limit for original files
+  const maxSize = 10 * 1024 * 1024; // 10MB limit for Cloudflare Images
   const allowedTypes = [
     'image/jpeg',
-    'image/jpg', 
+    'image/jpg',
     'image/png',
     'image/webp',
-    'image/heic'
+    'image/heic',
+    'image/gif',
+    'image/svg+xml'
   ];
-  
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.heic'];
+
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.heic', '.gif', '.svg'];
   const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
 
   if (file.size > maxSize) {
     return {
       valid: false,
-      error: `File size too large. Maximum size is ${maxSize / 1024 / 1024}MB`
+      error: `File size too large. Cloudflare Images supports up to ${maxSize / 1024 / 1024}MB`
     };
   }
 
   if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
     return {
       valid: false,
-      error: 'Unsupported file type. Please use JPEG, PNG, WebP, or HEIC images'
+      error: 'Unsupported file type. Please use JPEG, PNG, WebP, HEIC, GIF, or SVG images'
     };
   }
 
