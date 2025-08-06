@@ -147,17 +147,96 @@ export const getPlaceholderPhoto: RequestHandler = (req, res) => {
 export const uploadPhotoMiddleware = upload.single('photo');
 
 /**
- * List photos (for future sync functionality)
+ * List photos from Cloudflare Images (for sync functionality)
  */
 export const listPhotos: RequestHandler = async (req, res) => {
   try {
-    // This would typically list photos from R2 and return metadata
-    // For now, return empty array
-    res.json({ photos: [] });
+    if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_IMAGES_TOKEN) {
+      return res.json({ photos: [], message: "Cloudflare Images not configured" });
+    }
+
+    const response = await fetch(`${CLOUDFLARE_IMAGES_URL}?per_page=100`, {
+      headers: {
+        'Authorization': `Bearer ${CLOUDFLARE_IMAGES_TOKEN}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to list photos: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.errors?.[0]?.message || 'Failed to list photos');
+    }
+
+    // Filter for journal photos and format response
+    const journalPhotos = data.result.images
+      .filter((img: any) => img.id.startsWith('wee-adventure-'))
+      .map((img: any) => ({
+        id: img.id,
+        url: img.variants[0],
+        variants: img.variants,
+        metadata: img.meta,
+        uploaded: img.uploaded,
+      }));
+
+    res.json({
+      photos: journalPhotos,
+      total: journalPhotos.length,
+      message: "Photos retrieved successfully"
+    });
   } catch (error) {
     console.error("List photos error:", error);
-    res.status(500).json({ 
-      error: error instanceof Error ? error.message : "Failed to list photos" 
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Failed to list photos"
+    });
+  }
+};
+
+/**
+ * Delete a photo from Cloudflare Images
+ */
+export const deletePhoto: RequestHandler = async (req, res) => {
+  try {
+    const { imageId } = req.params;
+
+    if (!imageId) {
+      return res.status(400).json({ error: "Image ID is required" });
+    }
+
+    if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_IMAGES_TOKEN) {
+      return res.status(400).json({ error: "Cloudflare Images not configured" });
+    }
+
+    const response = await fetch(`${CLOUDFLARE_IMAGES_URL}/${imageId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${CLOUDFLARE_IMAGES_TOKEN}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete photo: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.errors?.[0]?.message || 'Failed to delete photo');
+    }
+
+    console.log(`Photo deleted successfully: ${imageId}`);
+
+    res.json({
+      message: "Photo deleted successfully",
+      imageId
+    });
+  } catch (error) {
+    console.error("Delete photo error:", error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Failed to delete photo"
     });
   }
 };
