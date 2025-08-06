@@ -124,7 +124,9 @@ export default function Journal() {
       otherTickets: entryData.otherTickets,
       petNotes: entryData.petNotes,
       content: entryData.content,
-      photos: entryData.photos.map(() => "/placeholder.svg"), // In a real app, you'd upload these
+      photos: entryData.photos.map((photo: any) =>
+        photo.cloudflareUrl || photo.preview || "/placeholder.svg"
+      ),
       tags: entryData.tags
     };
 
