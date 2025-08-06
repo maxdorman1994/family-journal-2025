@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { uploadPhoto, uploadPhotoMiddleware, getPlaceholderPhoto, listPhotos } from "./routes/photos";
 
 export function createServer() {
   const app = express();
@@ -18,6 +19,11 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Photo upload routes
+  app.post("/api/photos/upload", uploadPhotoMiddleware, uploadPhoto);
+  app.get("/api/photos/placeholder/:photoId", getPlaceholderPhoto);
+  app.get("/api/photos", listPhotos);
 
   return app;
 }
