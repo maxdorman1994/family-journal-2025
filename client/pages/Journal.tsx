@@ -37,6 +37,11 @@ export default function Journal() {
       milesTraveled: 45,
       parking: "£5",
       dogFriendly: true,
+      paidActivity: false,
+      adultTickets: "",
+      childTickets: "",
+      otherTickets: "",
+      petNotes: "Dogs welcome on beach and walking paths, water bowls available at visitor center",
       content: "A perfect family day by the beautiful Loch Lomond. We found the most amazing spot for our picnic with stunning views across the water. The kids (and Bonnie) had so much fun skipping stones and exploring the shoreline...",
       photos: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
       tags: ["Lake", "Family", "Relaxing", "Nature", "Picnic"]
