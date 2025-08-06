@@ -21,7 +21,7 @@ const weatherOptions = [
   { value: "🌧️ Light Rain", label: "🌧️ Light Rain" },
   { value: "🌦️ Showers", label: "🌦️ Showers" },
   { value: "❄️ Snow", label: "❄️ Snow" },
-  { value: "🌫️ Foggy", label: "🌫️ Foggy" },
+  { value: "��️ Foggy", label: "🌫️ Foggy" },
   { value: "💨 Windy", label: "💨 Windy" }
 ];
 
@@ -52,6 +52,11 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
     milesTraveled: "",
     parking: "",
     dogFriendly: false,
+    paidActivity: false,
+    adultTickets: "",
+    childTickets: "",
+    otherTickets: "",
+    petNotes: "",
     content: "",
     tags: [] as string[],
     photos: [] as File[]
