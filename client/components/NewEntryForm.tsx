@@ -123,6 +123,10 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
     e.preventDefault();
     if (validateForm()) {
       onSubmit(formData);
+
+      // Clean up photo preview URLs
+      cleanupPreviewUrls(formData.photos);
+
       // Reset form
       setFormData({
         title: "",
