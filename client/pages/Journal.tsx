@@ -138,35 +138,61 @@ export default function Journal() {
     return matchesSearch && matchesTag;
   });
 
-  const handleNewEntry = (entryData: any) => {
-    const newEntry = {
-      id: entries.length + 1,
-      title: entryData.title,
-      date: new Date(entryData.date).toLocaleDateString('en-GB', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      }),
-      location: entryData.location,
-      weather: entryData.weather,
-      mood: entryData.mood,
-      milesTraveled: parseInt(entryData.milesTraveled) || 0,
-      parking: entryData.parking || "Not specified",
-      dogFriendly: entryData.dogFriendly,
-      paidActivity: entryData.paidActivity,
-      adultTickets: entryData.adultTickets,
-      childTickets: entryData.childTickets,
-      otherTickets: entryData.otherTickets,
-      petNotes: entryData.petNotes,
-      content: entryData.content,
-      photos: entryData.photos.map((photo: any) =>
-        photo.cloudflareUrl || photo.preview || "/placeholder.svg"
-      ),
-      tags: entryData.tags
-    };
+  const handleNewEntry = async (entryData: any) => {
+    try {
+      setIsLoading(true);
 
-    setEntries(prev => [newEntry, ...prev]);
+      // Prepare entry data for Supabase
+      const supabaseEntryData = {
+        title: entryData.title,
+        content: entryData.content,
+        date: entryData.date,
+        location: entryData.location,
+        weather: entryData.weather,
+        mood: entryData.mood,
+        miles_traveled: parseInt(entryData.milesTraveled) || 0,
+        parking: entryData.parking || "Not specified",
+        dog_friendly: entryData.dogFriendly,
+        paid_activity: entryData.paidActivity,
+        adult_tickets: entryData.adultTickets,
+        child_tickets: entryData.childTickets,
+        other_tickets: entryData.otherTickets,
+        pet_notes: entryData.petNotes,
+        tags: entryData.tags,
+        photos: entryData.photos.map((photo: ProcessedPhoto) =>
+          photo.cloudflareUrl || photo.preview || "/placeholder.svg"
+        )
+      };
+
+      // Try to save to Supabase first
+      try {
+        const savedEntry = await createJournalEntry(supabaseEntryData);
+        setEntries(prev => [savedEntry, ...prev]);
+      } catch (supabaseError) {
+        console.warn('Failed to save to Supabase, saving locally:', supabaseError);
+
+        // Fallback to local storage
+        const localEntry = {
+          id: `local-${Date.now()}`,
+          ...supabaseEntryData,
+          date: new Date(entryData.date).toLocaleDateString('en-GB', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          }),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        setEntries(prev => [localEntry, ...prev]);
+      }
+    } catch (error) {
+      console.error('Failed to create journal entry:', error);
+      setError('Failed to save entry');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const allTags = Array.from(new Set(entries.flatMap(entry => entry.tags)));
