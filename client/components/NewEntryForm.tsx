@@ -254,37 +254,99 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
                 Travel Details
               </CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Miles Traveled</label>
-                <Input
-                  type="number"
-                  value={formData.milesTraveled}
-                  onChange={(e) => handleInputChange("milesTraveled", e.target.value)}
-                  placeholder="e.g., 87"
-                />
+            <CardContent className="space-y-6">
+              {/* Basic Travel Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Miles Traveled</label>
+                  <Input
+                    type="number"
+                    value={formData.milesTraveled}
+                    onChange={(e) => handleInputChange("milesTraveled", e.target.value)}
+                    placeholder="e.g., 87"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Parking</label>
+                  <Input
+                    value={formData.parking}
+                    onChange={(e) => handleInputChange("parking", e.target.value)}
+                    placeholder="e.g., Free or £5"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Parking</label>
-                <Input
-                  value={formData.parking}
-                  onChange={(e) => handleInputChange("parking", e.target.value)}
-                  placeholder="e.g., Free or £5"
-                />
+
+              {/* Paid Activity Section */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="paidActivity"
+                    checked={formData.paidActivity}
+                    onCheckedChange={(checked) => handleInputChange("paidActivity", checked)}
+                  />
+                  <label htmlFor="paidActivity" className="text-sm font-medium flex items-center">
+                    <Ticket className="mr-1 h-4 w-4 text-vibrant-blue" />
+                    Paid Activity
+                  </label>
+                </div>
+
+                {formData.paidActivity && (
+                  <div className="ml-6 grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-white/50 rounded-lg border border-scotland-thistle/20">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Adult Tickets</label>
+                      <Input
+                        value={formData.adultTickets}
+                        onChange={(e) => handleInputChange("adultTickets", e.target.value)}
+                        placeholder="e.g., £12 each or 2 × £12"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Child Tickets</label>
+                      <Input
+                        value={formData.childTickets}
+                        onChange={(e) => handleInputChange("childTickets", e.target.value)}
+                        placeholder="e.g., £6 each or 1 × £6"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Other Tickets</label>
+                      <Input
+                        value={formData.otherTickets}
+                        onChange={(e) => handleInputChange("otherTickets", e.target.value)}
+                        placeholder="e.g., Senior £8 or Family £30"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Dog Friendly</label>
-                <div className="flex items-center space-x-2 mt-3">
+
+              {/* Pet-Friendly Section */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
                   <Checkbox
                     id="dogFriendly"
                     checked={formData.dogFriendly}
                     onCheckedChange={(checked) => handleInputChange("dogFriendly", checked)}
                   />
-                  <label htmlFor="dogFriendly" className="text-sm flex items-center">
+                  <label htmlFor="dogFriendly" className="text-sm font-medium flex items-center">
                     <Dog className="mr-1 h-4 w-4 text-vibrant-pink" />
                     Pet-friendly location
                   </label>
                 </div>
+
+                {formData.dogFriendly && (
+                  <div className="ml-6">
+                    <label className="block text-sm font-medium mb-2">Pet Notes & Requirements</label>
+                    <Input
+                      value={formData.petNotes}
+                      onChange={(e) => handleInputChange("petNotes", e.target.value)}
+                      placeholder="e.g., Dogs must be kept on leads, £2 dog entry fee, water bowls available"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Note any special requirements, restrictions, or facilities for pets
+                    </p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
