@@ -79,7 +79,7 @@ export default function Journal() {
     }
   ];
 
-  const filteredEntries = journalEntries.filter(entry => {
+  const filteredEntries = entries.filter(entry => {
     const matchesSearch = entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          entry.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          entry.content.toLowerCase().includes(searchTerm.toLowerCase());
