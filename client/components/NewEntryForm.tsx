@@ -61,7 +61,7 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
     petNotes: "",
     content: "",
     tags: [] as string[],
-    photos: [] as File[]
+    photos: [] as ProcessedPhoto[]
   });
 
   const [customTag, setCustomTag] = useState("");
