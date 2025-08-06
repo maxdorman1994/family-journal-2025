@@ -29,18 +29,26 @@ export interface CreateJournalEntryData {
  * Create a new journal entry in Supabase
  */
 export async function createJournalEntry(data: CreateJournalEntryData): Promise<JournalEntry> {
-  const { data: entry, error } = await supabase
-    .from('journal_entries')
-    .insert([data])
-    .select()
-    .single();
+  try {
+    const { data: entry, error } = await supabase
+      .from('journal_entries')
+      .insert([data])
+      .select()
+      .single();
 
-  if (error) {
-    console.error('Error creating journal entry:', error);
-    throw new Error(`Failed to create journal entry: ${error.message}`);
+    if (error) {
+      console.error('Supabase error creating journal entry:', error);
+      throw new Error(`Supabase error: ${error.message || error.details || 'Unknown database error'}`);
+    }
+
+    return entry;
+  } catch (error) {
+    console.error('Error in createJournalEntry:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to create journal entry: ${String(error)}`);
   }
-
-  return entry;
 }
 
 /**
