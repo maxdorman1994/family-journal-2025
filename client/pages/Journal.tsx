@@ -100,9 +100,17 @@ export default function Journal() {
       setError(null);
       const supabaseEntries = await getJournalEntries();
       setEntries(supabaseEntries);
+      console.log('✅ Loaded journal entries from Supabase:', supabaseEntries.length);
     } catch (error) {
-      console.warn('Failed to load from Supabase, using local data:', error);
-      setError('Using local data - Supabase not configured');
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn('Failed to load from Supabase, using local data:', errorMessage);
+
+      if (errorMessage.includes('not configured')) {
+        setError('📝 Development Mode: Using local data (Supabase not configured)');
+      } else {
+        setError(`⚠️ Database Error: ${errorMessage}. Using local data.`);
+      }
+
       setEntries(journalEntriesData);
     } finally {
       setIsLoading(false);
