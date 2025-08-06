@@ -54,91 +54,92 @@ export function validateCloudflareImagesConfig(): ValidationResult {
 }
 
 /**
- * Get R2 configuration status for debugging
+ * Get Cloudflare Images configuration status for debugging
  */
-export function getR2Status(): {
+export function getImagesStatus(): {
   configured: boolean;
   message: string;
   helpUrl: string;
 } {
-  const validation = validateR2Config();
+  const validation = validateCloudflareImagesConfig();
 
   if (validation.valid) {
     return {
       configured: true,
-      message: `R2 configured successfully. Bucket: ${validation.config!.bucketName}`,
-      helpUrl: '/docs/cloudflare-r2-setup.md'
+      message: `Cloudflare Images configured successfully. Account: ${validation.config!.accountId}`,
+      helpUrl: '/docs/setup-guide.md'
     };
   }
 
   if (validation.errors.length > 0) {
     return {
       configured: false,
-      message: `R2 configuration errors: ${validation.errors.join(', ')}`,
-      helpUrl: '/docs/cloudflare-r2-setup.md'
+      message: `Cloudflare Images configuration errors: ${validation.errors.join(', ')}`,
+      helpUrl: '/docs/setup-guide.md'
     };
   }
 
   return {
     configured: false,
-    message: 'R2 not configured - photos will use local placeholders',
-    helpUrl: '/docs/cloudflare-r2-setup.md'
+    message: 'Cloudflare Images not configured - photos will use local placeholders',
+    helpUrl: '/docs/setup-guide.md'
   };
 }
 
 /**
- * Log R2 configuration status on server start
+ * Log Cloudflare Images configuration status on server start
  */
-export function logR2Status(): void {
-  const validation = validateR2Config();
-  
+export function logImagesStatus(): void {
+  const validation = validateCloudflareImagesConfig();
+
   console.log('\n📸 Photo Storage Configuration:');
   console.log('================================');
-  
+
   if (validation.valid) {
-    console.log('✅ Cloudflare R2 configured successfully');
-    console.log(`📦 Bucket: ${validation.config!.bucketName}`);
-    console.log(`🌐 Endpoint: ${validation.config!.endpoint}`);
-    if (validation.config!.publicUrl) {
-      console.log(`🔗 Public URL: ${validation.config!.publicUrl}`);
-    }
-    
+    console.log('✅ Cloudflare Images configured successfully');
+    console.log(`🏢 Account: ${validation.config!.accountId}`);
+    console.log('🌐 Global CDN with automatic optimization enabled');
+    console.log('📱 HEIC support with automatic conversion');
+
     if (validation.warnings.length > 0) {
       console.log('\n⚠️  Warnings:');
       validation.warnings.forEach(warning => console.log(`   ${warning}`));
     }
   } else {
-    console.log('❌ Cloudflare R2 not configured');
+    console.log('❌ Cloudflare Images not configured');
     console.log('📝 Photos will use local placeholders');
     console.log('\n🔧 Configuration errors:');
     validation.errors.forEach(error => console.log(`   • ${error}`));
-    console.log('\n📖 Setup guide: docs/cloudflare-r2-setup.md');
-    console.log('🛠️  Quick setup: npm run setup:r2');
+    console.log('\n📖 Setup guide: docs/setup-guide.md');
+    console.log('🛠️  Environment variables needed:');
+    console.log('   CLOUDFLARE_ACCOUNT_ID=your-account-id');
+    console.log('   CLOUDFLARE_IMAGES_TOKEN=your-images-token');
   }
   console.log('================================\n');
 }
+
+// Keep old function names for compatibility
+export const logR2Status = logImagesStatus;
+export const getR2Status = getImagesStatus;
 
 /**
  * Generate example environment variables
  */
 export function generateExampleEnv(): string {
   return `
-# Cloudflare R2 Photo Storage Configuration
+# Cloudflare Images Photo Storage Configuration
 # Get these values from your Cloudflare dashboard
 
-# Required: Your R2 endpoint (replace with your account ID)
-CLOUDFLARE_R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
+# Required: Your Cloudflare Account ID
+CLOUDFLARE_ACCOUNT_ID=your-account-id
 
-# Required: R2 API credentials
-CLOUDFLARE_R2_ACCESS_KEY_ID=your-access-key-id
-CLOUDFLARE_R2_SECRET_ACCESS_KEY=your-secret-access-key
+# Required: Cloudflare Images API token
+CLOUDFLARE_IMAGES_TOKEN=your-images-token
 
-# Required: Bucket name
-CLOUDFLARE_R2_BUCKET_NAME=wee-adventure-photos
+# Supabase Configuration (for database)
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
 
-# Optional: Custom domain for photos
-CLOUDFLARE_R2_PUBLIC_URL=https://photos.your-domain.com
-
-# Setup Guide: docs/cloudflare-r2-setup.md
+# Setup Guide: docs/setup-guide.md
 `.trim();
 }
