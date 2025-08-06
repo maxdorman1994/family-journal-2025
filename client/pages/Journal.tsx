@@ -154,7 +154,7 @@ export default function Journal() {
               <Calendar className="mr-1 h-4 w-4" />
               📅 Newest First
             </div>
-            <Button variant="outline" size="sm" onClick={() => { setSearchTerm(""); setSelectedTag(""); }}>
+            <Button variant="outline" size="sm" onClick={() => { setSearchTerm(""); setSelectedTag("all"); }}>
               Clear Filters
             </Button>
           </div>
