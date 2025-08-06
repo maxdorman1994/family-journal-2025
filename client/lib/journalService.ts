@@ -47,17 +47,25 @@ export async function createJournalEntry(data: CreateJournalEntryData): Promise<
  * Get all journal entries, ordered by date (newest first)
  */
 export async function getJournalEntries(): Promise<JournalEntry[]> {
-  const { data: entries, error } = await supabase
-    .from('journal_entries')
-    .select('*')
-    .order('date', { ascending: false });
+  try {
+    const { data: entries, error } = await supabase
+      .from('journal_entries')
+      .select('*')
+      .order('date', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching journal entries:', error);
-    throw new Error(`Failed to fetch journal entries: ${error.message}`);
+    if (error) {
+      console.error('Supabase error fetching journal entries:', error);
+      throw new Error(`Supabase error: ${error.message || error.details || 'Unknown database error'}`);
+    }
+
+    return entries || [];
+  } catch (error) {
+    console.error('Error in getJournalEntries:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to fetch journal entries: ${String(error)}`);
   }
-
-  return entries || [];
 }
 
 /**
