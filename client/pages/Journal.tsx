@@ -34,7 +34,7 @@ export default function Journal() {
       date: "Sunday 28 July 2025",
       location: "Balloch, West Dunbartonshire",
       weather: "⛅ Partly Cloudy",
-      mood: "�� Peaceful",
+      mood: "😌 Peaceful",
       milesTraveled: 45,
       parking: "£5",
       dogFriendly: true,
@@ -87,7 +87,31 @@ export default function Journal() {
     return matchesSearch && matchesTag;
   });
 
-  const allTags = Array.from(new Set(journalEntries.flatMap(entry => entry.tags)));
+  const handleNewEntry = (entryData: any) => {
+    const newEntry = {
+      id: entries.length + 1,
+      title: entryData.title,
+      date: new Date(entryData.date).toLocaleDateString('en-GB', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }),
+      location: entryData.location,
+      weather: entryData.weather,
+      mood: entryData.mood,
+      milesTraveled: parseInt(entryData.milesTraveled) || 0,
+      parking: entryData.parking || "Not specified",
+      dogFriendly: entryData.dogFriendly,
+      content: entryData.content,
+      photos: entryData.photos.map(() => "/placeholder.svg"), // In a real app, you'd upload these
+      tags: entryData.tags
+    };
+
+    setEntries(prev => [newEntry, ...prev]);
+  };
+
+  const allTags = Array.from(new Set(entries.flatMap(entry => entry.tags)));
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
