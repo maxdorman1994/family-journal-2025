@@ -55,6 +55,10 @@ export async function createJournalEntry(data: CreateJournalEntryData): Promise<
  * Get all journal entries, ordered by date (newest first)
  */
 export async function getJournalEntries(): Promise<JournalEntry[]> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+  }
+
   try {
     const { data: entries, error } = await supabase
       .from('journal_entries')
