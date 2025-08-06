@@ -354,49 +354,15 @@ export default function NewEntryForm({ isOpen, onClose, onSubmit }: NewEntryForm
             <CardHeader>
               <CardTitle className="text-lg flex items-center">
                 <Camera className="mr-2 h-5 w-5 text-vibrant-blue" />
-                Photos ({formData.photos.length}/8)
+                Adventure Photos ({formData.photos.length}/8)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                {formData.photos.map((photo, index) => (
-                  <div key={index} className="relative group">
-                    <img
-                      src={URL.createObjectURL(photo)}
-                      alt={`Upload ${index + 1}`}
-                      className="w-full aspect-square object-cover rounded-lg"
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => removePhoto(index)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
-                
-                {formData.photos.length < 8 && (
-                  <label className="flex flex-col items-center justify-center w-full aspect-square border-2 border-dashed border-scotland-thistle/50 rounded-lg cursor-pointer hover:border-vibrant-blue transition-colors">
-                    <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                    <span className="text-sm text-muted-foreground text-center">
-                      Add Photo
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handlePhotoUpload}
-                      className="hidden"
-                    />
-                  </label>
-                )}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Upload up to 8 photos. Supports iPhone photos and all common formats.
-              </p>
+              <PhotoUpload
+                photos={formData.photos}
+                onPhotosChange={handlePhotosChange}
+                maxPhotos={8}
+              />
             </CardContent>
           </Card>
 
