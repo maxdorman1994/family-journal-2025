@@ -864,7 +864,7 @@ export default function Home() {
                 </div>
 
                 {/* Photo - Right Side */}
-                <div className="relative group w-48 h-48 flex-shrink-0">
+                <div className="relative group w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 flex-shrink-0">
                   <div className="w-full h-full rounded-xl overflow-hidden border-4 bg-gradient-to-r from-amber-500 to-orange-600 p-1 shadow-xl">
                     <div className="w-full h-full rounded-lg overflow-hidden bg-white">
                       <img
