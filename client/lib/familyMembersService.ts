@@ -298,6 +298,51 @@ export function subscribeToFamilyMembers(
 }
 
 /**
+ * Debug function to list available tables
+ */
+export async function debugAvailableTables(): Promise<string[]> {
+  if (!isSupabaseConfigured()) {
+    return [];
+  }
+
+  try {
+    // Try to query the information schema to see what tables exist
+    const { data, error } = await supabase.rpc('get_table_list');
+
+    if (error) {
+      console.log('📋 Could not get table list via RPC, trying manual check...');
+
+      // Manually test common table names
+      const testTables = ['family_members', 'family_members_with_stats', 'journal_entries', 'wishlist_items'];
+      const existingTables = [];
+
+      for (const tableName of testTables) {
+        try {
+          const { error: testError } = await supabase
+            .from(tableName)
+            .select('*', { count: 'exact', head: true });
+
+          if (!testError) {
+            existingTables.push(tableName);
+          } else {
+            console.log(`❌ Table ${tableName} not accessible:`, testError.message);
+          }
+        } catch (e) {
+          console.log(`❌ Table ${tableName} test failed:`, e);
+        }
+      }
+
+      return existingTables;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error debugging tables:', error);
+    return [];
+  }
+}
+
+/**
  * Test Supabase connection for family members data
  */
 export async function testFamilyMembersConnection(): Promise<{
