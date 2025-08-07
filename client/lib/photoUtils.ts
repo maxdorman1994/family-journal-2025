@@ -105,24 +105,44 @@ export async function convertHeicToJpeg(file: File): Promise<File> {
  * Compress an image file
  */
 export async function compressImage(
-  file: File, 
+  file: File,
   options: Partial<CompressionOptions> = {}
 ): Promise<File> {
   const compressionOptions = { ...defaultCompressionOptions, ...options };
-  
+
   try {
+    console.log(`Starting compression for: ${file.name} (${file.type})`);
+
     const compressedFile = await imageCompression(file, compressionOptions);
-    
+
     // Create a new file with a compressed suffix for clarity
     const newName = file.name.replace(/(\.[^.]+)$/, '_compressed$1');
-    
-    return new File([compressedFile], newName, {
+
+    const result = new File([compressedFile], newName, {
       type: compressedFile.type,
       lastModified: Date.now()
     });
+
+    console.log(`Compression successful: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) -> ${result.name} (${(result.size / 1024 / 1024).toFixed(2)}MB)`);
+    return result;
   } catch (error) {
-    console.error('Image compression failed:', error);
-    throw new Error(`Failed to compress image: ${file.name}`);
+    console.error('Image compression failed for:', file.name);
+    console.error('Compression error details:', error);
+
+    // Extract meaningful error information
+    let errorMessage = 'Unknown compression error';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (error instanceof Event) {
+      errorMessage = 'Browser event error during compression';
+    } else if (typeof error === 'object' && error !== null) {
+      errorMessage = JSON.stringify(error);
+    } else {
+      errorMessage = String(error);
+    }
+
+    console.error('Detailed compression error:', errorMessage);
+    throw new Error(`Failed to compress image: ${file.name}. Error: ${errorMessage}`);
   }
 }
 
