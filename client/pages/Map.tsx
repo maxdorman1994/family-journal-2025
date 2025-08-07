@@ -112,22 +112,27 @@ export default function MapPage() {
     setIsDialogOpen(true);
   }, []);
 
-  const handleAddPin = () => {
+  const handleAddPin = async () => {
     if (!selectedLocation || !newPin.title.trim()) return;
 
-    const pin: MapPin = {
-      id: Date.now().toString(),
-      latitude: selectedLocation.latitude,
-      longitude: selectedLocation.longitude,
-      title: newPin.title,
-      description: newPin.description,
-      category: newPin.category,
-      date: newPin.date,
-    };
+    try {
+      console.log("🗺️ Adding new pin:", newPin.title);
+      await addMapPin({
+        latitude: selectedLocation.latitude,
+        longitude: selectedLocation.longitude,
+        title: newPin.title,
+        description: newPin.description,
+        category: newPin.category,
+        date: newPin.date,
+      });
 
-    setPins([...pins, pin]);
-    setIsDialogOpen(false);
-    setSelectedLocation(null);
+      setIsDialogOpen(false);
+      setSelectedLocation(null);
+      console.log("✅ Pin added successfully and will sync across devices");
+    } catch (error) {
+      console.error("❌ Error adding pin:", error);
+      // You could add a toast notification here
+    }
   };
 
   const handleEditPin = (pin: MapPin) => {
