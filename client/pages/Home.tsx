@@ -829,7 +829,7 @@ export default function Home() {
       {/* Adventure Milestones */}
       <section className="mb-16">
         <div className="max-w-4xl mx-auto">
-          {/* Milestone Achievement Banner */}
+          {/* Dynamic Milestone Achievement Banner */}
           <div
             className="bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-2xl border-2 border-emerald-200/60 p-6 mb-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
             onClick={() => window.location.href = '/milestones'}
@@ -839,12 +839,27 @@ export default function Home() {
                 <Calendar className="w-6 h-6 text-white" />
               </div>
               <div className="text-center">
-                <h3 className="text-xl font-bold text-emerald-800 mb-1">
-                  Adventure Milestone: First Month of Scottish Exploration Complete!
-                </h3>
-                <p className="text-sm text-emerald-600">
-                  🎉 Congratulations on beginning your Scottish adventure journey! Click to view all milestones →
-                </p>
+                {milestonesLoading ? (
+                  <div className="space-y-2">
+                    <div className="h-6 bg-gray-300 animate-pulse rounded mx-auto w-80"></div>
+                    <div className="h-4 bg-gray-300 animate-pulse rounded mx-auto w-60"></div>
+                  </div>
+                ) : (
+                  <>
+                    <h3 className="text-xl font-bold text-emerald-800 mb-1">
+                      {milestoneStats.completed_count > 0
+                        ? `🏆 ${milestoneStats.completed_count} Milestones Completed • ${milestoneStats.total_xp} XP Earned!`
+                        : "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Start Your Scottish Adventure Journey!"
+                      }
+                    </h3>
+                    <p className="text-sm text-emerald-600">
+                      {milestoneStats.completed_count > 0
+                        ? `🎉 Amazing progress! ${Math.round(milestoneStats.completion_percentage)}% complete • Click to view all milestones →`
+                        : "🌟 Begin exploring Scotland and unlock exciting milestones along the way • Click to view all achievements →"
+                      }
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>
