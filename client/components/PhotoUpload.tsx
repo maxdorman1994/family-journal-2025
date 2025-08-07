@@ -335,8 +335,8 @@ export default function PhotoUpload({
 
       {/* Help text */}
       <p className="text-xs text-muted-foreground mt-2">
-        📷 Photos will be automatically compressed for optimal upload speed.
-        Max {maxPhotos} photos, up to 10MB each. Drag & drop or click to upload.
+        📷 Photos are intelligently compressed for faster uploads while maintaining quality.
+        Max {maxPhotos} photos, up to 15MB each. Larger photos are compressed more aggressively.
       </p>
     </div>
   );
