@@ -624,7 +624,6 @@ export default function MunroBagging() {
         {filteredMunros.length === 0 && (
           <div className="text-center py-20">
             <div className="bg-gradient-to-br from-slate-100 to-blue-100 rounded-3xl p-12 border-2 border-slate-200 max-w-md mx-auto">
-              <div className="text-6xl mb-6">🔍</div>
               <h3 className="text-2xl font-bold text-slate-800 mb-4">No Munros Found</h3>
               <p className="text-slate-600 mb-6">Try adjusting your search filters</p>
               <Button
