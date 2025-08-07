@@ -66,12 +66,22 @@ export default function Layout({ children }: LayoutProps) {
     return unsubscribeSettings;
   }, [initializeSync]);
 
-  // Save logo URL to localStorage whenever it changes
-  const updateLogoUrl = (newUrl: string) => {
+  // Save logo URL and sync across devices
+  const updateLogoUrlLocal = async (newUrl: string) => {
     setLogoUrl(newUrl);
-    if (newUrl !== "/placeholder.svg") {
-      localStorage.setItem("family_logo_url", newUrl);
-      console.log("💾 Logo URL saved to localStorage:", newUrl);
+
+    // Sync logo URL to database for cross-device sync
+    try {
+      await updateLogoUrl(newUrl);
+      console.log("💾 Logo URL synced across all devices:", newUrl);
+    } catch (error) {
+      console.error("Failed to sync logo URL:", error);
+      // Fallback to localStorage only
+      if (newUrl !== "/placeholder.svg") {
+        localStorage.setItem("family_logo_url", newUrl);
+      } else {
+        localStorage.removeItem("family_logo_url");
+      }
     }
   };
 
