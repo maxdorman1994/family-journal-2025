@@ -929,7 +929,8 @@ export default function Home() {
           {familyMembers
             .filter(
               (member) =>
-                (member.name === "John Dorman" || member.name === "Rachel Dorman") &&
+                (member.name === "John Dorman" ||
+                  member.name === "Rachel Dorman") &&
                 member.position_index > 4 &&
                 member.name !== "Charlie" &&
                 member.name !== "Fern",
@@ -1003,7 +1004,11 @@ export default function Home() {
           {familyMembers
             .filter(
               (member) =>
-                (member.name === "Lewis" || member.name === "Zara" || member.name === "Kira" || member.name === "Frankie" || member.name === "Iris") &&
+                (member.name === "Lewis" ||
+                  member.name === "Zara" ||
+                  member.name === "Kira" ||
+                  member.name === "Frankie" ||
+                  member.name === "Iris") &&
                 member.position_index > 4 &&
                 member.name !== "Charlie" &&
                 member.name !== "Fern",
