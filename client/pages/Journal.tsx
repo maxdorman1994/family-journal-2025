@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Filter, Plus, BookOpen, MapPin, Heart, Calendar, Route, Car, Dog, Edit, Trash2, Printer, Ticket, Loader2, AlertCircle, Eye, MoreHorizontal } from "lucide-react";
+import { Search, Filter, Plus, BookOpen, MapPin, Heart, Calendar, Route, Car, Dog, Edit, Trash2, Printer, Ticket, Loader2, AlertCircle, Eye, MoreHorizontal, Camera, Star, Compass, Mountain, Trees, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -120,27 +120,6 @@ export default function Journal() {
     }
   };
 
-  const stats = [
-    {
-      icon: BookOpen,
-      count: 6,
-      label: "Journal Entries",
-      gradient: "from-vibrant-blue to-scotland-loch"
-    },
-    {
-      icon: MapPin,
-      count: 6,
-      label: "Places Visited",
-      gradient: "from-scotland-forest to-vibrant-teal"
-    },
-    {
-      icon: Heart,
-      count: 19,
-      label: "Memory Tags",
-      gradient: "from-vibrant-pink to-scotland-heather"
-    }
-  ];
-
   const filteredEntries = entries.filter(entry => {
     const matchesSearch = entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          entry.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -156,10 +135,10 @@ export default function Journal() {
 
       // First, upload all photos to Cloudflare Images
       const uploadedPhotoUrls: string[] = [];
-
+      
       if (entryData.photos && entryData.photos.length > 0) {
         console.log(`Uploading ${entryData.photos.length} photos to Cloudflare Images...`);
-
+        
         for (const photo of entryData.photos) {
           try {
             // Only upload if not already uploaded
@@ -248,314 +227,458 @@ export default function Journal() {
     setSelectedEntry(null);
   };
 
+  // Fun statistics with animations
+  const stats = [
+    {
+      icon: Mountain,
+      count: entries.length,
+      label: "Epic Adventures",
+      gradient: "from-emerald-500 via-teal-500 to-cyan-500",
+      bgPattern: "🏔️",
+      description: "Mountains conquered"
+    },
+    {
+      icon: Compass,
+      count: new Set(entries.map(e => e.location)).size,
+      label: "Places Discovered",
+      gradient: "from-amber-500 via-orange-500 to-red-500", 
+      bgPattern: "🧭",
+      description: "Unique locations"
+    },
+    {
+      icon: Camera,
+      count: entries.reduce((acc, entry) => acc + (entry.photos?.length || 0), 0),
+      label: "Memories Captured",
+      gradient: "from-purple-500 via-pink-500 to-rose-500",
+      bgPattern: "📸",
+      description: "Photos taken"
+    },
+    {
+      icon: Star,
+      count: allTags.length,
+      label: "Story Tags",
+      gradient: "from-indigo-500 via-blue-500 to-cyan-500",
+      bgPattern: "⭐",
+      description: "Adventure themes"
+    }
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Page Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          <span className="bg-gradient-to-r from-vibrant-blue via-scotland-loch to-vibrant-teal bg-clip-text text-transparent">
-            Our Scottish Journey
-          </span>
-        </h1>
-        <p className="text-xl text-muted-foreground mb-4">
-          Capturing memories, one adventure at a time
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 text-6xl opacity-5 animate-bounce">🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
+        <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">🌄</div>
+        <div className="absolute bottom-20 left-20 text-5xl opacity-5 animate-bounce" style={{animationDelay: '1s'}}>⛰️</div>
+        <div className="absolute top-60 left-1/3 text-3xl opacity-10 animate-pulse" style={{animationDelay: '2s'}}>🍀</div>
+        <div className="absolute bottom-40 right-10 text-4xl opacity-5 animate-bounce" style={{animationDelay: '1.5s'}}>🦌</div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+        {/* Hero Header */}
+        <div className="text-center mb-16 relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 via-pink-400/20 to-blue-400/20 rounded-full blur-3xl transform -rotate-6"></div>
+          <div className="relative">
+            <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border-2 border-purple-200/50 shadow-lg">
+              <Sparkles className="h-6 w-6 text-purple-500 animate-pulse" />
+              <span className="text-sm font-medium text-purple-700">Scottish Family Adventures</span>
+              <Sparkles className="h-6 w-6 text-purple-500 animate-pulse" style={{animationDelay: '0.5s'}} />
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 relative">
+              <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
+                Our Wee Adventures
+              </span>
+              <div className="absolute -top-4 -right-4 text-2xl animate-spin">🍀</div>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+              Capturing magical moments across the beautiful landscapes of Scotland 
+              <span className="inline-block ml-2 text-2xl animate-bounce">✨</span>
+            </p>
+
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 text-lg px-8 py-4 rounded-full"
+              onClick={() => setIsNewEntryFormOpen(true)}
+            >
+              <Plus className="mr-3 h-6 w-6" />
+              Start New Adventure
+              <Mountain className="ml-3 h-6 w-6" />
+            </Button>
+          </div>
+        </div>
 
         {/* Status Indicator */}
         {error && (
-          <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800 max-w-md mx-auto">
-            {error}
+          <div className="mb-8 max-w-md mx-auto">
+            <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4 text-amber-800 text-center">
+              <AlertCircle className="h-5 w-5 mx-auto mb-2" />
+              <p className="text-sm">{error}</p>
+            </div>
           </div>
         )}
 
         {isLoading && (
-          <div className="mb-6 flex items-center justify-center text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            Loading journal entries...
+          <div className="mb-8 flex items-center justify-center">
+            <div className="bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 border-2 border-blue-200 flex items-center gap-3">
+              <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
+              <span className="text-blue-700 font-medium">Loading adventures...</span>
+            </div>
           </div>
         )}
 
-        <Button
-          size="lg"
-          className="bg-gradient-to-r from-vibrant-blue to-scotland-loch hover:from-vibrant-blue/90 hover:to-scotland-loch/90"
-          onClick={() => setIsNewEntryFormOpen(true)}
-        >
-          <Plus className="mr-2 h-5 w-5" />
-          New Entry
-        </Button>
-      </div>
+        {/* Fun Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <Card key={index} className="group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-gradient-to-br from-white to-slate-50">
+                <CardContent className="p-6 relative">
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 opacity-5 text-6xl flex items-center justify-center font-bold">
+                    {stat.bgPattern}
+                  </div>
+                  
+                  {/* Gradient Background */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                  
+                  <div className="relative z-10">
+                    <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon className="h-8 w-8 text-white" />
+                    </div>
+                    
+                    <div className="text-4xl font-bold text-slate-800 mb-2 text-center group-hover:scale-110 transition-transform duration-300">
+                      {stat.count}
+                    </div>
+                    
+                    <div className="text-sm font-semibold text-slate-600 text-center mb-1">
+                      {stat.label}
+                    </div>
+                    
+                    <div className="text-xs text-slate-500 text-center">
+                      {stat.description}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {stats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm border-scotland-thistle/20">
-              <CardContent className="p-6">
-                <div className={`w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r ${stat.gradient} flex items-center justify-center`}>
-                  <Icon className="h-6 w-6 text-white" />
+        {/* Search and Filter Section */}
+        <Card className="mb-12 border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <CardContent className="p-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-3">
+                  🔍 Search Adventures
+                </label>
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                  <Input
+                    placeholder="Find your favorite memories..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-12 border-2 border-slate-200 focus:border-blue-400 rounded-xl text-lg py-3"
+                  />
                 </div>
-                <div className="text-3xl font-bold text-gray-800 mb-2">{stat.count}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Configuration Status */}
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-600">
-          {error ? (
-            <>
-              <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-              Local Mode
-            </>
-          ) : (
-            <>
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              Cloud Sync Active
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Search and Filter Section */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 mb-8 border border-scotland-thistle/20">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-          <div className="md:col-span-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Search entries..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-          <div>
-            <Select value={selectedTag} onValueChange={setSelectedTag}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by tag" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All tags</SelectItem>
-                {allTags.map(tag => (
-                  <SelectItem key={tag} value={tag}>{tag}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Calendar className="mr-1 h-4 w-4" />
-              📅 Newest First
-            </div>
-            <Button variant="outline" size="sm" onClick={() => { setSearchTerm(""); setSelectedTag("all"); }}>
-              Clear Filters
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Journal Entries Timeline */}
-      <div className="relative">
-        {/* Timeline Line */}
-        <div className="absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-vibrant-blue via-scotland-thistle to-vibrant-pink"></div>
-
-        <div className="space-y-8">
-          {filteredEntries.map((entry, index) => (
-            <div key={entry.id} className="relative">
-              {/* Timeline Dot */}
-              <div className="absolute left-6 w-4 h-4 bg-gradient-to-r from-vibrant-blue to-scotland-loch rounded-full border-4 border-white shadow-lg"></div>
-
-              {/* Entry Card */}
-              <div className="ml-20">
-                <Card
-                  className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-white/90 backdrop-blur-sm border-scotland-thistle/20"
-                  onMouseEnter={() => setHoveredEntry(entry.id)}
-                  onMouseLeave={() => setHoveredEntry(null)}
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-3">
+                  🏷️ Filter by Theme
+                </label>
+                <Select value={selectedTag} onValueChange={setSelectedTag}>
+                  <SelectTrigger className="border-2 border-slate-200 focus:border-blue-400 rounded-xl">
+                    <SelectValue placeholder="All adventures" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All adventures</SelectItem>
+                    {allTags.map(tag => (
+                      <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center text-sm text-slate-600">
+                  <Calendar className="mr-2 h-4 w-4 text-blue-500" />
+                  📅 Newest First
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => { setSearchTerm(""); setSelectedTag("all"); }}
+                  className="border-2 border-slate-200 hover:bg-slate-50 rounded-xl"
                 >
-                  <CardContent className="p-6">
-                    {/* Entry Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="text-2xl font-bold text-gray-800 mb-2">{entry.title}</h3>
-                        <p className="text-lg text-muted-foreground mb-1">{entry.date}</p>
-                        <p className="text-vibrant-blue font-medium flex items-center">
-                          <MapPin className="mr-1 h-4 w-4" />
-                          {entry.location}
-                        </p>
-                      </div>
-                      
-                      {/* Action Buttons (appear on hover) */}
-                      {hoveredEntry === entry.id && (
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline">
-                            <Printer className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Weather and Mood */}
-                    <div className="flex gap-4 mb-4">
-                      <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                        {entry.weather}
-                      </span>
-                      <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-                        {entry.mood}
-                      </span>
-                    </div>
-
-                    {/* Travel Info */}
-                    <div className="space-y-3 mb-4 p-4 bg-scotland-mist/30 rounded-lg">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Route className="mr-2 h-4 w-4 text-vibrant-blue" />
-                          <span className="font-medium">{entry.miles_traveled} miles traveled</span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Car className="mr-2 h-4 w-4 text-scotland-forest" />
-                          <span className="font-medium">Parking: {entry.parking}</span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Dog className="mr-2 h-4 w-4 text-vibrant-pink" />
-                          <span className="font-medium">
-                            {entry.dog_friendly ? "🐕 Dog friendly" : "❌ No dogs"}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Pet Notes */}
-                      {entry.dog_friendly && entry.pet_notes && (
-                        <div className="text-sm text-gray-600 italic border-l-2 border-vibrant-pink pl-3">
-                          <span className="font-medium">Pet info: </span>{entry.pet_notes}
-                        </div>
-                      )}
-
-                      {/* Ticket Information */}
-                      {entry.paid_activity && (entry.adult_tickets || entry.child_tickets || entry.other_tickets) && (
-                        <div className="text-sm text-gray-600 border-l-2 border-vibrant-blue pl-3">
-                          <span className="font-medium flex items-center mb-1">
-                            <Ticket className="mr-1 h-3 w-3" />
-                            Tickets:
-                          </span>
-                          <div className="space-y-1">
-                            {entry.adult_tickets && <div>Adults: {entry.adult_tickets}</div>}
-                            {entry.child_tickets && <div>Children: {entry.child_tickets}</div>}
-                            {entry.other_tickets && <div>Other: {entry.other_tickets}</div>}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Photos Grid - Show only first 3 photos */}
-                    {entry.photos && entry.photos.length > 0 && (
-                      <div className="mb-4">
-                        <div className="grid grid-cols-3 gap-3">
-                          {entry.photos.slice(0, 3).map((photo, photoIndex) => (
-                            <div key={photoIndex} className="aspect-square rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer">
-                              <img
-                                src={photo}
-                                alt={`Photo ${photoIndex + 1}`}
-                                className="w-full h-full object-cover"
-                                loading="lazy"
-                                onClick={() => handleEntryClick(entry)}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                        {entry.photos.length > 3 && (
-                          <div className="mt-3 text-center">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleEntryClick(entry)}
-                              className="text-vibrant-blue border-vibrant-blue hover:bg-vibrant-blue hover:text-white"
-                            >
-                              <Eye className="h-4 w-4 mr-1" />
-                              View all {entry.photos.length} photos
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {entry.tags.map((tag, tagIndex) => (
-                        <span
-                          key={tagIndex}
-                          className="px-2 py-1 bg-scotland-thistle/20 text-scotland-thistle text-sm rounded-full"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Content Preview - Show first 200 characters */}
-                    <div className="mb-4">
-                      <p className="text-gray-700 leading-relaxed">
-                        {entry.content.length > 200
-                          ? `${entry.content.substring(0, 200)}...`
-                          : entry.content
-                        }
-                      </p>
-                      {entry.content.length > 200 && (
-                        <Button
-                          variant="link"
-                          className="p-0 h-auto text-vibrant-blue"
-                          onClick={() => handleEntryClick(entry)}
-                        >
-                          Read more
-                        </Button>
-                      )}
-                    </div>
-
-                    {/* View More Button */}
-                    <div className="text-center pt-4 border-t border-scotland-thistle/20">
-                      <Button
-                        variant="outline"
-                        className="w-full border-scotland-thistle/30 hover:bg-scotland-thistle/10"
-                        onClick={() => handleEntryClick(entry)}
-                      >
-                        <MoreHorizontal className="h-4 w-4 mr-2" />
-                        See Full Entry
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                  Clear All
+                </Button>
               </div>
             </div>
-          ))}
+          </CardContent>
+        </Card>
+
+        {/* Adventure Timeline */}
+        <div className="relative">
+          {/* Magical Timeline Line */}
+          <div className="absolute left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-400 via-blue-400 via-purple-400 to-pink-400 rounded-full shadow-lg"></div>
+          
+          {/* Timeline Sparkles */}
+          <div className="absolute left-10 top-20 w-5 h-5 bg-yellow-400 rounded-full animate-ping"></div>
+          <div className="absolute left-10 top-96 w-3 h-3 bg-blue-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute left-10 bottom-40 w-4 h-4 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '2s'}}></div>
+
+          <div className="space-y-12">
+            {filteredEntries.map((entry, index) => (
+              <div key={entry.id} className="relative group">
+                {/* Timeline Dot */}
+                <div className="absolute left-8 w-8 h-8 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-full border-4 border-white shadow-xl flex items-center justify-center group-hover:scale-125 transition-transform duration-300">
+                  <Sparkles className="h-4 w-4 text-white" />
+                </div>
+
+                {/* Entry Card */}
+                <div className="ml-24">
+                  <Card className="group/card hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] bg-white/95 backdrop-blur-sm border-0 shadow-xl overflow-hidden">
+                    <CardContent className="p-0">
+                      {/* Header with gradient background */}
+                      <div className="bg-gradient-to-r from-slate-50 to-blue-50 p-6 border-b-2 border-slate-100">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h3 className="text-2xl md:text-3xl font-bold text-slate-800 mb-3 group-hover/card:text-blue-600 transition-colors duration-300">
+                              {entry.title}
+                              <span className="ml-2 text-lg animate-bounce">✨</span>
+                            </h3>
+                            <div className="flex flex-wrap items-center gap-4 text-slate-600 mb-4">
+                              <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border-2 border-slate-200">
+                                <Calendar className="h-4 w-4 text-blue-500" />
+                                <span className="font-medium">{entry.date}</span>
+                              </div>
+                              <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border-2 border-slate-200">
+                                <MapPin className="h-4 w-4 text-emerald-500" />
+                                <span className="font-medium">{entry.location}</span>
+                              </div>
+                            </div>
+                            
+                            {/* Weather and Mood */}
+                            <div className="flex gap-3">
+                              <div className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold border-2 border-blue-200">
+                                {entry.weather}
+                              </div>
+                              <div className="px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-semibold border-2 border-purple-200">
+                                {entry.mood}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-6">
+                        {/* Travel Info */}
+                        <div className="bg-gradient-to-r from-slate-50 to-emerald-50 rounded-2xl p-5 mb-6 border-2 border-slate-100">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div className="flex items-center gap-3 text-sm text-slate-700">
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
+                                <Route className="h-5 w-5 text-white" />
+                              </div>
+                              <div>
+                                <div className="font-bold">{entry.miles_traveled} miles</div>
+                                <div className="text-xs text-slate-500">Distance traveled</div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-3 text-sm text-slate-700">
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-400 flex items-center justify-center">
+                                <Car className="h-5 w-5 text-white" />
+                              </div>
+                              <div>
+                                <div className="font-bold">{entry.parking}</div>
+                                <div className="text-xs text-slate-500">Parking cost</div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-3 text-sm text-slate-700">
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center">
+                                <Dog className="h-5 w-5 text-white" />
+                              </div>
+                              <div>
+                                <div className="font-bold">
+                                  {entry.dog_friendly ? "🐕 Pet-friendly" : "❌ No pets"}
+                                </div>
+                                <div className="text-xs text-slate-500">Pet policy</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Additional Info */}
+                          {entry.dog_friendly && entry.pet_notes && (
+                            <div className="bg-white rounded-xl p-4 border-2 border-pink-200 mb-4">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Dog className="h-4 w-4 text-pink-500" />
+                                <span className="font-semibold text-pink-700">Pet Notes:</span>
+                              </div>
+                              <p className="text-sm text-slate-600">{entry.pet_notes}</p>
+                            </div>
+                          )}
+
+                          {entry.paid_activity && (entry.adult_tickets || entry.child_tickets || entry.other_tickets) && (
+                            <div className="bg-white rounded-xl p-4 border-2 border-blue-200">
+                              <div className="flex items-center gap-2 mb-3">
+                                <Ticket className="h-4 w-4 text-blue-500" />
+                                <span className="font-semibold text-blue-700">Ticket Information:</span>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                                {entry.adult_tickets && (
+                                  <div className="bg-blue-50 rounded-lg p-3">
+                                    <div className="font-semibold text-blue-700">Adults</div>
+                                    <div className="text-blue-600">{entry.adult_tickets}</div>
+                                  </div>
+                                )}
+                                {entry.child_tickets && (
+                                  <div className="bg-green-50 rounded-lg p-3">
+                                    <div className="font-semibold text-green-700">Children</div>
+                                    <div className="text-green-600">{entry.child_tickets}</div>
+                                  </div>
+                                )}
+                                {entry.other_tickets && (
+                                  <div className="bg-purple-50 rounded-lg p-3">
+                                    <div className="font-semibold text-purple-700">Other</div>
+                                    <div className="text-purple-600">{entry.other_tickets}</div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Photos Preview */}
+                        {entry.photos && entry.photos.length > 0 && (
+                          <div className="mb-6">
+                            <div className="flex items-center gap-2 mb-4">
+                              <Camera className="h-5 w-5 text-purple-500" />
+                              <h4 className="font-bold text-slate-700">Adventure Photos</h4>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4">
+                              {entry.photos.slice(0, 3).map((photo, photoIndex) => (
+                                <div 
+                                  key={photoIndex} 
+                                  className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer border-4 border-white group"
+                                  onClick={() => handleEntryClick(entry)}
+                                >
+                                  <img
+                                    src={photo}
+                                    alt={`Photo ${photoIndex + 1}`}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    loading="lazy"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                            {entry.photos.length > 3 && (
+                              <div className="mt-4 text-center">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleEntryClick(entry)}
+                                  className="border-2 border-purple-200 hover:bg-purple-50 rounded-xl"
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  View all {entry.photos.length} photos
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Tags */}
+                        <div className="mb-6">
+                          <div className="flex items-center gap-2 mb-3">
+                            <Star className="h-4 w-4 text-amber-500" />
+                            <span className="font-semibold text-slate-700">Adventure Tags</span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {entry.tags.map((tag, tagIndex) => (
+                              <span
+                                key={tagIndex}
+                                className="px-3 py-1 bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 text-sm rounded-full border-2 border-purple-200 font-medium hover:scale-105 transition-transform duration-200"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Content Preview */}
+                        <div className="mb-6">
+                          <div className="flex items-center gap-2 mb-3">
+                            <BookOpen className="h-4 w-4 text-emerald-500" />
+                            <span className="font-semibold text-slate-700">Our Story</span>
+                          </div>
+                          <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl p-5 border-2 border-slate-100">
+                            <p className="text-slate-700 leading-relaxed">
+                              {entry.content.length > 200 
+                                ? `${entry.content.substring(0, 200)}...` 
+                                : entry.content
+                              }
+                            </p>
+                            {entry.content.length > 200 && (
+                              <Button
+                                variant="link"
+                                className="p-0 h-auto text-blue-600 hover:text-blue-800 mt-2"
+                                onClick={() => handleEntryClick(entry)}
+                              >
+                                Read the full story →
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Action Button */}
+                        <div className="text-center">
+                          <Button
+                            className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-2xl px-8 py-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                            onClick={() => handleEntryClick(entry)}
+                          >
+                            <Eye className="h-5 w-5 mr-2" />
+                            Explore Full Adventure
+                            <Sparkles className="h-5 w-5 ml-2" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+
+        {/* Empty State */}
+        {filteredEntries.length === 0 && (
+          <div className="text-center py-20">
+            <div className="bg-gradient-to-br from-purple-100 to-blue-100 rounded-3xl p-12 border-2 border-purple-200 max-w-md mx-auto">
+              <div className="text-6xl mb-6">🔍</div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">No Adventures Found</h3>
+              <p className="text-slate-600 mb-6">Try adjusting your search or start a new adventure!</p>
+              <Button
+                onClick={() => { setSearchTerm(""); setSelectedTag("all"); }}
+                className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-xl"
+              >
+                Show All Adventures
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Empty State */}
-      {filteredEntries.length === 0 && (
-        <div className="text-center py-12">
-          <BookOpen className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">No entries found</h3>
-          <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
-        </div>
-      )}
-
-      {/* New Entry Form */}
+      {/* Forms and Modals */}
       <NewEntryForm
         isOpen={isNewEntryFormOpen}
         onClose={() => setIsNewEntryFormOpen(false)}
         onSubmit={handleNewEntry}
       />
 
-      {/* Entry Detail Modal */}
       <EntryDetailModal
         entry={selectedEntry}
         isOpen={isDetailModalOpen}
