@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import ReactMapGL, { Marker, Popup, ViewState } from "react-map-gl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,18 +11,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MapPin, Trash2, Edit, Calendar, ExternalLink, Info } from "lucide-react";
+import { MapPin, Trash2, Edit, Calendar, ExternalLink, Info, Wifi, WifiOff } from "lucide-react";
+import {
+  MapPin as MapPinType,
+  addMapPin,
+  updateMapPin,
+  deleteMapPin,
+  subscribeToMapPins
+} from "@/lib/mapPinsService";
 import "mapbox-gl/dist/mapbox-gl.css";
-
-interface MapPin {
-  id: string;
-  latitude: number;
-  longitude: number;
-  title: string;
-  description: string;
-  category: "adventure" | "photo" | "memory" | "wishlist";
-  date?: string;
-}
 
 const categoryColors = {
   adventure: "bg-emerald-500",
