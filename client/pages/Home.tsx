@@ -58,8 +58,7 @@ export default function Home() {
 
       setFamilyMembers(members);
       setSyncStatus('connected');
-      // Temporarily force an error to show test button
-      setError('🔍 Debug Mode: Database connected but forcing test button visibility');
+      setError(null);
       console.log(`✅ Loaded ${members.length} family members successfully`);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -536,28 +535,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* Debug Connection Button - Always Visible */}
-          <div className="text-center mb-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={testConnection}
-              disabled={syncStatus === 'connecting'}
-              className="text-xs px-3 py-2"
-            >
-              {syncStatus === 'connecting' ? (
-                <>
-                  <Upload className="h-3 w-3 mr-1 animate-spin" />
-                  Testing...
-                </>
-              ) : (
-                <>
-                  <Users className="h-3 w-3 mr-1" />
-                  Debug Connection
-                </>
-              )}
-            </Button>
-          </div>
 
           {/* Edit instructions */}
           {!error || error.startsWith('✅') ? (
