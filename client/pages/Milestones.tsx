@@ -245,7 +245,7 @@ export default function Milestones() {
                 <Trophy className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-emerald-800 mb-1">
-                {stats.completed_count}
+                {stats.completed_milestones}
               </h3>
               <p className="text-sm text-emerald-600">Completed Milestones</p>
             </CardContent>
