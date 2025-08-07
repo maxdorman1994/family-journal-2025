@@ -668,7 +668,7 @@ export default function Home() {
                 className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
               >
                 <CardContent className="p-6">
-                  <div className="relative group w-34 h-34 mx-auto mb-4">
+                  <div className="relative group w-24 h-24 sm:w-28 sm:h-28 lg:w-34 lg:h-34 mx-auto mb-4">
                     <div
                       className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
                     >
@@ -858,7 +858,7 @@ export default function Home() {
                   {/* Paw print decorations */}
                   <div className="flex gap-2 opacity-40">
                     <span className="text-amber-600">🐾</span>
-                    <span className="text-orange-600">🐾</span>
+                    <span className="text-orange-600">���</span>
                     <span className="text-amber-600">🐾</span>
                   </div>
                 </div>
