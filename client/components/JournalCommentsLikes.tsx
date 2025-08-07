@@ -91,7 +91,7 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
 
   useEffect(() => {
     loadData();
-  }, [entryId, visitorName]);
+  }, [entryId]);
 
   const handleLike = async () => {
     if (!visitorName.trim()) {
