@@ -69,7 +69,7 @@ export default function Home() {
       if (errorMessage.includes('not configured')) {
         setError('📝 Development Mode: Supabase not configured - using local data');
       } else if (errorMessage.includes('SCHEMA_MISSING') || errorMessage.includes('Could not find the table')) {
-        setError('🎯 Database Setup Required: Please run family-members-schema.sql - using local data');
+        setError('🎯 Database Setup Required: Please run family-members-schema.sql in Supabase SQL Editor - using local data');
       } else {
         setSyncStatus('disconnected');
         setError(`⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`);
