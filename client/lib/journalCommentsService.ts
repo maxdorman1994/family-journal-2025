@@ -230,6 +230,23 @@ export async function toggleLike(entryId: string, visitorName: string): Promise<
   }
 }
 
+export async function deleteLike(likeId: string): Promise<void> {
+  try {
+    const { error } = await supabase
+      .from('journal_likes')
+      .delete()
+      .eq('id', likeId);
+
+    if (error) {
+      console.error('Error deleting like:', JSON.stringify(error, null, 2));
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error in deleteLike:', JSON.stringify(error, null, 2));
+    throw error;
+  }
+}
+
 export async function checkIfUserLiked(entryId: string, visitorName: string): Promise<boolean> {
   try {
     if (!visitorName.trim()) {
