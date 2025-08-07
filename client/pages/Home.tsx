@@ -357,9 +357,9 @@ export default function Home() {
   };
 
   const handlePhotoEdit = (memberId: string) => {
-    // Check authentication before allowing photo edit
-    if (!requestAuth()) {
-      return; // Will show password prompt
+    // Only allow photo edit if authenticated
+    if (!isAuthenticated) {
+      return;
     }
 
     setEditingMember(memberId);
