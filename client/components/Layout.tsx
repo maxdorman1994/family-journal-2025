@@ -128,7 +128,10 @@ export default function Layout({ children }: LayoutProps) {
       </header>
 
       {/* Main Content */}
-      <main>{children}</main>
+      <main className="pb-20">{children}</main>
+
+      {/* Authentication Footer */}
+      <AuthFooter />
     </div>
   );
 }
