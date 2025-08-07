@@ -38,6 +38,7 @@ export default function Home() {
   const [syncStatus, setSyncStatus] = useState<
     "connected" | "connecting" | "disconnected" | "local"
   >("connecting");
+  const [isStatsExpanded, setIsStatsExpanded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load family members data and setup real-time sync
