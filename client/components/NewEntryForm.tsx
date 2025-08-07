@@ -92,6 +92,7 @@ export default function NewEntryForm({
   isOpen,
   onClose,
   onSubmit,
+  editingEntry,
 }: NewEntryFormProps) {
   const [formData, setFormData] = useState({
     title: "",
