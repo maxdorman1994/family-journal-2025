@@ -29,6 +29,7 @@ import {
   uploadFamilyMemberAvatar,
   subscribeToFamilyMembers,
   testFamilyMembersConnection,
+  testSupabaseConnection,
   FamilyMember,
 } from "@/lib/familyMembersService";
 import {
