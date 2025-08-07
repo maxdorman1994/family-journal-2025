@@ -120,6 +120,7 @@ export default function NewEntryForm({
   // Populate form data when editing an entry
   useEffect(() => {
     if (editingEntry) {
+      console.log("🔧 Populating form for editing:", editingEntry);
       setFormData({
         title: editingEntry.title || "",
         date: editingEntry.date ? new Date(editingEntry.date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
