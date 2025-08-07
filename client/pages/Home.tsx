@@ -849,49 +849,79 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Milestone Progress Cards */}
+          {/* Dynamic Milestone Progress Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* First Adventure */}
-            <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200/60 hover:shadow-lg transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <MapPin className="w-8 h-8 text-white" />
-                </div>
-                <h4 className="font-bold text-blue-800 mb-2">First Adventure</h4>
-                <p className="text-sm text-blue-600 mb-3">Started your Scottish exploration journey</p>
-                <div className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full inline-block">
-                  ✅ Completed
-                </div>
-              </CardContent>
-            </Card>
+            {milestonesLoading ? (
+              // Loading skeleton
+              Array(3).fill(0).map((_, index) => (
+                <Card key={index} className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200/60">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-16 h-16 bg-gray-300 animate-pulse rounded-full mx-auto mb-4"></div>
+                    <div className="h-4 bg-gray-300 animate-pulse rounded mb-2"></div>
+                    <div className="h-3 bg-gray-300 animate-pulse rounded mb-3"></div>
+                    <div className="h-6 bg-gray-300 animate-pulse rounded-full w-20 mx-auto"></div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              // Show top 3 milestones (mix of completed and next available)
+              milestones.slice(0, 3).map((milestone) => {
+                const isCompleted = milestone.progress?.status === 'completed';
+                const isInProgress = milestone.progress?.status === 'in_progress';
+                const progressPercentage = milestone.progressPercentage || 0;
 
-            {/* Photo Memories */}
-            <Card className="bg-gradient-to-br from-purple-50 to-violet-100 border-2 border-purple-200/60 hover:shadow-lg transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-violet-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <Camera className="w-8 h-8 text-white" />
-                </div>
-                <h4 className="font-bold text-purple-800 mb-2">Photo Memories</h4>
-                <p className="text-sm text-purple-600 mb-3">Captured your first Scottish moments</p>
-                <div className="bg-purple-500 text-white text-xs px-3 py-1 rounded-full inline-block">
-                  ✅ Completed
-                </div>
-              </CardContent>
-            </Card>
+                // Icon mapping
+                const iconMap: { [key: string]: any } = {
+                  MapPin, Camera, Heart, Calendar, Users
+                };
+                const Icon = iconMap[milestone.icon] || MapPin;
 
-            {/* Family Together */}
-            <Card className="bg-gradient-to-br from-pink-50 to-rose-100 border-2 border-pink-200/60 hover:shadow-lg transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <Heart className="w-8 h-8 text-white" />
-                </div>
-                <h4 className="font-bold text-pink-800 mb-2">Family Adventure</h4>
-                <p className="text-sm text-pink-600 mb-3">Shared memories with loved ones</p>
-                <div className="bg-pink-500 text-white text-xs px-3 py-1 rounded-full inline-block">
-                  ✅ Completed
-                </div>
-              </CardContent>
-            </Card>
+                return (
+                  <Card
+                    key={milestone.id}
+                    className={`bg-gradient-to-br ${milestone.color_scheme.bgColor} border-2 ${milestone.color_scheme.borderColor} hover:shadow-lg transition-all duration-300 ${!isCompleted && !isInProgress ? 'opacity-75' : ''}`}
+                  >
+                    <CardContent className="p-6 text-center">
+                      <div className={`w-16 h-16 bg-gradient-to-r ${milestone.color_scheme.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg ${!isCompleted && !isInProgress ? 'opacity-50' : ''}`}>
+                        <Icon className="w-8 h-8 text-white" />
+                      </div>
+                      <h4 className={`font-bold mb-2 ${isCompleted ? 'text-emerald-800' : isInProgress ? 'text-amber-800' : 'text-gray-600'}`}>
+                        {milestone.title}
+                      </h4>
+                      <p className={`text-sm mb-3 ${isCompleted ? 'text-emerald-600' : isInProgress ? 'text-amber-600' : 'text-gray-500'}`}>
+                        {milestone.description}
+                      </p>
+
+                      {isCompleted && (
+                        <div className="bg-emerald-500 text-white text-xs px-3 py-1 rounded-full inline-block">
+                          ✅ Completed
+                        </div>
+                      )}
+
+                      {isInProgress && (
+                        <div className="space-y-2">
+                          <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div
+                              className={`bg-gradient-to-r ${milestone.color_scheme.color} h-full rounded-full transition-all duration-500`}
+                              style={{ width: `${progressPercentage}%` }}
+                            ></div>
+                          </div>
+                          <div className="bg-amber-500 text-white text-xs px-3 py-1 rounded-full inline-block">
+                            🚀 In Progress
+                          </div>
+                        </div>
+                      )}
+
+                      {!isCompleted && !isInProgress && (
+                        <div className="bg-gray-400 text-white text-xs px-3 py-1 rounded-full inline-block">
+                          🔒 Locked
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
           </div>
 
           {/* Next Milestone Preview */}
