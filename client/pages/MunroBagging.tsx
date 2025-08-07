@@ -515,6 +515,130 @@ export default function MunroBagging() {
           </CardContent>
         </Card>
 
+        {/* Add Custom Munro Button */}
+        <div className="mb-6 text-center">
+          <Button
+            onClick={() => setShowAddMunro(true)}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg"
+            disabled={isLoading}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Custom Munro
+          </Button>
+        </div>
+
+        {/* Add Custom Munro Modal */}
+        {showAddMunro && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Plus className="h-5 w-5 text-purple-500" />
+                    Add Custom Munro
+                  </CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowAddMunro(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Name *</label>
+                    <Input
+                      value={addMunroForm.name}
+                      onChange={(e) => setAddMunroForm(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="e.g. Ben Custom"
+                      className="border-2 border-slate-200 focus:border-purple-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Height (m) *</label>
+                    <Input
+                      type="number"
+                      min="914"
+                      value={addMunroForm.height}
+                      onChange={(e) => setAddMunroForm(prev => ({ ...prev, height: parseInt(e.target.value) || 914 }))}
+                      className="border-2 border-slate-200 focus:border-purple-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Region *</label>
+                    <Input
+                      value={addMunroForm.region}
+                      onChange={(e) => setAddMunroForm(prev => ({ ...prev, region: e.target.value }))}
+                      placeholder="e.g. Custom Highlands"
+                      className="border-2 border-slate-200 focus:border-purple-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Difficulty</label>
+                    <Select value={addMunroForm.difficulty} onValueChange={(value: any) => setAddMunroForm(prev => ({ ...prev, difficulty: value }))}>
+                      <SelectTrigger className="border-2 border-slate-200 focus:border-purple-400">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Easy">Easy</SelectItem>
+                        <SelectItem value="Moderate">Moderate</SelectItem>
+                        <SelectItem value="Hard">Hard</SelectItem>
+                        <SelectItem value="Extreme">Extreme</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Estimated Time</label>
+                    <Input
+                      value={addMunroForm.estimated_time}
+                      onChange={(e) => setAddMunroForm(prev => ({ ...prev, estimated_time: e.target.value }))}
+                      placeholder="e.g. 4-6 hours"
+                      className="border-2 border-slate-200 focus:border-purple-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">OS Grid Ref</label>
+                    <Input
+                      value={addMunroForm.os_grid_ref}
+                      onChange={(e) => setAddMunroForm(prev => ({ ...prev, os_grid_ref: e.target.value }))}
+                      placeholder="e.g. NN123456"
+                      className="border-2 border-slate-200 focus:border-purple-400"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Description</label>
+                  <Input
+                    value={addMunroForm.description}
+                    onChange={(e) => setAddMunroForm(prev => ({ ...prev, description: e.target.value }))}
+                    placeholder="Describe this custom peak..."
+                    className="border-2 border-slate-200 focus:border-purple-400"
+                  />
+                </div>
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    onClick={handleAddCustomMunro}
+                    disabled={isLoading || !addMunroForm.name.trim() || !addMunroForm.region.trim()}
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                  >
+                    {isLoading ? 'Adding...' : 'Add Munro'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowAddMunro(false)}
+                    className="flex-1 border-2 border-slate-200"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Filters and Search */}
         <Card className="mb-8 border-0 shadow-xl bg-white/80 backdrop-blur-sm">
           <CardContent className="p-6">
