@@ -135,7 +135,7 @@ export default function MapPage() {
     }
   };
 
-  const handleEditPin = (pin: MapPin) => {
+  const handleEditPin = (pin: MapPinType) => {
     setEditingPin(pin);
     setSelectedPin(null);
     setNewPin({
@@ -147,21 +147,37 @@ export default function MapPage() {
     setIsDialogOpen(true);
   };
 
-  const handleUpdatePin = () => {
+  const handleUpdatePin = async () => {
     if (!editingPin || !newPin.title.trim()) return;
 
-    setPins(
-      pins.map((pin) =>
-        pin.id === editingPin.id ? { ...pin, ...newPin } : pin,
-      ),
-    );
-    setIsDialogOpen(false);
-    setEditingPin(null);
+    try {
+      console.log("🗺️ Updating pin:", editingPin.title);
+      await updateMapPin(editingPin.id, {
+        title: newPin.title,
+        description: newPin.description,
+        category: newPin.category,
+        date: newPin.date,
+      });
+
+      setIsDialogOpen(false);
+      setEditingPin(null);
+      console.log("✅ Pin updated successfully and will sync across devices");
+    } catch (error) {
+      console.error("❌ Error updating pin:", error);
+      // You could add a toast notification here
+    }
   };
 
-  const handleDeletePin = (pinId: string) => {
-    setPins(pins.filter((pin) => pin.id !== pinId));
-    setSelectedPin(null);
+  const handleDeletePin = async (pinId: string) => {
+    try {
+      console.log("🗺️ Deleting pin:", pinId);
+      await deleteMapPin(pinId);
+      setSelectedPin(null);
+      console.log("✅ Pin deleted successfully and will sync across devices");
+    } catch (error) {
+      console.error("❌ Error deleting pin:", error);
+      // You could add a toast notification here
+    }
   };
 
   const flyToLocation = (latitude: number, longitude: number) => {
