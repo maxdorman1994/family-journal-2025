@@ -95,9 +95,10 @@ export default function Home() {
   useEffect(() => {
     loadFamilyMembersData();
     loadRealStats();
+    loadRecentAdventures();
 
-    // Setup real-time subscription
-    const unsubscribe = subscribeToFamilyMembers((members) => {
+    // Setup real-time subscriptions
+    const unsubscribeFamilyMembers = subscribeToFamilyMembers((members) => {
       console.log(
         "🔄 Real-time sync update received:",
         members.length,
@@ -107,7 +108,15 @@ export default function Home() {
       setSyncStatus("connected");
     });
 
-    return unsubscribe;
+    const unsubscribeAdventures = subscribeToAdventureUpdates((adventures) => {
+      console.log('🔄 Real-time adventures update received:', adventures.length, 'adventures');
+      setRecentAdventures(adventures);
+    });
+
+    return () => {
+      unsubscribeFamilyMembers();
+      unsubscribeAdventures();
+    };
   }, []);
 
   const loadFamilyMembersData = async () => {
