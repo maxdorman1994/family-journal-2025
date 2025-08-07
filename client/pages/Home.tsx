@@ -885,6 +885,24 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Expand/Collapse Button */}
+        <div className="mt-8 text-center">
+          <Button
+            variant="outline"
+            onClick={() => setIsStatsExpanded(!isStatsExpanded)}
+            className="group px-6 py-3 border-2 border-slate-200 hover:border-purple-300 hover:bg-purple-50 transition-all duration-300 rounded-full"
+          >
+            <span className="text-sm font-medium text-slate-700 group-hover:text-purple-700 mr-2">
+              {isStatsExpanded ? "Show Less" : "View All Adventure Stats"}
+            </span>
+            <ChevronDown
+              className={`h-4 w-4 text-slate-500 group-hover:text-purple-600 transition-transform duration-300 ${
+                isStatsExpanded ? "rotate-180" : "rotate-0"
+              }`}
+            />
+          </Button>
+        </div>
+
         {/* Achievement Banner */}
         <div className="mt-12 text-center">
           <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-emerald-200/50 rounded-full shadow-lg">
