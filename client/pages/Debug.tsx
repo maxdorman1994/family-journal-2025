@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import SyncStatus from "@/components/SyncStatus";
 
 interface EnvironmentStatus {
   supabase: boolean;
