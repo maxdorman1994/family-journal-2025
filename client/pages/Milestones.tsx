@@ -71,7 +71,9 @@ export default function Milestones() {
         setMilestones(realMilestones);
         setStats(realStats);
 
-        console.log(`✅ Loaded ${realMilestones.length} real milestones, ${realStats.completed_milestones} completed`);
+        console.log(
+          `✅ Loaded ${realMilestones.length} real milestones, ${realStats.completed_milestones} completed`,
+        );
       } catch (error) {
         console.error("Error loading real milestone data:", error);
         setError(
@@ -87,11 +89,15 @@ export default function Milestones() {
     loadRealMilestoneData();
 
     // Set up real-time subscription to journal changes
-    const unsubscribeMilestones = subscribeToRealMilestones((updatedMilestones) => {
-      console.log("🔄 Milestones updated from journal changes:", updatedMilestones.length);
-      setMilestones(updatedMilestones);
-      // Recalculate stats
-      getRealMilestoneStats().then(setStats);
+    const unsubscribeMilestones = subscribeToRealMilestones(
+      (updatedMilestones) => {
+        console.log(
+          "🔄 Milestones updated from journal changes:",
+          updatedMilestones.length,
+        );
+        setMilestones(updatedMilestones);
+        // Recalculate stats
+        getRealMilestoneStats().then(setStats);
       },
     );
 
@@ -100,8 +106,8 @@ export default function Milestones() {
 
   // Subscribe to cross-device sync
   useEffect(() => {
-    const unsubscribeSync = subscribe('journal_entries', (event) => {
-      console.log('🔄 Journal entry synced, recalculating milestones...');
+    const unsubscribeSync = subscribe("journal_entries", (event) => {
+      console.log("🔄 Journal entry synced, recalculating milestones...");
 
       // Recalculate milestones when journal entries change
       calculateRealMilestones().then(setMilestones);
@@ -128,7 +134,9 @@ export default function Milestones() {
 
   // Split milestones by status using real data
   const completedMilestones = milestones.filter((m) => m.completed);
-  const inProgressMilestones = milestones.filter((m) => !m.completed && m.current_value > 0);
+  const inProgressMilestones = milestones.filter(
+    (m) => !m.completed && m.current_value > 0,
+  );
   const availableMilestones = milestones.filter((m) => !m.completed);
 
   // Helper function to get the correct icon component
@@ -153,10 +161,7 @@ export default function Milestones() {
     return iconMap[iconName] || MapPin;
   };
 
-  const filterMilestones = (
-    milestones: RealMilestone[],
-    category: string,
-  ) => {
+  const filterMilestones = (milestones: RealMilestone[], category: string) => {
     return filterMilestonesByCategory(milestones, category);
   };
 
