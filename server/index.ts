@@ -54,10 +54,13 @@ export function createServer() {
   });
 
   // Log environment info
+  const distPath = path.join(__dirname, "../dist/spa");
   console.log("🔧 Server Environment Check:", {
     NODE_ENV: process.env.NODE_ENV,
-    distExists: fs.existsSync("dist/spa"),
+    distExists: fs.existsSync(distPath),
+    distPath: distPath,
     cwd: process.cwd(),
+    dirname: __dirname,
   });
 
   // Serve static files from dist/spa (force for all non-dev environments)
