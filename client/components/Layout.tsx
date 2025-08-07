@@ -138,6 +138,32 @@ export default function Layout({ children }: LayoutProps) {
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     {isUploadingLogo ? (
                       <Upload className="h-4 w-4 text-white animate-spin" />
+                    ) : logoUrl !== '/placeholder.svg' ? (
+                      <div className="flex gap-1">
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleLogoEdit();
+                          }}
+                          className="p-1 hover:bg-white/20 rounded"
+                          title="Change logo"
+                        >
+                          <Edit className="h-3 w-3 text-white" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            updateLogoUrl('/placeholder.svg');
+                            localStorage.removeItem('family_logo_url');
+                          }}
+                          className="p-1 hover:bg-white/20 rounded"
+                          title="Reset to default"
+                        >
+                          <X className="h-3 w-3 text-white" />
+                        </button>
+                      </div>
                     ) : (
                       <Edit className="h-4 w-4 text-white" />
                     )}
