@@ -14,7 +14,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { processPhoto, uploadPhotoToCloudflare, validatePhotoFile } from "@/lib/photoUtils";
+import {
+  processPhoto,
+  uploadPhotoToCloudflare,
+  validatePhotoFile,
+} from "@/lib/photoUtils";
 import {
   getFamilyMembers,
   updateFamilyMemberAvatar,
@@ -22,7 +26,7 @@ import {
   uploadFamilyMemberAvatar,
   subscribeToFamilyMembers,
   testFamilyMembersConnection,
-  FamilyMember
+  FamilyMember,
 } from "@/lib/familyMembersService";
 
 export default function Home() {
@@ -31,7 +35,9 @@ export default function Home() {
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [syncStatus, setSyncStatus] = useState<'connected' | 'connecting' | 'disconnected' | 'local'>('connecting');
+  const [syncStatus, setSyncStatus] = useState<
+    "connected" | "connecting" | "disconnected" | "local"
+  >("connecting");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load family members data and setup real-time sync
@@ -40,9 +46,13 @@ export default function Home() {
 
     // Setup real-time subscription
     const unsubscribe = subscribeToFamilyMembers((members) => {
-      console.log('🔄 Real-time sync update received:', members.length, 'members');
+      console.log(
+        "🔄 Real-time sync update received:",
+        members.length,
+        "members",
+      );
       setFamilyMembers(members);
-      setSyncStatus('connected');
+      setSyncStatus("connected");
     });
 
     return unsubscribe;
@@ -53,32 +63,45 @@ export default function Home() {
       setIsLoading(true);
       setError(null);
 
-      console.log('🔄 Loading family members from Supabase...');
+      console.log("🔄 Loading family members from Supabase...");
       const members = await getFamilyMembers();
 
       setFamilyMembers(members);
-      setSyncStatus('connected');
+      setSyncStatus("connected");
       setError(null);
       console.log(`✅ Loaded ${members.length} family members successfully`);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      console.warn('Failed to load from Supabase, using fallback:', errorMessage);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      console.warn(
+        "Failed to load from Supabase, using fallback:",
+        errorMessage,
+      );
 
       // Set sync status and appropriate error message
-      setSyncStatus('local');
-      if (errorMessage.includes('not configured')) {
-        setError('📝 Development Mode: Supabase not configured - using local data');
-      } else if (errorMessage.includes('SCHEMA_MISSING') || errorMessage.includes('Could not find the table')) {
-        setError('🎯 Database Setup Required: Please run family-members-schema.sql in Supabase SQL Editor - using local data');
+      setSyncStatus("local");
+      if (errorMessage.includes("not configured")) {
+        setError(
+          "📝 Development Mode: Supabase not configured - using local data",
+        );
+      } else if (
+        errorMessage.includes("SCHEMA_MISSING") ||
+        errorMessage.includes("Could not find the table")
+      ) {
+        setError(
+          "🎯 Database Setup Required: Please run family-members-schema.sql in Supabase SQL Editor - using local data",
+        );
       } else {
-        setSyncStatus('disconnected');
-        setError(`⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`);
+        setSyncStatus("disconnected");
+        setError(
+          `⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`,
+        );
       }
 
       // Fallback to hardcoded data
       setFamilyMembers([
         {
-          id: '1',
+          id: "1",
           name: "Max Dorman",
           role: "DAD",
           bio: "Adventure enthusiast and family trip organizer. Loves planning routes, discovering hidden gems, and capturing the perfect Highland sunset photos.",
@@ -87,11 +110,11 @@ export default function Home() {
           colors: {
             bg: "bg-gradient-to-br from-blue-50 to-indigo-100",
             border: "border-blue-200/60",
-            accent: "from-blue-500 to-indigo-500"
-          }
+            accent: "from-blue-500 to-indigo-500",
+          },
         },
         {
-          id: '2',
+          id: "2",
           name: "Charlotte Foster",
           role: "MUM",
           bio: "Nature lover and family historian. Documents our adventures and ensures everyone stays safe while exploring Scotland's wild landscapes.",
@@ -100,11 +123,11 @@ export default function Home() {
           colors: {
             bg: "bg-gradient-to-br from-rose-50 to-pink-100",
             border: "border-rose-200/60",
-            accent: "from-rose-500 to-pink-500"
-          }
+            accent: "from-rose-500 to-pink-500",
+          },
         },
         {
-          id: '3',
+          id: "3",
           name: "Oscar",
           role: "SON",
           bio: "Young explorer with boundless energy. Always the first to spot wildlife and loves climbing rocks and splashing in Highland streams.",
@@ -113,11 +136,11 @@ export default function Home() {
           colors: {
             bg: "bg-gradient-to-br from-green-50 to-emerald-100",
             border: "border-green-200/60",
-            accent: "from-green-500 to-emerald-500"
-          }
+            accent: "from-green-500 to-emerald-500",
+          },
         },
         {
-          id: '4',
+          id: "4",
           name: "Rose",
           role: "DAUGHTER",
           bio: "Curious adventurer who collects interesting stones and leaves. Has an amazing memory for the stories behind each place we visit.",
@@ -126,11 +149,11 @@ export default function Home() {
           colors: {
             bg: "bg-gradient-to-br from-purple-50 to-violet-100",
             border: "border-purple-200/60",
-            accent: "from-purple-500 to-violet-500"
-          }
+            accent: "from-purple-500 to-violet-500",
+          },
         },
         {
-          id: '5',
+          id: "5",
           name: "Lola",
           role: "DAUGHTER",
           bio: "Our youngest adventurer with the biggest smile. Brings joy to every journey and reminds us to appreciate the simple moments.",
@@ -139,9 +162,9 @@ export default function Home() {
           colors: {
             bg: "bg-gradient-to-br from-amber-50 to-yellow-100",
             border: "border-amber-200/60",
-            accent: "from-amber-500 to-yellow-500"
-          }
-        }
+            accent: "from-amber-500 to-yellow-500",
+          },
+        },
       ]);
     } finally {
       setIsLoading(false);
@@ -153,7 +176,9 @@ export default function Home() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file || editingMember === null) return;
 
@@ -166,26 +191,36 @@ export default function Home() {
 
     setIsUploading(true);
     try {
-      console.log(`📸 Processing and uploading photo for member: ${editingMember}`);
+      console.log(
+        `📸 Processing and uploading photo for member: ${editingMember}`,
+      );
 
       // Process the photo
       const processedPhoto = await processPhoto(file);
 
-      if (error && error.includes('Database Setup Required')) {
+      if (error && error.includes("Database Setup Required")) {
         // If database isn't set up, use local state only
-        console.log('📦 Using local state for avatar (database not available)');
-        setFamilyMembers(prev =>
-          prev.map(member =>
+        console.log("📦 Using local state for avatar (database not available)");
+        setFamilyMembers((prev) =>
+          prev.map((member) =>
             member.id === editingMember
-              ? { ...member, display_avatar: processedPhoto.preview, has_custom_avatar: true }
-              : member
-          )
+              ? {
+                  ...member,
+                  display_avatar: processedPhoto.preview,
+                  has_custom_avatar: true,
+                }
+              : member,
+          ),
         );
       } else {
         // Upload to Cloudflare and update database
-        await uploadFamilyMemberAvatar(editingMember, processedPhoto, (progress) => {
-          console.log(`Upload progress: ${progress}%`);
-        });
+        await uploadFamilyMemberAvatar(
+          editingMember,
+          processedPhoto,
+          (progress) => {
+            console.log(`Upload progress: ${progress}%`);
+          },
+        );
 
         // Reload data to get updated state
         await loadFamilyMembersData();
@@ -194,77 +229,92 @@ export default function Home() {
       setEditingMember(null);
       console.log(`✅ Profile photo updated successfully`);
     } catch (dbError) {
-      console.error('Error uploading avatar:', dbError);
-      alert('Failed to upload photo. Please try again.');
+      console.error("Error uploading avatar:", dbError);
+      alert("Failed to upload photo. Please try again.");
     } finally {
       setIsUploading(false);
     }
 
     // Reset file input
-    event.target.value = '';
+    event.target.value = "";
   };
 
   const removePhoto = async (memberId: string) => {
     try {
-      if (error && error.includes('Database Setup Required')) {
+      if (error && error.includes("Database Setup Required")) {
         // Local only
-        setFamilyMembers(prev =>
-          prev.map(member =>
+        setFamilyMembers((prev) =>
+          prev.map((member) =>
             member.id === memberId
-              ? { ...member, display_avatar: '/placeholder.svg', has_custom_avatar: false, avatar_url: undefined }
-              : member
-          )
+              ? {
+                  ...member,
+                  display_avatar: "/placeholder.svg",
+                  has_custom_avatar: false,
+                  avatar_url: undefined,
+                }
+              : member,
+          ),
         );
       } else {
         await removeFamilyMemberAvatar(memberId);
         await loadFamilyMembersData();
       }
     } catch (dbError) {
-      console.error('Database error, using local state:', dbError);
-      setFamilyMembers(prev =>
-        prev.map(member =>
+      console.error("Database error, using local state:", dbError);
+      setFamilyMembers((prev) =>
+        prev.map((member) =>
           member.id === memberId
-            ? { ...member, display_avatar: '/placeholder.svg', has_custom_avatar: false }
-            : member
-        )
+            ? {
+                ...member,
+                display_avatar: "/placeholder.svg",
+                has_custom_avatar: false,
+              }
+            : member,
+        ),
       );
     }
   };
 
   const testConnection = async () => {
     try {
-      setSyncStatus('connecting');
-      setError('🔍 Testing database connection and checking tables...');
+      setSyncStatus("connecting");
+      setError("🔍 Testing database connection and checking tables...");
 
       // Import the debug function
-      const { debugAvailableTables } = await import('@/lib/familyMembersService');
+      const { debugAvailableTables } = await import(
+        "@/lib/familyMembersService"
+      );
 
       // First check what tables are available
-      console.log('🔍 Debugging available tables...');
+      console.log("🔍 Debugging available tables...");
       const availableTables = await debugAvailableTables();
-      console.log('📋 Found tables:', availableTables);
+      console.log("📋 Found tables:", availableTables);
 
       const result = await testFamilyMembersConnection();
 
       if (result.success) {
-        setSyncStatus('connected');
+        setSyncStatus("connected");
         setError(`✅ ${result.message}`);
 
         // Reload data after successful connection
         await loadFamilyMembersData();
       } else {
-        setSyncStatus('disconnected');
-        let debugInfo = '';
+        setSyncStatus("disconnected");
+        let debugInfo = "";
         if (availableTables.length > 0) {
-          debugInfo = ` (Found tables: ${availableTables.join(', ')})`;
+          debugInfo = ` (Found tables: ${availableTables.join(", ")})`;
         } else {
           debugInfo = ` (No accessible tables found)`;
         }
-        setError(`❌ ${result.message}${result.error ? ': ' + result.error : ''}${debugInfo}`);
+        setError(
+          `❌ ${result.message}${result.error ? ": " + result.error : ""}${debugInfo}`,
+        );
       }
     } catch (error) {
-      setSyncStatus('disconnected');
-      setError(`❌ Connection test failed: ${error instanceof Error ? error.message : String(error)}`);
+      setSyncStatus("disconnected");
+      setError(
+        `❌ Connection test failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   };
   // Show loading state
@@ -275,7 +325,9 @@ export default function Home() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg animate-pulse">
             <Users className="h-8 w-8 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">Loading Family Crew</h3>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">
+            Loading Family Crew
+          </h3>
           <p className="text-slate-600">Getting your adventure team ready...</p>
         </div>
       </div>
@@ -291,8 +343,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-blue-50 to-indigo-100",
         border: "border-blue-200/60",
-        accent: "from-blue-500 to-indigo-500"
-      }
+        accent: "from-blue-500 to-indigo-500",
+      },
     },
     {
       name: "Charlotte Foster",
@@ -302,8 +354,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-rose-50 to-pink-100",
         border: "border-rose-200/60",
-        accent: "from-rose-500 to-pink-500"
-      }
+        accent: "from-rose-500 to-pink-500",
+      },
     },
     {
       name: "Oscar",
@@ -313,8 +365,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-green-50 to-emerald-100",
         border: "border-green-200/60",
-        accent: "from-green-500 to-emerald-500"
-      }
+        accent: "from-green-500 to-emerald-500",
+      },
     },
     {
       name: "Rose",
@@ -324,8 +376,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-purple-50 to-violet-100",
         border: "border-purple-200/60",
-        accent: "from-purple-500 to-violet-500"
-      }
+        accent: "from-purple-500 to-violet-500",
+      },
     },
     {
       name: "Lola",
@@ -335,8 +387,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-amber-50 to-yellow-100",
         border: "border-amber-200/60",
-        accent: "from-amber-500 to-yellow-500"
-      }
+        accent: "from-amber-500 to-yellow-500",
+      },
     },
   ];
 
@@ -417,10 +469,16 @@ export default function Home() {
             >
               <CardContent className="p-6">
                 <div className="relative group w-20 h-20 mx-auto mb-4">
-                  <div className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}>
+                  <div
+                    className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
+                  >
                     <div className="w-full h-full rounded-full overflow-hidden bg-white">
                       <img
-                        src={member.display_avatar || member.avatar_url || '/placeholder.svg'}
+                        src={
+                          member.display_avatar ||
+                          member.avatar_url ||
+                          "/placeholder.svg"
+                        }
                         alt={member.name}
                         className="w-full h-full object-cover"
                       />
@@ -459,8 +517,12 @@ export default function Home() {
                 <h3 className="font-semibold text-lg text-gray-800 mb-2">
                   {member.name}
                 </h3>
-                <p className="text-sm text-muted-foreground font-medium mb-3">{member.role}</p>
-                <p className="text-xs text-slate-600 leading-relaxed">{member.bio}</p>
+                <p className="text-sm text-muted-foreground font-medium mb-3">
+                  {member.role}
+                </p>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {member.bio}
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -479,29 +541,44 @@ export default function Home() {
         <div className="mt-6 space-y-4">
           {/* Sync Status Indicator */}
           <div className="flex items-center justify-center gap-2">
-            <div className={`w-3 h-3 rounded-full animate-pulse ${
-              syncStatus === 'connected' ? 'bg-green-500' :
-              syncStatus === 'connecting' ? 'bg-yellow-500' :
-              syncStatus === 'local' ? 'bg-blue-500' : 'bg-red-500'
-            }`} />
+            <div
+              className={`w-3 h-3 rounded-full animate-pulse ${
+                syncStatus === "connected"
+                  ? "bg-green-500"
+                  : syncStatus === "connecting"
+                    ? "bg-yellow-500"
+                    : syncStatus === "local"
+                      ? "bg-blue-500"
+                      : "bg-red-500"
+              }`}
+            />
             <span className="text-xs font-medium text-slate-600">
-              {syncStatus === 'connected' ? '🌐 Profile photos sync across devices' :
-               syncStatus === 'connecting' ? '🔄 Connecting...' :
-               syncStatus === 'local' ? '📱 Local mode only' : '❌ Sync disconnected'}
+              {syncStatus === "connected"
+                ? "🌐 Profile photos sync across devices"
+                : syncStatus === "connecting"
+                  ? "🔄 Connecting..."
+                  : syncStatus === "local"
+                    ? "📱 Local mode only"
+                    : "❌ Sync disconnected"}
             </span>
           </div>
 
           {/* Error Display */}
           {error && (
-            <div className={`max-w-md mx-auto border-2 rounded-xl p-3 text-center ${
-              error.startsWith('✅') ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800' :
-              'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 text-amber-800'
-            }`}>
+            <div
+              className={`max-w-md mx-auto border-2 rounded-xl p-3 text-center ${
+                error.startsWith("✅")
+                  ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800"
+                  : "bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 text-amber-800"
+              }`}
+            >
               <p className="text-xs leading-relaxed mb-2">{error}</p>
 
-              {error.includes('Database Setup Required') && (
+              {error.includes("Database Setup Required") && (
                 <div className="bg-white/50 rounded-lg p-2 mb-2 text-xs">
-                  <div className="font-semibold mb-1">📋 Setup Instructions:</div>
+                  <div className="font-semibold mb-1">
+                    📋 Setup Instructions:
+                  </div>
                   <ol className="list-decimal list-inside space-y-1 text-amber-700 text-xs">
                     <li>Go to Supabase Dashboard → SQL Editor</li>
                     <li>Paste contents of family-members-schema.sql</li>
@@ -516,10 +593,10 @@ export default function Home() {
                   variant="outline"
                   size="sm"
                   onClick={testConnection}
-                  disabled={syncStatus === 'connecting'}
+                  disabled={syncStatus === "connecting"}
                   className="text-xs px-2 py-1"
                 >
-                  {syncStatus === 'connecting' ? (
+                  {syncStatus === "connecting" ? (
                     <>
                       <Upload className="h-3 w-3 mr-1 animate-spin" />
                       Testing...
@@ -535,12 +612,12 @@ export default function Home() {
             </div>
           )}
 
-
           {/* Edit instructions */}
-          {!error || error.startsWith('✅') ? (
+          {!error || error.startsWith("✅") ? (
             <div className="text-center">
               <p className="text-sm text-slate-500">
-                💡 Hover over any family member's photo and click the edit button to upload a custom picture!
+                💡 Hover over any family member's photo and click the edit
+                button to upload a custom picture!
               </p>
             </div>
           ) : null}

@@ -1,5 +1,5 @@
-import { supabase, isSupabaseConfigured } from './supabase';
-import { uploadPhotoToCloudflare, ProcessedPhoto } from './photoUtils';
+import { supabase, isSupabaseConfigured } from "./supabase";
+import { uploadPhotoToCloudflare, ProcessedPhoto } from "./photoUtils";
 
 /**
  * Supabase Family Members Service
@@ -41,66 +41,80 @@ export interface UpdateFamilyMemberData {
  */
 export async function getFamilyMembers(): Promise<FamilyMember[]> {
   if (!isSupabaseConfigured()) {
-    throw new Error('Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+    throw new Error(
+      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
+    );
   }
 
   try {
-    console.log('🔄 Fetching family members...');
-    console.log('🔍 Supabase client config:', {
-      url: import.meta.env.VITE_SUPABASE_URL ? 'configured' : 'missing',
-      key: import.meta.env.VITE_SUPABASE_ANON_KEY ? 'configured' : 'missing'
+    console.log("🔄 Fetching family members...");
+    console.log("🔍 Supabase client config:", {
+      url: import.meta.env.VITE_SUPABASE_URL ? "configured" : "missing",
+      key: import.meta.env.VITE_SUPABASE_ANON_KEY ? "configured" : "missing",
     });
 
     // First try the view, then fallback to base table
-    console.log('📋 Attempting to query family_members_with_stats view...');
+    console.log("📋 Attempting to query family_members_with_stats view...");
     let { data: members, error } = await supabase
-      .from('family_members_with_stats')
-      .select('*')
-      .order('position_index', { ascending: true });
+      .from("family_members_with_stats")
+      .select("*")
+      .order("position_index", { ascending: true });
 
-    console.log('📋 View query result:', { members, error });
+    console.log("📋 View query result:", { members, error });
 
     // If view doesn't exist, try base table
-    if (error && (error.message.includes('Could not find the table') ||
-                  error.message.includes('relation "family_members_with_stats" does not exist') ||
-                  error.code === 'PGRST116')) {
-      console.log('📋 View not found, trying base table family_members...');
+    if (
+      error &&
+      (error.message.includes("Could not find the table") ||
+        error.message.includes(
+          'relation "family_members_with_stats" does not exist',
+        ) ||
+        error.code === "PGRST116")
+    ) {
+      console.log("📋 View not found, trying base table family_members...");
 
       const baseQuery = await supabase
-        .from('family_members')
-        .select('*')
-        .order('position_index', { ascending: true });
+        .from("family_members")
+        .select("*")
+        .order("position_index", { ascending: true });
 
-      console.log('📋 Base table query result:', { data: baseQuery.data, error: baseQuery.error });
+      console.log("📋 Base table query result:", {
+        data: baseQuery.data,
+        error: baseQuery.error,
+      });
 
       members = baseQuery.data;
       error = baseQuery.error;
 
       // Add computed fields that would be in the view
       if (members && !error) {
-        members = members.map(member => ({
+        members = members.map((member) => ({
           ...member,
           has_custom_avatar: member.avatar_url ? true : false,
-          display_avatar: member.avatar_url || '/placeholder.svg'
+          display_avatar: member.avatar_url || "/placeholder.svg",
         }));
       }
     }
 
     if (error) {
-      console.error('Error fetching family members:', {
+      console.error("Error fetching family members:", {
         message: error.message,
         code: error.code,
         details: error.details,
         hint: error.hint,
-        error
+        error,
       });
 
       // Check if it's a table not found error
-      if (error.message.includes('Could not find the table') ||
-          error.message.includes('relation "family_members" does not exist') ||
-          error.message.includes('relation "family_members_with_stats" does not exist') ||
-          error.code === 'PGRST116') {
-        throw new Error('SCHEMA_MISSING: Database tables not found');
+      if (
+        error.message.includes("Could not find the table") ||
+        error.message.includes('relation "family_members" does not exist') ||
+        error.message.includes(
+          'relation "family_members_with_stats" does not exist',
+        ) ||
+        error.code === "PGRST116"
+      ) {
+        throw new Error("SCHEMA_MISSING: Database tables not found");
       }
       throw new Error(`Failed to fetch family members: ${error.message}`);
     }
@@ -108,7 +122,7 @@ export async function getFamilyMembers(): Promise<FamilyMember[]> {
     console.log(`✅ Loaded ${members?.length || 0} family members`);
     return members || [];
   } catch (error) {
-    console.error('Error in getFamilyMembers:', error);
+    console.error("Error in getFamilyMembers:", error);
     if (error instanceof Error) {
       throw error;
     }
@@ -119,30 +133,33 @@ export async function getFamilyMembers(): Promise<FamilyMember[]> {
 /**
  * Update a family member's avatar
  */
-export async function updateFamilyMemberAvatar(id: string, avatarUrl: string): Promise<FamilyMember> {
+export async function updateFamilyMemberAvatar(
+  id: string,
+  avatarUrl: string,
+): Promise<FamilyMember> {
   if (!isSupabaseConfigured()) {
-    throw new Error('Supabase not configured');
+    throw new Error("Supabase not configured");
   }
 
   try {
     console.log(`🔄 Updating avatar for family member: ${id}...`);
 
     const { data: member, error } = await supabase
-      .from('family_members')
+      .from("family_members")
       .update({ avatar_url: avatarUrl })
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error updating family member avatar:', error);
+      console.error("Error updating family member avatar:", error);
       throw new Error(`Failed to update avatar: ${error.message}`);
     }
 
     console.log(`✅ Avatar updated successfully: ${id}`);
     return member;
   } catch (error) {
-    console.error('Error in updateFamilyMemberAvatar:', error);
+    console.error("Error in updateFamilyMemberAvatar:", error);
     if (error instanceof Error) {
       throw error;
     }
@@ -153,30 +170,32 @@ export async function updateFamilyMemberAvatar(id: string, avatarUrl: string): P
 /**
  * Remove a family member's avatar
  */
-export async function removeFamilyMemberAvatar(id: string): Promise<FamilyMember> {
+export async function removeFamilyMemberAvatar(
+  id: string,
+): Promise<FamilyMember> {
   if (!isSupabaseConfigured()) {
-    throw new Error('Supabase not configured');
+    throw new Error("Supabase not configured");
   }
 
   try {
     console.log(`🗑️ Removing avatar for family member: ${id}...`);
 
     const { data: member, error } = await supabase
-      .from('family_members')
+      .from("family_members")
       .update({ avatar_url: null })
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error removing family member avatar:', error);
+      console.error("Error removing family member avatar:", error);
       throw new Error(`Failed to remove avatar: ${error.message}`);
     }
 
     console.log(`✅ Avatar removed successfully: ${id}`);
     return member;
   } catch (error) {
-    console.error('Error in removeFamilyMemberAvatar:', error);
+    console.error("Error in removeFamilyMemberAvatar:", error);
     if (error instanceof Error) {
       throw error;
     }
@@ -187,30 +206,33 @@ export async function removeFamilyMemberAvatar(id: string): Promise<FamilyMember
 /**
  * Update family member information
  */
-export async function updateFamilyMember(id: string, updates: UpdateFamilyMemberData): Promise<FamilyMember> {
+export async function updateFamilyMember(
+  id: string,
+  updates: UpdateFamilyMemberData,
+): Promise<FamilyMember> {
   if (!isSupabaseConfigured()) {
-    throw new Error('Supabase not configured');
+    throw new Error("Supabase not configured");
   }
 
   try {
     console.log(`🔄 Updating family member: ${id}...`);
 
     const { data: member, error } = await supabase
-      .from('family_members')
+      .from("family_members")
       .update(updates)
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error updating family member:', error);
+      console.error("Error updating family member:", error);
       throw new Error(`Failed to update family member: ${error.message}`);
     }
 
     console.log(`✅ Family member updated successfully: ${id}`);
     return member;
   } catch (error) {
-    console.error('Error in updateFamilyMember:', error);
+    console.error("Error in updateFamilyMember:", error);
     if (error instanceof Error) {
       throw error;
     }
@@ -224,25 +246,31 @@ export async function updateFamilyMember(id: string, updates: UpdateFamilyMember
 export async function uploadFamilyMemberAvatar(
   memberId: string,
   processedPhoto: ProcessedPhoto,
-  onProgress?: (progress: number) => void
+  onProgress?: (progress: number) => void,
 ): Promise<FamilyMember> {
   if (!isSupabaseConfigured()) {
-    throw new Error('Supabase not configured');
+    throw new Error("Supabase not configured");
   }
 
   try {
     console.log(`📸 Uploading avatar for family member: ${memberId}...`);
 
     // Upload photo to Cloudflare
-    const cloudflareUrl = await uploadPhotoToCloudflare(processedPhoto, onProgress);
+    const cloudflareUrl = await uploadPhotoToCloudflare(
+      processedPhoto,
+      onProgress,
+    );
 
     // Update family member with new avatar URL
-    const updatedMember = await updateFamilyMemberAvatar(memberId, cloudflareUrl);
+    const updatedMember = await updateFamilyMemberAvatar(
+      memberId,
+      cloudflareUrl,
+    );
 
     console.log(`✅ Avatar uploaded and updated successfully: ${memberId}`);
     return updatedMember;
   } catch (error) {
-    console.error('Error in uploadFamilyMemberAvatar:', error);
+    console.error("Error in uploadFamilyMemberAvatar:", error);
     if (error instanceof Error) {
       throw error;
     }
@@ -254,45 +282,51 @@ export async function uploadFamilyMemberAvatar(
  * Subscribe to real-time changes in family members
  */
 export function subscribeToFamilyMembers(
-  callback: (members: FamilyMember[]) => void
+  callback: (members: FamilyMember[]) => void,
 ) {
   if (!isSupabaseConfigured()) {
-    console.warn('Supabase not configured, skipping real-time subscription');
+    console.warn("Supabase not configured, skipping real-time subscription");
     return () => {}; // Return empty unsubscribe function
   }
 
-  console.log('🔄 Setting up real-time family members sync...');
-  
+  console.log("🔄 Setting up real-time family members sync...");
+
   const subscription = supabase
-    .channel('family_members_changes')
+    .channel("family_members_changes")
     .on(
-      'postgres_changes',
+      "postgres_changes",
       {
-        event: '*',
-        schema: 'public',
-        table: 'family_members'
+        event: "*",
+        schema: "public",
+        table: "family_members",
       },
       async (payload) => {
-        console.log('📡 Real-time family member change detected:', payload.eventType);
-        
+        console.log(
+          "📡 Real-time family member change detected:",
+          payload.eventType,
+        );
+
         // Refetch all family members when any change occurs
         try {
           const members = await getFamilyMembers();
           callback(members);
-          console.log('✅ Family members sync updated with latest data');
+          console.log("✅ Family members sync updated with latest data");
         } catch (error) {
-          console.error('Error in real-time family members subscription:', error);
+          console.error(
+            "Error in real-time family members subscription:",
+            error,
+          );
         }
-      }
+      },
     )
     .subscribe((status) => {
-      console.log('📡 Family members subscription status:', status);
+      console.log("📡 Family members subscription status:", status);
     });
 
-  console.log('✅ Real-time family members sync enabled');
+  console.log("✅ Real-time family members sync enabled");
 
   return () => {
-    console.log('🔌 Unsubscribing from family members changes');
+    console.log("🔌 Unsubscribing from family members changes");
     subscription.unsubscribe();
   };
 }
@@ -307,25 +341,35 @@ export async function debugAvailableTables(): Promise<string[]> {
 
   try {
     // Try to query the information schema to see what tables exist
-    const { data, error } = await supabase.rpc('get_table_list');
+    const { data, error } = await supabase.rpc("get_table_list");
 
     if (error) {
-      console.log('📋 Could not get table list via RPC, trying manual check...');
+      console.log(
+        "📋 Could not get table list via RPC, trying manual check...",
+      );
 
       // Manually test common table names
-      const testTables = ['family_members', 'family_members_with_stats', 'journal_entries', 'wishlist_items'];
+      const testTables = [
+        "family_members",
+        "family_members_with_stats",
+        "journal_entries",
+        "wishlist_items",
+      ];
       const existingTables = [];
 
       for (const tableName of testTables) {
         try {
           const { error: testError } = await supabase
             .from(tableName)
-            .select('*', { count: 'exact', head: true });
+            .select("*", { count: "exact", head: true });
 
           if (!testError) {
             existingTables.push(tableName);
           } else {
-            console.log(`❌ Table ${tableName} not accessible:`, testError.message);
+            console.log(
+              `❌ Table ${tableName} not accessible:`,
+              testError.message,
+            );
           }
         } catch (e) {
           console.log(`❌ Table ${tableName} test failed:`, e);
@@ -337,7 +381,7 @@ export async function debugAvailableTables(): Promise<string[]> {
 
     return data || [];
   } catch (error) {
-    console.error('Error debugging tables:', error);
+    console.error("Error debugging tables:", error);
     return [];
   }
 }
@@ -353,69 +397,77 @@ export async function testFamilyMembersConnection(): Promise<{
   if (!isSupabaseConfigured()) {
     return {
       success: false,
-      message: 'Supabase not configured',
-      error: 'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY'
+      message: "Supabase not configured",
+      error: "Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
     };
   }
 
   try {
-    console.log('🔍 Testing family members database connection...');
+    console.log("🔍 Testing family members database connection...");
 
     // Debug: Check what tables are available
-    console.log('🔍 Checking available tables...');
+    console.log("🔍 Checking available tables...");
     const availableTables = await debugAvailableTables();
-    console.log('📋 Available tables:', availableTables);
+    console.log("📋 Available tables:", availableTables);
 
     // Test 1: Check if base table exists
-    console.log('🔍 Testing family_members table...');
+    console.log("🔍 Testing family_members table...");
     const { data, error, count } = await supabase
-      .from('family_members')
-      .select('*', { count: 'exact', head: true });
+      .from("family_members")
+      .select("*", { count: "exact", head: true });
 
     if (error) {
-      console.error('Base table test failed:', error);
-      if (error.message.includes('Could not find the table') ||
-          error.message.includes('relation "family_members" does not exist')) {
+      console.error("Base table test failed:", error);
+      if (
+        error.message.includes("Could not find the table") ||
+        error.message.includes('relation "family_members" does not exist')
+      ) {
         return {
           success: false,
-          message: 'Database tables not found - please run family-members-schema.sql',
-          error: 'Missing: family_members table. Run the SQL schema to create all required tables and views.'
+          message:
+            "Database tables not found - please run family-members-schema.sql",
+          error:
+            "Missing: family_members table. Run the SQL schema to create all required tables and views.",
         };
       }
       return {
         success: false,
-        message: 'Database connection failed',
-        error: error.message
+        message: "Database connection failed",
+        error: error.message,
       };
     }
 
     // Test 2: Check if view exists
     const { error: viewError } = await supabase
-      .from('family_members_with_stats')
-      .select('*', { count: 'exact', head: true });
+      .from("family_members_with_stats")
+      .select("*", { count: "exact", head: true });
 
-    let viewStatus = '';
+    let viewStatus = "";
     if (viewError) {
-      if (viewError.message.includes('Could not find the table') ||
-          viewError.message.includes('relation "family_members_with_stats" does not exist')) {
-        viewStatus = ' (View missing - using fallback)';
+      if (
+        viewError.message.includes("Could not find the table") ||
+        viewError.message.includes(
+          'relation "family_members_with_stats" does not exist',
+        )
+      ) {
+        viewStatus = " (View missing - using fallback)";
       } else {
-        viewStatus = ' (View error - using fallback)';
+        viewStatus = " (View error - using fallback)";
       }
     } else {
-      viewStatus = ' (View working)';
+      viewStatus = " (View working)";
     }
 
     const memberCount = count || 0;
     return {
       success: true,
-      message: `✅ Family members database connected! Found ${memberCount} member${memberCount !== 1 ? 's' : ''}${viewStatus}.`
+      message: `✅ Family members database connected! Found ${memberCount} member${memberCount !== 1 ? "s" : ""}${viewStatus}.`,
     };
   } catch (error) {
     return {
       success: false,
-      message: 'Connection test failed',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: "Connection test failed",
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
