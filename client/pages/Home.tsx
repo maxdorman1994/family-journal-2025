@@ -1829,6 +1829,62 @@ export default function Home() {
           </Button>
         </div>
       </section>
+
+      {/* Contact Us Section */}
+      <section className="mt-20 mb-12">
+        <div className="text-center">
+          <div className="bg-gradient-to-r from-slate-50 via-blue-50 to-emerald-50 rounded-2xl p-8 border-2 border-slate-200/60 shadow-lg">
+            <div className="max-w-2xl mx-auto">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Heart className="w-8 h-8 text-white" />
+              </div>
+
+              <h2 className="text-3xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-blue-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                  Get in Touch
+                </span>
+              </h2>
+
+              <p className="text-lg text-slate-600 mb-6 leading-relaxed">
+                Have a question about our Scottish adventures or want to share your own family travel stories?
+                We'd love to hear from you!
+              </p>
+
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-600 rounded-full flex items-center justify-center shadow-md">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-medium text-slate-500 mb-1">Email us at</p>
+                  <a
+                    href="mailto:contact@aweeadventure.co.uk"
+                    className="text-xl font-bold text-blue-600 hover:text-emerald-600 transition-colors duration-300"
+                  >
+                    contact@aweeadventure.co.uk
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex justify-center gap-2 opacity-60">
+                <span className="text-blue-600">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+                <span className="text-emerald-600">💌</span>
+                <span className="text-blue-600">🏔️</span>
+              </div>
+
+              <p className="text-sm text-slate-500 mt-4">
+                We'll get back to you faster than a Highland wind! 🌬️
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
