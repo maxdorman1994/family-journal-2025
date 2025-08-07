@@ -35,7 +35,12 @@ export default function Layout({ children }: LayoutProps) {
       console.log("📸 Loading stored logo URL:", storedLogoUrl);
       setLogoUrl(storedLogoUrl);
     }
-  }, []);
+
+    // Initialize cross-device sync
+    initializeSync().catch(error => {
+      console.error("Failed to initialize sync:", error);
+    });
+  }, [initializeSync]);
 
   // Save logo URL to localStorage whenever it changes
   const updateLogoUrl = (newUrl: string) => {
