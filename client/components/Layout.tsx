@@ -45,6 +45,51 @@ export default function Layout({ children }: LayoutProps) {
     return false;
   };
 
+  const handleLogoEdit = () => {
+    if (!isAuthenticated) {
+      return;
+    }
+    logoFileInputRef.current?.click();
+  };
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file
+    const validation = validatePhotoFile(file);
+    if (!validation.valid) {
+      alert(`Invalid file: ${validation.error}`);
+      return;
+    }
+
+    setIsUploadingLogo(true);
+
+    try {
+      console.log(`📸 Processing and uploading new logo: ${file.name}`);
+
+      // Process the photo (compress, etc.)
+      const processedPhoto = await processPhoto(file);
+
+      // Upload to Cloudflare
+      const cloudflareUrl = await uploadPhotoToCloudflare(processedPhoto);
+
+      // Update logo URL
+      setLogoUrl(cloudflareUrl);
+      console.log("✅ Logo updated successfully:", cloudflareUrl);
+
+    } catch (error) {
+      console.error("❌ Error uploading logo:", error);
+      alert("Failed to upload logo. Please try again.");
+    } finally {
+      setIsUploadingLogo(false);
+      // Reset input value to allow selecting the same file again
+      if (logoFileInputRef.current) {
+        logoFileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-vibrant-pink/15 via-scotland-thistle/10 to-vibrant-blue/25">
       {/* Navigation Header */}
