@@ -234,7 +234,15 @@ export default function Home() {
   const testConnection = async () => {
     try {
       setSyncStatus('connecting');
-      setError('🔍 Testing database connection...');
+      setError('🔍 Testing database connection and checking tables...');
+
+      // Import the debug function
+      const { debugAvailableTables } = await import('@/lib/familyMembersService');
+
+      // First check what tables are available
+      console.log('🔍 Debugging available tables...');
+      const availableTables = await debugAvailableTables();
+      console.log('📋 Found tables:', availableTables);
 
       const result = await testFamilyMembersConnection();
 
@@ -246,7 +254,13 @@ export default function Home() {
         await loadFamilyMembersData();
       } else {
         setSyncStatus('disconnected');
-        setError(`❌ ${result.message}${result.error ? ': ' + result.error : ''}`);
+        let debugInfo = '';
+        if (availableTables.length > 0) {
+          debugInfo = ` (Found tables: ${availableTables.join(', ')})`;
+        } else {
+          debugInfo = ` (No accessible tables found)`;
+        }
+        setError(`❌ ${result.message}${result.error ? ': ' + result.error : ''}${debugInfo}`);
       }
     } catch (error) {
       setSyncStatus('disconnected');
