@@ -7,7 +7,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { MapPin, Trash2, Edit, Calendar, Camera } from 'lucide-react';
-import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
 // Fix for default markers in React Leaflet
