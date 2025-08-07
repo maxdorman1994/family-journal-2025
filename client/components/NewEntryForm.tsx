@@ -35,6 +35,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import PhotoUpload from "@/components/PhotoUpload";
 import { ProcessedPhoto, cleanupPreviewUrls } from "@/lib/photoUtils";
+import { JournalEntry } from "@/lib/supabase";
 
 interface NewEntryFormProps {
   isOpen: boolean;
