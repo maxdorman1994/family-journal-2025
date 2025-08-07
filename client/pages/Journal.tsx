@@ -68,12 +68,8 @@ export default function Journal() {
 
   const {
     isAuthenticated,
-    showPasswordPrompt,
     sessionTimeRemaining,
-    requestAuth,
-    authenticate,
-    logout,
-    cancelAuth
+    logout
   } = useAuth();
 
   // Fallback data for development when Supabase is not configured
@@ -131,7 +127,7 @@ export default function Journal() {
       date: "Saturday 15 July 2025",
       location: "Edinburgh, Midlothian",
       weather: "🌧️ Light Rain",
-      mood: "🤩 Amazed",
+      mood: "���� Amazed",
       miles_traveled: 123,
       parking: "£12",
       dog_friendly: false,
