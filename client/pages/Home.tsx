@@ -881,7 +881,7 @@ export default function Home() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-6">
           {familyMembers
-            .filter((member) => member.position_index > 4 && member.name !== "Charlie") // Extended family (positions 5+), excluding Charlie
+            .filter((member) => member.position_index > 4 && member.name !== "Charlie" && member.name !== "Fern") // Extended family (positions 5+), excluding dogs
             .map((member) => (
               <Card
                 key={member.id}
@@ -1075,7 +1075,7 @@ export default function Home() {
                     <h3 className="text-xl font-bold text-emerald-800 mb-1">
                       {milestoneStats.completed_count > 0
                         ? `🏆 ${milestoneStats.completed_count} Milestones Completed • ${milestoneStats.total_xp} XP Earned!`
-                        : "🏴󠁧󠁢󠁳󠁣󠁴��� Start Your Scottish Adventure Journey!"}
+                        : "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Start Your Scottish Adventure Journey!"}
                     </h3>
                     <p className="text-sm text-emerald-600">
                       {milestoneStats.completed_count > 0
