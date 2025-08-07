@@ -159,12 +159,11 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
       conversionAttempted = true; // Mark as attempted so compression is skipped
     }
 
-    // Try to compress the image (skip for HEIC files when conversion failed)
-    const isOriginalHeic = (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) && conversionAttempted && processedFile === file;
+    // Try to compress the image (skip for HEIC files)
+    const isHeicFile = (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic'));
 
-    if (isOriginalHeic) {
-      console.log(`Skipping compression for original HEIC file: ${processedFile.name}`);
-      warnings.push('HEIC file - uploading directly to Cloudflare Images (supports HEIC)');
+    if (isHeicFile) {
+      console.log(`Skipping compression for HEIC file: ${processedFile.name} - will be optimized by Cloudflare Images`);
     } else {
       console.log(`Attempting compression for: ${processedFile.name}`);
       compressionAttempted = true;
