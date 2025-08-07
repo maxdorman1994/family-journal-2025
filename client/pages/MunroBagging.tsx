@@ -147,8 +147,8 @@ export default function MunroBagging() {
   };
 
   const completedCount = stats.completed_count;
-  const totalMunros = stats.total_munros;
-  const completionPercentage = stats.completion_percentage;
+  const totalMunros = 282; // Always track against the full 282 official Munros
+  const completionPercentage = Math.round((completedCount / totalMunros) * 100 * 10) / 10;
 
   const filteredMunros = munros.filter(munro => {
     const matchesFilter = filter === 'all' ||
@@ -194,7 +194,8 @@ export default function MunroBagging() {
         setStats(prev => ({
           ...prev,
           completed_count: newCompletedCount,
-          completion_percentage: Math.round((newCompletedCount / prev.total_munros) * 100)
+          total_munros: 282,
+          completion_percentage: Math.round((newCompletedCount / 282) * 100 * 10) / 10
         }));
 
         return;
