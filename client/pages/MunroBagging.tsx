@@ -294,7 +294,7 @@ export default function MunroBagging() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <Calendar className="h-8 w-8 text-white" />
                 </div>
-                <div className="text-4xl font-bold text-slate-800 mb-2 text-center">{Math.ceil((TOTAL_MUNROS - completedCount) / 12)}</div>
+                <div className="text-4xl font-bold text-slate-800 mb-2 text-center">{Math.ceil((totalMunros - completedCount) / 12)}</div>
                 <div className="text-sm font-semibold text-slate-600 text-center">Years to Complete</div>
               </div>
             </CardContent>
