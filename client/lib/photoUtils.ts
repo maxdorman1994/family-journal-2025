@@ -1,5 +1,5 @@
-import imageCompression from 'browser-image-compression';
-import { v4 as uuidv4 } from 'uuid';
+import imageCompression from "browser-image-compression";
+import { v4 as uuidv4 } from "uuid";
 
 export interface ProcessedPhoto {
   id: string;
@@ -23,16 +23,15 @@ const defaultCompressionOptions: CompressionOptions = {
   maxSizeMB: 1, // Compress to max 1MB
   maxWidthOrHeight: 1920, // Max dimension 1920px
   useWebWorker: true,
-  quality: 0.8 // 80% quality
+  quality: 0.8, // 80% quality
 };
-
 
 /**
  * Compress an image file
  */
 export async function compressImage(
   file: File,
-  options: Partial<CompressionOptions> = {}
+  options: Partial<CompressionOptions> = {},
 ): Promise<File> {
   const compressionOptions = { ...defaultCompressionOptions, ...options };
 
@@ -42,33 +41,37 @@ export async function compressImage(
     const compressedFile = await imageCompression(file, compressionOptions);
 
     // Create a new file with a compressed suffix for clarity
-    const newName = file.name.replace(/(\.[^.]+)$/, '_compressed$1');
+    const newName = file.name.replace(/(\.[^.]+)$/, "_compressed$1");
 
     const result = new File([compressedFile], newName, {
       type: compressedFile.type,
-      lastModified: Date.now()
+      lastModified: Date.now(),
     });
 
-    console.log(`Compression successful: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) -> ${result.name} (${(result.size / 1024 / 1024).toFixed(2)}MB)`);
+    console.log(
+      `Compression successful: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) -> ${result.name} (${(result.size / 1024 / 1024).toFixed(2)}MB)`,
+    );
     return result;
   } catch (error) {
-    console.error('Image compression failed for:', file.name);
-    console.error('Compression error details:', error);
+    console.error("Image compression failed for:", file.name);
+    console.error("Compression error details:", error);
 
     // Extract meaningful error information
-    let errorMessage = 'Unknown compression error';
+    let errorMessage = "Unknown compression error";
     if (error instanceof Error) {
       errorMessage = error.message;
     } else if (error instanceof Event) {
-      errorMessage = 'Browser event error during compression';
-    } else if (typeof error === 'object' && error !== null) {
+      errorMessage = "Browser event error during compression";
+    } else if (typeof error === "object" && error !== null) {
       errorMessage = JSON.stringify(error);
     } else {
       errorMessage = String(error);
     }
 
-    console.error('Detailed compression error:', errorMessage);
-    throw new Error(`Failed to compress image: ${file.name}. Error: ${errorMessage}`);
+    console.error("Detailed compression error:", errorMessage);
+    throw new Error(
+      `Failed to compress image: ${file.name}. Error: ${errorMessage}`,
+    );
   }
 }
 
@@ -92,8 +95,11 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
       processedFile = compressedFile;
       console.log(`Compression successful for: ${file.name}`);
     } catch (compressionError) {
-      console.warn(`Compression failed for ${processedFile.name}:`, compressionError);
-      warnings.push('Compression failed - using original size');
+      console.warn(
+        `Compression failed for ${processedFile.name}:`,
+        compressionError,
+      );
+      warnings.push("Compression failed - using original size");
       // Keep the uncompressed file
     }
 
@@ -102,12 +108,14 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
     try {
       preview = URL.createObjectURL(processedFile);
     } catch (previewError) {
-      console.warn('Failed to create preview, using placeholder');
-      preview = '/placeholder.svg';
-      warnings.push('Preview generation failed');
+      console.warn("Failed to create preview, using placeholder");
+      preview = "/placeholder.svg";
+      warnings.push("Preview generation failed");
     }
 
-    console.log(`Photo processing completed: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) -> ${processedFile.name} (${(processedFile.size / 1024 / 1024).toFixed(2)}MB)`);
+    console.log(
+      `Photo processing completed: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) -> ${processedFile.name} (${(processedFile.size / 1024 / 1024).toFixed(2)}MB)`,
+    );
 
     return {
       id,
@@ -116,17 +124,17 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
       preview,
       isProcessing: false,
       uploadProgress: 0,
-      error: warnings.length > 0 ? warnings.join('; ') : undefined
+      error: warnings.length > 0 ? warnings.join("; ") : undefined,
     };
   } catch (error) {
-    console.error('Photo processing failed completely:', error);
+    console.error("Photo processing failed completely:", error);
 
     // Ultimate fallback: return the original file with detailed error
-    let fallbackPreview = '/placeholder.svg';
+    let fallbackPreview = "/placeholder.svg";
     try {
       fallbackPreview = URL.createObjectURL(file);
     } catch (previewError) {
-      console.warn('Even fallback preview failed');
+      console.warn("Even fallback preview failed");
     }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -138,7 +146,7 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
       preview: fallbackPreview,
       isProcessing: false,
       uploadProgress: 0,
-      error: `Processing failed: ${errorMessage}. Uploading original file.`
+      error: `Processing failed: ${errorMessage}. Uploading original file.`,
     };
   }
 }
@@ -148,7 +156,7 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
  */
 export async function processPhotos(files: File[]): Promise<ProcessedPhoto[]> {
   const processedPhotos: ProcessedPhoto[] = [];
-  
+
   for (const file of files) {
     try {
       const processed = await processPhoto(file);
@@ -163,11 +171,11 @@ export async function processPhotos(files: File[]): Promise<ProcessedPhoto[]> {
         preview: URL.createObjectURL(file),
         isProcessing: false,
         uploadProgress: 0,
-        error: error instanceof Error ? error.message : 'Processing failed'
+        error: error instanceof Error ? error.message : "Processing failed",
       });
     }
   }
-  
+
   return processedPhotos;
 }
 
@@ -176,20 +184,22 @@ export async function processPhotos(files: File[]): Promise<ProcessedPhoto[]> {
  */
 export async function uploadPhotoToCloudflare(
   photo: ProcessedPhoto,
-  onProgress?: (progress: number) => void
+  onProgress?: (progress: number) => void,
 ): Promise<string> {
-  console.log(`🔼 Starting upload for photo: ${photo.originalFile.name} (${photo.id})`);
+  console.log(
+    `🔼 Starting upload for photo: ${photo.originalFile.name} (${photo.id})`,
+  );
 
   const formData = new FormData();
-  formData.append('photo', photo.file);
-  formData.append('originalName', photo.originalFile.name);
-  formData.append('photoId', photo.id);
+  formData.append("photo", photo.file);
+  formData.append("originalName", photo.originalFile.name);
+  formData.append("photoId", photo.id);
 
   console.log(`📤 FormData prepared:`, {
     fileName: photo.originalFile.name,
     fileSize: photo.file.size,
     fileType: photo.file.type,
-    photoId: photo.id
+    photoId: photo.id,
   });
 
   try {
@@ -197,18 +207,18 @@ export async function uploadPhotoToCloudflare(
     const xhr = new XMLHttpRequest();
 
     return new Promise((resolve, reject) => {
-      xhr.upload.addEventListener('progress', (e) => {
+      xhr.upload.addEventListener("progress", (e) => {
         if (e.lengthComputable && onProgress) {
           const progress = Math.round((e.loaded / e.total) * 100);
           onProgress(progress);
         }
       });
 
-      xhr.addEventListener('load', () => {
+      xhr.addEventListener("load", () => {
         console.log(`📥 Upload response received:`, {
           status: xhr.status,
           statusText: xhr.statusText,
-          responseText: xhr.responseText
+          responseText: xhr.responseText,
         });
 
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -218,56 +228,69 @@ export async function uploadPhotoToCloudflare(
             resolve(response.url);
           } catch (error) {
             console.error(`❌ Failed to parse response:`, error);
-            reject(new Error('Invalid response format'));
+            reject(new Error("Invalid response format"));
           }
         } else {
-          console.error(`❌ Upload failed with status ${xhr.status}:`, xhr.responseText);
+          console.error(
+            `❌ Upload failed with status ${xhr.status}:`,
+            xhr.responseText,
+          );
           reject(new Error(`Upload failed: ${xhr.statusText}`));
         }
       });
 
-      xhr.addEventListener('error', () => {
-        reject(new Error('Network error during upload'));
+      xhr.addEventListener("error", () => {
+        reject(new Error("Network error during upload"));
       });
 
-      xhr.open('POST', '/api/photos/upload');
+      xhr.open("POST", "/api/photos/upload");
       console.log(`🚀 Sending upload request to /api/photos/upload`);
       xhr.send(formData);
     });
   } catch (error) {
-    console.error('Photo upload failed:', error);
-    throw new Error(error instanceof Error ? error.message : 'Upload failed');
+    console.error("Photo upload failed:", error);
+    throw new Error(error instanceof Error ? error.message : "Upload failed");
   }
 }
 
 /**
  * Validate file type and size for Cloudflare Images
  */
-export function validatePhotoFile(file: File): { valid: boolean; error?: string; warning?: string } {
+export function validatePhotoFile(file: File): {
+  valid: boolean;
+  error?: string;
+  warning?: string;
+} {
   const maxSize = 10 * 1024 * 1024; // 10MB limit for Cloudflare Images
   const allowedTypes = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/webp',
-    'image/gif',
-    'image/svg+xml'
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+    "image/svg+xml",
   ];
 
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
-  const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+  const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"];
+  const fileExtension = file.name
+    .toLowerCase()
+    .substring(file.name.lastIndexOf("."));
 
   if (file.size > maxSize) {
     return {
       valid: false,
-      error: `File size too large. Maximum file size is ${maxSize / 1024 / 1024}MB`
+      error: `File size too large. Maximum file size is ${maxSize / 1024 / 1024}MB`,
     };
   }
 
-  if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
+  if (
+    !allowedTypes.includes(file.type) &&
+    !allowedExtensions.includes(fileExtension)
+  ) {
     return {
       valid: false,
-      error: 'Unsupported file type. Please use JPEG, PNG, WebP, GIF, or SVG images'
+      error:
+        "Unsupported file type. Please use JPEG, PNG, WebP, GIF, or SVG images",
     };
   }
 
@@ -278,8 +301,8 @@ export function validatePhotoFile(file: File): { valid: boolean; error?: string;
  * Cleanup preview URLs to prevent memory leaks
  */
 export function cleanupPreviewUrls(photos: ProcessedPhoto[]) {
-  photos.forEach(photo => {
-    if (photo.preview.startsWith('blob:')) {
+  photos.forEach((photo) => {
+    if (photo.preview.startsWith("blob:")) {
       URL.revokeObjectURL(photo.preview);
     }
   });

@@ -14,7 +14,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { processPhoto, uploadPhotoToCloudflare, validatePhotoFile } from "@/lib/photoUtils";
+import {
+  processPhoto,
+  uploadPhotoToCloudflare,
+  validatePhotoFile,
+} from "@/lib/photoUtils";
 
 export default function Home() {
   const [editingMember, setEditingMember] = useState<number | null>(null);
@@ -27,7 +31,9 @@ export default function Home() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file || editingMember === null) return;
 
@@ -45,30 +51,30 @@ export default function Home() {
 
       // For demo purposes, we'll use the preview URL directly
       // In production, you'd want to upload to Cloudflare and save the URL
-      setMemberPhotos(prev => ({
+      setMemberPhotos((prev) => ({
         ...prev,
-        [editingMember]: processedPhoto.preview
+        [editingMember]: processedPhoto.preview,
       }));
 
       setEditingMember(null);
       console.log(`Profile photo updated for family member ${editingMember}`);
     } catch (error) {
-      console.error('Error processing photo:', error);
-      alert('Failed to process photo. Please try again.');
+      console.error("Error processing photo:", error);
+      alert("Failed to process photo. Please try again.");
     } finally {
       setIsUploading(false);
     }
 
     // Reset file input
-    event.target.value = '';
+    event.target.value = "";
   };
 
   const removePhoto = (memberIndex: number) => {
     const photoUrl = memberPhotos[memberIndex];
-    if (photoUrl && photoUrl.startsWith('blob:')) {
+    if (photoUrl && photoUrl.startsWith("blob:")) {
       URL.revokeObjectURL(photoUrl);
     }
-    setMemberPhotos(prev => {
+    setMemberPhotos((prev) => {
       const updated = { ...prev };
       delete updated[memberIndex];
       return updated;
@@ -83,8 +89,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-blue-50 to-indigo-100",
         border: "border-blue-200/60",
-        accent: "from-blue-500 to-indigo-500"
-      }
+        accent: "from-blue-500 to-indigo-500",
+      },
     },
     {
       name: "Charlotte Foster",
@@ -94,8 +100,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-rose-50 to-pink-100",
         border: "border-rose-200/60",
-        accent: "from-rose-500 to-pink-500"
-      }
+        accent: "from-rose-500 to-pink-500",
+      },
     },
     {
       name: "Oscar",
@@ -105,8 +111,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-green-50 to-emerald-100",
         border: "border-green-200/60",
-        accent: "from-green-500 to-emerald-500"
-      }
+        accent: "from-green-500 to-emerald-500",
+      },
     },
     {
       name: "Rose",
@@ -116,8 +122,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-purple-50 to-violet-100",
         border: "border-purple-200/60",
-        accent: "from-purple-500 to-violet-500"
-      }
+        accent: "from-purple-500 to-violet-500",
+      },
     },
     {
       name: "Lola",
@@ -127,8 +133,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-amber-50 to-yellow-100",
         border: "border-amber-200/60",
-        accent: "from-amber-500 to-yellow-500"
-      }
+        accent: "from-amber-500 to-yellow-500",
+      },
     },
   ];
 
@@ -209,7 +215,9 @@ export default function Home() {
             >
               <CardContent className="p-6">
                 <div className="relative group w-20 h-20 mx-auto mb-4">
-                  <div className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}>
+                  <div
+                    className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
+                  >
                     <div className="w-full h-full rounded-full overflow-hidden bg-white">
                       <img
                         src={memberPhotos[index] || member.avatar}
@@ -251,8 +259,12 @@ export default function Home() {
                 <h3 className="font-semibold text-lg text-gray-800 mb-2">
                   {member.name}
                 </h3>
-                <p className="text-sm text-muted-foreground font-medium mb-3">{member.role}</p>
-                <p className="text-xs text-slate-600 leading-relaxed">{member.bio}</p>
+                <p className="text-sm text-muted-foreground font-medium mb-3">
+                  {member.role}
+                </p>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {member.bio}
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -271,7 +283,8 @@ export default function Home() {
         {Object.keys(memberPhotos).length === 0 && (
           <div className="text-center mt-4">
             <p className="text-sm text-slate-500">
-              💡 Hover over any family member's photo and click the edit button to upload a custom picture!
+              💡 Hover over any family member's photo and click the edit button
+              to upload a custom picture!
             </p>
           </div>
         )}

@@ -1,5 +1,35 @@
 import { useState } from "react";
-import { Mountain, Camera, Backpack, CloudRain, Heart, Car, Dog, Baby, MapPin, Compass, Star, Lightbulb, Shield, Wallet, Home, Utensils, Coffee, AlertTriangle, CheckCircle, Info, BookOpen, Navigation, Sun, Snowflake, Wind, Umbrella, Waves, Anchor, Ship } from "lucide-react";
+import {
+  Mountain,
+  Camera,
+  Backpack,
+  CloudRain,
+  Heart,
+  Car,
+  Dog,
+  Baby,
+  MapPin,
+  Compass,
+  Star,
+  Lightbulb,
+  Shield,
+  Wallet,
+  Home,
+  Utensils,
+  Coffee,
+  AlertTriangle,
+  CheckCircle,
+  Info,
+  BookOpen,
+  Navigation,
+  Sun,
+  Snowflake,
+  Wind,
+  Umbrella,
+  Waves,
+  Anchor,
+  Ship,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,15 +39,60 @@ export default function HintsTips() {
   const [activeCategory, setActiveCategory] = useState("safety");
 
   const categories = [
-    { id: "safety", label: "Safety & Planning", icon: Shield, color: "from-red-500 to-orange-500" },
-    { id: "packing", label: "Packing Essentials", icon: Backpack, color: "from-blue-500 to-cyan-500" },
-    { id: "weather", label: "Weather & Seasons", icon: CloudRain, color: "from-slate-500 to-blue-500" },
-    { id: "tides", label: "Tides & Coast", icon: Waves, color: "from-cyan-500 to-blue-500" },
-    { id: "family", label: "Family Tips", icon: Heart, color: "from-pink-500 to-purple-500" },
-    { id: "accommodation", label: "Places to Stay", icon: Home, color: "from-green-500 to-emerald-500" },
-    { id: "photography", label: "Photography", icon: Camera, color: "from-purple-500 to-pink-500" },
-    { id: "budget", label: "Budget Tips", icon: Wallet, color: "from-yellow-500 to-orange-500" },
-    { id: "local", label: "Local Secrets", icon: MapPin, color: "from-indigo-500 to-purple-500" }
+    {
+      id: "safety",
+      label: "Safety & Planning",
+      icon: Shield,
+      color: "from-red-500 to-orange-500",
+    },
+    {
+      id: "packing",
+      label: "Packing Essentials",
+      icon: Backpack,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      id: "weather",
+      label: "Weather & Seasons",
+      icon: CloudRain,
+      color: "from-slate-500 to-blue-500",
+    },
+    {
+      id: "tides",
+      label: "Tides & Coast",
+      icon: Waves,
+      color: "from-cyan-500 to-blue-500",
+    },
+    {
+      id: "family",
+      label: "Family Tips",
+      icon: Heart,
+      color: "from-pink-500 to-purple-500",
+    },
+    {
+      id: "accommodation",
+      label: "Places to Stay",
+      icon: Home,
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      id: "photography",
+      label: "Photography",
+      icon: Camera,
+      color: "from-purple-500 to-pink-500",
+    },
+    {
+      id: "budget",
+      label: "Budget Tips",
+      icon: Wallet,
+      color: "from-yellow-500 to-orange-500",
+    },
+    {
+      id: "local",
+      label: "Local Secrets",
+      icon: MapPin,
+      color: "from-indigo-500 to-purple-500",
+    },
   ];
 
   const tips = {
@@ -31,8 +106,8 @@ export default function HintsTips() {
           "Pack emergency whistle - 6 sharp blasts is the international distress signal",
           "Bring head torch with spare batteries, even for day walks",
           "Carry emergency shelter or space blanket",
-          "Download offline maps on your phone as backup to paper maps"
-        ]
+          "Download offline maps on your phone as backup to paper maps",
+        ],
       },
       {
         title: "Weather Awareness",
@@ -43,8 +118,8 @@ export default function HintsTips() {
           "Turn back if conditions deteriorate - mountains will still be there tomorrow",
           "Learn to recognize signs of hypothermia and heat exhaustion",
           "Allow extra time in winter - daylight hours are severely limited",
-          "Inform someone of your planned route and expected return time"
-        ]
+          "Inform someone of your planned route and expected return time",
+        ],
       },
       {
         title: "Navigation Essentials",
@@ -55,9 +130,9 @@ export default function HintsTips() {
           "Practice navigation skills in good weather before challenging conditions",
           "Use handrails like rivers and ridges to guide your route",
           "Count paces to estimate distance traveled",
-          "Consider GPS watch or device as backup, not primary navigation"
-        ]
-      }
+          "Consider GPS watch or device as backup, not primary navigation",
+        ],
+      },
     ],
     packing: [
       {
@@ -69,8 +144,8 @@ export default function HintsTips() {
           "Insulating layer: Fleece or down jacket for warmth",
           "Shell layer: Waterproof and breathable jacket and trousers",
           "Pack spare warm layer and extra socks in waterproof bag",
-          "Gaiters prevent stones entering boots and keep legs dry"
-        ]
+          "Gaiters prevent stones entering boots and keep legs dry",
+        ],
       },
       {
         title: "Footwear & Comfort",
@@ -81,8 +156,8 @@ export default function HintsTips() {
           "Break in new boots gradually before your trip",
           "Merino wool socks with liner socks to prevent blisters",
           "Consider microspikes or crampons for winter conditions",
-          "Pack blister plasters and spare socks"
-        ]
+          "Pack blister plasters and spare socks",
+        ],
       },
       {
         title: "Food & Hydration",
@@ -93,9 +168,9 @@ export default function HintsTips() {
           "Pack high-energy snacks: nuts, dried fruit, energy bars",
           "Hot drink in thermos flask for morale in cold conditions",
           "Emergency food: chocolate or energy gel that won't freeze",
-          "Water purification tablets if refilling from streams"
-        ]
-      }
+          "Water purification tablets if refilling from streams",
+        ],
+      },
     ],
     weather: [
       {
@@ -106,9 +181,9 @@ export default function HintsTips() {
           "Weather can change dramatically within hours, especially in mountains",
           "West coast generally wetter, east coast often clearer but windier",
           "Midges are worst in still, warm, humid conditions (May-September)",
-          "\"Four seasons in one day\" is not a cliché - it's reality",
-          "Even summer days can be cold and wet - always pack warm layers"
-        ]
+          '"Four seasons in one day" is not a cliché - it\'s reality',
+          "Even summer days can be cold and wet - always pack warm layers",
+        ],
       },
       {
         title: "Best Times to Visit",
@@ -119,8 +194,8 @@ export default function HintsTips() {
           "April & October: Fewer crowds, changeable weather, shorter days",
           "November-March: Winter conditions, short days, but stunning snow scenes",
           "December-February: Very short daylight (8 hours max), winter gear essential",
-          "Check sunrise/sunset times and plan accordingly"
-        ]
+          "Check sunrise/sunset times and plan accordingly",
+        ],
       },
       {
         title: "Seasonal Considerations",
@@ -131,9 +206,9 @@ export default function HintsTips() {
           "Summer: Long days (19+ hours daylight), warmest temperatures",
           "Autumn: Beautiful colors, clearer air, first snow on peaks",
           "Winter: Snow and ice, specialist equipment needed, magical landscapes",
-          "Shoulder seasons offer best value accommodation and fewer crowds"
-        ]
-      }
+          "Shoulder seasons offer best value accommodation and fewer crowds",
+        ],
+      },
     ],
     family: [
       {
@@ -145,8 +220,8 @@ export default function HintsTips() {
           "Bring plenty of snacks and water - more than for adults",
           "Make it fun: nature treasure hunts, geocaching, wildlife spotting",
           "Pack extra warm clothes and waterproofs for children",
-          "Allow twice as much time as you would for adults-only walks"
-        ]
+          "Allow twice as much time as you would for adults-only walks",
+        ],
       },
       {
         title: "Pet-Friendly Adventures",
@@ -157,8 +232,8 @@ export default function HintsTips() {
           "Bring collapsible water bowl and extra water for your dog",
           "Paw protectors for rough terrain or hot surfaces",
           "Keep dogs on leads near livestock and wildlife",
-          "Check for dog-friendly accommodation well in advance"
-        ]
+          "Check for dog-friendly accommodation well in advance",
+        ],
       },
       {
         title: "Entertainment & Motivation",
@@ -169,9 +244,9 @@ export default function HintsTips() {
           "Pack a magnifying glass for examining interesting finds",
           "Bring small rewards: favorite snacks or small toys",
           "Take breaks at interesting features: waterfalls, viewpoints, ruins",
-          "Let children lead sometimes - follow their curiosity"
-        ]
-      }
+          "Let children lead sometimes - follow their curiosity",
+        ],
+      },
     ],
     accommodation: [
       {
@@ -183,8 +258,8 @@ export default function HintsTips() {
           "Youth hostels: Budget-friendly, often in stunning locations",
           "B&Bs: Personal touch, local knowledge, hearty breakfasts",
           "Glamping: Outdoor experience with creature comforts",
-          "Book early for school holidays and peak summer months"
-        ]
+          "Book early for school holidays and peak summer months",
+        ],
       },
       {
         title: "What to Look For",
@@ -195,8 +270,8 @@ export default function HintsTips() {
           "Secure storage for bikes and outdoor equipment",
           "Family rooms or interconnecting rooms",
           "Pet-friendly policies if traveling with animals",
-          "Proximity to shops, restaurants, and attractions"
-        ]
+          "Proximity to shops, restaurants, and attractions",
+        ],
       },
       {
         title: "Hidden Gems",
@@ -207,9 +282,9 @@ export default function HintsTips() {
           "Farm stays: Great for children, often include activities",
           "University accommodation in summer: Budget option in cities",
           "National Trust and Historic Scotland properties often have unique stays",
-          "Wild camping is legal in Scotland with right to roam"
-        ]
-      }
+          "Wild camping is legal in Scotland with right to roam",
+        ],
+      },
     ],
     photography: [
       {
@@ -221,8 +296,8 @@ export default function HintsTips() {
           "Use foreground elements to add depth to your compositions",
           "Polarizing filter reduces reflections and enhances sky contrast",
           "Protect your camera from Scottish weather with rain covers",
-          "Tripod essential for low light and long exposure shots"
-        ]
+          "Tripod essential for low light and long exposure shots",
+        ],
       },
       {
         title: "Family Photos Tips",
@@ -233,8 +308,8 @@ export default function HintsTips() {
           "Include scale - people in landscape shots show mountain size",
           "Take photos throughout the day, not just at the summit",
           "Group shots at iconic locations for future memories",
-          "Don't forget to be in some photos yourself!"
-        ]
+          "Don't forget to be in some photos yourself!",
+        ],
       },
       {
         title: "Technical Tips",
@@ -245,9 +320,9 @@ export default function HintsTips() {
           "Bring extra batteries - cold weather drains them quickly",
           "Lens cloth for cleaning water droplets from lens",
           "Consider smartphone with good camera as backup",
-          "Learn basic composition rules: rule of thirds, leading lines"
-        ]
-      }
+          "Learn basic composition rules: rule of thirds, leading lines",
+        ],
+      },
     ],
     budget: [
       {
@@ -259,8 +334,8 @@ export default function HintsTips() {
           "Many of Scotland's best attractions (mountains, beaches) are free",
           "National Trust and Historic Scotland memberships pay for themselves",
           "Travel in shoulder seasons for lower accommodation costs",
-          "Pack lunches for day trips instead of buying expensive mountain café food"
-        ]
+          "Pack lunches for day trips instead of buying expensive mountain café food",
+        ],
       },
       {
         title: "Free Activities",
@@ -271,8 +346,8 @@ export default function HintsTips() {
           "Forest walks in Forestry Commission lands",
           "Free museums and galleries in major cities",
           "Wildlife watching: seals, dolphins, eagles, deer",
-          "Photography walks in picturesque villages"
-        ]
+          "Photography walks in picturesque villages",
+        ],
       },
       {
         title: "Transport Savings",
@@ -283,9 +358,9 @@ export default function HintsTips() {
           "Consider train travel for longer distances - scenic and relaxing",
           "Book ferries in advance for better prices",
           "Carpool with other families if traveling together",
-          "Some attractions offer discounts for public transport users"
-        ]
-      }
+          "Some attractions offer discounts for public transport users",
+        ],
+      },
     ],
     tides: [
       {
@@ -297,8 +372,8 @@ export default function HintsTips() {
           "Spring tides (new/full moon) have larger ranges, neap tides are smaller",
           "High tide times shift by roughly 50 minutes each day",
           "West coast tides are generally 1-2 hours later than east coast",
-          "Tidal bores can occur in sea lochs - water rushes in rapidly"
-        ]
+          "Tidal bores can occur in sea lochs - water rushes in rapidly",
+        ],
       },
       {
         title: "Tidal Resources & Apps",
@@ -309,8 +384,8 @@ export default function HintsTips() {
           "Tides4Fishing.com - detailed tidal charts for specific locations",
           "UK Hydrographic Office app - official Admiralty tide data",
           "Local harbour masters provide printed tide tables",
-          "Many coastal cafés and shops display daily tide times"
-        ]
+          "Many coastal cafés and shops display daily tide times",
+        ],
       },
       {
         title: "Coastal Safety & Activities",
@@ -321,8 +396,8 @@ export default function HintsTips() {
           "Check tide times before rock pooling, beach walks, or coastal hikes",
           "Low tide is best for exploring rock pools and sea caves",
           "Plan ferry crossings around tidal schedules for shorter journeys",
-          "Some beaches and causeways are only accessible at low tide"
-        ]
+          "Some beaches and causeways are only accessible at low tide",
+        ],
       },
       {
         title: "Island & Ferry Planning",
@@ -333,8 +408,8 @@ export default function HintsTips() {
           "Some smaller islands have tide-dependent landing schedules",
           "St. Kilda and other remote islands require calm seas for landing",
           "Orkney and Shetland ferries can be affected by high winds and tides",
-          "Check weather and sea conditions before island day trips"
-        ]
+          "Check weather and sea conditions before island day trips",
+        ],
       },
       {
         title: "Best Coastal Times",
@@ -345,9 +420,9 @@ export default function HintsTips() {
           "High tide + 1 hour: dramatic waves and coastal photography",
           "Early morning low tides: fewer crowds, better wildlife spotting",
           "Spring low tides expose areas usually underwater - great for exploration",
-          "Sunset at high tide: spectacular views from coastal paths"
-        ]
-      }
+          "Sunset at high tide: spectacular views from coastal paths",
+        ],
+      },
     ],
     local: [
       {
@@ -359,8 +434,8 @@ export default function HintsTips() {
           "Chat to locals in pubs and cafés for hidden gem recommendations",
           "Follow local Facebook groups and hiking forums",
           "Ordnance Survey maps show details Google Maps misses",
-          "Local weather can be very different from national forecasts"
-        ]
+          "Local weather can be very different from national forecasts",
+        ],
       },
       {
         title: "Cultural Tips",
@@ -371,8 +446,8 @@ export default function HintsTips() {
           "Understand right to roam laws - access with responsibility",
           "Support local businesses, especially in remote communities",
           "Respect wildlife and farming activities",
-          "Always close gates and follow the Scottish Outdoor Access Code"
-        ]
+          "Always close gates and follow the Scottish Outdoor Access Code",
+        ],
       },
       {
         title: "Seasonal Local Events",
@@ -383,58 +458,81 @@ export default function HintsTips() {
           "Farmers markets for local produce and crafts",
           "Music festivals and ceilidhs for traditional entertainment",
           "Whisky festivals for adults (many distilleries offer tours)",
-          "Christmas markets and winter festivals in cities"
-        ]
-      }
-    ]
+          "Christmas markets and winter festivals in cities",
+        ],
+      },
+    ],
   };
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case 'Critical': return 'bg-red-100 text-red-800 border-red-200';
-      case 'Essential': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'Important': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'Planning': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'Knowledge': return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'Family': return 'bg-pink-100 text-pink-800 border-pink-200';
-      case 'Pets': return 'bg-green-100 text-green-800 border-green-200';
-      case 'Fun': return 'bg-indigo-100 text-indigo-800 border-indigo-200';
-      case 'Creative': return 'bg-violet-100 text-violet-800 border-violet-200';
-      case 'Memories': return 'bg-rose-100 text-rose-800 border-rose-200';
-      case 'Skills': return 'bg-teal-100 text-teal-800 border-teal-200';
-      case 'Budget': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-      case 'Free': return 'bg-lime-100 text-lime-800 border-lime-200';
-      case 'Travel': return 'bg-cyan-100 text-cyan-800 border-cyan-200';
-      case 'Secret': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'Culture': return 'bg-slate-100 text-slate-800 border-slate-200';
-      case 'Events': return 'bg-stone-100 text-stone-800 border-stone-200';
-      case 'Timing': return 'bg-sky-100 text-sky-800 border-sky-200';
-      case 'Checklist': return 'bg-neutral-100 text-neutral-800 border-neutral-200';
-      case 'Local': return 'bg-zinc-100 text-zinc-800 border-zinc-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case "Critical":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "Essential":
+        return "bg-orange-100 text-orange-800 border-orange-200";
+      case "Important":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "Planning":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "Knowledge":
+        return "bg-purple-100 text-purple-800 border-purple-200";
+      case "Family":
+        return "bg-pink-100 text-pink-800 border-pink-200";
+      case "Pets":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "Fun":
+        return "bg-indigo-100 text-indigo-800 border-indigo-200";
+      case "Creative":
+        return "bg-violet-100 text-violet-800 border-violet-200";
+      case "Memories":
+        return "bg-rose-100 text-rose-800 border-rose-200";
+      case "Skills":
+        return "bg-teal-100 text-teal-800 border-teal-200";
+      case "Budget":
+        return "bg-emerald-100 text-emerald-800 border-emerald-200";
+      case "Free":
+        return "bg-lime-100 text-lime-800 border-lime-200";
+      case "Travel":
+        return "bg-cyan-100 text-cyan-800 border-cyan-200";
+      case "Secret":
+        return "bg-amber-100 text-amber-800 border-amber-200";
+      case "Culture":
+        return "bg-slate-100 text-slate-800 border-slate-200";
+      case "Events":
+        return "bg-stone-100 text-stone-800 border-stone-200";
+      case "Timing":
+        return "bg-sky-100 text-sky-800 border-sky-200";
+      case "Checklist":
+        return "bg-neutral-100 text-neutral-800 border-neutral-200";
+      case "Local":
+        return "bg-zinc-100 text-zinc-800 border-zinc-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
         {/* Hero Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border-2 border-green-200/50 shadow-lg">
             <Lightbulb className="h-6 w-6 text-green-600" />
-            <span className="text-sm font-medium text-green-700">Scottish Adventure Wisdom</span>
+            <span className="text-sm font-medium text-green-700">
+              Scottish Adventure Wisdom
+            </span>
             <Mountain className="h-6 w-6 text-green-600" />
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
               Hints & Tips
             </span>
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Our collected wisdom from exploring Scotland with family - practical advice for your own adventures
+            Our collected wisdom from exploring Scotland with family - practical
+            advice for your own adventures
           </p>
         </div>
 
@@ -450,9 +548,9 @@ export default function HintsTips() {
                   variant={isActive ? "default" : "outline"}
                   onClick={() => setActiveCategory(category.id)}
                   className={`h-auto p-4 flex flex-col items-center gap-2 ${
-                    isActive 
+                    isActive
                       ? `bg-gradient-to-br ${category.color} text-white border-0 shadow-lg`
-                      : 'bg-white/80 backdrop-blur-sm border-2 border-slate-200 hover:border-slate-300'
+                      : "bg-white/80 backdrop-blur-sm border-2 border-slate-200 hover:border-slate-300"
                   }`}
                 >
                   <Icon className="h-6 w-6" />
@@ -483,7 +581,9 @@ export default function HintsTips() {
                       <CardTitle className="text-xl font-bold text-slate-800 mb-2">
                         {tip.title}
                       </CardTitle>
-                      <Badge className={`text-xs border-2 ${getLevelColor(tip.level)}`}>
+                      <Badge
+                        className={`text-xs border-2 ${getLevelColor(tip.level)}`}
+                      >
                         {tip.level}
                       </Badge>
                     </div>
@@ -492,7 +592,10 @@ export default function HintsTips() {
                 <CardContent>
                   <ul className="space-y-3">
                     {tip.content.map((item, itemIndex) => (
-                      <li key={itemIndex} className="flex items-start gap-3 text-sm text-slate-700">
+                      <li
+                        key={itemIndex}
+                        className="flex items-start gap-3 text-sm text-slate-700"
+                      >
                         <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
                         <span className="leading-relaxed">{item}</span>
                       </li>
@@ -512,28 +615,44 @@ export default function HintsTips() {
                 <AlertTriangle className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-800 mb-2">Emergency Information</h2>
-                <p className="text-slate-600">Important numbers and procedures for Scottish adventures</p>
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">
+                  Emergency Information
+                </h2>
+                <p className="text-slate-600">
+                  Important numbers and procedures for Scottish adventures
+                </p>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white/80 rounded-xl p-4">
-                <h3 className="font-bold text-red-600 mb-2">Emergency Services</h3>
+                <h3 className="font-bold text-red-600 mb-2">
+                  Emergency Services
+                </h3>
                 <p className="text-2xl font-bold mb-2">999 or 112</p>
-                <p className="text-sm text-slate-600">Police, Fire, Ambulance, Coast Guard, Mountain Rescue</p>
+                <p className="text-sm text-slate-600">
+                  Police, Fire, Ambulance, Coast Guard, Mountain Rescue
+                </p>
               </div>
-              
+
               <div className="bg-white/80 rounded-xl p-4">
-                <h3 className="font-bold text-orange-600 mb-2">Mountain Rescue</h3>
-                <p className="text-lg font-bold mb-2">Ask for "Police" then "Mountain Rescue"</p>
-                <p className="text-sm text-slate-600">They coordinate all mountain rescues in Scotland</p>
+                <h3 className="font-bold text-orange-600 mb-2">
+                  Mountain Rescue
+                </h3>
+                <p className="text-lg font-bold mb-2">
+                  Ask for "Police" then "Mountain Rescue"
+                </p>
+                <p className="text-sm text-slate-600">
+                  They coordinate all mountain rescues in Scotland
+                </p>
               </div>
-              
+
               <div className="bg-white/80 rounded-xl p-4">
                 <h3 className="font-bold text-yellow-600 mb-2">What3Words</h3>
                 <p className="text-lg font-bold mb-2">Download the app</p>
-                <p className="text-sm text-slate-600">Gives emergency services precise location anywhere</p>
+                <p className="text-sm text-slate-600">
+                  Gives emergency services precise location anywhere
+                </p>
               </div>
             </div>
           </CardContent>
@@ -550,38 +669,174 @@ export default function HintsTips() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div>
-                <h3 className="font-bold text-slate-800 mb-2">Weather Resources</h3>
+                <h3 className="font-bold text-slate-800 mb-2">
+                  Weather Resources
+                </h3>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• <a href="https://mwis.org.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">mwis.org.uk</a> - Mountain weather</li>
-                  <li>• <a href="https://metoffice.gov.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">metoffice.gov.uk</a> - General forecast</li>
-                  <li>• <a href="https://windy.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">windy.com</a> - Visual weather maps</li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://mwis.org.uk"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      mwis.org.uk
+                    </a>{" "}
+                    - Mountain weather
+                  </li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://metoffice.gov.uk"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      metoffice.gov.uk
+                    </a>{" "}
+                    - General forecast
+                  </li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://windy.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      windy.com
+                    </a>{" "}
+                    - Visual weather maps
+                  </li>
                 </ul>
               </div>
 
               <div>
                 <h3 className="font-bold text-slate-800 mb-2">Navigation</h3>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• <a href="https://shop.ordnancesurvey.co.uk/apps/os-maps/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">OS Maps app</a> - Official mapping</li>
-                  <li>• <a href="https://www.viewranger.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">ViewRanger</a> - Offline maps</li>
-                  <li>• <a href="https://what3words.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">what3words</a> - Emergency location</li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://shop.ordnancesurvey.co.uk/apps/os-maps/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      OS Maps app
+                    </a>{" "}
+                    - Official mapping
+                  </li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://www.viewranger.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      ViewRanger
+                    </a>{" "}
+                    - Offline maps
+                  </li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://what3words.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      what3words
+                    </a>{" "}
+                    - Emergency location
+                  </li>
                 </ul>
               </div>
 
               <div>
                 <h3 className="font-bold text-slate-800 mb-2">Accommodation</h3>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• <a href="https://booking.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">booking.com</a> - Hotels & B&Bs</li>
-                  <li>• <a href="https://syha.org.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">syha.org.uk</a> - Youth hostels</li>
-                  <li>• <a href="https://airbnb.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">airbnb.com</a> - Self-catering</li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://booking.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      booking.com
+                    </a>{" "}
+                    - Hotels & B&Bs
+                  </li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://syha.org.uk"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      syha.org.uk
+                    </a>{" "}
+                    - Youth hostels
+                  </li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://airbnb.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      airbnb.com
+                    </a>{" "}
+                    - Self-catering
+                  </li>
                 </ul>
               </div>
 
               <div>
-                <h3 className="font-bold text-slate-800 mb-2">Travel & Tides</h3>
+                <h3 className="font-bold text-slate-800 mb-2">
+                  Travel & Tides
+                </h3>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• <a href="https://calmac.co.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">calmac.co.uk</a> - West coast ferries</li>
-                  <li>• <a href="https://tidetimes.org.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">tidetimes.org.uk</a> - UK tide times</li>
-                  <li>• <a href="https://bbc.co.uk/weather" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">bbc.co.uk/weather</a> - Includes tides</li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://calmac.co.uk"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      calmac.co.uk
+                    </a>{" "}
+                    - West coast ferries
+                  </li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://tidetimes.org.uk"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      tidetimes.org.uk
+                    </a>{" "}
+                    - UK tide times
+                  </li>
+                  <li>
+                    •{" "}
+                    <a
+                      href="https://bbc.co.uk/weather"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    >
+                      bbc.co.uk/weather
+                    </a>{" "}
+                    - Includes tides
+                  </li>
                 </ul>
               </div>
             </div>

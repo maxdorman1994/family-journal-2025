@@ -1,29 +1,39 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 // Supabase configuration
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
-console.log('🔧 Supabase Configuration Check:', {
+console.log("🔧 Supabase Configuration Check:", {
   hasUrl: !!supabaseUrl,
   hasKey: !!supabaseAnonKey,
-  urlFormat: supabaseUrl ? (supabaseUrl.startsWith('https://') ? 'Valid HTTPS URL' : 'Invalid URL format') : 'Missing',
-  keyFormat: supabaseAnonKey ? (supabaseAnonKey.length > 100 ? 'Valid length' : 'Too short') : 'Missing'
+  urlFormat: supabaseUrl
+    ? supabaseUrl.startsWith("https://")
+      ? "Valid HTTPS URL"
+      : "Invalid URL format"
+    : "Missing",
+  keyFormat: supabaseAnonKey
+    ? supabaseAnonKey.length > 100
+      ? "Valid length"
+      : "Too short"
+    : "Missing",
 });
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️  Supabase configuration missing. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
-  console.warn('Environment variables:', {
-    VITE_SUPABASE_URL: supabaseUrl ? 'Set' : 'Missing',
-    VITE_SUPABASE_ANON_KEY: supabaseAnonKey ? 'Set' : 'Missing'
+  console.warn(
+    "⚠️  Supabase configuration missing. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
+  );
+  console.warn("Environment variables:", {
+    VITE_SUPABASE_URL: supabaseUrl ? "Set" : "Missing",
+    VITE_SUPABASE_ANON_KEY: supabaseAnonKey ? "Set" : "Missing",
   });
 }
 
 // Create Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: false
-  }
+    persistSession: false,
+  },
 });
 
 // Database types for Supabase tables
@@ -81,13 +91,14 @@ export function getSupabaseStatus(): {
   if (!supabaseUrl || !supabaseAnonKey) {
     return {
       configured: false,
-      message: 'Supabase not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.',
+      message:
+        "Supabase not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.",
     };
   }
 
   return {
     configured: true,
-    message: 'Supabase configured successfully',
+    message: "Supabase configured successfully",
     url: supabaseUrl,
   };
 }

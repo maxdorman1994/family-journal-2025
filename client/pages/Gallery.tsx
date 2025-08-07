@@ -1,9 +1,33 @@
 import { useState, useEffect } from "react";
-import { Search, Filter, Download, Heart, Calendar, MapPin, Loader2, AlertCircle, X, ChevronLeft, ChevronRight, Image as ImageIcon, Camera, Star, Grid3X3, Grid2X2, LayoutGrid } from "lucide-react";
+import {
+  Search,
+  Filter,
+  Download,
+  Heart,
+  Calendar,
+  MapPin,
+  Loader2,
+  AlertCircle,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Image as ImageIcon,
+  Camera,
+  Star,
+  Grid3X3,
+  Grid2X2,
+  LayoutGrid,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { getJournalEntries, getAllTags } from "@/lib/journalService";
 import { JournalEntry } from "@/lib/supabase";
@@ -20,14 +44,18 @@ export default function Gallery() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState("all");
   const [selectedLocation, setSelectedLocation] = useState("all");
-  const [selectedPhoto, setSelectedPhoto] = useState<PhotoWithMetadata | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoWithMetadata | null>(
+    null,
+  );
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
-  const [gridSize, setGridSize] = useState<'small' | 'medium' | 'large'>('medium');
-  const [sortBy, setSortBy] = useState<'date' | 'location' | 'title'>('date');
+  const [gridSize, setGridSize] = useState<"small" | "medium" | "large">(
+    "medium",
+  );
+  const [sortBy, setSortBy] = useState<"date" | "location" | "title">("date");
 
   // Load photos and metadata
   useEffect(() => {
@@ -46,22 +74,22 @@ export default function Gallery() {
 
       const [journalEntries, availableTags] = await Promise.all([
         getJournalEntries(),
-        getAllTags()
+        getAllTags(),
       ]);
 
       // Extract all photos with their metadata
       const allPhotos: PhotoWithMetadata[] = [];
       const locationSet = new Set<string>();
 
-      journalEntries.forEach(entry => {
+      journalEntries.forEach((entry) => {
         locationSet.add(entry.location);
-        
+
         if (entry.photos && entry.photos.length > 0) {
           entry.photos.forEach((photoUrl, index) => {
             allPhotos.push({
               url: photoUrl,
               journalEntry: entry,
-              index
+              index,
             });
           });
         }
@@ -70,11 +98,14 @@ export default function Gallery() {
       setPhotos(allPhotos);
       setTags(availableTags);
       setLocations(Array.from(locationSet).sort());
-      
-      console.log(`✅ Loaded ${allPhotos.length} photos from ${journalEntries.length} journal entries`);
+
+      console.log(
+        `✅ Loaded ${allPhotos.length} photos from ${journalEntries.length} journal entries`,
+      );
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error('Failed to load gallery data:', errorMessage);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      console.error("Failed to load gallery data:", errorMessage);
       setError(`Failed to load photos: ${errorMessage}`);
     } finally {
       setIsLoading(false);
@@ -86,35 +117,45 @@ export default function Gallery() {
 
     // Filter by search term (searches entry title, content, location)
     if (searchTerm) {
-      filtered = filtered.filter(photo => 
-        photo.journalEntry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        photo.journalEntry.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        photo.journalEntry.location.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (photo) =>
+          photo.journalEntry.title
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          photo.journalEntry.content
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          photo.journalEntry.location
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()),
       );
     }
 
     // Filter by tag
-    if (selectedTag !== 'all') {
-      filtered = filtered.filter(photo => 
-        photo.journalEntry.tags?.includes(selectedTag)
+    if (selectedTag !== "all") {
+      filtered = filtered.filter((photo) =>
+        photo.journalEntry.tags?.includes(selectedTag),
       );
     }
 
     // Filter by location
-    if (selectedLocation !== 'all') {
-      filtered = filtered.filter(photo => 
-        photo.journalEntry.location === selectedLocation
+    if (selectedLocation !== "all") {
+      filtered = filtered.filter(
+        (photo) => photo.journalEntry.location === selectedLocation,
       );
     }
 
     // Sort photos
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'date':
-          return new Date(b.journalEntry.date).getTime() - new Date(a.journalEntry.date).getTime();
-        case 'location':
+        case "date":
+          return (
+            new Date(b.journalEntry.date).getTime() -
+            new Date(a.journalEntry.date).getTime()
+          );
+        case "location":
           return a.journalEntry.location.localeCompare(b.journalEntry.location);
-        case 'title':
+        case "title":
           return a.journalEntry.title.localeCompare(b.journalEntry.title);
         default:
           return 0;
@@ -152,10 +193,14 @@ export default function Gallery() {
 
   const getGridCols = () => {
     switch (gridSize) {
-      case 'small': return 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6';
-      case 'medium': return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
-      case 'large': return 'grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
-      default: return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+      case "small":
+        return "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6";
+      case "medium":
+        return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
+      case "large":
+        return "grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
+      default:
+        return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
     }
   };
 
@@ -167,8 +212,12 @@ export default function Gallery() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-lg animate-pulse">
             <Camera className="h-8 w-8 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">Loading Photo Gallery</h3>
-          <p className="text-slate-600">Gathering your beautiful Scottish memories...</p>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">
+            Loading Photo Gallery
+          </h3>
+          <p className="text-slate-600">
+            Gathering your beautiful Scottish memories...
+          </p>
         </div>
       </div>
     );
@@ -177,23 +226,25 @@ export default function Gallery() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
         {/* Hero Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border-2 border-blue-200/50 shadow-lg">
             <Camera className="h-6 w-6 text-blue-600" />
-            <span className="text-sm font-medium text-blue-700">Scottish Adventure Gallery</span>
+            <span className="text-sm font-medium text-blue-700">
+              Scottish Adventure Gallery
+            </span>
             <ImageIcon className="h-6 w-6 text-blue-600" />
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent drop-shadow-sm">
               Photo Gallery
             </span>
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Relive your Scottish adventures through {filteredPhotos.length} beautiful memories
+            Relive your Scottish adventures through {filteredPhotos.length}{" "}
+            beautiful memories
           </p>
 
           {/* Error Display */}
@@ -221,19 +272,29 @@ export default function Gallery() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-8">
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">{filteredPhotos.length}</div>
-                <div className="text-sm font-semibold text-slate-600">Photos</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">
+                  {filteredPhotos.length}
+                </div>
+                <div className="text-sm font-semibold text-slate-600">
+                  Photos
+                </div>
               </CardContent>
             </Card>
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">{locations.length}</div>
-                <div className="text-sm font-semibold text-slate-600">Locations</div>
+                <div className="text-3xl font-bold text-purple-600 mb-2">
+                  {locations.length}
+                </div>
+                <div className="text-sm font-semibold text-slate-600">
+                  Locations
+                </div>
               </CardContent>
             </Card>
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-pink-600 mb-2">{tags.length}</div>
+                <div className="text-3xl font-bold text-pink-600 mb-2">
+                  {tags.length}
+                </div>
                 <div className="text-sm font-semibold text-slate-600">Tags</div>
               </CardContent>
             </Card>
@@ -246,7 +307,9 @@ export default function Gallery() {
             <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
               {/* Search */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-slate-700 mb-2">🔍 Search</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  🔍 Search
+                </label>
                 <Input
                   placeholder="Search photos..."
                   value={searchTerm}
@@ -254,18 +317,22 @@ export default function Gallery() {
                   className="border-2 border-slate-200 focus:border-blue-400"
                 />
               </div>
-              
+
               {/* Tag Filter */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">🏷️ Tag</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  🏷️ Tag
+                </label>
                 <Select value={selectedTag} onValueChange={setSelectedTag}>
                   <SelectTrigger className="border-2 border-slate-200 focus:border-blue-400">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Tags</SelectItem>
-                    {tags.map(tag => (
-                      <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                    {tags.map((tag) => (
+                      <SelectItem key={tag} value={tag}>
+                        {tag}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -273,15 +340,22 @@ export default function Gallery() {
 
               {/* Location Filter */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">📍 Location</label>
-                <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  📍 Location
+                </label>
+                <Select
+                  value={selectedLocation}
+                  onValueChange={setSelectedLocation}
+                >
                   <SelectTrigger className="border-2 border-slate-200 focus:border-blue-400">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Locations</SelectItem>
-                    {locations.map(location => (
-                      <SelectItem key={location} value={location}>{location}</SelectItem>
+                    {locations.map((location) => (
+                      <SelectItem key={location} value={location}>
+                        {location}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -289,8 +363,13 @@ export default function Gallery() {
 
               {/* Sort */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">📊 Sort</label>
-                <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  📊 Sort
+                </label>
+                <Select
+                  value={sortBy}
+                  onValueChange={(value: any) => setSortBy(value)}
+                >
                   <SelectTrigger className="border-2 border-slate-200 focus:border-blue-400">
                     <SelectValue />
                   </SelectTrigger>
@@ -304,28 +383,30 @@ export default function Gallery() {
 
               {/* Grid Size */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">📐 Size</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  📐 Size
+                </label>
                 <div className="flex gap-1">
                   <Button
-                    variant={gridSize === 'small' ? 'default' : 'outline'}
+                    variant={gridSize === "small" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setGridSize('small')}
+                    onClick={() => setGridSize("small")}
                     className="p-2"
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant={gridSize === 'medium' ? 'default' : 'outline'}
+                    variant={gridSize === "medium" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setGridSize('medium')}
+                    onClick={() => setGridSize("medium")}
                     className="p-2"
                   >
                     <Grid2X2 className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant={gridSize === 'large' ? 'default' : 'outline'}
+                    variant={gridSize === "large" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setGridSize('large')}
+                    onClick={() => setGridSize("large")}
                     className="p-2"
                   >
                     <LayoutGrid className="h-4 w-4" />
@@ -341,18 +422,19 @@ export default function Gallery() {
           <div className="text-center py-20">
             <div className="bg-gradient-to-br from-slate-100 to-blue-100 rounded-3xl p-12 border-2 border-slate-200 max-w-md mx-auto">
               <ImageIcon className="h-16 w-16 mx-auto mb-6 text-slate-400" />
-              <h3 className="text-2xl font-bold text-slate-800 mb-4">No Photos Found</h3>
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">
+                No Photos Found
+              </h3>
               <p className="text-slate-600 mb-6">
-                {photos.length === 0 
-                  ? "No photos have been added to your journal entries yet." 
-                  : "Try adjusting your search filters to find photos."
-                }
+                {photos.length === 0
+                  ? "No photos have been added to your journal entries yet."
+                  : "Try adjusting your search filters to find photos."}
               </p>
               <Button
                 onClick={() => {
-                  setSearchTerm('');
-                  setSelectedTag('all');
-                  setSelectedLocation('all');
+                  setSearchTerm("");
+                  setSelectedTag("all");
+                  setSelectedLocation("all");
                 }}
                 className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
               >
@@ -375,18 +457,26 @@ export default function Gallery() {
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     loading="lazy"
                   />
-                  
+
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-4 left-4 right-4 text-white">
-                      <h3 className="font-bold text-lg mb-1 truncate">{photo.journalEntry.title}</h3>
+                      <h3 className="font-bold text-lg mb-1 truncate">
+                        {photo.journalEntry.title}
+                      </h3>
                       <div className="flex items-center gap-2 text-sm mb-2">
                         <MapPin className="h-4 w-4" />
-                        <span className="truncate">{photo.journalEntry.location}</span>
+                        <span className="truncate">
+                          {photo.journalEntry.location}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <Calendar className="h-4 w-4" />
-                        <span>{new Date(photo.journalEntry.date).toLocaleDateString()}</span>
+                        <span>
+                          {new Date(
+                            photo.journalEntry.date,
+                          ).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -400,7 +490,6 @@ export default function Gallery() {
         {selectedPhoto && (
           <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="relative max-w-6xl w-full h-full flex items-center justify-center">
-              
               {/* Close Button */}
               <Button
                 variant="ghost"
@@ -422,7 +511,7 @@ export default function Gallery() {
                   <ChevronLeft className="h-6 w-6" />
                 </Button>
               )}
-              
+
               {lightboxIndex < filteredPhotos.length - 1 && (
                 <Button
                   variant="ghost"
@@ -441,10 +530,12 @@ export default function Gallery() {
                   alt={`Photo from ${selectedPhoto.journalEntry.title}`}
                   className="max-h-full max-w-full object-contain"
                 />
-                
+
                 {/* Photo Info */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
-                  <h2 className="text-2xl font-bold mb-2">{selectedPhoto.journalEntry.title}</h2>
+                  <h2 className="text-2xl font-bold mb-2">
+                    {selectedPhoto.journalEntry.title}
+                  </h2>
                   <div className="flex flex-wrap items-center gap-4 mb-3">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-4 w-4" />
@@ -452,15 +543,21 @@ export default function Gallery() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4" />
-                      <span>{new Date(selectedPhoto.journalEntry.date).toLocaleDateString()}</span>
+                      <span>
+                        {new Date(
+                          selectedPhoto.journalEntry.date,
+                        ).toLocaleDateString()}
+                      </span>
                     </div>
                     <div className="text-sm">
                       Photo {lightboxIndex + 1} of {filteredPhotos.length}
                     </div>
                   </div>
-                  <p className="text-sm text-white/80 mb-3">{selectedPhoto.journalEntry.content}</p>
+                  <p className="text-sm text-white/80 mb-3">
+                    {selectedPhoto.journalEntry.content}
+                  </p>
                   <div className="flex flex-wrap gap-1">
-                    {selectedPhoto.journalEntry.tags?.map(tag => (
+                    {selectedPhoto.journalEntry.tags?.map((tag) => (
                       <Badge key={tag} variant="secondary" className="text-xs">
                         {tag}
                       </Badge>

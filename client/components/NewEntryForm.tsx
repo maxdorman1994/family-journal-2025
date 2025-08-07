@@ -166,9 +166,11 @@ export default function NewEntryForm({
         setIsSubmitting(true);
 
         // Check if we have photos that need uploading
-        const photosNeedUploading = formData.photos.some(photo => !photo.cloudflareUrl);
+        const photosNeedUploading = formData.photos.some(
+          (photo) => !photo.cloudflareUrl,
+        );
         if (photosNeedUploading) {
-          console.log('Photos detected, will upload during entry creation...');
+          console.log("Photos detected, will upload during entry creation...");
         }
 
         // Submit the form data (photos will be uploaded in handleNewEntry)
@@ -198,8 +200,8 @@ export default function NewEntryForm({
         });
         onClose();
       } catch (error) {
-        console.error('Failed to submit entry:', error);
-        setErrors({ submit: 'Failed to save entry. Please try again.' });
+        console.error("Failed to submit entry:", error);
+        setErrors({ submit: "Failed to save entry. Please try again." });
       } finally {
         setIsSubmitting(false);
       }
@@ -585,10 +587,12 @@ export default function NewEntryForm({
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {formData.photos.length > 0 ? 'Uploading Photos...' : 'Saving...'}
+                  {formData.photos.length > 0
+                    ? "Uploading Photos..."
+                    : "Saving..."}
                 </>
               ) : (
-                'Save Adventure'
+                "Save Adventure"
               )}
             </Button>
           </div>
