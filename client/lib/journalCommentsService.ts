@@ -1,5 +1,51 @@
 import { supabase } from './supabase';
 
+// Debug function to check if tables exist
+export async function checkCommentsLikesTables(): Promise<void> {
+  try {
+    console.log('🔍 Checking if comments and likes tables exist...');
+
+    // Test journal_comments table
+    const { data: commentsTest, error: commentsError } = await supabase
+      .from('journal_comments')
+      .select('count')
+      .limit(1);
+
+    if (commentsError) {
+      console.error('❌ journal_comments table issue:', JSON.stringify(commentsError, null, 2));
+    } else {
+      console.log('✅ journal_comments table exists and accessible');
+    }
+
+    // Test journal_likes table
+    const { data: likesTest, error: likesError } = await supabase
+      .from('journal_likes')
+      .select('count')
+      .limit(1);
+
+    if (likesError) {
+      console.error('❌ journal_likes table issue:', JSON.stringify(likesError, null, 2));
+    } else {
+      console.log('✅ journal_likes table exists and accessible');
+    }
+
+    // Test journal_entry_stats view
+    const { data: statsTest, error: statsError } = await supabase
+      .from('journal_entry_stats')
+      .select('count')
+      .limit(1);
+
+    if (statsError) {
+      console.error('❌ journal_entry_stats view issue:', JSON.stringify(statsError, null, 2));
+    } else {
+      console.log('✅ journal_entry_stats view exists and accessible');
+    }
+
+  } catch (error) {
+    console.error('❌ Error checking tables:', JSON.stringify(error, null, 2));
+  }
+}
+
 export interface JournalComment {
   id: string;
   journal_entry_id: string;
