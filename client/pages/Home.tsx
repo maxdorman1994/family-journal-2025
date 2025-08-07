@@ -6,6 +6,7 @@ import {
   forceRefreshHomeData,
   getCachedHomeData,
 } from "@/lib/homePageSyncService";
+import HomePageSyncIndicator from "@/components/HomePageSyncIndicator";
 import {
   ArrowRight,
   Camera,
@@ -1345,7 +1346,7 @@ export default function Home() {
                     <h3 className="text-xl font-bold text-emerald-800 mb-1">
                       {milestoneStats.completed_count > 0
                         ? `🏆 ${milestoneStats.completed_count} Milestones Completed • ${milestoneStats.total_xp} XP Earned!`
-                        : "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Start Your Scottish Adventure Journey!"}
+                        : "🏴󠁧󠁢󠁳󠁣���󠁿 Start Your Scottish Adventure Journey!"}
                     </h3>
                     <p className="text-sm text-emerald-600">
                       {milestoneStats.completed_count > 0
@@ -2171,7 +2172,7 @@ export default function Home() {
               <div className="flex justify-center gap-2 opacity-60">
                 <span className="text-red-600">📺</span>
                 <span className="text-pink-600">🎥</span>
-                <span className="text-red-600">🏴󠁧󠁢���󠁣󠁴󠁿</span>
+                <span className="text-red-600">🏴󠁧󠁢���󠁣����󠁿</span>
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
