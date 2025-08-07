@@ -26,6 +26,7 @@ interface JournalCommentsLikesProps {
 }
 
 export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCommentsLikesProps) {
+  const { isAuthenticated } = useAuth();
   const [comments, setComments] = useState<JournalComment[]>([]);
   const [likes, setLikes] = useState<JournalLike[]>([]);
   const [likeCount, setLikeCount] = useState(0);
@@ -33,7 +34,7 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
   const [isLiked, setIsLiked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Form state
   const [visitorName, setVisitorName] = useState('');
   const [commentText, setCommentText] = useState('');
