@@ -208,7 +208,7 @@ export default function MapPage() {
           <Card className="overflow-hidden">
             <CardContent className="p-0">
               <div className="h-[600px] w-full relative">
-                <Map
+                <ReactMapGL
                   ref={mapRef}
                   {...viewState}
                   onMove={evt => setViewState(evt.viewState)}
@@ -292,7 +292,7 @@ export default function MapPage() {
                       </div>
                     </Popup>
                   )}
-                </Map>
+                </ReactMapGL>
 
                 {/* Map Controls Overlay */}
                 <div className="absolute top-4 right-4 space-y-2">
