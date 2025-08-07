@@ -28,11 +28,34 @@ const defaultCompressionOptions: CompressionOptions = {
 };
 
 /**
+ * Check if HEIC conversion is supported in this browser
+ */
+async function isHeicSupported(): Promise<boolean> {
+  try {
+    // Try a minimal test to see if heic2any is working
+    await heic2any({
+      blob: new Blob(['test'], { type: 'image/heic' }),
+      toType: 'image/jpeg'
+    });
+    return true;
+  } catch (error) {
+    console.warn('HEIC conversion not supported in this browser:', error);
+    return false;
+  }
+}
+
+/**
  * Convert HEIC file to JPEG
  */
 export async function convertHeicToJpeg(file: File): Promise<File> {
   try {
     console.log(`Starting HEIC conversion for: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+
+    // Check if HEIC is supported first
+    const supported = await isHeicSupported();
+    if (!supported) {
+      throw new Error('HEIC conversion not supported in this browser. Browser lacks HEIF decoder support.');
+    }
 
     const convertedBlob = await heic2any({
       blob: file,
@@ -56,15 +79,25 @@ export async function convertHeicToJpeg(file: File): Promise<File> {
     if (error instanceof Error) {
       errorMessage = error.message;
     } else if (typeof error === 'object' && error !== null) {
-      errorMessage = JSON.stringify(error);
+      if ('code' in error && 'message' in error) {
+        errorMessage = `${error.message} (code: ${error.code})`;
+      } else {
+        errorMessage = JSON.stringify(error);
+      }
     } else {
       errorMessage = String(error);
     }
 
     console.error('Detailed error:', errorMessage);
 
-    // Throw a more informative error
-    throw new Error(`HEIC conversion failed for ${file.name}: ${errorMessage}. Try using a JPEG/PNG version of this photo.`);
+    // Provide specific error messages based on common issues
+    if (errorMessage.includes('ERR_LIBHEIF') || errorMessage.includes('format not supported')) {
+      throw new Error(`Browser doesn't support HEIC format. Please convert to JPEG first or use a different browser.`);
+    } else if (errorMessage.includes('not supported in this browser')) {
+      throw new Error(`HEIC conversion not available in this browser. Please convert to JPEG first.`);
+    } else {
+      throw new Error(`HEIC conversion failed: ${errorMessage}. Try converting to JPEG first.`);
+    }
   }
 }
 
