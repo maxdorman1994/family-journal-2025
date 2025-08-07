@@ -526,7 +526,9 @@ export default function Home() {
           </span>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {familyMembers.map((member) => (
+          {familyMembers
+            .filter((member) => member.position_index <= 4) // Immediate family (positions 0-4)
+            .map((member) => (
             <Card
               key={member.id}
               className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
