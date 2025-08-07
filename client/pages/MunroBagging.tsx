@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mountain, Trophy, MapPin, Clock, Star, TrendingUp, Camera, CheckCircle, Circle, Target, Compass, Flag, Crown, Award, Zap, Calendar, Database, AlertCircle } from "lucide-react";
+import { Mountain, Trophy, MapPin, Clock, Star, TrendingUp, Camera, CheckCircle, Circle, Target, Compass, Flag, Crown, Award, Zap, Calendar, Database, AlertCircle, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
