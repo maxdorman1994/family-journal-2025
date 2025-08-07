@@ -41,6 +41,7 @@ export default function Milestones() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showAllCompleted, setShowAllCompleted] = useState(false);
 
   // Load milestone data
   useEffect(() => {
