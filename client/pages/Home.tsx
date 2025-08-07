@@ -2,6 +2,11 @@ import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useSync } from "@/lib/syncService";
 import {
+  subscribeToHomePageSync,
+  forceRefreshHomeData,
+  getCachedHomeData,
+} from "@/lib/homePageSyncService";
+import {
   ArrowRight,
   Camera,
   MapPin,
