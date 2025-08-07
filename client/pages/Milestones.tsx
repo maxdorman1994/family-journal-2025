@@ -245,7 +245,24 @@ export default function Milestones() {
 
       {/* Category Filter */}
       <div className="flex flex-wrap justify-center gap-4 mb-8">
-        {categories.map((category) => {
+        {/* Add "All" category */}
+        <Button
+          variant={selectedCategory === "all" ? "default" : "outline"}
+          onClick={() => setSelectedCategory("all")}
+          className={`flex items-center gap-2 ${
+            selectedCategory === "all"
+              ? "bg-gradient-to-r from-vibrant-blue to-scotland-loch text-white"
+              : "hover:bg-scotland-thistle/10"
+          }`}
+        >
+          <Star className="h-4 w-4" />
+          All ({milestones.length})
+        </Button>
+
+        {/* Real milestone categories */}
+        {MILESTONE_CATEGORIES.map((category) => {
+          const categoryMilestones = filterMilestones(milestones, category.id);
+          if (categoryMilestones.length === 0) return null;
           const Icon = getIconComponent(category.icon);
           return (
             <Button
