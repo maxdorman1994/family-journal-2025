@@ -329,6 +329,12 @@ export async function removeVoteFromItem(id: string): Promise<WishlistItem> {
     return item;
   } catch (error) {
     console.error("Error in removeVoteFromItem:", error);
+
+    // Check if it's a network error
+    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    }
+
     if (error instanceof Error) {
       throw error;
     }
