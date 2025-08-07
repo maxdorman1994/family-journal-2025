@@ -58,8 +58,9 @@
       "url": "/journal",
       "icons": [
         {
-          "src": "/placeholder.svg",
-          "sizes": "96x96"
+          "src": "https://cdn.builder.io/api/v1/image/assets%2Fa83b3164f88441ffa1b74f47a94f3c3d%2F1f080612d23e43379e57f92b5020b490?format=webp&width=96",
+          "sizes": "96x96",
+          "type": "image/webp"
         }
       ]
     },
@@ -70,8 +71,9 @@
       "url": "/map",
       "icons": [
         {
-          "src": "/placeholder.svg",
-          "sizes": "96x96"
+          "src": "https://cdn.builder.io/api/v1/image/assets%2Fa83b3164f88441ffa1b74f47a94f3c3d%2F1f080612d23e43379e57f92b5020b490?format=webp&width=96",
+          "sizes": "96x96",
+          "type": "image/webp"
         }
       ]
     },
@@ -82,8 +84,9 @@
       "url": "/gallery",
       "icons": [
         {
-          "src": "/placeholder.svg",
-          "sizes": "96x96"
+          "src": "https://cdn.builder.io/api/v1/image/assets%2Fa83b3164f88441ffa1b74f47a94f3c3d%2F1f080612d23e43379e57f92b5020b490?format=webp&width=96",
+          "sizes": "96x96",
+          "type": "image/webp"
         }
       ]
     }
