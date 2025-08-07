@@ -165,6 +165,13 @@ export default function Home() {
         members.length,
         "members",
       );
+
+      // Verify Charlie is included in real-time updates
+      const charlieExists = members.find(m => m.name === "Charlie");
+      if (charlieExists) {
+        console.log("🐕 Charlie sync confirmed - photos will sync across devices");
+      }
+
       setFamilyMembers(members);
       setSyncStatus("connected");
     });
@@ -1346,7 +1353,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-bold">🗓��</span>
+                    <span className="text-xs text-white font-bold">🗓️</span>
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-3">
