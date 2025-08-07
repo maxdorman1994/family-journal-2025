@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import * as React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-
-const { useState, useEffect, useRef } = React;
 import { Menu, X, Sun, Moon, Edit, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AuthFooter from "./AuthFooter";
