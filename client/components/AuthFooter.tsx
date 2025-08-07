@@ -61,10 +61,10 @@ export default function AuthFooter() {
   };
 
   return (
-    <footer className="sticky bottom-0 z-50 backdrop-blur-md bg-white/95 dark:bg-gray-900/95 border-t border-border/50 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="sticky bottom-0 z-50 backdrop-blur-md bg-white/95 dark:bg-gray-900/95 border-t border-border/50 shadow-lg safe-bottom">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         {/* Main Footer Bar */}
-        <div className="flex items-center justify-between py-3">
+        <div className="flex items-center justify-between py-2 sm:py-3">
           {/* Left Side - Status */}
           <div className="flex items-center gap-3">
             <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm ${
