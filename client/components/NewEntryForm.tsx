@@ -327,9 +327,9 @@ export default function NewEntryForm({
                   </label>
                   <Input
                     type="number"
-                    value={formData.milesTraveled}
+                    value={formData.miles_traveled}
                     onChange={(e) =>
-                      handleInputChange("milesTraveled", e.target.value)
+                      handleInputChange("miles_traveled", e.target.value)
                     }
                     placeholder="e.g., 87"
                   />
