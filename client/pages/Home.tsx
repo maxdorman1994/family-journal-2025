@@ -836,9 +836,9 @@ export default function Home() {
         <div className="flex justify-center">
           <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-amber-50 to-orange-100 backdrop-blur-sm border-2 border-amber-200/60 max-w-4xl">
             <CardContent className="p-8">
-              <div className="flex items-center gap-8">
+              <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
                 {/* Text Content - Left Side */}
-                <div className="flex-1">
+                <div className="flex-1 text-center md:text-left">
                   <h3 className="text-3xl font-bold text-amber-800 mb-3">
                     Charlie
                   </h3>
