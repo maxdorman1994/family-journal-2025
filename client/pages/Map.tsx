@@ -321,7 +321,7 @@ export default function MapPage() {
             <span>
               {isAuthenticated
                 ? "Interactive map powered by Mapbox - Click to add pins, drag to explore Scotland!"
-                : "Interactive map powered by Mapbox - Viewing mode (password required to edit)"
+                : "Interactive map powered by Mapbox - Login in footer to add pins and edit adventures"
               }
             </span>
           </div>
