@@ -202,6 +202,31 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
     }
   };
 
+  const handleDeleteLike = async (likeId: string, visitorName: string) => {
+    try {
+      await deleteLike(likeId);
+      setLikes(prev => prev.filter(l => l.id !== likeId));
+      setLikeCount(prev => prev - 1);
+
+      // If this was the current user's like, update the liked state
+      if (visitorName === visitorName.trim()) {
+        setIsLiked(false);
+      }
+
+      toast({
+        title: "Like removed",
+        description: `Removed like from ${visitorName}`,
+      });
+    } catch (error) {
+      console.error('Error deleting like:', error);
+      toast({
+        title: "Error",
+        description: "Failed to remove like",
+        variant: "destructive",
+      });
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-GB', {
       day: 'numeric',
