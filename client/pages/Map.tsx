@@ -155,19 +155,26 @@ export default function MapPage() {
 
     try {
       console.log("🗺️ Updating pin:", editingPin.title);
-      await updateMapPin(editingPin.id, {
+      const updatedPin = await updateMapPin(editingPin.id, {
         title: newPin.title,
         description: newPin.description,
         category: newPin.category,
         date: newPin.date,
       });
 
+      // Immediately update local state for instant UI feedback
+      setPins(currentPins =>
+        currentPins.map(pin =>
+          pin.id === editingPin.id ? updatedPin : pin
+        )
+      );
+
       setIsDialogOpen(false);
       setEditingPin(null);
       console.log("✅ Pin updated successfully and will sync across devices");
     } catch (error) {
       console.error("❌ Error updating pin:", error);
-      // You could add a toast notification here
+      alert(`Error updating pin: ${error.message || error}`);
     }
   };
 
