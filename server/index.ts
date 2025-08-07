@@ -62,15 +62,16 @@ export function createServer() {
 
   // Serve static files from dist/spa (force for all non-dev environments)
   const isDevelopment = process.env.NODE_ENV === "development";
-  const hasDistFolder = fs.existsSync("dist/spa");
+  const distPath = path.join(__dirname, "../dist/spa");
+  const hasDistFolder = fs.existsSync(distPath);
 
   if (!isDevelopment && hasDistFolder) {
-    console.log("✅ Serving static files from dist/spa/");
-    app.use(express.static("dist/spa"));
+    console.log("✅ Serving static files from:", distPath);
+    app.use(express.static(distPath));
 
     // Serve index.html for all non-API routes (SPA fallback)
     app.get("*", (_req, res) => {
-      const indexPath = path.resolve("dist/spa/index.html");
+      const indexPath = path.join(distPath, "index.html");
       console.log("📄 Serving SPA fallback:", indexPath);
       res.sendFile(indexPath);
     });
@@ -78,6 +79,8 @@ export function createServer() {
     console.log(
       "⚠️ Not serving static files - development mode or no dist folder",
     );
+    console.log("📁 Checked path:", distPath);
+    console.log("📁 Directory exists:", hasDistFolder);
   }
 
   return app;
