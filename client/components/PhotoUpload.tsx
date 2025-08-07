@@ -251,11 +251,13 @@ export default function PhotoUpload({
                   )}
                 </div>
                 {photo.error && (
-                  <div className="text-xs text-red-500 mt-1 leading-tight">
-                    {photo.error}
+                  <div className="text-xs mt-1 leading-tight">
+                    <div className={photo.error.includes('Cloudflare Images') ? 'text-blue-600' : 'text-red-500'}>
+                      {photo.error}
+                    </div>
                     {photo.error.includes('HEIC') && (
-                      <div className="text-blue-600 mt-1">
-                        💡 Try: Export as JPEG from Photos app
+                      <div className="text-green-600 mt-1">
+                        ✅ HEIC files work with Cloudflare Images
                       </div>
                     )}
                   </div>
