@@ -14,26 +14,146 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { processPhoto, uploadPhotoToCloudflare, validatePhotoFile } from "@/lib/photoUtils";
 import {
-  processPhoto,
-  uploadPhotoToCloudflare,
-  validatePhotoFile,
-} from "@/lib/photoUtils";
+  getFamilyMembers,
+  updateFamilyMemberAvatar,
+  removeFamilyMemberAvatar,
+  uploadFamilyMemberAvatar,
+  subscribeToFamilyMembers,
+  testFamilyMembersConnection,
+  FamilyMember
+} from "@/lib/familyMembersService";
 
 export default function Home() {
-  const [editingMember, setEditingMember] = useState<number | null>(null);
-  const [memberPhotos, setMemberPhotos] = useState<Record<number, string>>({});
+  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
+  const [editingMember, setEditingMember] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [syncStatus, setSyncStatus] = useState<'connected' | 'connecting' | 'disconnected' | 'local'>('connecting');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handlePhotoEdit = (memberIndex: number) => {
-    setEditingMember(memberIndex);
+  // Load family members data and setup real-time sync
+  useState(() => {
+    loadFamilyMembersData();
+
+    // Setup real-time subscription
+    const unsubscribe = subscribeToFamilyMembers((members) => {
+      console.log('🔄 Real-time sync update received:', members.length, 'members');
+      setFamilyMembers(members);
+      setSyncStatus('connected');
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const loadFamilyMembersData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      console.log('🔄 Loading family members from Supabase...');
+      const members = await getFamilyMembers();
+
+      setFamilyMembers(members);
+      setSyncStatus('connected');
+      setError(null);
+      console.log(`✅ Loaded ${members.length} family members successfully`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn('Failed to load from Supabase, using fallback:', errorMessage);
+
+      // Set sync status and appropriate error message
+      setSyncStatus('local');
+      if (errorMessage.includes('not configured')) {
+        setError('📝 Development Mode: Supabase not configured - using local data');
+      } else if (errorMessage.includes('SCHEMA_MISSING') || errorMessage.includes('Could not find the table')) {
+        setError('🎯 Database Setup Required: Please run family-members-schema.sql - using local data');
+      } else {
+        setSyncStatus('disconnected');
+        setError(`⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`);
+      }
+
+      // Fallback to hardcoded data
+      setFamilyMembers([
+        {
+          id: '1',
+          name: "Max Dorman",
+          role: "DAD",
+          bio: "Adventure enthusiast and family trip organizer. Loves planning routes, discovering hidden gems, and capturing the perfect Highland sunset photos.",
+          position_index: 0,
+          display_avatar: "/placeholder.svg",
+          colors: {
+            bg: "bg-gradient-to-br from-blue-50 to-indigo-100",
+            border: "border-blue-200/60",
+            accent: "from-blue-500 to-indigo-500"
+          }
+        },
+        {
+          id: '2',
+          name: "Charlotte Foster",
+          role: "MUM",
+          bio: "Nature lover and family historian. Documents our adventures and ensures everyone stays safe while exploring Scotland's wild landscapes.",
+          position_index: 1,
+          display_avatar: "/placeholder.svg",
+          colors: {
+            bg: "bg-gradient-to-br from-rose-50 to-pink-100",
+            border: "border-rose-200/60",
+            accent: "from-rose-500 to-pink-500"
+          }
+        },
+        {
+          id: '3',
+          name: "Oscar",
+          role: "SON",
+          bio: "Young explorer with boundless energy. Always the first to spot wildlife and loves climbing rocks and splashing in Highland streams.",
+          position_index: 2,
+          display_avatar: "/placeholder.svg",
+          colors: {
+            bg: "bg-gradient-to-br from-green-50 to-emerald-100",
+            border: "border-green-200/60",
+            accent: "from-green-500 to-emerald-500"
+          }
+        },
+        {
+          id: '4',
+          name: "Rose",
+          role: "DAUGHTER",
+          bio: "Curious adventurer who collects interesting stones and leaves. Has an amazing memory for the stories behind each place we visit.",
+          position_index: 3,
+          display_avatar: "/placeholder.svg",
+          colors: {
+            bg: "bg-gradient-to-br from-purple-50 to-violet-100",
+            border: "border-purple-200/60",
+            accent: "from-purple-500 to-violet-500"
+          }
+        },
+        {
+          id: '5',
+          name: "Lola",
+          role: "DAUGHTER",
+          bio: "Our youngest adventurer with the biggest smile. Brings joy to every journey and reminds us to appreciate the simple moments.",
+          position_index: 4,
+          display_avatar: "/placeholder.svg",
+          colors: {
+            bg: "bg-gradient-to-br from-amber-50 to-yellow-100",
+            border: "border-amber-200/60",
+            accent: "from-amber-500 to-yellow-500"
+          }
+        }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePhotoEdit = (memberId: string) => {
+    setEditingMember(memberId);
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || editingMember === null) return;
 
@@ -46,41 +166,109 @@ export default function Home() {
 
     setIsUploading(true);
     try {
+      console.log(`📸 Processing and uploading photo for member: ${editingMember}`);
+
       // Process the photo
       const processedPhoto = await processPhoto(file);
 
-      // For demo purposes, we'll use the preview URL directly
-      // In production, you'd want to upload to Cloudflare and save the URL
-      setMemberPhotos((prev) => ({
-        ...prev,
-        [editingMember]: processedPhoto.preview,
-      }));
+      if (error && error.includes('Database Setup Required')) {
+        // If database isn't set up, use local state only
+        console.log('📦 Using local state for avatar (database not available)');
+        setFamilyMembers(prev =>
+          prev.map(member =>
+            member.id === editingMember
+              ? { ...member, display_avatar: processedPhoto.preview, has_custom_avatar: true }
+              : member
+          )
+        );
+      } else {
+        // Upload to Cloudflare and update database
+        await uploadFamilyMemberAvatar(editingMember, processedPhoto, (progress) => {
+          console.log(`Upload progress: ${progress}%`);
+        });
+
+        // Reload data to get updated state
+        await loadFamilyMembersData();
+      }
 
       setEditingMember(null);
-      console.log(`Profile photo updated for family member ${editingMember}`);
-    } catch (error) {
-      console.error("Error processing photo:", error);
-      alert("Failed to process photo. Please try again.");
+      console.log(`✅ Profile photo updated successfully`);
+    } catch (dbError) {
+      console.error('Error uploading avatar:', dbError);
+      alert('Failed to upload photo. Please try again.');
     } finally {
       setIsUploading(false);
     }
 
     // Reset file input
-    event.target.value = "";
+    event.target.value = '';
   };
 
-  const removePhoto = (memberIndex: number) => {
-    const photoUrl = memberPhotos[memberIndex];
-    if (photoUrl && photoUrl.startsWith("blob:")) {
-      URL.revokeObjectURL(photoUrl);
+  const removePhoto = async (memberId: string) => {
+    try {
+      if (error && error.includes('Database Setup Required')) {
+        // Local only
+        setFamilyMembers(prev =>
+          prev.map(member =>
+            member.id === memberId
+              ? { ...member, display_avatar: '/placeholder.svg', has_custom_avatar: false, avatar_url: undefined }
+              : member
+          )
+        );
+      } else {
+        await removeFamilyMemberAvatar(memberId);
+        await loadFamilyMembersData();
+      }
+    } catch (dbError) {
+      console.error('Database error, using local state:', dbError);
+      setFamilyMembers(prev =>
+        prev.map(member =>
+          member.id === memberId
+            ? { ...member, display_avatar: '/placeholder.svg', has_custom_avatar: false }
+            : member
+        )
+      );
     }
-    setMemberPhotos((prev) => {
-      const updated = { ...prev };
-      delete updated[memberIndex];
-      return updated;
-    });
   };
-  const familyMembers = [
+
+  const testConnection = async () => {
+    try {
+      setSyncStatus('connecting');
+      setError('🔍 Testing database connection...');
+
+      const result = await testFamilyMembersConnection();
+
+      if (result.success) {
+        setSyncStatus('connected');
+        setError(`✅ ${result.message}`);
+
+        // Reload data after successful connection
+        await loadFamilyMembersData();
+      } else {
+        setSyncStatus('disconnected');
+        setError(`❌ ${result.message}${result.error ? ': ' + result.error : ''}`);
+      }
+    } catch (error) {
+      setSyncStatus('disconnected');
+      setError(`❌ Connection test failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg animate-pulse">
+            <Users className="h-8 w-8 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">Loading Family Crew</h3>
+          <p className="text-slate-600">Getting your adventure team ready...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const hardcodedMembers = [
     {
       name: "Max Dorman",
       role: "DAD",
@@ -89,8 +277,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-blue-50 to-indigo-100",
         border: "border-blue-200/60",
-        accent: "from-blue-500 to-indigo-500",
-      },
+        accent: "from-blue-500 to-indigo-500"
+      }
     },
     {
       name: "Charlotte Foster",
@@ -100,8 +288,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-rose-50 to-pink-100",
         border: "border-rose-200/60",
-        accent: "from-rose-500 to-pink-500",
-      },
+        accent: "from-rose-500 to-pink-500"
+      }
     },
     {
       name: "Oscar",
@@ -111,8 +299,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-green-50 to-emerald-100",
         border: "border-green-200/60",
-        accent: "from-green-500 to-emerald-500",
-      },
+        accent: "from-green-500 to-emerald-500"
+      }
     },
     {
       name: "Rose",
@@ -122,8 +310,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-purple-50 to-violet-100",
         border: "border-purple-200/60",
-        accent: "from-purple-500 to-violet-500",
-      },
+        accent: "from-purple-500 to-violet-500"
+      }
     },
     {
       name: "Lola",
@@ -133,8 +321,8 @@ export default function Home() {
       colors: {
         bg: "bg-gradient-to-br from-amber-50 to-yellow-100",
         border: "border-amber-200/60",
-        accent: "from-amber-500 to-yellow-500",
-      },
+        accent: "from-amber-500 to-yellow-500"
+      }
     },
   ];
 
@@ -208,19 +396,17 @@ export default function Home() {
           </span>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {familyMembers.map((member, index) => (
+          {familyMembers.map((member) => (
             <Card
-              key={index}
+              key={member.id}
               className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
             >
               <CardContent className="p-6">
                 <div className="relative group w-20 h-20 mx-auto mb-4">
-                  <div
-                    className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
-                  >
+                  <div className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}>
                     <div className="w-full h-full rounded-full overflow-hidden bg-white">
                       <img
-                        src={memberPhotos[index] || member.avatar}
+                        src={member.display_avatar || member.avatar_url || '/placeholder.svg'}
                         alt={member.name}
                         className="w-full h-full object-cover"
                       />
@@ -234,21 +420,21 @@ export default function Home() {
                         size="sm"
                         variant="secondary"
                         className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
-                        onClick={() => handlePhotoEdit(index)}
+                        onClick={() => handlePhotoEdit(member.id)}
                         disabled={isUploading}
                       >
-                        {isUploading && editingMember === index ? (
+                        {isUploading && editingMember === member.id ? (
                           <Upload className="h-3 w-3 animate-pulse" />
                         ) : (
                           <Edit className="h-3 w-3" />
                         )}
                       </Button>
-                      {memberPhotos[index] && (
+                      {member.has_custom_avatar && (
                         <Button
                           size="sm"
                           variant="destructive"
                           className="h-7 w-7 p-0"
-                          onClick={() => removePhoto(index)}
+                          onClick={() => removePhoto(member.id)}
                         >
                           <X className="h-3 w-3" />
                         </Button>
@@ -259,12 +445,8 @@ export default function Home() {
                 <h3 className="font-semibold text-lg text-gray-800 mb-2">
                   {member.name}
                 </h3>
-                <p className="text-sm text-muted-foreground font-medium mb-3">
-                  {member.role}
-                </p>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {member.bio}
-                </p>
+                <p className="text-sm text-muted-foreground font-medium mb-3">{member.role}</p>
+                <p className="text-xs text-slate-600 leading-relaxed">{member.bio}</p>
               </CardContent>
             </Card>
           ))}
@@ -283,8 +465,7 @@ export default function Home() {
         {Object.keys(memberPhotos).length === 0 && (
           <div className="text-center mt-4">
             <p className="text-sm text-slate-500">
-              💡 Hover over any family member's photo and click the edit button
-              to upload a custom picture!
+              💡 Hover over any family member's photo and click the edit button to upload a custom picture!
             </p>
           </div>
         )}
