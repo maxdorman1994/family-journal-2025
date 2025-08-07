@@ -770,6 +770,89 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Adventure Milestones */}
+      <section className="mb-16">
+        <div className="max-w-4xl mx-auto">
+          {/* Milestone Achievement Banner */}
+          <div className="bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-2xl border-2 border-emerald-200/60 p-6 mb-8 shadow-lg">
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
+              <div className="text-center">
+                <h3 className="text-xl font-bold text-emerald-800 mb-1">
+                  Adventure Milestone: First Month of Scottish Exploration Complete!
+                </h3>
+                <p className="text-sm text-emerald-600">
+                  🎉 Congratulations on beginning your Scottish adventure journey!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Milestone Progress Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* First Adventure */}
+            <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200/60 hover:shadow-lg transition-all duration-300">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <MapPin className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="font-bold text-blue-800 mb-2">First Adventure</h4>
+                <p className="text-sm text-blue-600 mb-3">Started your Scottish exploration journey</p>
+                <div className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full inline-block">
+                  ✅ Completed
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Photo Memories */}
+            <Card className="bg-gradient-to-br from-purple-50 to-violet-100 border-2 border-purple-200/60 hover:shadow-lg transition-all duration-300">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-violet-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Camera className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="font-bold text-purple-800 mb-2">Photo Memories</h4>
+                <p className="text-sm text-purple-600 mb-3">Captured your first Scottish moments</p>
+                <div className="bg-purple-500 text-white text-xs px-3 py-1 rounded-full inline-block">
+                  ✅ Completed
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Family Together */}
+            <Card className="bg-gradient-to-br from-pink-50 to-rose-100 border-2 border-pink-200/60 hover:shadow-lg transition-all duration-300">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Heart className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="font-bold text-pink-800 mb-2">Family Adventure</h4>
+                <p className="text-sm text-pink-600 mb-3">Shared memories with loved ones</p>
+                <div className="bg-pink-500 text-white text-xs px-3 py-1 rounded-full inline-block">
+                  ✅ Completed
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Next Milestone Preview */}
+          <div className="mt-8 text-center">
+            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border-2 border-amber-200/60 p-4">
+              <h4 className="font-semibold text-amber-800 mb-2">
+                🎯 Next Milestone: Highland Explorer
+              </h4>
+              <p className="text-sm text-amber-600 mb-3">
+                Visit 5 different Scottish locations to unlock this achievement!
+              </p>
+              <div className="bg-amber-100 rounded-full h-3 mb-2 overflow-hidden">
+                <div className="bg-gradient-to-r from-amber-400 to-yellow-500 h-full rounded-full transition-all duration-500" style={{width: '20%'}}></div>
+              </div>
+              <p className="text-xs text-amber-600">1 of 5 locations visited</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Adventure Stats */}
       <section className="mb-20">
         {/* Section Header */}
