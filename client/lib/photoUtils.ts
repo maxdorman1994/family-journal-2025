@@ -20,10 +20,10 @@ export interface CompressionOptions {
 }
 
 const defaultCompressionOptions: CompressionOptions = {
-  maxSizeMB: 1, // Compress to max 1MB
-  maxWidthOrHeight: 1920, // Max dimension 1920px
+  maxSizeMB: 0.8, // Compress to max 0.8MB (smaller for faster uploads)
+  maxWidthOrHeight: 1600, // Max dimension 1600px (optimal for most screens)
   useWebWorker: true,
-  quality: 0.8, // 80% quality
+  quality: 0.85, // 85% quality (better balance of quality/size)
 };
 
 /**
