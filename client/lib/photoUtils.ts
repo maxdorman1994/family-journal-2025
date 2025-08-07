@@ -30,18 +30,10 @@ const defaultCompressionOptions: CompressionOptions = {
 /**
  * Check if HEIC conversion is supported in this browser
  */
-async function isHeicSupported(): Promise<boolean> {
-  try {
-    // Try a minimal test to see if heic2any is working
-    await heic2any({
-      blob: new Blob(['test'], { type: 'image/heic' }),
-      toType: 'image/jpeg'
-    });
-    return true;
-  } catch (error) {
-    console.warn('HEIC conversion not supported in this browser:', error);
-    return false;
-  }
+function isHeicSupported(): boolean {
+  // For now, assume HEIC conversion is not supported in most browsers
+  // This avoids the test blob issue and we'll just handle the error during actual conversion
+  return false;
 }
 
 /**
