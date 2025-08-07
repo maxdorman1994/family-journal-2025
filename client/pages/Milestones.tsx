@@ -86,13 +86,12 @@ export default function Milestones() {
 
     loadRealMilestoneData();
 
-    // Set up real-time subscription
-    const unsubscribe = subscribeToMilestoneUpdates(
-      "demo-user",
-      (updatedMilestones) => {
-        setMilestones(updatedMilestones);
-        // Recalculate stats
-        getMilestoneStats("demo-user").then(setStats);
+    // Set up real-time subscription to journal changes
+    const unsubscribeMilestones = subscribeToRealMilestones((updatedMilestones) => {
+      console.log("🔄 Milestones updated from journal changes:", updatedMilestones.length);
+      setMilestones(updatedMilestones);
+      // Recalculate stats
+      getRealMilestoneStats().then(setStats);
       },
     );
 
