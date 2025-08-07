@@ -698,10 +698,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                  6
+                  {statsLoading ? '...' : getStatValue('journal_entries', 6)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Journal Entries</div>
-                <div className="text-sm text-slate-500">Stories captured & memories preserved</div>
+                <div className="text-sm text-slate-500">{getStatDescription('journal_entries', 'Stories captured & memories preserved')}</div>
               </CardContent>
             </Card>
           </div>
@@ -721,10 +721,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-3">
-                  6
+                  {statsLoading ? '...' : getStatValue('places_explored', 6)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Places Explored</div>
-                <div className="text-sm text-slate-500">Across Scotland's breathtaking landscapes</div>
+                <div className="text-sm text-slate-500">{getStatDescription('places_explored', 'Across Scotland\'s breathtaking landscapes')}</div>
               </CardContent>
             </Card>
           </div>
@@ -744,10 +744,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-3">
-                  19
+                  {statsLoading ? '...' : getStatValue('memory_tags', 19)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Memory Tags</div>
-                <div className="text-sm text-slate-500">Special moments & magical experiences</div>
+                <div className="text-sm text-slate-500">{getStatDescription('memory_tags', 'Special moments & magical experiences')}</div>
               </CardContent>
             </Card>
           </div>
@@ -767,10 +767,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent mb-3">
-                  127
+                  {statsLoading ? '...' : getStatValue('photos_captured', 127)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Photos Captured</div>
-                <div className="text-sm text-slate-500">Beautiful moments frozen in time</div>
+                <div className="text-sm text-slate-500">{getStatDescription('photos_captured', 'Beautiful moments frozen in time')}</div>
               </CardContent>
             </Card>
           </div>
