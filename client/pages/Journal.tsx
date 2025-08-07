@@ -284,13 +284,21 @@ export default function Journal() {
         photos: uploadedPhotoUrls,
       };
 
-      console.log("Creating journal entry with data:", supabaseEntryData);
+      console.log(isEditing ? "Updating journal entry with data:" : "Creating journal entry with data:", supabaseEntryData);
 
       // Try to save to Supabase first
       try {
-        const savedEntry = await createJournalEntry(supabaseEntryData);
-        setEntries((prev) => [savedEntry, ...prev]);
-        console.log("✅ Entry saved to Supabase successfully");
+        if (isEditing && editingEntry) {
+          const updatedEntry = await updateJournalEntry(editingEntry.id, supabaseEntryData);
+          setEntries((prev) => prev.map(entry =>
+            entry.id === editingEntry.id ? updatedEntry : entry
+          ));
+          console.log("✅ Entry updated in Supabase successfully");
+        } else {
+          const savedEntry = await createJournalEntry(supabaseEntryData);
+          setEntries((prev) => [savedEntry, ...prev]);
+          console.log("✅ Entry saved to Supabase successfully");
+        }
       } catch (supabaseError) {
         console.warn(
           "Failed to save to Supabase, saving locally:",
