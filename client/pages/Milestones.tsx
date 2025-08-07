@@ -469,7 +469,7 @@ export default function Milestones() {
             {filterMilestones(lockedMilestones, selectedCategory).map(
               (milestone) => {
                 const Icon = getIconComponent(milestone.icon);
-                const colorScheme = milestone.color_scheme;
+                const colorScheme = getColorScheme(milestone);
                 return (
                   <Card
                     key={milestone.id}
