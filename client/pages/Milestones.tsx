@@ -138,7 +138,9 @@ export default function Milestones() {
     (m) => !m.completed && m.current_value > 0,
   );
   const availableMilestones = milestones.filter((m) => !m.completed);
-  const lockedMilestones = milestones.filter((m) => !m.completed && m.current_value === 0);
+  const lockedMilestones = milestones.filter(
+    (m) => !m.completed && m.current_value === 0,
+  );
 
   // Helper function to get the correct icon component
   const getIconComponent = (iconName: string) => {
@@ -164,7 +166,9 @@ export default function Milestones() {
 
   // Helper function to get color scheme based on milestone category
   const getColorScheme = (milestone: RealMilestone) => {
-    const category = MILESTONE_CATEGORIES.find(cat => cat.id === milestone.category);
+    const category = MILESTONE_CATEGORIES.find(
+      (cat) => cat.id === milestone.category,
+    );
     const defaultColor = "from-gray-500 to-slate-500";
     const baseColor = category?.color || defaultColor;
 
@@ -173,20 +177,22 @@ export default function Milestones() {
       bronze: "from-amber-50 to-orange-50",
       silver: "from-slate-50 to-gray-50",
       gold: "from-yellow-50 to-amber-50",
-      platinum: "from-purple-50 to-indigo-50"
+      platinum: "from-purple-50 to-indigo-50",
     };
 
     const difficultyBorders = {
       bronze: "border-amber-200/60",
       silver: "border-slate-200/60",
       gold: "border-yellow-200/60",
-      platinum: "border-purple-200/60"
+      platinum: "border-purple-200/60",
     };
 
     return {
       color: baseColor,
-      bgColor: difficultyColors[milestone.difficulty] || "from-gray-50 to-slate-50",
-      borderColor: difficultyBorders[milestone.difficulty] || "border-gray-200/60"
+      bgColor:
+        difficultyColors[milestone.difficulty] || "from-gray-50 to-slate-50",
+      borderColor:
+        difficultyBorders[milestone.difficulty] || "border-gray-200/60",
     };
   };
 
@@ -494,7 +500,8 @@ export default function Milestones() {
                           🔒 Locked
                         </div>
                         <p className="text-xs text-gray-500">
-                          {milestone.unlock_condition || "Complete previous milestones to unlock"}
+                          {milestone.unlock_condition ||
+                            "Complete previous milestones to unlock"}
                         </p>
                         <div className="flex items-center justify-center gap-1 opacity-50">
                           <Zap className="w-4 h-4 text-amber-500" />
