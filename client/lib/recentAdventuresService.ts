@@ -292,6 +292,8 @@ export function subscribeToAdventureUpdates(
         console.log(
           "📡 Real-time journal change detected for recent adventures:",
           payload.eventType,
+          "Entry ID:",
+          payload.new?.id || payload.old?.id
         );
 
         // Refetch recent adventures when journal entries change
