@@ -205,14 +205,14 @@ export default function JournalCommentsLikes({
     }
   };
 
-  const handleDeleteLike = async (likeId: string, visitorName: string) => {
+  const handleDeleteLike = async (likeId: string, likeVisitorName: string) => {
     try {
       await deleteLike(likeId);
       setLikes((prev) => prev.filter((l) => l.id !== likeId));
       setLikeCount((prev) => prev - 1);
 
       // If this was the current user's like, update the liked state
-      if (visitorName === visitorName.trim()) {
+      if (likeVisitorName === visitorName.trim()) {
         setIsLiked(false);
       }
 
