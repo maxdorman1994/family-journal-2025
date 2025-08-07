@@ -251,7 +251,14 @@ export default function PhotoUpload({
                   )}
                 </div>
                 {photo.error && (
-                  <div className="text-xs text-red-500 mt-1">{photo.error}</div>
+                  <div className="text-xs text-red-500 mt-1 leading-tight">
+                    {photo.error}
+                    {photo.error.includes('HEIC') && (
+                      <div className="text-blue-600 mt-1">
+                        💡 Try: Export as JPEG from Photos app
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             </CardContent>
