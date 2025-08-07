@@ -57,6 +57,10 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
   const loadData = async () => {
     try {
       setIsLoading(true);
+
+      // Check if tables exist first (for debugging)
+      await checkCommentsLikesTables();
+
       const [commentsData, likesData, statsData] = await Promise.all([
         getCommentsForEntry(entryId),
         getLikesForEntry(entryId),
