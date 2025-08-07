@@ -43,11 +43,7 @@ export async function convertHeicToJpeg(file: File): Promise<File> {
   try {
     console.log(`Starting HEIC conversion for: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
 
-    // Check if HEIC is supported first
-    const supported = await isHeicSupported();
-    if (!supported) {
-      throw new Error('HEIC conversion not supported in this browser. Browser lacks HEIF decoder support.');
-    }
+    // Try HEIC conversion directly - if it fails, we'll handle it in the catch block
 
     const convertedBlob = await heic2any({
       blob: file,
