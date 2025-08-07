@@ -20,29 +20,49 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+// Fallback app without TooltipProvider for debugging
+const FallbackApp = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/journal" element={<Journal />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/munro-bagging" element={<MunroBagging />} />
-            <Route path="/hints-tips" element={<HintsTips />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/milestones" element={<Milestones />} />
-            <Route path="/map" element={<Map />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </TooltipProvider>
+    <div style={{ padding: '20px', textAlign: 'center', background: '#f0f0f0' }}>
+      <h1>🏴󠁧󠁢󠁳󠁣󠁴󠁿 A Wee Adventure</h1>
+      <p>Loading minimal version due to React error...</p>
+      <p>If you see this, React is working but TooltipProvider is causing issues.</p>
+      <button onClick={() => window.location.reload()}>Try Again</button>
+    </div>
   </QueryClientProvider>
 );
+
+const App = () => {
+  // Check if we can safely use TooltipProvider
+  try {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/journal" element={<Journal />} />
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/munro-bagging" element={<MunroBagging />} />
+                <Route path="/hints-tips" element={<HintsTips />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/milestones" element={<Milestones />} />
+                <Route path="/map" element={<Map />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    );
+  } catch (error) {
+    console.error('TooltipProvider failed, using fallback:', error);
+    return <FallbackApp />;
+  }
+};
 
 // Error boundary component
 class ErrorBoundary extends React.Component<
