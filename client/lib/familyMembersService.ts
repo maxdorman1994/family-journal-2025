@@ -53,10 +53,19 @@ export async function getFamilyMembers(): Promise<FamilyMember[]> {
       .order('position_index', { ascending: true });
 
     if (error) {
-      console.error('Error fetching family members:', error);
+      console.error('Error fetching family members:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+        error
+      });
+
       // Check if it's a table not found error
       if (error.message.includes('Could not find the table') ||
-          error.message.includes('relation "family_members" does not exist')) {
+          error.message.includes('relation "family_members" does not exist') ||
+          error.message.includes('relation "family_members_with_stats" does not exist') ||
+          error.code === 'PGRST116') {
         throw new Error('SCHEMA_MISSING: Database tables not found');
       }
       throw new Error(`Failed to fetch family members: ${error.message}`);
