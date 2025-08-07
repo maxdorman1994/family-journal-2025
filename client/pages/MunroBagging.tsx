@@ -1,102 +1,19 @@
 import { useState, useEffect } from "react";
-import { Mountain, Trophy, MapPin, Clock, Star, TrendingUp, Camera, CheckCircle, Circle, Target, Compass, Flag, Crown, Award, Zap, Calendar } from "lucide-react";
+import { Mountain, Trophy, MapPin, Clock, Star, TrendingUp, Camera, CheckCircle, Circle, Target, Compass, Flag, Crown, Award, Zap, Calendar, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { COMPLETE_MUNROS_LIST, CompleteMunro, TOTAL_MUNROS, getAllRegions } from "@/data/complete-munros";
 
-// Sample Munro data (in a real app, this would come from a database)
-interface Munro {
-  id: string;
-  name: string;
-  height: number;
-  region: string;
-  difficulty: 'Easy' | 'Moderate' | 'Hard' | 'Extreme';
+// Enhanced Munro interface with completion tracking
+interface MunroWithCompletion extends CompleteMunro {
   completed: boolean;
   completedDate?: string;
-  latitude: number;
-  longitude: number;
-  description: string;
-  estimatedTime: string;
-  bestSeasons: string[];
   photoCount: number;
 }
-
-const sampleMunros: Munro[] = [
-  {
-    id: "1",
-    name: "Ben Nevis",
-    height: 1345,
-    region: "Lochaber",
-    difficulty: "Hard",
-    completed: true,
-    completedDate: "2025-08-03",
-    latitude: 56.7969,
-    longitude: -5.0037,
-    description: "Scotland's highest peak and the UK's tallest mountain. A challenging but rewarding climb with spectacular views.",
-    estimatedTime: "6-8 hours",
-    bestSeasons: ["May", "June", "July", "August", "September"],
-    photoCount: 4
-  },
-  {
-    id: "2", 
-    name: "Ben Macdui",
-    height: 1309,
-    region: "Cairngorms",
-    difficulty: "Moderate",
-    completed: false,
-    latitude: 57.0701,
-    longitude: -3.6689,
-    description: "Second highest peak in Scotland, located in the heart of the Cairngorms National Park.",
-    estimatedTime: "5-7 hours",
-    bestSeasons: ["June", "July", "August", "September"],
-    photoCount: 0
-  },
-  {
-    id: "3",
-    name: "Braeriach", 
-    height: 1296,
-    region: "Cairngorms",
-    difficulty: "Hard",
-    completed: false,
-    latitude: 57.0784,
-    longitude: -3.7282,
-    description: "Third highest mountain in Scotland with dramatic cliffs and alpine scenery.",
-    estimatedTime: "6-8 hours",
-    bestSeasons: ["June", "July", "August"],
-    photoCount: 0
-  },
-  {
-    id: "4",
-    name: "Cairn Toul",
-    height: 1291,
-    region: "Cairngorms", 
-    difficulty: "Hard",
-    completed: false,
-    latitude: 57.0544,
-    longitude: -3.7100,
-    description: "Remote peak in the Cairngorms with challenging terrain and stunning wilderness views.",
-    estimatedTime: "7-9 hours",
-    bestSeasons: ["June", "July", "August"],
-    photoCount: 0
-  },
-  {
-    id: "5",
-    name: "Sgor an Lochain Uaine",
-    height: 1258,
-    region: "Cairngorms",
-    difficulty: "Moderate",
-    completed: false,
-    latitude: 57.0646,
-    longitude: -3.7228,
-    description: "Known as the 'Angel's Peak', this mountain offers incredible views of the Lairig Ghru.",
-    estimatedTime: "5-6 hours", 
-    bestSeasons: ["June", "July", "August", "September"],
-    photoCount: 0
-  }
-];
 
 export default function MunroBagging() {
   const [munros, setMunros] = useState<Munro[]>(sampleMunros);
@@ -159,7 +76,7 @@ export default function MunroBagging() {
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 text-6xl opacity-5 animate-bounce">⛰️</div>
-        <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">🏔️</div>
+        <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">���️</div>
         <div className="absolute bottom-20 left-20 text-5xl opacity-5 animate-bounce" style={{animationDelay: '1s'}}>🗻</div>
         <div className="absolute top-60 left-1/3 text-3xl opacity-10 animate-pulse" style={{animationDelay: '2s'}}>⛷️</div>
         <div className="absolute bottom-40 right-10 text-4xl opacity-5 animate-bounce" style={{animationDelay: '1.5s'}}>🧗</div>
