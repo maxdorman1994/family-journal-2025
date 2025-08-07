@@ -373,6 +373,23 @@ export default function Home() {
     fileInputRef.current?.click();
   };
 
+  const handlePhotoRemove = async (memberId: string) => {
+    // Check authentication before allowing photo removal
+    if (!requestAuth()) {
+      return; // Will show password prompt
+    }
+
+    try {
+      console.log(`🗑️ Removing photo for member: ${memberId}`);
+      await removeFamilyMemberAvatar(memberId);
+      await loadFamilyMembersData();
+      console.log("✅ Photo removed successfully");
+    } catch (error) {
+      console.error("Error removing photo:", error);
+      alert("Failed to remove photo. Please try again.");
+    }
+  };
+
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
