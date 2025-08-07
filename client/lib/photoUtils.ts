@@ -1,4 +1,3 @@
-import heic2any from 'heic2any';
 import imageCompression from 'browser-image-compression';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -27,67 +26,6 @@ const defaultCompressionOptions: CompressionOptions = {
   quality: 0.8 // 80% quality
 };
 
-/**
- * Check if HEIC conversion is supported in this browser
- */
-function isHeicSupported(): boolean {
-  // For now, assume HEIC conversion is not supported in most browsers
-  // This avoids the test blob issue and we'll just handle the error during actual conversion
-  return false;
-}
-
-/**
- * Convert HEIC file to JPEG
- */
-export async function convertHeicToJpeg(file: File): Promise<File> {
-  try {
-    console.log(`Starting HEIC conversion for: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
-
-    // Try HEIC conversion directly - if it fails, we'll handle it in the catch block
-
-    const convertedBlob = await heic2any({
-      blob: file,
-      toType: 'image/jpeg',
-      quality: 0.9
-    }) as Blob;
-
-    const convertedFile = new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpg'), {
-      type: 'image/jpeg',
-      lastModified: Date.now()
-    });
-
-    console.log(`HEIC conversion successful: ${file.name} -> ${convertedFile.name}`);
-    return convertedFile;
-  } catch (error) {
-    console.error('HEIC conversion failed for:', file.name);
-    console.error('Error details:', error);
-
-    // Extract more detailed error information
-    let errorMessage = 'Unknown HEIC conversion error';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    } else if (typeof error === 'object' && error !== null) {
-      if ('code' in error && 'message' in error) {
-        errorMessage = `${error.message} (code: ${error.code})`;
-      } else {
-        errorMessage = JSON.stringify(error);
-      }
-    } else {
-      errorMessage = String(error);
-    }
-
-    console.error('Detailed error:', errorMessage);
-
-    // Provide specific error messages based on common issues
-    if (errorMessage.includes('ERR_LIBHEIF') || errorMessage.includes('format not supported') || errorMessage.includes('Browser lacks HEIF decoder')) {
-      throw new Error(`Browser doesn't support HEIC conversion. Cloudflare Images will handle HEIC directly.`);
-    } else if (errorMessage.includes('not supported in this browser')) {
-      throw new Error(`HEIC conversion not available. Cloudflare Images supports HEIC natively.`);
-    } else {
-      throw new Error(`HEIC conversion failed: ${errorMessage}. Cloudflare Images can handle HEIC files.`);
-    }
-  }
-}
 
 /**
  * Compress an image file
@@ -145,38 +83,18 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
   const warnings: string[] = [];
 
   try {
-    // Handle HEIC files
-    if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-      console.log(`HEIC file detected: ${file.name}`);
+    // Try to compress the image
+    console.log(`Attempting compression for: ${processedFile.name}`);
+    compressionAttempted = true;
 
-      // Skip conversion entirely - most browsers don't support HEIC conversion
-      // Cloudflare Images will handle HEIC files natively
-      console.log(`Skipping browser HEIC conversion - Cloudflare Images supports HEIC natively`);
-      warnings.push('HEIC file will be processed by Cloudflare Images (supports HEIC natively)');
-
-      // Keep the original HEIC file unchanged
-      processedFile = file;
-      conversionAttempted = true; // Mark as attempted so compression is skipped
-    }
-
-    // Try to compress the image (skip for HEIC files)
-    const isHeicFile = (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic'));
-
-    if (isHeicFile) {
-      console.log(`Skipping compression for HEIC file: ${processedFile.name} - will be optimized by Cloudflare Images`);
-    } else {
-      console.log(`Attempting compression for: ${processedFile.name}`);
-      compressionAttempted = true;
-
-      try {
-        const compressedFile = await compressImage(processedFile);
-        processedFile = compressedFile;
-        console.log(`Compression successful for: ${file.name}`);
-      } catch (compressionError) {
-        console.warn(`Compression failed for ${processedFile.name}:`, compressionError);
-        warnings.push('Compression failed - using original size');
-        // Keep the uncompressed file
-      }
+    try {
+      const compressedFile = await compressImage(processedFile);
+      processedFile = compressedFile;
+      console.log(`Compression successful for: ${file.name}`);
+    } catch (compressionError) {
+      console.warn(`Compression failed for ${processedFile.name}:`, compressionError);
+      warnings.push('Compression failed - using original size');
+      // Keep the uncompressed file
     }
 
     // Create preview URL
@@ -313,33 +231,24 @@ export function validatePhotoFile(file: File): { valid: boolean; error?: string;
     'image/jpg',
     'image/png',
     'image/webp',
-    'image/heic',
     'image/gif',
     'image/svg+xml'
   ];
 
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.heic', '.gif', '.svg'];
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
   const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
 
   if (file.size > maxSize) {
     return {
       valid: false,
-      error: `File size too large. Cloudflare Images supports up to ${maxSize / 1024 / 1024}MB`
+      error: `File size too large. Maximum file size is ${maxSize / 1024 / 1024}MB`
     };
   }
 
   if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
     return {
       valid: false,
-      error: 'Unsupported file type. Please use JPEG, PNG, WebP, HEIC, GIF, or SVG images'
-    };
-  }
-
-  // Add warning for HEIC files
-  if (file.type === 'image/heic' || fileExtension === '.heic') {
-    return {
-      valid: true,
-      warning: 'HEIC file detected. Browser support may be limited - consider converting to JPEG for best results.'
+      error: 'Unsupported file type. Please use JPEG, PNG, WebP, GIF, or SVG images'
     };
   }
 
