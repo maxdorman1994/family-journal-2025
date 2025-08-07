@@ -129,9 +129,9 @@ export default function MapPage() {
   const handleMapClick = useCallback((event: any) => {
     const { lng, lat } = event.lngLat;
 
-    // Check authentication before allowing pin creation
-    if (!requestAuth()) {
-      return; // Will show password prompt
+    // Only allow pin creation if authenticated
+    if (!isAuthenticated) {
+      return;
     }
 
     setSelectedLocation({ latitude: lat, longitude: lng });
@@ -144,7 +144,7 @@ export default function MapPage() {
       date: new Date().toISOString().split("T")[0],
     });
     setIsDialogOpen(true);
-  }, [requestAuth]);
+  }, [isAuthenticated]);
 
   const handleAddPin = async () => {
     if (!selectedLocation || !newPin.title.trim()) return;
