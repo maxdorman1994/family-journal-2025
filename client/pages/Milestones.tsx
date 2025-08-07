@@ -72,27 +72,6 @@ export default function Milestones() {
         setStats(realStats);
 
         console.log(`✅ Loaded ${realMilestones.length} real milestones, ${realStats.completed_milestones} completed`);
-        setError(null);
-
-        console.log("🔄 Loading milestone data...");
-
-        // Load all data in parallel
-        const [categoriesData, milestonesData, statsData] = await Promise.all([
-          getMilestoneCategories(),
-          getMilestonesWithProgress("demo-user"),
-          getMilestoneStats("demo-user"),
-        ]);
-
-        setCategories([
-          { id: "all", name: "All", icon: "Star" },
-          ...categoriesData,
-        ]);
-        setMilestones(milestonesData);
-        setStats(statsData);
-
-        console.log(
-          `✅ Loaded milestone data: ${milestonesData.length} milestones, ${statsData.total_xp} XP`,
-        );
       } catch (error) {
         console.error("Error loading milestone data:", error);
         setError(
