@@ -56,6 +56,11 @@ export async function getWishlistItems(): Promise<WishlistItem[]> {
 
     if (error) {
       console.error('Error fetching wishlist items:', error);
+      // Check if it's a table not found error
+      if (error.message.includes('Could not find the table') ||
+          error.message.includes('relation "wishlist_items" does not exist')) {
+        throw new Error('SCHEMA_MISSING: Database tables not found');
+      }
       throw new Error(`Failed to fetch wishlist items: ${error.message}`);
     }
 
@@ -372,7 +377,15 @@ export async function getWishlistStats(): Promise<{
 
     if (error) {
       console.error('Error fetching wishlist stats:', error);
-      console.warn('Stats view not available, returning default stats');
+      // Check if it's a table not found error or network error
+      if (error.message.includes('Could not find the table') ||
+          error.message.includes('relation "wishlist_stats" does not exist') ||
+          error.message.includes('Failed to fetch') ||
+          error.code === 'PGRST116') {
+        console.warn('Stats view not available, returning default stats');
+        return defaultStats;
+      }
+      console.warn('Stats fetch error, returning default stats:', error.message);
       return defaultStats;
     }
 
