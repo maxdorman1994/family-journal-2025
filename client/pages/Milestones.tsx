@@ -73,18 +73,18 @@ export default function Milestones() {
 
         console.log(`✅ Loaded ${realMilestones.length} real milestones, ${realStats.completed_milestones} completed`);
       } catch (error) {
-        console.error("Error loading milestone data:", error);
+        console.error("Error loading real milestone data:", error);
         setError(
           error instanceof Error
             ? error.message
-            : "Failed to load milestone data",
+            : "Failed to load milestone data from journal entries",
         );
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadMilestoneData();
+    loadRealMilestoneData();
 
     // Set up real-time subscription
     const unsubscribe = subscribeToMilestoneUpdates(
