@@ -32,6 +32,7 @@ ALTER TABLE journal_entries ENABLE ROW LEVEL SECURITY;
 
 -- Create a policy that allows all operations for now
 -- In production, you might want to restrict this to authenticated users
+DROP POLICY IF EXISTS "Allow all operations on journal_entries" ON journal_entries;
 CREATE POLICY "Allow all operations on journal_entries" ON journal_entries
     FOR ALL USING (true);
 
