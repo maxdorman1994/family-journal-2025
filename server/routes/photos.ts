@@ -17,7 +17,7 @@ const upload = multer({
     if (allowedTypes.includes(file.mimetype) || allowedExtensions.includes(fileExtension)) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid file type. Only JPEG, PNG, WebP, HEIC, GIF, and SVG files are allowed.'));
+      cb(new Error('Invalid file type. Only JPEG, PNG, WebP, GIF, and SVG files are allowed.'));
     }
   }
 });
