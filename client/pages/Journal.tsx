@@ -152,8 +152,36 @@ export default function Journal() {
   const handleNewEntry = async (entryData: any) => {
     try {
       setIsLoading(true);
+      setError(null);
 
-      // Prepare entry data for Supabase
+      // First, upload all photos to Cloudflare Images
+      const uploadedPhotoUrls: string[] = [];
+
+      if (entryData.photos && entryData.photos.length > 0) {
+        console.log(`Uploading ${entryData.photos.length} photos to Cloudflare Images...`);
+
+        for (const photo of entryData.photos) {
+          try {
+            // Only upload if not already uploaded
+            if (!photo.cloudflareUrl) {
+              const { uploadPhotoToCloudflare } = await import('@/lib/photoUtils');
+              const cloudflareUrl = await uploadPhotoToCloudflare(photo);
+              uploadedPhotoUrls.push(cloudflareUrl);
+              console.log(`✅ Uploaded: ${photo.originalFile.name} -> ${cloudflareUrl}`);
+            } else {
+              uploadedPhotoUrls.push(photo.cloudflareUrl);
+              console.log(`✅ Already uploaded: ${photo.cloudflareUrl}`);
+            }
+          } catch (uploadError) {
+            console.error(`Failed to upload photo ${photo.originalFile.name}:`, uploadError);
+            // Continue with other photos, use placeholder for failed uploads
+            uploadedPhotoUrls.push("/placeholder.svg");
+            setError(`Some photos failed to upload but entry was saved`);
+          }
+        }
+      }
+
+      // Prepare entry data for Supabase with uploaded photo URLs
       const supabaseEntryData = {
         title: entryData.title,
         content: entryData.content,
@@ -170,15 +198,16 @@ export default function Journal() {
         other_tickets: entryData.other_tickets,
         pet_notes: entryData.pet_notes,
         tags: entryData.tags,
-        photos: entryData.photos.map((photo: ProcessedPhoto) =>
-          photo.cloudflareUrl || photo.preview || "/placeholder.svg"
-        )
+        photos: uploadedPhotoUrls
       };
+
+      console.log('Creating journal entry with data:', supabaseEntryData);
 
       // Try to save to Supabase first
       try {
         const savedEntry = await createJournalEntry(supabaseEntryData);
         setEntries(prev => [savedEntry, ...prev]);
+        console.log('✅ Entry saved to Supabase successfully');
       } catch (supabaseError) {
         console.warn('Failed to save to Supabase, saving locally:', supabaseError);
 
@@ -197,6 +226,7 @@ export default function Journal() {
         };
 
         setEntries(prev => [localEntry, ...prev]);
+        console.log('✅ Entry saved locally as fallback');
       }
     } catch (error) {
       console.error('Failed to create journal entry:', error);
