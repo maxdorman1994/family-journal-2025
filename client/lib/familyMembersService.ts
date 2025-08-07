@@ -188,7 +188,7 @@ export async function removeFamilyMemberAvatar(
       .single();
 
     if (error) {
-      console.error("Error removing family member avatar:", error);
+      console.error("Error removing family member avatar:", JSON.stringify(error, null, 2));
       throw new Error(`Failed to remove avatar: ${error.message}`);
     }
 
@@ -196,6 +196,12 @@ export async function removeFamilyMemberAvatar(
     return member;
   } catch (error) {
     console.error("Error in removeFamilyMemberAvatar:", error);
+
+    // Check if it's a network error
+    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    }
+
     if (error instanceof Error) {
       throw error;
     }
