@@ -171,12 +171,15 @@ export default function MapPage() {
   const handleDeletePin = async (pinId: string) => {
     try {
       console.log("🗺️ Deleting pin:", pinId);
+      console.log("🗺️ Current pins before delete:", pins.length);
+
       await deleteMapPin(pinId);
       setSelectedPin(null);
+
       console.log("✅ Pin deleted successfully and will sync across devices");
     } catch (error) {
       console.error("❌ Error deleting pin:", error);
-      // You could add a toast notification here
+      alert(`Error deleting pin: ${error.message || error}`);
     }
   };
 
