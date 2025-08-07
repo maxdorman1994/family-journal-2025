@@ -1003,6 +1003,15 @@ export default function Journal() {
           </div>
         </div>
       )}
+
+      {/* Password Prompt */}
+      <PasswordPrompt
+        isOpen={showPasswordPrompt}
+        onAuthenticate={authenticate}
+        onCancel={cancelAuth}
+        title="Family Access Required"
+        description="Please enter the family password to create new journal entries."
+      />
     </div>
   );
 }
