@@ -509,9 +509,34 @@ export default function MunroBagging() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-slate-600 mb-4 max-w-3xl mx-auto leading-relaxed">
               Conquering Scotland's 282 magnificent peaks over 3,000 feet
             </p>
+
+            {/* Auth Status */}
+            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm mb-6 ${
+              isAuthenticated
+                ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
+                : 'bg-orange-50 border border-orange-200 text-orange-700'
+            }`}>
+              <Lock className="w-4 h-4" />
+              <span>
+                {isAuthenticated
+                  ? `Edit mode (${sessionTimeRemaining}m left) - Click peaks to mark complete`
+                  : "View only mode - Password required to mark Munros complete"
+                }
+              </span>
+              {isAuthenticated && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={logout}
+                  className="h-5 px-2 text-xs ml-2"
+                >
+                  Lock
+                </Button>
+              )}
+            </div>
 
             {/* Error Display */}
             {error && (
