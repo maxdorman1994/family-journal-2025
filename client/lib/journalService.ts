@@ -57,6 +57,15 @@ export async function createJournalEntry(
       );
     }
 
+    // Update milestones based on the new journal entry
+    try {
+      await updateMilestonesFromJournalEntry(entry, 'demo-user', true);
+      console.log("✅ Milestones updated from new journal entry");
+    } catch (milestoneError) {
+      console.error("Error updating milestones:", milestoneError);
+      // Don't fail the journal creation if milestone update fails
+    }
+
     return entry;
   } catch (error) {
     console.error("Error in createJournalEntry:", error);
