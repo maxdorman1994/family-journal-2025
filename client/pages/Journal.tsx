@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSync } from "@/lib/syncService";
 import {
   Search,
   Filter,
@@ -158,7 +159,7 @@ export default function Journal() {
       const supabaseEntries = await getJournalEntries();
       setEntries(supabaseEntries);
       console.log(
-        "✅ Loaded journal entries from Supabase:",
+        "��� Loaded journal entries from Supabase:",
         supabaseEntries.length,
       );
 
