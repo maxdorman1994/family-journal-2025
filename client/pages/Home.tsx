@@ -958,58 +958,143 @@ export default function Home() {
       </section>
 
       {/* Recent Adventures */}
-      <section className="mb-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold">
-            <span className="bg-gradient-to-r from-vibrant-blue to-scotland-loch bg-clip-text text-transparent">
+      <section className="mb-20">
+        {/* Section Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border-2 border-emerald-200/50 shadow-lg">
+            <Calendar className="h-6 w-6 text-emerald-600" />
+            <span className="text-sm font-medium text-emerald-700">Latest Family Adventures</span>
+            <MapPin className="h-6 w-6 text-emerald-600" />
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
               Recent Adventures
             </span>
           </h2>
-          <Button asChild variant="outline">
+
+          <p className="text-slate-600 max-w-2xl mx-auto mb-8">
+            Our latest Scottish explorations, from mountain peaks to castle visits. Each adventure adds to our family's growing collection of memories.
+          </p>
+
+          <Button asChild className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-300">
             <Link to="/journal">
-              View All
+              <Calendar className="mr-2 h-4 w-4" />
+              View All Adventures
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Adventures Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {recentAdventures.map((adventure, index) => (
-            <Card
-              key={index}
-              className="group hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm border-scotland-thistle/20"
-            >
-              <CardContent className="p-0">
-                <div className="relative">
-                  <img
-                    src={adventure.image}
-                    alt={adventure.title}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-t-lg" />
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <h3 className="font-semibold text-lg">{adventure.title}</h3>
-                    <p className="text-sm opacity-90">{adventure.location}</p>
+            <div key={index} className="group relative">
+              {/* Glow Effect */}
+              <div className={`absolute inset-0 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity ${
+                index === 0 ? 'bg-gradient-to-r from-emerald-400 to-blue-500' :
+                index === 1 ? 'bg-gradient-to-r from-blue-400 to-purple-500' :
+                'bg-gradient-to-r from-purple-400 to-pink-500'
+              }`}></div>
+
+              <Card className="relative bg-white/95 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+                {/* Top Border */}
+                <div className={`absolute top-0 left-0 w-full h-1 ${
+                  index === 0 ? 'bg-gradient-to-r from-emerald-500 to-blue-500' :
+                  index === 1 ? 'bg-gradient-to-r from-blue-500 to-purple-500' :
+                  'bg-gradient-to-r from-purple-500 to-pink-500'
+                }`}></div>
+
+                <CardContent className="p-0">
+                  {/* Image Section */}
+                  <div className="relative">
+                    <img
+                      src={adventure.image}
+                      alt={adventure.title}
+                      className="w-full h-56 object-cover"
+                    />
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+                    {/* Adventure Badge */}
+                    <div className="absolute top-4 right-4">
+                      <div className={`px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg ${
+                        index === 0 ? 'bg-gradient-to-r from-emerald-500 to-blue-500' :
+                        index === 1 ? 'bg-gradient-to-r from-blue-500 to-purple-500' :
+                        'bg-gradient-to-r from-purple-500 to-pink-500'
+                      }`}>
+                        Adventure #{recentAdventures.length - index}
+                      </div>
+                    </div>
+
+                    {/* Title & Location Overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                      <h3 className="font-bold text-xl text-white mb-2 group-hover:text-emerald-200 transition-colors">
+                        {adventure.title}
+                      </h3>
+                      <div className="flex items-center gap-2 text-white/90">
+                        <MapPin className="h-4 w-4" />
+                        <span className="text-sm">{adventure.location}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="p-4">
-                  <p className="text-sm text-muted-foreground mb-3">
-                    {adventure.date}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {adventure.tags.map((tag, tagIndex) => (
-                      <span
-                        key={tagIndex}
-                        className="px-2 py-1 bg-scotland-thistle/20 text-scotland-thistle text-xs rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+
+                  {/* Content Section */}
+                  <div className="p-6">
+                    {/* Date */}
+                    <div className="flex items-center gap-2 mb-4">
+                      <Calendar className="h-4 w-4 text-slate-500" />
+                      <span className="text-sm font-medium text-slate-600">{adventure.date}</span>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {adventure.tags.map((tag, tagIndex) => (
+                        <span
+                          key={tagIndex}
+                          className={`px-3 py-1 text-xs font-medium rounded-full border-2 ${
+                            index === 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                            index === 1 ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                            'bg-purple-50 text-purple-700 border-purple-200'
+                          }`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Action Button */}
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className={`w-full border-2 transition-all duration-300 ${
+                        index === 0 ? 'border-emerald-300 text-emerald-700 hover:bg-emerald-50' :
+                        index === 1 ? 'border-blue-300 text-blue-700 hover:bg-blue-50' :
+                        'border-purple-300 text-purple-700 hover:bg-purple-50'
+                      }`}
+                    >
+                      <Link to="/journal" className="flex items-center gap-2">
+                        <span>Read Full Story</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </Button>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           ))}
+        </div>
+
+        {/* Call to Add New Adventure */}
+        <div className="mt-12 text-center">
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-slate-50 to-emerald-50 border-2 border-slate-200/50 rounded-full shadow-lg">
+            <Heart className="h-5 w-5 text-slate-600" />
+            <span className="text-sm font-medium text-slate-700">
+              Ready for your next Scottish adventure? Start planning today!
+            </span>
+          </div>
         </div>
       </section>
 
