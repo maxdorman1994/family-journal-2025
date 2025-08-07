@@ -1143,13 +1143,13 @@ export default function Home() {
 
                 {/* Text Content - Right Side */}
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-3xl font-bold text-green-800 mb-3">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-green-800 mb-3">
                     Fern
                   </h3>
-                  <p className="text-lg font-medium text-green-600 mb-6">
+                  <p className="text-base sm:text-lg font-medium text-green-600 mb-4 sm:mb-6">
                     ADVENTURE DOG
                   </p>
-                  <p className="text-base text-green-700 leading-relaxed mb-6">
+                  <p className="text-sm sm:text-base text-green-700 leading-relaxed mb-4 sm:mb-6">
                     Our spirited second furry explorer who brings her own unique
                     energy to every Scottish adventure! Fern is the perfect
                     adventure buddy - curious about every new trail, fearless
