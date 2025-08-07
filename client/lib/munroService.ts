@@ -48,6 +48,19 @@ export interface CreateMunroCompletionData {
   climbing_time?: string;
 }
 
+export interface CreateMunroData {
+  name: string;
+  height: number;
+  region: string;
+  difficulty: 'Easy' | 'Moderate' | 'Hard' | 'Extreme';
+  latitude: number;
+  longitude: number;
+  description: string;
+  estimated_time: string;
+  best_seasons: string[];
+  os_grid_ref: string;
+}
+
 /**
  * Get all Munros with their completion status
  */
@@ -390,6 +403,71 @@ export function subscribeToMunroCompletions(
   return () => {
     subscription.unsubscribe();
   };
+}
+
+/**
+ * Add a new custom Munro
+ */
+export async function addCustomMunro(data: CreateMunroData): Promise<MunroData> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  try {
+    console.log(`🆕 Adding custom Munro: ${data.name}...`);
+
+    // Get the next available ID (max + 1)
+    const { data: maxId, error: maxError } = await supabase
+      .from('munros')
+      .select('rank')
+      .order('rank', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (maxError && maxError.code !== 'PGRST116') {
+      console.error('Error getting max rank:', maxError);
+      throw new Error(`Failed to get max rank: ${maxError.message}`);
+    }
+
+    const nextRank = (maxId?.rank || 282) + 1;
+    const munroId = `custom-${Date.now()}`;
+
+    const munroData = {
+      id: munroId,
+      name: data.name,
+      height: data.height,
+      region: data.region,
+      difficulty: data.difficulty,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      description: data.description,
+      estimated_time: data.estimated_time,
+      best_seasons: data.best_seasons,
+      os_grid_ref: data.os_grid_ref,
+      rank: nextRank,
+      is_custom: true
+    };
+
+    const { data: munro, error } = await supabase
+      .from('munros')
+      .insert(munroData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding custom Munro:', error);
+      throw new Error(`Failed to add custom Munro: ${error.message}`);
+    }
+
+    console.log(`✅ Custom Munro added successfully: ${data.name}`);
+    return munro;
+  } catch (error) {
+    console.error('Error in addCustomMunro:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to add custom Munro: ${String(error)}`);
+  }
 }
 
 /**
