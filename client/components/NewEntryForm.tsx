@@ -58,7 +58,7 @@ const moodOptions = [
   { value: "🤩 Amazed", label: "🤩 Amazed" },
   { value: "😄 Happy", label: "😄 Happy" },
   { value: "😊 Content", label: "😊 Content" },
-  { value: "🥰 Loved", label: "🥰 Loved" },
+  { value: "���� Loved", label: "🥰 Loved" },
   { value: "😴 Tired", label: "😴 Tired" },
   { value: "🤗 Blessed", label: "🤗 Blessed" },
 ];
@@ -428,7 +428,7 @@ export default function NewEntryForm({
                   </label>
                 </div>
 
-                {formData.dogFriendly && (
+                {formData.dog_friendly && (
                   <div className="ml-6">
                     <label className="block text-sm font-medium mb-2">
                       Pet Notes & Requirements
