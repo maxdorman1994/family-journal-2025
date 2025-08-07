@@ -223,6 +223,12 @@ export async function deleteWishlistItem(id: string): Promise<void> {
     console.log(`✅ Wishlist item deleted successfully: ${id}`);
   } catch (error) {
     console.error("Error in deleteWishlistItem:", error);
+
+    // Check if it's a network error
+    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    }
+
     if (error instanceof Error) {
       throw error;
     }
