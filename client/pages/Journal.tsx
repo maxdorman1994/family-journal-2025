@@ -365,11 +365,12 @@ export default function Journal() {
   };
 
   const handleEditClick = (entry: JournalEntry) => {
-    alert("Edit button clicked for: " + entry.title);
+    console.log("🔧 Edit button clicked for:", entry.title, entry);
     if (!isAuthenticated) {
-      alert("Not authenticated!");
+      console.log("❌ Not authenticated!");
       return;
     }
+    console.log("✅ Setting editing entry and opening form");
     setEditingEntry(entry);
     setIsNewEntryFormOpen(true);
   };
