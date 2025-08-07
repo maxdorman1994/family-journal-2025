@@ -22,7 +22,7 @@ import { ProcessedPhoto } from "@/lib/photoUtils";
 export default function Journal() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
-  const [hoveredEntry, setHoveredEntry] = useState<number | null>(null);
+  const [hoveredEntry, setHoveredEntry] = useState<string | null>(null);
   const [isNewEntryFormOpen, setIsNewEntryFormOpen] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -30,60 +30,60 @@ export default function Journal() {
   const [error, setError] = useState<string | null>(null);
 
   // Fallback data for development when Supabase is not configured
-  const journalEntriesData = [
+  const journalEntriesData: JournalEntry[] = [
     {
-      id: 1,
+      id: "1",
       title: "Ben Nevis Summit - Our Greatest Challenge Yet!",
       date: "Sunday 3 August 2025",
       location: "Fort William, Highland",
       weather: "☀️ Sunny",
       mood: "🙏 Grateful",
-      milesTraveled: 87,
+      miles_traveled: 87,
       parking: "Free",
-      dogFriendly: true,
-      paidActivity: false,
-      adultTickets: "",
-      childTickets: "",
-      otherTickets: "",
-      petNotes: "Dogs allowed off-lead on mountain paths, keep on lead near car park",
+      dog_friendly: true,
+      paid_activity: false,
+      adult_tickets: "",
+      child_tickets: "",
+      other_tickets: "",
+      pet_notes: "Dogs allowed off-lead on mountain paths, keep on lead near car park",
       content: "What an incredible day! After months of training, we finally conquered Ben Nevis. The views from the summit were absolutely breathtaking - you could see for miles across the Scottish Highlands. Little Alex was such a trooper, and Bonnie loved every minute of it...",
       photos: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
       tags: ["Mountain", "Challenge", "Family", "Views", "Achievement"]
     },
     {
-      id: 2,
+      id: "2",
       title: "Magical Loch Lomond Picnic",
       date: "Sunday 28 July 2025",
       location: "Balloch, West Dunbartonshire",
       weather: "⛅ Partly Cloudy",
       mood: "😌 Peaceful",
-      milesTraveled: 45,
+      miles_traveled: 45,
       parking: "£5",
-      dogFriendly: true,
-      paidActivity: false,
-      adultTickets: "",
-      childTickets: "",
-      otherTickets: "",
-      petNotes: "Dogs welcome on beach and walking paths, water bowls available at visitor center",
+      dog_friendly: true,
+      paid_activity: false,
+      adult_tickets: "",
+      child_tickets: "",
+      other_tickets: "",
+      pet_notes: "Dogs welcome on beach and walking paths, water bowls available at visitor center",
       content: "A perfect family day by the beautiful Loch Lomond. We found the most amazing spot for our picnic with stunning views across the water. The kids (and Bonnie) had so much fun skipping stones and exploring the shoreline...",
       photos: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
       tags: ["Lake", "Family", "Relaxing", "Nature", "Picnic"]
     },
     {
-      id: 3,
+      id: "3",
       title: "Edinburgh Castle - Step Back in Time",
       date: "Saturday 15 July 2025",
       location: "Edinburgh, Midlothian",
       weather: "🌧️ Light Rain",
       mood: "🤩 Amazed",
-      milesTraveled: 123,
+      miles_traveled: 123,
       parking: "£12",
-      dogFriendly: false,
-      paidActivity: true,
-      adultTickets: "2 × £17.50",
-      childTickets: "1 × £10.50",
-      otherTickets: "",
-      petNotes: "",
+      dog_friendly: false,
+      paid_activity: true,
+      adult_tickets: "2 × £17.50",
+      child_tickets: "1 × £10.50",
+      other_tickets: "",
+      pet_notes: "",
       content: "Despite the Scottish drizzle, Edinburgh Castle was absolutely magical. The history here is incredible - you can really feel the centuries of stories within these ancient walls. The views over Edinburgh from the castle are spectacular...",
       photos: ["/placeholder.svg", "/placeholder.svg"],
       tags: ["History", "Culture", "City", "Castle", "Education"]
@@ -161,14 +161,14 @@ export default function Journal() {
         location: entryData.location,
         weather: entryData.weather,
         mood: entryData.mood,
-        miles_traveled: parseInt(entryData.milesTraveled) || 0,
+        miles_traveled: parseInt(entryData.miles_traveled) || 0,
         parking: entryData.parking || "Not specified",
-        dog_friendly: entryData.dogFriendly,
-        paid_activity: entryData.paidActivity,
-        adult_tickets: entryData.adultTickets,
-        child_tickets: entryData.childTickets,
-        other_tickets: entryData.otherTickets,
-        pet_notes: entryData.petNotes,
+        dog_friendly: entryData.dog_friendly,
+        paid_activity: entryData.paid_activity,
+        adult_tickets: entryData.adult_tickets,
+        child_tickets: entryData.child_tickets,
+        other_tickets: entryData.other_tickets,
+        pet_notes: entryData.pet_notes,
         tags: entryData.tags,
         photos: entryData.photos.map((photo: ProcessedPhoto) =>
           photo.cloudflareUrl || photo.preview || "/placeholder.svg"
@@ -390,7 +390,7 @@ export default function Journal() {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="flex items-center text-sm text-gray-600">
                           <Route className="mr-2 h-4 w-4 text-vibrant-blue" />
-                          <span className="font-medium">{entry.milesTraveled} miles traveled</span>
+                          <span className="font-medium">{entry.miles_traveled} miles traveled</span>
                         </div>
                         <div className="flex items-center text-sm text-gray-600">
                           <Car className="mr-2 h-4 w-4 text-scotland-forest" />
@@ -399,29 +399,29 @@ export default function Journal() {
                         <div className="flex items-center text-sm text-gray-600">
                           <Dog className="mr-2 h-4 w-4 text-vibrant-pink" />
                           <span className="font-medium">
-                            {entry.dogFriendly ? "🐕 Dog friendly" : "❌ No dogs"}
+                            {entry.dog_friendly ? "🐕 Dog friendly" : "❌ No dogs"}
                           </span>
                         </div>
                       </div>
 
                       {/* Pet Notes */}
-                      {entry.dogFriendly && entry.petNotes && (
+                      {entry.dog_friendly && entry.pet_notes && (
                         <div className="text-sm text-gray-600 italic border-l-2 border-vibrant-pink pl-3">
-                          <span className="font-medium">Pet info: </span>{entry.petNotes}
+                          <span className="font-medium">Pet info: </span>{entry.pet_notes}
                         </div>
                       )}
 
                       {/* Ticket Information */}
-                      {entry.paidActivity && (entry.adultTickets || entry.childTickets || entry.otherTickets) && (
+                      {entry.paid_activity && (entry.adult_tickets || entry.child_tickets || entry.other_tickets) && (
                         <div className="text-sm text-gray-600 border-l-2 border-vibrant-blue pl-3">
                           <span className="font-medium flex items-center mb-1">
                             <Ticket className="mr-1 h-3 w-3" />
                             Tickets:
                           </span>
                           <div className="space-y-1">
-                            {entry.adultTickets && <div>Adults: {entry.adultTickets}</div>}
-                            {entry.childTickets && <div>Children: {entry.childTickets}</div>}
-                            {entry.otherTickets && <div>Other: {entry.otherTickets}</div>}
+                            {entry.adult_tickets && <div>Adults: {entry.adult_tickets}</div>}
+                            {entry.child_tickets && <div>Children: {entry.child_tickets}</div>}
+                            {entry.other_tickets && <div>Other: {entry.other_tickets}</div>}
                           </div>
                         </div>
                       )}
