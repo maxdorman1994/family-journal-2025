@@ -47,7 +47,7 @@ interface NewEntryFormProps {
 const weatherOptions = [
   { value: "☀️ Sunny", label: "☀️ Sunny" },
   { value: "⛅ Partly Cloudy", label: "⛅ Partly Cloudy" },
-  { value: "☁️ Cloudy", label: "☁️ Cloudy" },
+  { value: "��️ Cloudy", label: "☁️ Cloudy" },
   { value: "🌧️ Light Rain", label: "🌧️ Light Rain" },
   { value: "🌦️ Showers", label: "🌦️ Showers" },
   { value: "❄️ Snow", label: "❄️ Snow" },
@@ -116,6 +116,50 @@ export default function NewEntryForm({
   const [customTag, setCustomTag] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Populate form data when editing an entry
+  useEffect(() => {
+    if (editingEntry) {
+      setFormData({
+        title: editingEntry.title || "",
+        date: editingEntry.date ? new Date(editingEntry.date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+        location: editingEntry.location || "",
+        weather: editingEntry.weather || "",
+        mood: editingEntry.mood || "",
+        miles_traveled: editingEntry.miles_traveled?.toString() || "",
+        parking: editingEntry.parking || "",
+        dog_friendly: editingEntry.dog_friendly || false,
+        paid_activity: editingEntry.paid_activity || false,
+        adult_tickets: editingEntry.adult_tickets || "",
+        child_tickets: editingEntry.child_tickets || "",
+        other_tickets: editingEntry.other_tickets || "",
+        pet_notes: editingEntry.pet_notes || "",
+        content: editingEntry.content || "",
+        tags: editingEntry.tags || [],
+        photos: [], // Photos will need special handling for existing entries
+      });
+    } else {
+      // Reset form for new entry
+      setFormData({
+        title: "",
+        date: new Date().toISOString().split("T")[0],
+        location: "",
+        weather: "",
+        mood: "",
+        miles_traveled: "",
+        parking: "",
+        dog_friendly: false,
+        paid_activity: false,
+        adult_tickets: "",
+        child_tickets: "",
+        other_tickets: "",
+        pet_notes: "",
+        content: "",
+        tags: [],
+        photos: [],
+      });
+    }
+  }, [editingEntry]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
