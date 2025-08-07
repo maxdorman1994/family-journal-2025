@@ -197,8 +197,19 @@ export async function getMunroCompletionStats(): Promise<{
   first_completion: string | null;
   latest_completion: string | null;
 }> {
+  const defaultStats = {
+    completed_count: 0,
+    total_munros: 282,
+    completion_percentage: 0,
+    highest_completed: 0,
+    total_photos: 0,
+    first_completion: null,
+    latest_completion: null
+  };
+
   if (!isSupabaseConfigured()) {
-    throw new Error('Supabase not configured');
+    console.warn('Supabase not configured, returning default stats');
+    return defaultStats;
   }
 
   try {
@@ -211,30 +222,24 @@ export async function getMunroCompletionStats(): Promise<{
 
     if (error) {
       console.error('Error fetching stats:', error);
-      // Check if it's a table not found error
+      // Check if it's a table not found error or network error
       if (error.message.includes('Could not find the table') ||
-          error.message.includes('relation "munro_completion_stats" does not exist')) {
-        throw new Error('SCHEMA_MISSING: Database tables not found');
+          error.message.includes('relation "munro_completion_stats" does not exist') ||
+          error.message.includes('Failed to fetch') ||
+          error.code === 'PGRST116') {
+        console.warn('Stats view not available, returning default stats');
+        return defaultStats;
       }
-      throw new Error(`Failed to fetch stats: ${error.message}`);
+      console.warn('Stats fetch error, returning default stats:', error.message);
+      return defaultStats;
     }
 
     console.log('✅ Munro stats loaded successfully');
-    return data || {
-      completed_count: 0,
-      total_munros: 282,
-      completion_percentage: 0,
-      highest_completed: 0,
-      total_photos: 0,
-      first_completion: null,
-      latest_completion: null
-    };
+    return data || defaultStats;
   } catch (error) {
     console.error('Error in getMunroCompletionStats:', error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch stats: ${String(error)}`);
+    console.warn('Falling back to default stats due to error');
+    return defaultStats;
   }
 }
 
