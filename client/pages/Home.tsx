@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import { useSync } from "@/lib/syncService";
 import {
   ArrowRight,
   Camera,
