@@ -231,6 +231,7 @@ export async function uploadPhotoToCloudflare(
       });
 
       xhr.open('POST', '/api/photos/upload');
+      console.log(`🚀 Sending upload request to /api/photos/upload`);
       xhr.send(formData);
     });
   } catch (error) {
