@@ -33,7 +33,8 @@ export async function getCommentsForEntry(entryId: string): Promise<JournalComme
       .order('created_at', { ascending: true });
 
     if (error) {
-      console.error('Error fetching comments:', error);
+      console.error('Error fetching comments:', JSON.stringify(error, null, 2));
+      console.error('Error details:', error);
       throw error;
     }
 
