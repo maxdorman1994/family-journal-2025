@@ -410,9 +410,8 @@ export default function Milestones() {
               (milestone) => {
                 const Icon = getIconComponent(milestone.icon);
                 const colorScheme = getColorScheme(milestone);
-                const progressPercentage = milestone.progressPercentage || 0;
-                const currentProgress =
-                  milestone.progress?.current_progress || 0;
+                const progressPercentage = milestone.progress_percentage || 0;
+                const currentProgress = milestone.current_value || 0;
                 const targetValue = milestone.target_value || 1;
                 return (
                   <Card
