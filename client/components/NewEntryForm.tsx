@@ -230,26 +230,30 @@ export default function NewEntryForm({
         // Clean up photo preview URLs only after successful submission
         cleanupPreviewUrls(formData.photos);
 
-        // Reset form
-        setFormData({
-          title: "",
-          date: new Date().toISOString().split("T")[0],
-          location: "",
-          weather: "",
-          mood: "",
-          miles_traveled: "",
-          parking: "",
-          dog_friendly: false,
-          paid_activity: false,
-          adult_tickets: "",
-          child_tickets: "",
-          other_tickets: "",
-          pet_notes: "",
-          content: "",
-          tags: [],
-          photos: [],
-        });
-        onClose();
+        // Reset form only for new entries (not edits)
+        if (!editingEntry) {
+          setFormData({
+            title: "",
+            date: new Date().toISOString().split("T")[0],
+            location: "",
+            weather: "",
+            mood: "",
+            miles_traveled: "",
+            parking: "",
+            dog_friendly: false,
+            paid_activity: false,
+            adult_tickets: "",
+            child_tickets: "",
+            other_tickets: "",
+            pet_notes: "",
+            content: "",
+            tags: [],
+            photos: [],
+          });
+        }
+
+        console.log("✅ Form submission completed successfully");
+        // Don't call onClose() here - let the parent handle it after successful save
       } catch (error) {
         console.error("Failed to submit entry:", error);
         setErrors({ submit: "Failed to save entry. Please try again." });
