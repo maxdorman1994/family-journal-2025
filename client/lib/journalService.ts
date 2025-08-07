@@ -103,9 +103,19 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
   } catch (error) {
     console.error('Error in getJournalEntries:', error);
 
+    // Debug the network error
+    debugNetworkError(error);
+
     // Check if it's a network error
     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
       console.error('❌ Network error: Unable to connect to Supabase');
+      console.error('🔧 Possible causes:', [
+        'Internet connection issue',
+        'Supabase service is down',
+        'Invalid Supabase URL',
+        'Firewall blocking request',
+        'CORS configuration issue'
+      ]);
       throw new Error('Network error: Unable to connect to database. Please check your internet connection and Supabase configuration.');
     }
 
