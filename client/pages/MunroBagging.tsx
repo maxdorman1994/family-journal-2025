@@ -570,7 +570,7 @@ export default function MunroBagging() {
                   )}
 
                   <div className="text-xs text-center text-amber-600 mb-4">
-                    📱 Your progress is being tracked locally until database is
+                    ���� Your progress is being tracked locally until database is
                     connected
                   </div>
 
@@ -806,18 +806,16 @@ export default function MunroBagging() {
 
         {/* Add Custom Munro Button */}
         <div className="mb-6 text-center">
-          <Button
-            onClick={() => {
-              if (requestAuth()) {
-                setShowAddMunro(true);
-              }
-            }}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg"
-            disabled={isLoading}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Add Custom Munro
-          </Button>
+          {isAuthenticated && (
+            <Button
+              onClick={() => setShowAddMunro(true)}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg"
+              disabled={isLoading}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Custom Munro
+            </Button>
+          )}
         </div>
 
         {/* Add Custom Munro Modal */}
