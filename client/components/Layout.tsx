@@ -5,7 +5,9 @@ import { Menu, X, Sun, Moon, Edit, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AuthFooter from "./AuthFooter";
 import PWAInstaller from "./PWAInstaller";
+import SyncStatus from "./SyncStatus";
 import { useAuth } from "@/hooks/useAuth";
+import { useSync } from "@/lib/syncService";
 import {
   processPhoto,
   uploadPhotoToCloudflare,
