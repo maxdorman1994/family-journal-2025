@@ -1,4 +1,5 @@
 import { supabase, JournalEntry, isSupabaseConfigured } from './supabase';
+import { getEnvironmentInfo, validateSupabaseConfig, debugNetworkError } from './debug';
 
 /**
  * Supabase Journal Service
