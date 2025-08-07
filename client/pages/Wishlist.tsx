@@ -1100,14 +1100,16 @@ export default function Wishlist() {
                         </div>
                       </div>
 
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => deleteItem(item.id)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X className="h-4 w-4 text-slate-400 hover:text-red-500" />
-                      </Button>
+                      {isAuthenticated && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteItem(item.id)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-4 w-4 text-slate-400 hover:text-red-500" />
+                        </Button>
+                      )}
                     </div>
 
                     {/* Badges */}
