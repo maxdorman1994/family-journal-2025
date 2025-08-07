@@ -639,7 +639,7 @@ export default function NewEntryForm({
                     : "Saving..."}
                 </>
               ) : (
-                "Save Adventure"
+                editingEntry ? "Update Adventure" : "Save Adventure"
               )}
             </Button>
           </div>
