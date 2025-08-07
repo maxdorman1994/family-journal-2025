@@ -84,14 +84,15 @@ export default function MunroBagging() {
   const completionPercentage = stats.completion_percentage;
 
   const filteredMunros = munros.filter(munro => {
-    const matchesFilter = filter === 'all' || 
+    const matchesFilter = filter === 'all' ||
                          (filter === 'completed' && munro.completed) ||
                          (filter === 'remaining' && !munro.completed);
     const matchesRegion = regionFilter === 'all' || munro.region === regionFilter;
     const matchesDifficulty = difficultyFilter === 'all' || munro.difficulty === difficultyFilter;
     const matchesSearch = munro.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         munro.region.toLowerCase().includes(searchTerm.toLowerCase());
-    
+                         munro.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         munro.description.toLowerCase().includes(searchTerm.toLowerCase());
+
     return matchesFilter && matchesRegion && matchesDifficulty && matchesSearch;
   });
 
