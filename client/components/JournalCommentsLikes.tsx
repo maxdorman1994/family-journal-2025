@@ -12,6 +12,7 @@ import {
   getLikesForEntry,
   addComment,
   deleteComment,
+  deleteLike,
   toggleLike,
   checkIfUserLiked,
   getEntryStats,
