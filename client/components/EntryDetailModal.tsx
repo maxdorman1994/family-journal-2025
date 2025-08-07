@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { JournalEntry } from "@/lib/supabase";
+import JournalCommentsLikes from "./JournalCommentsLikes";
 
 interface EntryDetailModalProps {
   entry: JournalEntry | null;
