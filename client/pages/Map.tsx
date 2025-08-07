@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
-import Map, { Marker, Popup, ViewState } from "react-map-gl";
+import ReactMapGL, { Marker, Popup, ViewState } from "react-map-gl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
