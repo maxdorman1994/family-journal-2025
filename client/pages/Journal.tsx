@@ -299,6 +299,10 @@ export default function Journal() {
           setEntries((prev) => [savedEntry, ...prev]);
           console.log("✅ Entry saved to Supabase successfully");
         }
+
+        // Close form and clear editing state on successful save
+        setIsNewEntryFormOpen(false);
+        setEditingEntry(null);
       } catch (supabaseError) {
         console.warn(
           "Failed to save to Supabase, saving locally:",
