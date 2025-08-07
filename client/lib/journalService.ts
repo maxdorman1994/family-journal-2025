@@ -64,6 +64,8 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
   }
 
   try {
+    console.log('🔄 Attempting to fetch journal entries from Supabase...');
+
     const { data: entries, error } = await supabase
       .from('journal_entries')
       .select('*')
@@ -71,15 +73,42 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
 
     if (error) {
       console.error('Supabase error fetching journal entries:', error);
-      throw new Error(`Supabase error: ${error.message || error.details || 'Unknown database error'}`);
+
+      // More detailed error information
+      const errorMessage = error.message || error.details || error.hint || 'Unknown database error';
+      const errorCode = error.code || 'UNKNOWN';
+
+      console.error('Error details:', {
+        message: errorMessage,
+        code: errorCode,
+        details: error.details,
+        hint: error.hint
+      });
+
+      throw new Error(`Supabase error (${errorCode}): ${errorMessage}`);
     }
 
+    console.log(`✅ Successfully fetched ${entries?.length || 0} journal entries`);
     return entries || [];
   } catch (error) {
     console.error('Error in getJournalEntries:', error);
+
+    // Check if it's a network error
+    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+      console.error('❌ Network error: Unable to connect to Supabase');
+      throw new Error('Network error: Unable to connect to database. Please check your internet connection and Supabase configuration.');
+    }
+
+    // Check if it's a CORS error
+    if (error instanceof TypeError && error.message.includes('CORS')) {
+      console.error('❌ CORS error: Invalid Supabase configuration');
+      throw new Error('CORS error: Invalid Supabase URL or configuration. Please check your environment variables.');
+    }
+
     if (error instanceof Error) {
       throw error;
     }
+
     throw new Error(`Failed to fetch journal entries: ${String(error)}`);
   }
 }
