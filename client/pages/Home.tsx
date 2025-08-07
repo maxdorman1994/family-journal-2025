@@ -39,6 +39,7 @@ import {
   subscribeToAdventureUpdates,
   RecentAdventure,
 } from "@/lib/recentAdventuresService";
+import { initializeMilestoneTracking } from "@/lib/milestoneTracker";
 
 export default function Home() {
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
