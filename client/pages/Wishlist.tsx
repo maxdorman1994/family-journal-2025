@@ -435,15 +435,26 @@ export default function Wishlist() {
         await addVoteToItem(id);
       }
     } catch (dbError) {
-      console.error("Database error, using local state:", dbError);
-      setWishlistItems((prev) =>
-        prev.map((item) =>
-          item.id === id
-            ? { ...item, family_votes: item.family_votes + 1 }
-            : item,
-        ),
-      );
+    console.error("Database error, using local state:", dbError);
+
+    const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
+
+    if (errorMessage.includes("Network connection failed") ||
+        errorMessage.includes("Failed to fetch")) {
+      console.log("🌐 Network error during vote, updating locally");
+      setSyncStatus("disconnected");
+      setError("🌐 Connection lost - vote saved locally, will sync when connection restored");
     }
+
+    // Always update local state as fallback
+    setWishlistItems((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, family_votes: item.family_votes + 1 }
+          : item,
+      ),
+    );
+  }
   };
 
   const removeVote = async (id: string) => {
