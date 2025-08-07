@@ -4,7 +4,13 @@ import cors from "cors";
 import path from "path";
 import fs from "fs";
 import { handleDemo } from "./routes/demo";
-import { uploadPhoto, uploadPhotoMiddleware, getPlaceholderPhoto, listPhotos, deletePhoto } from "./routes/photos";
+import {
+  uploadPhoto,
+  uploadPhotoMiddleware,
+  getPlaceholderPhoto,
+  listPhotos,
+  deletePhoto,
+} from "./routes/photos";
 import { logR2Status, getR2Status } from "./utils/r2Config";
 
 export function createServer() {
@@ -39,28 +45,30 @@ export function createServer() {
   });
 
   // Log environment info
-  console.log('🔧 Server Environment Check:', {
+  console.log("🔧 Server Environment Check:", {
     NODE_ENV: process.env.NODE_ENV,
-    distExists: fs.existsSync('dist/spa'),
-    cwd: process.cwd()
+    distExists: fs.existsSync("dist/spa"),
+    cwd: process.cwd(),
   });
 
   // Serve static files from dist/spa (force for all non-dev environments)
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const hasDistFolder = fs.existsSync('dist/spa');
+  const isDevelopment = process.env.NODE_ENV === "development";
+  const hasDistFolder = fs.existsSync("dist/spa");
 
   if (!isDevelopment && hasDistFolder) {
-    console.log('✅ Serving static files from dist/spa/');
-    app.use(express.static('dist/spa'));
+    console.log("✅ Serving static files from dist/spa/");
+    app.use(express.static("dist/spa"));
 
     // Serve index.html for all non-API routes (SPA fallback)
-    app.get('*', (_req, res) => {
-      const indexPath = path.resolve('dist/spa/index.html');
-      console.log('📄 Serving SPA fallback:', indexPath);
+    app.get("*", (_req, res) => {
+      const indexPath = path.resolve("dist/spa/index.html");
+      console.log("📄 Serving SPA fallback:", indexPath);
       res.sendFile(indexPath);
     });
   } else {
-    console.log('⚠️ Not serving static files - development mode or no dist folder');
+    console.log(
+      "⚠️ Not serving static files - development mode or no dist folder",
+    );
   }
 
   return app;

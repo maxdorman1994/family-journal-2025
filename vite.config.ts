@@ -18,13 +18,13 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ['react', 'react-dom'],
-          vendor: ['@tanstack/react-query', 'react-router-dom'],
+          react: ["react", "react-dom"],
+          vendor: ["@tanstack/react-query", "react-router-dom"],
         },
       },
     },
     sourcemap: false,
-    minify: 'esbuild',
+    minify: "esbuild",
   },
   plugins: [react(), expressPlugin()],
   resolve: {
@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom'],
+    include: ["react", "react-dom"],
   },
 }));
 
