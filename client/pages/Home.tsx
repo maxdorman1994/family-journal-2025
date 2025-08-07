@@ -64,6 +64,15 @@ export default function Home() {
     [],
   );
   const [adventuresLoading, setAdventuresLoading] = useState(true);
+  const [milestones, setMilestones] = useState<MilestoneWithProgress[]>([]);
+  const [milestoneStats, setMilestoneStats] = useState<MilestoneStats>({
+    completed_count: 0,
+    in_progress_count: 0,
+    locked_count: 0,
+    total_xp: 0,
+    completion_percentage: 0,
+  });
+  const [milestonesLoading, setMilestonesLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadRealStats = async () => {
