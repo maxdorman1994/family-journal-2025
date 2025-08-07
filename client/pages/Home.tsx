@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState, useRef } from "react";
 import {
   ArrowRight,
   Camera,
@@ -6,11 +7,73 @@ import {
   Heart,
   Calendar,
   Users,
+  Edit,
+  Upload,
+  X,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { processPhoto, uploadPhotoToCloudflare, validatePhotoFile } from "@/lib/photoUtils";
 
 export default function Home() {
+  const [editingMember, setEditingMember] = useState<number | null>(null);
+  const [memberPhotos, setMemberPhotos] = useState<Record<number, string>>({});
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePhotoEdit = (memberIndex: number) => {
+    setEditingMember(memberIndex);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || editingMember === null) return;
+
+    // Validate file
+    const validation = validatePhotoFile(file);
+    if (!validation.valid) {
+      alert(`Invalid file: ${validation.error}`);
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      // Process the photo
+      const processedPhoto = await processPhoto(file);
+
+      // For demo purposes, we'll use the preview URL directly
+      // In production, you'd want to upload to Cloudflare and save the URL
+      setMemberPhotos(prev => ({
+        ...prev,
+        [editingMember]: processedPhoto.preview
+      }));
+
+      setEditingMember(null);
+      console.log(`Profile photo updated for family member ${editingMember}`);
+    } catch (error) {
+      console.error('Error processing photo:', error);
+      alert('Failed to process photo. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
+
+    // Reset file input
+    event.target.value = '';
+  };
+
+  const removePhoto = (memberIndex: number) => {
+    const photoUrl = memberPhotos[memberIndex];
+    if (photoUrl && photoUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(photoUrl);
+    }
+    setMemberPhotos(prev => {
+      const updated = { ...prev };
+      delete updated[memberIndex];
+      return updated;
+    });
+  };
   const familyMembers = [
     {
       name: "Max Dorman",
