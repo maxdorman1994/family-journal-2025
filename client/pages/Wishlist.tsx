@@ -1284,15 +1284,6 @@ export default function Wishlist() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => addVote(item.id)}
-                        className="flex-1 text-xs"
-                      >
-                        <Heart className="h-3 w-3 mr-1" />
-                        Vote
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
                         onClick={() => toggleResearched(item.id)}
                         className={`flex-1 text-xs ${item.researched ? "bg-green-50 text-green-700" : ""}`}
                       >
