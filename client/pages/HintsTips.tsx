@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mountain, Camera, Backpack, CloudRain, Heart, Car, Dog, Baby, MapPin, Compass, Star, Lightbulb, Shield, Wallet, Home, Utensils, Coffee, AlertTriangle, CheckCircle, Info, BookOpen, Navigation, Sun, Snowflake, Wind, Umbrella } from "lucide-react";
+import { Mountain, Camera, Backpack, CloudRain, Heart, Car, Dog, Baby, MapPin, Compass, Star, Lightbulb, Shield, Wallet, Home, Utensils, Coffee, AlertTriangle, CheckCircle, Info, BookOpen, Navigation, Sun, Snowflake, Wind, Umbrella, Waves, Anchor, Ship } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ export default function HintsTips() {
     { id: "safety", label: "Safety & Planning", icon: Shield, color: "from-red-500 to-orange-500" },
     { id: "packing", label: "Packing Essentials", icon: Backpack, color: "from-blue-500 to-cyan-500" },
     { id: "weather", label: "Weather & Seasons", icon: CloudRain, color: "from-slate-500 to-blue-500" },
+    { id: "tides", label: "Tides & Coast", icon: Waves, color: "from-cyan-500 to-blue-500" },
     { id: "family", label: "Family Tips", icon: Heart, color: "from-pink-500 to-purple-500" },
     { id: "accommodation", label: "Places to Stay", icon: Home, color: "from-green-500 to-emerald-500" },
     { id: "photography", label: "Photography", icon: Camera, color: "from-purple-500 to-pink-500" },
@@ -286,6 +287,68 @@ export default function HintsTips() {
         ]
       }
     ],
+    tides: [
+      {
+        title: "Understanding Scottish Tides",
+        icon: Waves,
+        level: "Essential",
+        content: [
+          "Scottish tides range from 1-6 meters - always check before coastal activities",
+          "Spring tides (new/full moon) have larger ranges, neap tides are smaller",
+          "High tide times shift by roughly 50 minutes each day",
+          "West coast tides are generally 1-2 hours later than east coast",
+          "Tidal bores can occur in sea lochs - water rushes in rapidly"
+        ]
+      },
+      {
+        title: "Tidal Resources & Apps",
+        icon: Anchor,
+        level: "Planning",
+        content: [
+          "BBC Weather app includes tidal times for major Scottish ports",
+          "Tides4Fishing.com - detailed tidal charts for specific locations",
+          "UK Hydrographic Office app - official Admiralty tide data",
+          "Local harbour masters provide printed tide tables",
+          "Many coastal cafés and shops display daily tide times"
+        ]
+      },
+      {
+        title: "Coastal Safety & Activities",
+        icon: Ship,
+        level: "Safety",
+        content: [
+          "Never turn your back on the sea - waves can be unpredictable",
+          "Check tide times before rock pooling, beach walks, or coastal hikes",
+          "Low tide is best for exploring rock pools and sea caves",
+          "Plan ferry crossings around tidal schedules for shorter journeys",
+          "Some beaches and causeways are only accessible at low tide"
+        ]
+      },
+      {
+        title: "Island & Ferry Planning",
+        icon: Navigation,
+        level: "Travel",
+        content: [
+          "CalMac ferries: book vehicles in advance, especially summer weekends",
+          "Some smaller islands have tide-dependent landing schedules",
+          "St. Kilda and other remote islands require calm seas for landing",
+          "Orkney and Shetland ferries can be affected by high winds and tides",
+          "Check weather and sea conditions before island day trips"
+        ]
+      },
+      {
+        title: "Best Coastal Times",
+        icon: Sun,
+        level: "Timing",
+        content: [
+          "Two hours either side of low tide: best for rock pooling and exploring",
+          "High tide + 1 hour: dramatic waves and coastal photography",
+          "Early morning low tides: fewer crowds, better wildlife spotting",
+          "Spring low tides expose areas usually underwater - great for exploration",
+          "Sunset at high tide: spectacular views from coastal paths"
+        ]
+      }
+    ],
     local: [
       {
         title: "Insider Knowledge",
@@ -345,6 +408,7 @@ export default function HintsTips() {
       case 'Secret': return 'bg-amber-100 text-amber-800 border-amber-200';
       case 'Culture': return 'bg-slate-100 text-slate-800 border-slate-200';
       case 'Events': return 'bg-stone-100 text-stone-800 border-stone-200';
+      case 'Timing': return 'bg-sky-100 text-sky-800 border-sky-200';
       case 'Checklist': return 'bg-neutral-100 text-neutral-800 border-neutral-200';
       case 'Local': return 'bg-zinc-100 text-zinc-800 border-zinc-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
@@ -513,11 +577,11 @@ export default function HintsTips() {
               </div>
               
               <div>
-                <h3 className="font-bold text-slate-800 mb-2">Travel</h3>
+                <h3 className="font-bold text-slate-800 mb-2">Travel & Tides</h3>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>�� calmac.co.uk - West coast ferries</li>
-                  <li>• scotrail.co.uk - Train travel</li>
-                  <li>• citylink.co.uk - Bus services</li>
+                  <li>• calmac.co.uk - West coast ferries</li>
+                  <li>• tidetimes.org.uk - UK tide times</li>
+                  <li>• bbc.co.uk/weather - Includes tides</li>
                 </ul>
               </div>
             </div>
