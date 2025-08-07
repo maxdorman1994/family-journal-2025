@@ -304,6 +304,23 @@ export default function Milestones() {
               },
             )}
           </div>
+
+          {/* View More/Less Button */}
+          {filterMilestones(completedMilestones, selectedCategory).length > 3 && (
+            <div className="text-center mt-6">
+              <Button
+                variant="outline"
+                onClick={() => setShowAllCompleted(!showAllCompleted)}
+                className="bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                {showAllCompleted
+                  ? `View Less (showing ${filterMilestones(completedMilestones, selectedCategory).length})`
+                  : `View More (${filterMilestones(completedMilestones, selectedCategory).length - 3} more)`
+                }
+              </Button>
+            </div>
+          )}
         </section>
       )}
 
