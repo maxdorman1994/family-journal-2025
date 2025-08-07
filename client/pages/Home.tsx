@@ -929,24 +929,31 @@ export default function Home() {
           {familyMembers
             .filter(
               (member) =>
-                (member.name === "Lewis" ||
-                  member.name === "Zara" ||
-                  member.name === "Kira" ||
-                  member.name === "Frankie" ||
-                  member.name === "Iris") &&
+                (member.name === "John Dorman" ||
+                 member.name === "Rachel Dorman" ||
+                 member.name === "Lewis" ||
+                 member.name === "Zara" ||
+                 member.name === "Kira" ||
+                 member.name === "Frankie" ||
+                 member.name === "Iris") &&
                 member.position_index > 4 &&
                 member.name !== "Charlie" &&
                 member.name !== "Fern",
             )
+            .sort((a, b) => {
+              // Sort to put parents first, then children
+              const order = ["John Dorman", "Rachel Dorman", "Lewis", "Zara", "Kira", "Frankie", "Iris"];
+              return order.indexOf(a.name) - order.indexOf(b.name);
+            })
             .map((member) => (
               <Card
                 key={member.id}
                 className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
               >
-                <CardContent className="p-6">
-                  <div className="relative group w-30 h-30 mx-auto mb-4">
+                <CardContent className="p-4">
+                  <div className="relative group w-30 h-30 mx-auto mb-3">
                     <div
-                      className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
+                      className={`w-full h-full rounded-full overflow-hidden border-2 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-md`}
                     >
                       <div className="w-full h-full rounded-full overflow-hidden bg-white">
                         <img
@@ -967,7 +974,7 @@ export default function Home() {
                         <Button
                           size="sm"
                           variant="secondary"
-                          className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
+                          className="h-6 w-6 p-0 bg-white/90 hover:bg-white"
                           onClick={() => handlePhotoEdit(member.id)}
                           disabled={isUploading}
                         >
@@ -978,7 +985,7 @@ export default function Home() {
                             <Button
                               size="sm"
                               variant="destructive"
-                              className="h-7 w-7 p-0 bg-red-500/90 hover:bg-red-600"
+                              className="h-6 w-6 p-0 bg-red-500/90 hover:bg-red-600"
                               onClick={() => handlePhotoRemove(member.id)}
                               disabled={isUploading}
                             >
@@ -988,10 +995,10 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                  <h3 className="font-semibold text-base text-gray-800 mb-2">
                     {member.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground font-medium mb-3">
+                  <p className="text-xs text-muted-foreground font-medium mb-2">
                     {member.role}
                   </p>
                   <p className="text-xs text-slate-600 leading-relaxed">
