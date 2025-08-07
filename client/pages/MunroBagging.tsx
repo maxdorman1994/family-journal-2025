@@ -6,14 +6,15 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { COMPLETE_MUNROS_LIST, CompleteMunro, TOTAL_MUNROS, getAllRegions } from "@/data/complete-munros";
-
-// Enhanced Munro interface with completion tracking
-interface MunroWithCompletion extends CompleteMunro {
-  completed: boolean;
-  completedDate?: string;
-  photoCount: number;
-}
+import {
+  getAllMunrosWithCompletion,
+  completeMunro,
+  uncompleteMunro,
+  getMunroCompletionStats,
+  getMunroRegions,
+  testMunroConnection,
+  MunroWithCompletion
+} from "@/lib/munroService";
 
 export default function MunroBagging() {
   const [munros, setMunros] = useState<MunroWithCompletion[]>([]);
