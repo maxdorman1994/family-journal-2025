@@ -86,6 +86,18 @@ export default function MapPage() {
     const unsubscribe = subscribeToMapPins((updatedPins) => {
       console.log(`🗺️ Received ${updatedPins.length} pins from database`);
       setPins(updatedPins);
+
+      // Update stats
+      const newStats = {
+        total: updatedPins.length,
+        byCategory: {
+          adventure: updatedPins.filter(p => p.category === "adventure").length,
+          photo: updatedPins.filter(p => p.category === "photo").length,
+          memory: updatedPins.filter(p => p.category === "memory").length,
+          wishlist: updatedPins.filter(p => p.category === "wishlist").length,
+        }
+      };
+      setStats(newStats);
       setIsLoading(false);
     });
 
