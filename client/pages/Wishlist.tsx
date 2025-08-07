@@ -88,7 +88,7 @@ export default function Wishlist() {
       // Set appropriate error message
       if (errorMessage.includes('not configured')) {
         setError('📝 Development Mode: Supabase not configured - using local data');
-      } else if (errorMessage.includes('Could not find the table') || errorMessage.includes('relation "wishlist_items" does not exist')) {
+      } else if (errorMessage.includes('SCHEMA_MISSING') || errorMessage.includes('Could not find the table') || errorMessage.includes('relation "wishlist_items" does not exist')) {
         setError('🎯 Database Setup Required: Please run the Wishlist SQL schema - using local data');
       } else {
         setError(`⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`);
@@ -112,6 +112,39 @@ export default function Wishlist() {
           target_date: '2024-07-15',
           researched: true,
           created_at: '2024-01-15'
+        },
+        {
+          id: '2',
+          title: 'Ben Nevis Summit Challenge',
+          location: 'Lochaber, Scotland',
+          description: 'Conquer Scotland\'s highest peak as a family adventure',
+          priority: 'High',
+          status: 'Planning',
+          estimated_cost: 600,
+          best_seasons: ['Summer'],
+          duration: '2-3 days',
+          category: 'Mountain',
+          family_votes: 4,
+          notes: 'Need proper hiking gear. Check weather conditions. Book accommodation in Fort William.',
+          researched: false,
+          created_at: '2024-01-20'
+        },
+        {
+          id: '3',
+          title: 'Edinburgh Festival Fringe',
+          location: 'Edinburgh, Scotland',
+          description: 'Experience the world\'s largest arts festival with family-friendly shows',
+          priority: 'Medium',
+          status: 'Ready',
+          estimated_cost: 800,
+          best_seasons: ['Summer'],
+          duration: '4-5 days',
+          category: 'City',
+          family_votes: 3,
+          notes: 'Book shows in advance. Consider Royal Mile walking tour. Visit Edinburgh Castle.',
+          target_date: '2024-08-10',
+          researched: true,
+          created_at: '2024-02-01'
         }
       ];
 
@@ -462,7 +495,8 @@ export default function Wishlist() {
                       <div className="font-semibold mb-1">📋 Setup Instructions:</div>
                       <ol className="list-decimal list-inside space-y-1 text-amber-700 text-xs">
                         <li>Go to Supabase Dashboard → SQL Editor</li>
-                        <li>Run the wishlist-schema.sql file</li>
+                        <li>Create new query and copy wishlist-schema.sql</li>
+                        <li>Run the schema to create wishlist tables</li>
                         <li>Refresh page to enable cross-device sync</li>
                       </ol>
                     </div>
