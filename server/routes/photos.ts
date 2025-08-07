@@ -45,7 +45,15 @@ function generatePhotoId(originalName: string, photoId: string): string {
  */
 export const uploadPhoto: RequestHandler = async (req, res) => {
   try {
+    console.log('📨 Photo upload request received:', {
+      hasFile: !!req.file,
+      fileName: req.file?.originalname,
+      fileSize: req.file?.size,
+      body: req.body
+    });
+
     if (!req.file) {
+      console.error('❌ No photo file provided in request');
       return res.status(400).json({ error: "No photo file provided" });
     }
 
