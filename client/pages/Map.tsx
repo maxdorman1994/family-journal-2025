@@ -241,7 +241,7 @@ export default function MapPage() {
       setEditingPin(null);
       console.log("✅ Pin updated successfully and will sync across devices");
     } catch (error) {
-      console.error("�� Error updating pin:", error);
+      console.error("❌ Error updating pin:", error);
       alert(`Error updating pin: ${error.message || error}`);
     }
   };
@@ -559,24 +559,26 @@ export default function MapPage() {
                           <Badge className={`${categoryColors[selectedPin.category]} text-white text-xs`}>
                             {categoryLabels[selectedPin.category]}
                           </Badge>
-                          <div className="flex gap-1">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleEditPin(selectedPin)}
-                              className="h-6 w-6 p-0"
-                            >
-                              <Edit className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleDeletePin(selectedPin.id)}
-                              className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
+                          {isAuthenticated && (
+                            <div className="flex gap-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleEditPin(selectedPin)}
+                                className="h-6 w-6 p-0"
+                              >
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleDeletePin(selectedPin.id)}
+                                className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          )}
                         </div>
                         <h3 className="font-semibold text-sm mb-1">{selectedPin.title}</h3>
                         {selectedPin.description && (
