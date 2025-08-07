@@ -383,6 +383,17 @@ export default function Wishlist() {
       }
     } catch (dbError) {
       console.error("Database error, using local state:", dbError);
+
+      const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
+
+      if (errorMessage.includes("Network connection failed") ||
+          errorMessage.includes("Failed to fetch")) {
+        console.log("🌐 Network error during delete, removing locally");
+        setSyncStatus("disconnected");
+        setError("🌐 Connection lost - item removed locally, will sync when connection restored");
+      }
+
+      // Always remove from local state as fallback
       setWishlistItems((prev) => prev.filter((item) => item.id !== id));
     }
   };
