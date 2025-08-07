@@ -133,7 +133,12 @@ export default function MapPage() {
 
   const handleMapClick = useCallback((event: any) => {
     const { lng, lat } = event.lngLat;
-    
+
+    // Check authentication before allowing pin creation
+    if (!requestAuth()) {
+      return; // Will show password prompt
+    }
+
     setSelectedLocation({ latitude: lat, longitude: lng });
     setSelectedPin(null);
     setEditingPin(null);
@@ -144,7 +149,7 @@ export default function MapPage() {
       date: new Date().toISOString().split("T")[0],
     });
     setIsDialogOpen(true);
-  }, []);
+  }, [requestAuth]);
 
   const handleAddPin = async () => {
     if (!selectedLocation || !newPin.title.trim()) return;
