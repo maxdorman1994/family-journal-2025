@@ -47,6 +47,7 @@ import {
   getJournalEntriesByTag,
   subscribeToJournalEntries,
   createJournalEntry,
+  updateJournalEntry,
   deleteJournalEntry,
   testSupabaseConnection,
 } from "@/lib/journalService";
