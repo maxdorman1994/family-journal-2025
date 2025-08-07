@@ -43,6 +43,15 @@ export default function MapPage() {
   const [pins, setPins] = useState<MapPinType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [stats, setStats] = useState({
+    total: 0,
+    byCategory: {
+      adventure: 0,
+      photo: 0,
+      memory: 0,
+      wishlist: 0,
+    }
+  });
 
   const [viewState, setViewState] = useState<ViewState>({
     longitude: -4.2026,
