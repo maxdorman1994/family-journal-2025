@@ -1,11 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-} from "react-leaflet";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,24 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MapPin, Trash2, Edit, Calendar, Camera } from "lucide-react";
-import L from "leaflet";
+import { MapPin, Trash2, Edit, Calendar } from "lucide-react";
 
-// Fix for default markers in React Leaflet
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import markerRetina from "leaflet/dist/images/marker-icon-2x.png";
-
-L.Marker.prototype.options.icon = L.icon({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerRetina,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41],
-});
+// Dynamic import for Leaflet to avoid SSR issues
+const MapComponent = React.lazy(() => import("../components/MapComponent"));
 
 interface MapPin {
   id: string;
@@ -59,20 +38,6 @@ const categoryLabels = {
   memory: "Memory",
   wishlist: "Wishlist",
 };
-
-// Component to handle map clicks
-function MapClickHandler({
-  onMapClick,
-}: {
-  onMapClick: (latlng: L.LatLng) => void;
-}) {
-  const map = useMapEvents({
-    click: (event) => {
-      onMapClick(event.latlng);
-    },
-  });
-  return null;
-}
 
 export default function Map() {
   const [pins, setPins] = useState<MapPin[]>([
@@ -110,10 +75,10 @@ export default function Map() {
     date: "",
   });
 
-  const mapRef = useRef<L.Map>(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-  const handleMapClick = useCallback((latlng: L.LatLng) => {
-    setSelectedLocation({ lat: latlng.lat, lng: latlng.lng });
+  const handleMapClick = useCallback((latlng: { lat: number; lng: number }) => {
+    setSelectedLocation(latlng);
     setEditingPin(null);
     setNewPin({
       title: "",
@@ -169,9 +134,6 @@ export default function Map() {
     setPins(pins.filter((pin) => pin.id !== pinId));
   };
 
-  // Scotland bounds - centered on Scotland with good zoom
-  const scotlandCenter: [number, number] = [56.4907, -4.2026];
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -205,67 +167,25 @@ export default function Map() {
           <Card className="overflow-hidden">
             <CardContent className="p-0">
               <div className="h-[600px] w-full">
-                <MapContainer
-                  center={scotlandCenter}
-                  zoom={7}
-                  style={{ height: "100%", width: "100%" }}
-                  ref={mapRef}
+                <React.Suspense
+                  fallback={
+                    <div className="h-full w-full flex items-center justify-center bg-muted/20">
+                      <div className="text-center">
+                        <MapPin className="w-12 h-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
+                        <p className="text-muted-foreground">Loading map...</p>
+                      </div>
+                    </div>
+                  }
                 >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  <MapComponent
+                    pins={pins}
+                    onMapClick={handleMapClick}
+                    onEditPin={handleEditPin}
+                    onDeletePin={handleDeletePin}
+                    categoryColors={categoryColors}
+                    categoryLabels={categoryLabels}
                   />
-
-                  <MapClickHandler onMapClick={handleMapClick} />
-
-                  {pins.map((pin) => (
-                    <Marker key={pin.id} position={[pin.lat, pin.lng]}>
-                      <Popup>
-                        <div className="p-2 min-w-[200px]">
-                          <div className="flex items-center justify-between mb-2">
-                            <Badge
-                              className={`${categoryColors[pin.category]} text-white text-xs`}
-                            >
-                              {categoryLabels[pin.category]}
-                            </Badge>
-                            <div className="flex gap-1">
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => handleEditPin(pin)}
-                                className="h-6 w-6 p-0"
-                              >
-                                <Edit className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => handleDeletePin(pin.id)}
-                                className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
-                          <h3 className="font-semibold text-sm mb-1">
-                            {pin.title}
-                          </h3>
-                          {pin.description && (
-                            <p className="text-xs text-muted-foreground mb-2">
-                              {pin.description}
-                            </p>
-                          )}
-                          {pin.date && (
-                            <div className="flex items-center text-xs text-muted-foreground">
-                              <Calendar className="w-3 h-3 mr-1" />
-                              {new Date(pin.date).toLocaleDateString()}
-                            </div>
-                          )}
-                        </div>
-                      </Popup>
-                    </Marker>
-                  ))}
-                </MapContainer>
+                </React.Suspense>
               </div>
             </CardContent>
           </Card>
