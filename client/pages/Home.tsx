@@ -1059,7 +1059,7 @@ export default function Home() {
 
         <div className="text-center mt-6">
           <p className="text-sm text-green-600">
-            �� Our second adventure companion, doubling the fun on every Scottish journey!
+            🌿 Our second adventure companion, doubling the fun on every Scottish journey!
           </p>
         </div>
       </section>
@@ -1923,12 +1923,12 @@ export default function Home() {
                 <div className="text-left">
                   <p className="text-sm font-medium text-slate-500 mb-1">Follow us on</p>
                   <a
-                    href="https://youtube.com/@aweeadventure"
+                    href="https://www.youtube.com/@AWeeAdventures"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xl font-bold text-red-600 hover:text-pink-600 transition-colors duration-300"
                   >
-                    A Wee Adventure
+                    A Wee Adventures
                   </a>
                 </div>
               </div>
