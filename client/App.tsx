@@ -13,6 +13,7 @@ import Gallery from "./pages/Gallery";
 import MunroBagging from "./pages/MunroBagging";
 import HintsTips from "./pages/HintsTips";
 import Wishlist from "./pages/Wishlist";
+import Milestones from "./pages/Milestones";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
