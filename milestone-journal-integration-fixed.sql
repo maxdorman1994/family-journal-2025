@@ -66,107 +66,107 @@ DECLARE
   unique_seasons INTEGER;
   consecutive_days INTEGER;
 BEGIN
-  -- Basic counts
-  SELECT COUNT(*) INTO journal_count FROM journal_entries;
-  
-  SELECT COALESCE(SUM(array_length(photos, 1)), 0) INTO photo_count 
+  -- Basic counts (explicitly cast all COUNTs to INTEGER)
+  SELECT COUNT(*)::INTEGER INTO journal_count FROM journal_entries;
+
+  SELECT COALESCE(SUM(array_length(photos, 1)), 0)::INTEGER INTO photo_count
   FROM journal_entries WHERE photos IS NOT NULL;
-  
+
   -- Fixed: Use CTE to unnest tags first, then count distinct
   WITH unnested_tags AS (
-    SELECT unnest(tags) as tag 
-    FROM journal_entries 
+    SELECT unnest(tags) as tag
+    FROM journal_entries
     WHERE tags IS NOT NULL AND array_length(tags, 1) > 0
   )
-  SELECT COUNT(DISTINCT tag) INTO unique_tags FROM unnested_tags;
-  
-  SELECT COUNT(DISTINCT LOWER(location)) INTO unique_locations 
+  SELECT COUNT(DISTINCT tag)::INTEGER INTO unique_tags FROM unnested_tags;
+
+  SELECT COUNT(DISTINCT LOWER(location))::INTEGER INTO unique_locations
   FROM journal_entries WHERE location IS NOT NULL AND location != '';
-  
-  SELECT COUNT(DISTINCT LOWER(weather)) INTO unique_weather 
+
+  SELECT COUNT(DISTINCT LOWER(weather))::INTEGER INTO unique_weather
   FROM journal_entries WHERE weather IS NOT NULL AND weather != '';
-  
-  SELECT COUNT(DISTINCT LOWER(mood)) INTO unique_moods 
+
+  SELECT COUNT(DISTINCT LOWER(mood))::INTEGER INTO unique_moods
   FROM journal_entries WHERE mood IS NOT NULL AND mood != '';
-  
-  SELECT COALESCE(SUM(miles_traveled), 0) INTO total_miles 
+
+  SELECT COALESCE(SUM(miles_traveled), 0) INTO total_miles
   FROM journal_entries WHERE miles_traveled IS NOT NULL;
 
-  -- Adventure type specific counts
-  SELECT COUNT(*) INTO castle_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+  -- Adventure type specific counts (cast all to INTEGER)
+  SELECT COUNT(*)::INTEGER INTO castle_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(castle|fortress|palace).*';
-    
-  SELECT COUNT(*) INTO munro_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+
+  SELECT COUNT(*)::INTEGER INTO munro_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(munro|mountain|peak|summit).*';
-    
-  SELECT COUNT(*) INTO loch_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+
+  SELECT COUNT(*)::INTEGER INTO loch_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(loch|lake|water).*';
-    
-  SELECT COUNT(*) INTO beach_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+
+  SELECT COUNT(*)::INTEGER INTO beach_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(beach|coast|shore|sea).*';
-    
-  SELECT COUNT(*) INTO forest_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+
+  SELECT COUNT(*)::INTEGER INTO forest_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(forest|wood|trees|nature).*';
-    
-  SELECT COUNT(*) INTO waterfall_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+
+  SELECT COUNT(*)::INTEGER INTO waterfall_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(waterfall|falls|cascade).*';
-    
-  SELECT COUNT(*) INTO bridge_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+
+  SELECT COUNT(*)::INTEGER INTO bridge_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(bridge|crossing).*';
-    
-  SELECT COUNT(*) INTO island_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+
+  SELECT COUNT(*)::INTEGER INTO island_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(island|isle).*';
-    
-  SELECT COUNT(*) INTO wildlife_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+
+  SELECT COUNT(*)::INTEGER INTO wildlife_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(wildlife|animal|bird|deer|seal|otter).*';
-    
-  SELECT COUNT(*) INTO heritage_count 
-  FROM journal_entries 
-  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), '')) 
+
+  SELECT COUNT(*)::INTEGER INTO heritage_count
+  FROM journal_entries
+  WHERE LOWER(title || ' ' || content || ' ' || COALESCE(array_to_string(tags, ' '), ''))
     ~ '.*(heritage|historic|museum|culture|traditional).*';
 
-  -- Family and memory counts (fixed: use array_to_string instead of unnest)
-  SELECT COUNT(*) INTO family_adventures 
-  FROM journal_entries 
-  WHERE tags IS NOT NULL AND array_length(tags, 1) > 0 
+  -- Family and memory counts (cast to INTEGER)
+  SELECT COUNT(*)::INTEGER INTO family_adventures
+  FROM journal_entries
+  WHERE tags IS NOT NULL AND array_length(tags, 1) > 0
     AND LOWER(array_to_string(tags, ' ')) ~ '.*(family|kids|children|together|dad|mum|parents).*';
-    
-  SELECT COUNT(*) INTO memory_count 
-  FROM journal_entries 
+
+  SELECT COUNT(*)::INTEGER INTO memory_count
+  FROM journal_entries
   WHERE tags IS NOT NULL AND array_length(tags, 1) > 0;
 
-  -- Seasonal count
-  SELECT COUNT(DISTINCT 
-    CASE 
+  -- Seasonal count (cast to INTEGER)
+  SELECT COUNT(DISTINCT
+    CASE
       WHEN EXTRACT(MONTH FROM date::date) IN (12, 1, 2) THEN 'winter'
       WHEN EXTRACT(MONTH FROM date::date) IN (3, 4, 5) THEN 'spring'
       WHEN EXTRACT(MONTH FROM date::date) IN (6, 7, 8) THEN 'summer'
       WHEN EXTRACT(MONTH FROM date::date) IN (9, 10, 11) THEN 'autumn'
     END
-  ) INTO unique_seasons 
+  )::INTEGER INTO unique_seasons
   FROM journal_entries;
 
-  -- Simple consecutive days calculation
-  SELECT COUNT(DISTINCT date::date) INTO consecutive_days 
-  FROM journal_entries 
+  -- Simple consecutive days calculation (cast to INTEGER)
+  SELECT COUNT(DISTINCT date::date)::INTEGER INTO consecutive_days
+  FROM journal_entries
   WHERE date >= CURRENT_DATE - INTERVAL '30 days';
 
   -- Update all milestones
