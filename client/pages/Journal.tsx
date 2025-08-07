@@ -37,7 +37,7 @@ export default function Journal() {
       date: "Sunday 3 August 2025",
       location: "Fort William, Highland",
       weather: "☀️ Sunny",
-      mood: "��� Grateful",
+      mood: "🙏 Grateful",
       miles_traveled: 87,
       parking: "Free",
       dog_friendly: true,
@@ -331,10 +331,16 @@ export default function Journal() {
 
         {/* Status Indicator */}
         {error && (
-          <div className="mb-8 max-w-md mx-auto">
-            <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4 text-amber-800 text-center">
-              <AlertCircle className="h-5 w-5 mx-auto mb-2" />
-              <p className="text-sm">{error}</p>
+          <div className="mb-8 max-w-2xl mx-auto">
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-6 text-amber-800 shadow-lg">
+              <div className="flex items-center justify-center mb-3">
+                <AlertCircle className="h-6 w-6 mr-2" />
+                <span className="font-semibold">System Status</span>
+              </div>
+              <p className="text-sm text-center leading-relaxed">{error}</p>
+              <div className="mt-4 text-xs text-center text-amber-600">
+                📱 Your data is safe - all changes will sync when connection is restored
+              </div>
             </div>
           </div>
         )}
