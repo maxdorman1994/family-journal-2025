@@ -60,7 +60,7 @@ export default function MunroBagging() {
       // Set appropriate error message
       if (errorMessage.includes('not configured')) {
         setError('📝 Development Mode: Supabase not configured - using local data');
-      } else if (errorMessage.includes('Could not find the table') || errorMessage.includes('relation "munros" does not exist')) {
+      } else if (errorMessage.includes('SCHEMA_MISSING') || errorMessage.includes('Could not find the table') || errorMessage.includes('relation "munros" does not exist')) {
         setError('🏔️ Database Setup Required: Please run the Munro Bagging SQL schema - using local data');
       } else {
         setError(`⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`);
@@ -102,7 +102,14 @@ export default function MunroBagging() {
       setRegions(regionsData);
       console.log(`✅ Loaded ${regionsData.length} regions from database`);
     } catch (error) {
-      console.warn('Failed to load regions from database, using fallback:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn('Failed to load regions from database, using fallback:', errorMessage);
+
+      // Only log error if it's not the expected schema missing error
+      if (!errorMessage.includes('SCHEMA_MISSING') && !errorMessage.includes('not configured')) {
+        console.error('Error fetching Munros:', error);
+      }
+
       // Fallback regions based on the sample data
       const fallbackRegions = [
         'Cairngorms', 'Lochaber', 'Western Highlands', 'Southern Highlands',
