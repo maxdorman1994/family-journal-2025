@@ -70,6 +70,7 @@ export default function Home() {
   // Load family members data and setup real-time sync
   useEffect(() => {
     loadFamilyMembersData();
+    loadRealStats();
 
     // Setup real-time subscription
     const unsubscribe = subscribeToFamilyMembers((members) => {
@@ -594,7 +595,7 @@ export default function Home() {
           {error && (
             <div
               className={`max-w-md mx-auto border-2 rounded-xl p-3 text-center ${
-                error.startsWith("���")
+                error.startsWith("✅")
                   ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800"
                   : "bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 text-amber-800"
               }`}
