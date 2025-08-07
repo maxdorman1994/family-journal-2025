@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSync } from "@/lib/syncService";
 import {
   Heart,
   MapPin,
