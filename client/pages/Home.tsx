@@ -1020,10 +1020,10 @@ export default function Home() {
                   {/* Image Section */}
                   <div className="relative">
                     <img
-                      src={adventure.image}
-                      alt={adventure.title}
-                      className="w-full h-56 object-cover"
-                    />
+                    src={adventure.featured_image}
+                    alt={adventure.title}
+                    className="w-full h-56 object-cover"
+                  />
 
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
@@ -1056,12 +1056,12 @@ export default function Home() {
                     {/* Date */}
                     <div className="flex items-center gap-2 mb-4">
                       <Calendar className="h-4 w-4 text-slate-500" />
-                      <span className="text-sm font-medium text-slate-600">{adventure.date}</span>
+                      <span className="text-sm font-medium text-slate-600">{adventure.formatted_date}</span>
                     </div>
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {adventure.tags.map((tag, tagIndex) => (
+                      {adventure.tags && adventure.tags.map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
                           className={`px-3 py-1 text-xs font-medium rounded-full border-2 ${
@@ -1073,6 +1073,14 @@ export default function Home() {
                           {tag}
                         </span>
                       ))}
+                      {/* Show adventure type badge */}
+                      <span className={`px-3 py-1 text-xs font-medium rounded-full border-2 ${
+                        index === 0 ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
+                        index === 1 ? 'bg-blue-100 text-blue-800 border-blue-300' :
+                        'bg-purple-100 text-purple-800 border-purple-300'
+                      }`}>
+                        {adventure.adventure_type}
+                      </span>
                     </div>
 
                     {/* Action Button */}
