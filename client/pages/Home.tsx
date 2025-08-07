@@ -1019,7 +1019,7 @@ export default function Home() {
                 className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
               >
                 <CardContent className="p-6">
-                  <div className="relative group w-34 h-34 mx-auto mb-4">
+                  <div className="relative group w-30 h-30 mx-auto mb-4">
                     <div
                       className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
                     >
