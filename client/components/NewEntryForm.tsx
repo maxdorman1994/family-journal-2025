@@ -53,7 +53,7 @@ const weatherOptions = [
 ];
 
 const moodOptions = [
-  { value: "�� Grateful", label: "🙏 Grateful" },
+  { value: "🙏 Grateful", label: "🙏 Grateful" },
   { value: "😌 Peaceful", label: "😌 Peaceful" },
   { value: "🤩 Amazed", label: "🤩 Amazed" },
   { value: "😄 Happy", label: "😄 Happy" },
@@ -413,14 +413,14 @@ export default function NewEntryForm({
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
                   <Checkbox
-                    id="dogFriendly"
-                    checked={formData.dogFriendly}
+                    id="dog_friendly"
+                    checked={formData.dog_friendly}
                     onCheckedChange={(checked) =>
-                      handleInputChange("dogFriendly", checked)
+                      handleInputChange("dog_friendly", checked)
                     }
                   />
                   <label
-                    htmlFor="dogFriendly"
+                    htmlFor="dog_friendly"
                     className="text-sm font-medium flex items-center"
                   >
                     <Dog className="mr-1 h-4 w-4 text-vibrant-pink" />
