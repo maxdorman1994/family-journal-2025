@@ -451,8 +451,14 @@ export default function Home() {
       setEditingMember(null);
       console.log(`✅ Profile photo updated successfully`);
     } catch (dbError) {
-      console.error("Error uploading avatar:", dbError);
-      alert("Failed to upload photo. Please try again.");
+      console.error("❌ Error uploading avatar:", dbError);
+      console.error("❌ Error details:", {
+        message: dbError instanceof Error ? dbError.message : String(dbError),
+        stack: dbError instanceof Error ? dbError.stack : undefined,
+        editingMember,
+        fileName: file.name
+      });
+      alert(`Failed to upload photo: ${dbError instanceof Error ? dbError.message : String(dbError)}`);
     } finally {
       setIsUploading(false);
     }
