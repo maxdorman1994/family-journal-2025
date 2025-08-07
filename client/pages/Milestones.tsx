@@ -15,18 +15,23 @@ import {
   Zap,
   Map,
   Eye,
+  RefreshCw,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useSync } from "@/lib/syncService";
 import {
-  getMilestoneCategories,
-  getMilestonesWithProgress,
-  getMilestoneStats,
-  subscribeToMilestoneUpdates,
+  calculateRealMilestones,
+  getRealMilestoneStats,
+  subscribeToRealMilestones,
+  filterMilestonesByCategory,
+  getNextMilestones,
+  getRecentlyCompleted,
+  MILESTONE_CATEGORIES,
+  RealMilestone,
   MilestoneCategory,
-  MilestoneWithProgress,
   MilestoneStats,
-} from "@/lib/milestonesService";
+} from "@/lib/realMilestonesService";
 
 export default function Milestones() {
   const [selectedCategory, setSelectedCategory] = useState("all");
