@@ -56,12 +56,8 @@ export default function MapPage() {
 
   const {
     isAuthenticated,
-    showPasswordPrompt,
     sessionTimeRemaining,
-    requestAuth,
-    authenticate,
-    logout,
-    cancelAuth
+    logout
   } = useAuth();
 
   const [viewState, setViewState] = useState<ViewState>({
@@ -95,7 +91,7 @@ export default function MapPage() {
 
     // Subscribe to real-time updates
     const unsubscribe = subscribeToMapPins((updatedPins) => {
-      console.log(`��️ Received ${updatedPins.length} pins from database`);
+      console.log(`🗺️ Received ${updatedPins.length} pins from database`);
       setPins(updatedPins);
 
       // Update stats
