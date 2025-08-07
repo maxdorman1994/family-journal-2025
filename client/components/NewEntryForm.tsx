@@ -559,16 +559,36 @@ export default function NewEntryForm({
             </p>
           </div>
 
+          {/* Submit Error */}
+          {errors.submit && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
+              {errors.submit}
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div className="flex justify-end gap-4 pt-6 border-t">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-gradient-to-r from-vibrant-blue to-scotland-loch hover:from-vibrant-blue/90 hover:to-scotland-loch/90"
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-vibrant-blue to-scotland-loch hover:from-vibrant-blue/90 hover:to-scotland-loch/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Save Adventure
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {formData.photos.length > 0 ? 'Uploading Photos...' : 'Saving...'}
+                </>
+              ) : (
+                'Save Adventure'
+              )}
             </Button>
           </div>
         </form>
