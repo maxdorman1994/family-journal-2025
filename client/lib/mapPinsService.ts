@@ -105,19 +105,24 @@ export async function updateMapPin(id: string, updates: Partial<Omit<MapPin, "id
  */
 export async function deleteMapPin(id: string): Promise<void> {
   try {
-    console.log("📍 Deleting map pin:", id);
-    
-    const { error } = await supabase
+    console.log("📍 Deleting map pin with ID:", id);
+
+    if (!id) {
+      throw new Error("Pin ID is required for deletion");
+    }
+
+    const { data, error } = await supabase
       .from("map_pins")
       .delete()
-      .eq("id", id);
+      .eq("id", id)
+      .select();
 
     if (error) {
       console.error("❌ Error deleting map pin:", error);
       throw error;
     }
 
-    console.log("✅ Successfully deleted map pin");
+    console.log("✅ Successfully deleted map pin:", data);
   } catch (error) {
     console.error("Error in deleteMapPin:", error);
     throw error;
