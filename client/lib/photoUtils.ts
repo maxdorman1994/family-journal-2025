@@ -177,18 +177,25 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
       }
     }
 
-    // Try to compress the image
-    console.log(`Attempting compression for: ${processedFile.name}`);
-    compressionAttempted = true;
+    // Try to compress the image (skip for HEIC files when conversion failed)
+    const isOriginalHeic = (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) && conversionAttempted && processedFile === file;
 
-    try {
-      const compressedFile = await compressImage(processedFile);
-      processedFile = compressedFile;
-      console.log(`Compression successful for: ${file.name}`);
-    } catch (compressionError) {
-      console.warn(`Compression failed for ${processedFile.name}:`, compressionError);
-      warnings.push('Compression failed - using original size');
-      // Keep the uncompressed file
+    if (isOriginalHeic) {
+      console.log(`Skipping compression for original HEIC file: ${processedFile.name}`);
+      warnings.push('HEIC file - uploading directly to Cloudflare Images (supports HEIC)');
+    } else {
+      console.log(`Attempting compression for: ${processedFile.name}`);
+      compressionAttempted = true;
+
+      try {
+        const compressedFile = await compressImage(processedFile);
+        processedFile = compressedFile;
+        console.log(`Compression successful for: ${file.name}`);
+      } catch (compressionError) {
+        console.warn(`Compression failed for ${processedFile.name}:`, compressionError);
+        warnings.push('Compression failed - using original size');
+        // Keep the uncompressed file
+      }
     }
 
     // Create preview URL
