@@ -352,14 +352,14 @@ export default function NewEntryForm({
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
                   <Checkbox
-                    id="paidActivity"
-                    checked={formData.paidActivity}
+                    id="paid_activity"
+                    checked={formData.paid_activity}
                     onCheckedChange={(checked) =>
-                      handleInputChange("paidActivity", checked)
+                      handleInputChange("paid_activity", checked)
                     }
                   />
                   <label
-                    htmlFor="paidActivity"
+                    htmlFor="paid_activity"
                     className="text-sm font-medium flex items-center"
                   >
                     <Ticket className="mr-1 h-4 w-4 text-vibrant-blue" />
