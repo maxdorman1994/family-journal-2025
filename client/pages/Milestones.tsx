@@ -642,6 +642,10 @@ export default function Milestones() {
     { id: "adventure", name: "Adventure", icon: Mountain },
     { id: "documentation", name: "Documentation", icon: Eye },
     { id: "time", name: "Time", icon: Calendar },
+    { id: "wildlife", name: "Wildlife", icon: Eye },
+    { id: "culture", name: "Culture", icon: Trophy },
+    { id: "nature", name: "Nature", icon: Mountain },
+    { id: "legendary", name: "Legendary", icon: Award },
   ];
 
   const totalXP = completedMilestones.reduce((sum, milestone) => sum + milestone.xpReward, 0);
