@@ -12,9 +12,12 @@ import {
   X,
   Check,
   ChevronDown,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import PasswordPrompt from "@/components/PasswordPrompt";
+import { useAuth } from "@/hooks/useAuth";
 import {
   processPhoto,
   uploadPhotoToCloudflare,
