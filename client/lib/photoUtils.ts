@@ -311,7 +311,7 @@ export function validatePhotoFile(file: File): {
   error?: string;
   warning?: string;
 } {
-  const maxSize = 10 * 1024 * 1024; // 10MB limit for Cloudflare Images
+  const maxSize = 15 * 1024 * 1024; // 15MB limit (we compress aggressively)
   const allowedTypes = [
     "image/jpeg",
     "image/jpg",
