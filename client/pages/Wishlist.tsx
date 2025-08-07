@@ -64,6 +64,7 @@ import {
 export default function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const { isAuthenticated } = useAuth();
+  const { subscribe } = useSync();
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPriority, setFilterPriority] = useState("all");
