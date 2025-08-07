@@ -1031,7 +1031,11 @@ export default function Home() {
                               size="sm"
                               variant="destructive"
                               className="h-6 w-6 p-0 bg-red-500/90 hover:bg-red-600"
-                              onClick={() => handlePhotoRemove(member.id)}
+                              onClick={() => {
+                                if (requestAuth()) {
+                                  handlePhotoRemove(member.id);
+                                }
+                              }}
                               disabled={isUploading}
                             >
                               <X className="h-3 w-3" />
