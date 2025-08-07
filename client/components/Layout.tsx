@@ -198,8 +198,7 @@ export default function Layout({ children }: LayoutProps) {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            updateLogoUrl("/placeholder.svg");
-                            localStorage.removeItem("family_logo_url");
+                            await updateLogoUrlLocal("/placeholder.svg");
                           }}
                           className="p-1 hover:bg-white/20 rounded"
                           title="Reset to default"
