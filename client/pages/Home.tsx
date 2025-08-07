@@ -88,7 +88,7 @@ export default function Home() {
             Meet the Adventure Crew
           </span>
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {familyMembers.map((member, index) => (
             <Card
               key={index}
@@ -105,12 +105,7 @@ export default function Home() {
                 <h3 className="font-semibold text-lg text-gray-800">
                   {member.name}
                 </h3>
-                <p className="text-sm text-muted-foreground">{member.role}</p>
-                {member.isPet && (
-                  <span className="inline-block mt-2 px-2 py-1 bg-scotland-heather/20 text-scotland-thistle text-xs rounded-full">
-                    🐕 Four-legged explorer
-                  </span>
-                )}
+                <p className="text-sm text-muted-foreground font-medium">{member.role}</p>
               </CardContent>
             </Card>
           ))}
