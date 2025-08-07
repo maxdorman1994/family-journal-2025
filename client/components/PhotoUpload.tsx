@@ -252,14 +252,11 @@ export default function PhotoUpload({
                 </div>
                 {photo.error && (
                   <div className="text-xs mt-1 leading-tight">
-                    <div className={photo.error.includes('Cloudflare Images') ? 'text-blue-600' : 'text-red-500'}>
-                      {photo.error}
+                    <div className={photo.error.includes('Cloudflare Images') || photo.error.includes('HEIC') ? 'text-green-600' : 'text-red-500'}>
+                      {photo.error.includes('HEIC file will be processed')
+                        ? '✅ HEIC → Cloudflare Images (native support)'
+                        : photo.error}
                     </div>
-                    {photo.error.includes('HEIC') && (
-                      <div className="text-green-600 mt-1">
-                        ✅ HEIC files work with Cloudflare Images
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
