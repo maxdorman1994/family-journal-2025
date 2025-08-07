@@ -117,7 +117,7 @@ export default function MapPage() {
 
     // Cleanup function
     return () => {
-      console.log("🗺️ Cleaning up map pins subscriptions");
+      console.log("����️ Cleaning up map pins subscriptions");
       unsubscribe();
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
@@ -597,16 +597,16 @@ export default function MapPage() {
         </div>
 
         {/* Pin List Sidebar */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 order-2 lg:order-2">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-lg">
                 <MapPin className="w-5 h-5 mr-2" />
                 Adventure Pins ({pins.length})
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3 max-h-[500px] overflow-y-auto">
+              <div className="space-y-3 max-h-[300px] sm:max-h-[400px] lg:max-h-[500px] overflow-y-auto">
                 {pins.map((pin) => (
                   <div
                     key={pin.id}
