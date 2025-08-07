@@ -631,7 +631,7 @@ export default function Home() {
                 className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
               >
                 <CardContent className="p-6">
-                  <div className="relative group w-24 h-24 mx-auto mb-4">
+                  <div className="relative group w-28 h-28 mx-auto mb-4">
                     <div
                       className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
                     >
@@ -1463,7 +1463,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-bold">����️</span>
+                    <span className="text-xs text-white font-bold">�����️</span>
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-3">
@@ -1914,7 +1914,7 @@ export default function Home() {
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
-                Subscribe for weekly Scottish adventure vlogs! ����
+                Subscribe for weekly Scottish adventure vlogs! 🎬
               </p>
             </div>
           </div>
