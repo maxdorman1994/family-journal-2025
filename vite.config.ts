@@ -16,7 +16,6 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist/spa",
     rollupOptions: {
-      external: [],
       output: {
         manualChunks: {
           react: ['react', 'react-dom'],
@@ -26,10 +25,6 @@ export default defineConfig(({ mode }) => ({
     },
     sourcemap: false,
     minify: 'esbuild',
-    commonjsOptions: {
-      include: [/node_modules/],
-      transformMixedEsModules: true,
-    },
   },
   plugins: [react(), expressPlugin()],
   resolve: {
@@ -37,11 +32,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./client"),
       "@shared": path.resolve(__dirname, "./shared"),
     },
-    dedupe: ['react', 'react-dom'],
   },
   optimizeDeps: {
     include: ['react', 'react-dom'],
-    force: true,
   },
 }));
 
