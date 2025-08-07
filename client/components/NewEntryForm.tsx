@@ -41,6 +41,7 @@ interface NewEntryFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (entry: any) => Promise<void>;
+  editingEntry?: JournalEntry | null;
 }
 
 const weatherOptions = [
