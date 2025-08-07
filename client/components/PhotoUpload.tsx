@@ -28,7 +28,7 @@ interface PhotoUploadProps {
 export default function PhotoUpload({
   photos,
   onPhotosChange,
-  maxPhotos = 8,
+  maxPhotos = 20,
   className = "",
 }: PhotoUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
