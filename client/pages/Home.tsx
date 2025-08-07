@@ -127,10 +127,11 @@ export default function Home() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h3 className="font-semibold text-lg text-gray-800">
+                <h3 className="font-semibold text-lg text-gray-800 mb-2">
                   {member.name}
                 </h3>
-                <p className="text-sm text-muted-foreground font-medium">{member.role}</p>
+                <p className="text-sm text-muted-foreground font-medium mb-3">{member.role}</p>
+                <p className="text-xs text-slate-600 leading-relaxed">{member.bio}</p>
               </CardContent>
             </Card>
           ))}
