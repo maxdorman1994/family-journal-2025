@@ -93,6 +93,27 @@ export default function Home() {
     }
   };
 
+  const loadMilestones = async () => {
+    try {
+      setMilestonesLoading(true);
+      console.log("🏆 Loading milestones from database...");
+
+      const [milestonesData, statsData] = await Promise.all([
+        getMilestonesWithProgress('demo-user'),
+        getMilestoneStats('demo-user'),
+      ]);
+
+      setMilestones(milestonesData);
+      setMilestoneStats(statsData);
+
+      console.log(`✅ Loaded ${milestonesData.length} milestones with ${statsData.completed_count} completed`);
+    } catch (error) {
+      console.error("Error loading milestones:", error);
+    } finally {
+      setMilestonesLoading(false);
+    }
+  };
+
   const loadRecentAdventures = async () => {
     try {
       setAdventuresLoading(true);
