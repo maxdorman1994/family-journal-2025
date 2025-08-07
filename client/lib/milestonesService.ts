@@ -341,12 +341,12 @@ function getFallbackCategories(): MilestoneCategory[] {
 }
 
 function getFallbackMilestones(): MilestoneWithProgress[] {
-  // Return a subset of milestones for fallback
+  // Return basic milestone structure without progress when database is unavailable
   return [
     {
       id: "first-adventure",
       title: "First Adventure",
-      description: "Started your Scottish exploration journey",
+      description: "Record your first journal entry to start your Scottish exploration journey",
       category_id: "exploration",
       icon: "MapPin",
       xp_reward: 100,
@@ -358,27 +358,50 @@ function getFallbackMilestones(): MilestoneWithProgress[] {
       milestone_type: "simple",
       sort_order: 1,
       is_active: true,
-      progress: {
-        id: "1",
-        user_id: "demo-user",
-        milestone_id: "first-adventure",
-        status: "completed",
-        current_progress: 1,
-        completion_date: "2025-01-10T12:00:00Z",
-        created_at: "2025-01-10T12:00:00Z",
-        updated_at: "2025-01-10T12:00:00Z",
+      // No progress when using fallback - shows as locked/not started
+    },
+    {
+      id: "photo-memories",
+      title: "Photo Memories",
+      description: "Upload your first photos to capture Scottish memories",
+      category_id: "photography",
+      icon: "Camera",
+      xp_reward: 50,
+      color_scheme: {
+        color: "from-emerald-500 to-teal-600",
+        bgColor: "from-emerald-50 to-teal-100",
+        borderColor: "border-emerald-200/60",
       },
-      dateCompleted: "2025-01-10T12:00:00Z",
+      milestone_type: "simple",
+      sort_order: 2,
+      is_active: true,
+    },
+    {
+      id: "location-explorer",
+      title: "Location Explorer",
+      description: "Visit and document 5 different Scottish locations",
+      category_id: "exploration",
+      icon: "MapPin",
+      xp_reward: 200,
+      color_scheme: {
+        color: "from-amber-500 to-orange-600",
+        bgColor: "from-amber-50 to-orange-100",
+        borderColor: "border-amber-200/60",
+      },
+      milestone_type: "progress",
+      target_value: 5,
+      sort_order: 3,
+      is_active: true,
     },
   ];
 }
 
 function getFallbackStats(): MilestoneStats {
   return {
-    completed_count: 8,
-    in_progress_count: 12,
-    locked_count: 30,
-    total_xp: 900,
-    completion_percentage: 16,
+    completed_count: 0,
+    in_progress_count: 0,
+    locked_count: 3,
+    total_xp: 0,
+    completion_percentage: 0,
   };
 }
