@@ -218,7 +218,7 @@ export default function JournalCommentsLikes({
 
       toast({
         title: "Like removed",
-        description: `Removed like from ${visitorName}`,
+        description: `Removed like from ${likeVisitorName}`,
       });
     } catch (error) {
       console.error("Error deleting like:", error);
