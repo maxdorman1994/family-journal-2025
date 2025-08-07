@@ -39,35 +39,9 @@ const categoryLabels = {
 const MAPBOX_TOKEN = 'pk.eyJ1IjoibWF4ZG9ybWFuMTciLCJhIjoiY21keHpjOHJhMWNmbjJrcXczem9hNzBvdCJ9.BKW3-ffrkz1oPVI6lYEKtA';
 
 export default function MapPage() {
-  const [pins, setPins] = useState<MapPin[]>([
-    {
-      id: "1",
-      latitude: 56.8198,
-      longitude: -5.1044,
-      title: "Ben Nevis Base",
-      description: "Started our epic climb to the highest peak in Scotland!",
-      category: "adventure",
-      date: "2024-06-15",
-    },
-    {
-      id: "2",
-      latitude: 57.1474,
-      longitude: -2.0942,
-      title: "Cairngorms Photography",
-      description: "Amazing sunset shots with the whole family.",
-      category: "photo",
-      date: "2024-07-02",
-    },
-    {
-      id: "3",
-      latitude: 55.9533,
-      longitude: -3.1883,
-      title: "Edinburgh Castle",
-      description: "Explored the historic castle with amazing city views.",
-      category: "memory",
-      date: "2024-05-20",
-    },
-  ]);
+  const [pins, setPins] = useState<MapPinType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const [viewState, setViewState] = useState<ViewState>({
     longitude: -4.2026,
