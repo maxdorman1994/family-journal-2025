@@ -104,6 +104,11 @@ export default function Home() {
     loadRealStats();
     loadRecentAdventures();
 
+    // Initialize milestone tracking
+    initializeMilestoneTracking('demo-user').catch(error => {
+      console.error("Error initializing milestone tracking:", error);
+    });
+
     // Setup real-time subscriptions
     const unsubscribeFamilyMembers = subscribeToFamilyMembers((members) => {
       console.log(
