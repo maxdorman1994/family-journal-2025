@@ -205,14 +205,23 @@ export async function uploadPhotoToCloudflare(
       });
 
       xhr.addEventListener('load', () => {
+        console.log(`📥 Upload response received:`, {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          responseText: xhr.responseText
+        });
+
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const response = JSON.parse(xhr.responseText);
+            console.log(`✅ Upload successful:`, response);
             resolve(response.url);
           } catch (error) {
+            console.error(`❌ Failed to parse response:`, error);
             reject(new Error('Invalid response format'));
           }
         } else {
+          console.error(`❌ Upload failed with status ${xhr.status}:`, xhr.responseText);
           reject(new Error(`Upload failed: ${xhr.statusText}`));
         }
       });
