@@ -1142,7 +1142,7 @@ export default function Home() {
                 </div>
 
                 {/* Text Content - Right Side */}
-                <div className="flex-1">
+                <div className="flex-1 text-center md:text-left">
                   <h3 className="text-3xl font-bold text-green-800 mb-3">
                     Fern
                   </h3>
