@@ -734,8 +734,8 @@ export default function Home() {
             </Card>
           </div>
 
-          {/* Miles Traveled */}
-          <div className="group relative">
+          {/* Miles Traveled - Hidden by default */}
+          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-blue-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-blue-500"></div>
@@ -759,8 +759,8 @@ export default function Home() {
             </Card>
           </div>
 
-          {/* Munros Climbed */}
-          <div className="group relative">
+          {/* Munros Climbed - Hidden by default */}
+          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
             <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-lime-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-lime-500"></div>
@@ -784,8 +784,8 @@ export default function Home() {
             </Card>
           </div>
 
-          {/* Adventures This Year */}
-          <div className="group relative">
+          {/* Adventures This Year - Hidden by default */}
+          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
             <div className="absolute inset-0 bg-gradient-to-r from-violet-400 to-purple-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-purple-500"></div>
@@ -809,8 +809,8 @@ export default function Home() {
             </Card>
           </div>
 
-          {/* Wildlife Spotted */}
-          <div className="group relative">
+          {/* Wildlife Spotted - Hidden by default */}
+          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
             <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-green-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-green-500"></div>
@@ -834,8 +834,8 @@ export default function Home() {
             </Card>
           </div>
 
-          {/* Castles Visited */}
-          <div className="group relative">
+          {/* Castles Visited - Hidden by default */}
+          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
             <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-pink-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-pink-500"></div>
@@ -859,8 +859,8 @@ export default function Home() {
             </Card>
           </div>
 
-          {/* Weather Days */}
-          <div className="group relative">
+          {/* Weather Days - Hidden by default */}
+          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
