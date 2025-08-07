@@ -110,7 +110,10 @@ export default function Home() {
         `✅ Loaded ${milestonesData.length} milestones with ${statsData.completed_count} completed`,
       );
     } catch (error) {
-      console.error("Error loading milestones:", error instanceof Error ? error.message : String(error));
+      console.error(
+        "Error loading milestones:",
+        error instanceof Error ? error.message : String(error),
+      );
       // Set empty milestone state on error
       setMilestones([]);
       setMilestoneStats({
@@ -167,10 +170,12 @@ export default function Home() {
       );
 
       // Verify both dogs are included in real-time updates
-      const charlieExists = members.find(m => m.name === "Charlie");
-      const fernExists = members.find(m => m.name === "Fern");
+      const charlieExists = members.find((m) => m.name === "Charlie");
+      const fernExists = members.find((m) => m.name === "Fern");
       if (charlieExists) {
-        console.log("🐕 Charlie sync confirmed - photos will sync across devices");
+        console.log(
+          "🐕 Charlie sync confirmed - photos will sync across devices",
+        );
       }
       if (fernExists) {
         console.log("🌿 Fern sync confirmed - photos will sync across devices");
@@ -223,20 +228,26 @@ export default function Home() {
       setError(null);
 
       // Check if our dogs are loaded for sync verification
-      const charlieExists = members.find(m => m.name === "Charlie");
-      const fernExists = members.find(m => m.name === "Fern");
+      const charlieExists = members.find((m) => m.name === "Charlie");
+      const fernExists = members.find((m) => m.name === "Fern");
       console.log(`✅ Loaded ${members.length} family members successfully`);
 
       if (charlieExists) {
-        console.log(`🐕 Charlie loaded successfully with ID: ${charlieExists.id}`);
+        console.log(
+          `🐕 Charlie loaded successfully with ID: ${charlieExists.id}`,
+        );
       } else {
-        console.warn("⚠️ Charlie not found in family members - may need to run SQL");
+        console.warn(
+          "⚠️ Charlie not found in family members - may need to run SQL",
+        );
       }
 
       if (fernExists) {
         console.log(`🌿 Fern loaded successfully with ID: ${fernExists.id}`);
       } else {
-        console.warn("⚠️ Fern not found in family members - may need to run SQL");
+        console.warn(
+          "⚠️ Fern not found in family members - may need to run SQL",
+        );
       }
     } catch (error) {
       const errorMessage =
@@ -800,13 +811,20 @@ export default function Home() {
               <div className="flex items-center gap-8">
                 {/* Text Content - Left Side */}
                 <div className="flex-1">
-                  <h3 className="text-3xl font-bold text-amber-800 mb-3">Charlie</h3>
-                  <p className="text-lg font-medium text-amber-600 mb-6">ADVENTURE DOG</p>
+                  <h3 className="text-3xl font-bold text-amber-800 mb-3">
+                    Charlie
+                  </h3>
+                  <p className="text-lg font-medium text-amber-600 mb-6">
+                    ADVENTURE DOG
+                  </p>
                   <p className="text-base text-amber-700 leading-relaxed mb-6">
-                    Our loyal four-legged family member who never misses an adventure! Charlie is the ultimate Scottish explorer,
-                    always ready to hike through the Highlands, chase waves on Scottish beaches, and provide endless entertainment
-                    around the campfire. With boundless energy and an adventurous spirit, Charlie reminds us to stay curious,
-                    live in the moment, and find joy in every trail we explore together. 🐕
+                    Our loyal four-legged family member who never misses an
+                    adventure! Charlie is the ultimate Scottish explorer, always
+                    ready to hike through the Highlands, chase waves on Scottish
+                    beaches, and provide endless entertainment around the
+                    campfire. With boundless energy and an adventurous spirit,
+                    Charlie reminds us to stay curious, live in the moment, and
+                    find joy in every trail we explore together. 🐕
                   </p>
 
                   {/* Paw print decorations */}
@@ -823,8 +841,10 @@ export default function Home() {
                     <div className="w-full h-full rounded-lg overflow-hidden bg-white">
                       <img
                         src={
-                          familyMembers.find(m => m.name === "Charlie")?.display_avatar ||
-                          familyMembers.find(m => m.name === "Charlie")?.avatar_url ||
+                          familyMembers.find((m) => m.name === "Charlie")
+                            ?.display_avatar ||
+                          familyMembers.find((m) => m.name === "Charlie")
+                            ?.avatar_url ||
                           "/placeholder.svg"
                         }
                         alt="Charlie"
@@ -841,7 +861,9 @@ export default function Home() {
                         variant="secondary"
                         className="h-10 w-10 p-0 bg-white/90 hover:bg-white"
                         onClick={() => {
-                          const charlieMember = familyMembers.find(m => m.name === "Charlie");
+                          const charlieMember = familyMembers.find(
+                            (m) => m.name === "Charlie",
+                          );
                           if (charlieMember) handlePhotoEdit(charlieMember.id);
                         }}
                         disabled={isUploading}
@@ -849,28 +871,37 @@ export default function Home() {
                         <Edit className="h-5 w-5" />
                       </Button>
                       {(() => {
-                        const charlieMember = familyMembers.find(m => m.name === "Charlie");
-                        return charlieMember?.avatar_url && charlieMember.avatar_url !== "/placeholder.svg" && (
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            className="h-10 w-10 p-0 bg-white/90 hover:bg-white text-red-600 hover:text-red-700"
-                            onClick={() => handlePhotoRemove(charlieMember.id)}
-                            disabled={isUploading}
-                          >
-                            <X className="h-5 w-5" />
-                          </Button>
+                        const charlieMember = familyMembers.find(
+                          (m) => m.name === "Charlie",
+                        );
+                        return (
+                          charlieMember?.avatar_url &&
+                          charlieMember.avatar_url !== "/placeholder.svg" && (
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              className="h-10 w-10 p-0 bg-white/90 hover:bg-white text-red-600 hover:text-red-700"
+                              onClick={() =>
+                                handlePhotoRemove(charlieMember.id)
+                              }
+                              disabled={isUploading}
+                            >
+                              <X className="h-5 w-5" />
+                            </Button>
+                          )
                         );
                       })()}
                     </div>
                   </div>
 
                   {/* Upload indicator */}
-                  {isUploading && editingMember === familyMembers.find(m => m.name === "Charlie")?.id && (
-                    <div className="absolute inset-0 bg-black/70 rounded-xl flex items-center justify-center">
-                      <Upload className="h-8 w-8 text-white animate-spin" />
-                    </div>
-                  )}
+                  {isUploading &&
+                    editingMember ===
+                      familyMembers.find((m) => m.name === "Charlie")?.id && (
+                      <div className="absolute inset-0 bg-black/70 rounded-xl flex items-center justify-center">
+                        <Upload className="h-8 w-8 text-white animate-spin" />
+                      </div>
+                    )}
                 </div>
               </div>
             </CardContent>
@@ -879,7 +910,8 @@ export default function Home() {
 
         <div className="text-center mt-6">
           <p className="text-sm text-amber-600">
-            🐕 Our trusted adventure companion, making every Scottish journey more memorable!
+            🐕 Our trusted adventure companion, making every Scottish journey
+            more memorable!
           </p>
         </div>
       </section>
@@ -893,7 +925,12 @@ export default function Home() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-6">
           {familyMembers
-            .filter((member) => member.position_index > 4 && member.name !== "Charlie" && member.name !== "Fern") // Extended family (positions 5+), excluding dogs
+            .filter(
+              (member) =>
+                member.position_index > 4 &&
+                member.name !== "Charlie" &&
+                member.name !== "Fern",
+            ) // Extended family (positions 5+), excluding dogs
             .map((member) => (
               <Card
                 key={member.id}
@@ -983,8 +1020,10 @@ export default function Home() {
                     <div className="w-full h-full rounded-lg overflow-hidden bg-white">
                       <img
                         src={
-                          familyMembers.find(m => m.name === "Fern")?.display_avatar ||
-                          familyMembers.find(m => m.name === "Fern")?.avatar_url ||
+                          familyMembers.find((m) => m.name === "Fern")
+                            ?.display_avatar ||
+                          familyMembers.find((m) => m.name === "Fern")
+                            ?.avatar_url ||
                           "/placeholder.svg"
                         }
                         alt="Fern"
@@ -1001,7 +1040,9 @@ export default function Home() {
                         variant="secondary"
                         className="h-10 w-10 p-0 bg-white/90 hover:bg-white"
                         onClick={() => {
-                          const fernMember = familyMembers.find(m => m.name === "Fern");
+                          const fernMember = familyMembers.find(
+                            (m) => m.name === "Fern",
+                          );
                           if (fernMember) handlePhotoEdit(fernMember.id);
                         }}
                         disabled={isUploading}
@@ -1009,40 +1050,55 @@ export default function Home() {
                         <Edit className="h-5 w-5" />
                       </Button>
                       {(() => {
-                        const fernMember = familyMembers.find(m => m.name === "Fern");
-                        return fernMember?.avatar_url && fernMember.avatar_url !== "/placeholder.svg" && (
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            className="h-10 w-10 p-0 bg-white/90 hover:bg-white text-red-600 hover:text-red-700"
-                            onClick={() => handlePhotoRemove(fernMember.id)}
-                            disabled={isUploading}
-                          >
-                            <X className="h-5 w-5" />
-                          </Button>
+                        const fernMember = familyMembers.find(
+                          (m) => m.name === "Fern",
+                        );
+                        return (
+                          fernMember?.avatar_url &&
+                          fernMember.avatar_url !== "/placeholder.svg" && (
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              className="h-10 w-10 p-0 bg-white/90 hover:bg-white text-red-600 hover:text-red-700"
+                              onClick={() => handlePhotoRemove(fernMember.id)}
+                              disabled={isUploading}
+                            >
+                              <X className="h-5 w-5" />
+                            </Button>
+                          )
                         );
                       })()}
                     </div>
                   </div>
 
                   {/* Upload indicator */}
-                  {isUploading && editingMember === familyMembers.find(m => m.name === "Fern")?.id && (
-                    <div className="absolute inset-0 bg-black/70 rounded-xl flex items-center justify-center">
-                      <Upload className="h-8 w-8 text-white animate-spin" />
-                    </div>
-                  )}
+                  {isUploading &&
+                    editingMember ===
+                      familyMembers.find((m) => m.name === "Fern")?.id && (
+                      <div className="absolute inset-0 bg-black/70 rounded-xl flex items-center justify-center">
+                        <Upload className="h-8 w-8 text-white animate-spin" />
+                      </div>
+                    )}
                 </div>
 
                 {/* Text Content - Right Side */}
                 <div className="flex-1">
-                  <h3 className="text-3xl font-bold text-green-800 mb-3">Fern</h3>
-                  <p className="text-lg font-medium text-green-600 mb-6">ADVENTURE DOG</p>
+                  <h3 className="text-3xl font-bold text-green-800 mb-3">
+                    Fern
+                  </h3>
+                  <p className="text-lg font-medium text-green-600 mb-6">
+                    ADVENTURE DOG
+                  </p>
                   <p className="text-base text-green-700 leading-relaxed mb-6">
-                    Our spirited second furry explorer who brings her own unique energy to every Scottish adventure!
-                    Fern is the perfect adventure buddy - curious about every new trail, fearless when exploring rocky highlands,
-                    and always ready to splash through Highland streams. With her playful nature and boundless enthusiasm,
-                    Fern adds joy and laughter to our family expeditions, reminding us that the best adventures are shared
-                    with those who love the journey as much as the destination. 🌿
+                    Our spirited second furry explorer who brings her own unique
+                    energy to every Scottish adventure! Fern is the perfect
+                    adventure buddy - curious about every new trail, fearless
+                    when exploring rocky highlands, and always ready to splash
+                    through Highland streams. With her playful nature and
+                    boundless enthusiasm, Fern adds joy and laughter to our
+                    family expeditions, reminding us that the best adventures
+                    are shared with those who love the journey as much as the
+                    destination. 🌿
                   </p>
 
                   {/* Leaf decorations */}
@@ -1059,7 +1115,8 @@ export default function Home() {
 
         <div className="text-center mt-6">
           <p className="text-sm text-green-600">
-            🌿 Our second adventure companion, doubling the fun on every Scottish journey!
+            🌿 Our second adventure companion, doubling the fun on every
+            Scottish journey!
           </p>
         </div>
       </section>
@@ -1622,7 +1679,6 @@ export default function Home() {
             />
           </Button>
         </div>
-
       </section>
 
       {/* Recent Adventures */}
@@ -1807,7 +1863,6 @@ export default function Home() {
       {/* Contact & YouTube Section */}
       <section className="mt-20 mb-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
           {/* Contact Us - Left Side */}
           <div className="text-center">
             <div className="bg-gradient-to-r from-slate-50 via-blue-50 to-emerald-50 rounded-2xl p-8 border-2 border-slate-200/60 shadow-lg h-full">
@@ -1822,8 +1877,8 @@ export default function Home() {
               </h2>
 
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                Have a question about our Scottish adventures or want to share your own family travel stories?
-                We'd love to hear from you!
+                Have a question about our Scottish adventures or want to share
+                your own family travel stories? We'd love to hear from you!
               </p>
 
               <div className="flex items-center justify-center gap-4 mb-6">
@@ -1838,7 +1893,9 @@ export default function Home() {
                   </svg>
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-medium text-slate-500 mb-1">Email us at</p>
+                  <p className="text-sm font-medium text-slate-500 mb-1">
+                    Email us at
+                  </p>
                   <a
                     href="mailto:contact@aweeadventure.co.uk"
                     className="text-xl font-bold text-blue-600 hover:text-emerald-600 transition-colors duration-300"
@@ -1869,7 +1926,7 @@ export default function Home() {
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                 </svg>
               </div>
 
@@ -1880,8 +1937,9 @@ export default function Home() {
               </h2>
 
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                Join us on YouTube as we explore Scotland's breathtaking landscapes, share travel tips,
-                and capture unforgettable family moments!
+                Join us on YouTube as we explore Scotland's breathtaking
+                landscapes, share travel tips, and capture unforgettable family
+                moments!
               </p>
 
               <div className="flex items-center justify-center gap-4 mb-6">
@@ -1891,11 +1949,13 @@ export default function Home() {
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                   </svg>
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-medium text-slate-500 mb-1">Follow us on</p>
+                  <p className="text-sm font-medium text-slate-500 mb-1">
+                    Follow us on
+                  </p>
                   <a
                     href="https://www.youtube.com/@AWeeAdventures"
                     target="_blank"
@@ -1918,7 +1978,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-
         </div>
       </section>
     </div>

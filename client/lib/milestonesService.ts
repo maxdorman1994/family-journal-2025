@@ -170,7 +170,10 @@ export async function getMilestoneStats(
       .maybeSingle(); // Use maybeSingle instead of single to handle no results gracefully
 
     if (error) {
-      console.error("Error fetching milestone stats from leaderboard:", error.message || error);
+      console.error(
+        "Error fetching milestone stats from leaderboard:",
+        error.message || error,
+      );
 
       // Fallback: Calculate stats manually from user_milestone_progress table
       return await calculateStatsManually(userId);
@@ -178,7 +181,9 @@ export async function getMilestoneStats(
 
     // If no stats found in leaderboard (user has no progress yet), return empty stats
     if (!stats) {
-      console.log("📊 No milestone stats found for user, returning empty stats");
+      console.log(
+        "📊 No milestone stats found for user, returning empty stats",
+      );
       return {
         completed_count: 0,
         in_progress_count: 0,
@@ -199,7 +204,10 @@ export async function getMilestoneStats(
     console.log("✅ Milestone stats loaded:", result);
     return result;
   } catch (error) {
-    console.error("Error in getMilestoneStats:", error instanceof Error ? error.message : String(error));
+    console.error(
+      "Error in getMilestoneStats:",
+      error instanceof Error ? error.message : String(error),
+    );
     return getFallbackStats();
   }
 }
@@ -214,11 +222,13 @@ async function calculateStatsManually(userId: string): Promise<MilestoneStats> {
     // Get user progress directly
     const { data: progressData, error: progressError } = await supabase
       .from("user_milestone_progress")
-      .select(`
+      .select(
+        `
         status,
         milestone_id,
         milestones!inner(xp_reward)
-      `)
+      `,
+      )
       .eq("user_id", userId);
 
     if (progressError) {
@@ -228,10 +238,14 @@ async function calculateStatsManually(userId: string): Promise<MilestoneStats> {
 
     const progress = progressData || [];
 
-    const completed_count = progress.filter(p => p.status === 'completed').length;
-    const in_progress_count = progress.filter(p => p.status === 'in_progress').length;
+    const completed_count = progress.filter(
+      (p) => p.status === "completed",
+    ).length;
+    const in_progress_count = progress.filter(
+      (p) => p.status === "in_progress",
+    ).length;
     const total_xp = progress
-      .filter(p => p.status === 'completed')
+      .filter((p) => p.status === "completed")
       .reduce((sum, p) => sum + (p.milestones?.xp_reward || 0), 0);
 
     // Get total milestone count for percentage calculation
@@ -240,12 +254,15 @@ async function calculateStatsManually(userId: string): Promise<MilestoneStats> {
       .select("*", { count: "exact", head: true })
       .eq("is_active", true);
 
-    const completion_percentage = totalMilestones ? (completed_count / totalMilestones) * 100 : 0;
+    const completion_percentage = totalMilestones
+      ? (completed_count / totalMilestones) * 100
+      : 0;
 
     const result = {
       completed_count,
       in_progress_count,
-      locked_count: (totalMilestones || 0) - completed_count - in_progress_count,
+      locked_count:
+        (totalMilestones || 0) - completed_count - in_progress_count,
       total_xp,
       completion_percentage,
     };
@@ -253,7 +270,10 @@ async function calculateStatsManually(userId: string): Promise<MilestoneStats> {
     console.log("✅ Manually calculated milestone stats:", result);
     return result;
   } catch (error) {
-    console.error("Error calculating stats manually:", error instanceof Error ? error.message : String(error));
+    console.error(
+      "Error calculating stats manually:",
+      error instanceof Error ? error.message : String(error),
+    );
     return getFallbackStats();
   }
 }
