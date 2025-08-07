@@ -238,7 +238,8 @@ export async function getEntryStats(entryId: string): Promise<{ commentCount: nu
       likeCount: data.like_count || 0,
     };
   } catch (error) {
-    console.error('Error in getEntryStats:', error);
+    console.error('Error in getEntryStats:', JSON.stringify(error, null, 2));
+    console.error('Error details:', error);
     return { commentCount: 0, likeCount: 0 };
   }
 }
