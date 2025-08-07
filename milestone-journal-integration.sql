@@ -72,8 +72,12 @@ BEGIN
   SELECT COALESCE(SUM(array_length(photos, 1)), 0) INTO photo_count 
   FROM journal_entries WHERE photos IS NOT NULL;
   
-  SELECT COUNT(DISTINCT unnest(tags)) INTO unique_tags 
-  FROM journal_entries WHERE tags IS NOT NULL AND array_length(tags, 1) > 0;
+  WITH unnested_tags AS (
+    SELECT unnest(tags) as tag
+    FROM journal_entries
+    WHERE tags IS NOT NULL AND array_length(tags, 1) > 0
+  )
+  SELECT COUNT(DISTINCT tag) INTO unique_tags FROM unnested_tags;
   
   SELECT COUNT(DISTINCT LOWER(location)) INTO unique_locations 
   FROM journal_entries WHERE location IS NOT NULL AND location != '';
