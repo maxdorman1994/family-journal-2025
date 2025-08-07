@@ -101,13 +101,15 @@ export async function getLikesForEntry(entryId: string): Promise<JournalLike[]> 
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching likes:', error);
+      console.error('Error fetching likes:', JSON.stringify(error, null, 2));
+      console.error('Error details:', error);
       throw error;
     }
 
     return data || [];
   } catch (error) {
-    console.error('Error in getLikesForEntry:', error);
+    console.error('Error in getLikesForEntry:', JSON.stringify(error, null, 2));
+    console.error('Error details:', error);
     throw error;
   }
 }
