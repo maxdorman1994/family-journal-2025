@@ -55,15 +55,42 @@ export default function MunroBagging() {
       console.log(`✅ Loaded ${munrosData.length} Munros successfully`);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      console.warn('Failed to load from Supabase:', errorMessage);
+      console.warn('Failed to load from Supabase, using fallback data:', errorMessage);
 
+      // Set appropriate error message
       if (errorMessage.includes('not configured')) {
-        setError('📝 Development Mode: Supabase not configured');
-      } else if (errorMessage.includes('relation "munros" does not exist')) {
-        setError('🏔️ Please run the Munro Bagging SQL schema first');
+        setError('📝 Development Mode: Supabase not configured - using local data');
+      } else if (errorMessage.includes('Could not find the table') || errorMessage.includes('relation "munros" does not exist')) {
+        setError('🏔️ Database Setup Required: Please run the Munro Bagging SQL schema - using local data');
       } else {
-        setError(`⚠️ Database Error: ${errorMessage}`);
+        setError(`⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`);
       }
+
+      // Fallback to local data
+      console.log('📦 Loading fallback Munro data...');
+      const fallbackMunros: MunroWithCompletion[] = COMPLETE_MUNROS_LIST.slice(0, 50).map(munro => ({
+        ...munro,
+        completed: munro.id === '1', // Mark Ben Nevis as completed for demo
+        completion: munro.id === '1' ? {
+          id: 'demo-1',
+          munro_id: '1',
+          completed_date: '2025-08-03',
+          notes: 'Amazing summit views! Our greatest family achievement so far.',
+          photo_count: 4,
+          weather_conditions: 'Sunny and clear',
+          climbing_time: '7 hours 30 minutes'
+        } : undefined
+      }));
+
+      setMunros(fallbackMunros);
+      setStats({
+        completed_count: 1,
+        total_munros: 282,
+        completion_percentage: 0.4,
+        highest_completed: 1345
+      });
+
+      console.log(`📦 Loaded ${fallbackMunros.length} fallback Munros`);
     } finally {
       setIsLoading(false);
     }
@@ -178,7 +205,7 @@ export default function MunroBagging() {
         <div className="absolute top-20 left-10 text-6xl opacity-5 animate-bounce">⛰️</div>
         <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">🏔️</div>
         <div className="absolute bottom-20 left-20 text-5xl opacity-5 animate-bounce" style={{animationDelay: '1s'}}>🗻</div>
-        <div className="absolute top-60 left-1/3 text-3xl opacity-10 animate-pulse" style={{animationDelay: '2s'}}>⛷️</div>
+        <div className="absolute top-60 left-1/3 text-3xl opacity-10 animate-pulse" style={{animationDelay: '2s'}}>��️</div>
         <div className="absolute bottom-40 right-10 text-4xl opacity-5 animate-bounce" style={{animationDelay: '1.5s'}}>🧗</div>
       </div>
 
