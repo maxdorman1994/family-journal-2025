@@ -71,12 +71,6 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
       setLikes(likesData);
       setLikeCount(statsData.likeCount);
       setCommentCount(statsData.commentCount);
-
-      // Check if current visitor has liked this entry
-      if (visitorName.trim()) {
-        const userLiked = await checkIfUserLiked(entryId, visitorName);
-        setIsLiked(userLiked);
-      }
     } catch (error) {
       console.error('Error loading comments and likes:', error);
       toast({
@@ -86,6 +80,22 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Check if current visitor has liked this entry (separate from data loading)
+  const checkUserLikeStatus = async (name: string) => {
+    if (!name.trim()) {
+      setIsLiked(false);
+      return;
+    }
+
+    try {
+      const userLiked = await checkIfUserLiked(entryId, name);
+      setIsLiked(userLiked);
+    } catch (error) {
+      console.error('Error checking user like status:', error);
+      setIsLiked(false);
     }
   };
 
