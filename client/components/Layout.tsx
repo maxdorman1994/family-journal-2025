@@ -206,6 +206,9 @@ export default function Layout({ children }: LayoutProps) {
       {/* Authentication Footer */}
       <AuthFooter />
 
+      {/* PWA Install Prompt */}
+      <PWAInstaller />
+
       {/* Hidden file input for logo upload */}
       <input
         ref={logoFileInputRef}
