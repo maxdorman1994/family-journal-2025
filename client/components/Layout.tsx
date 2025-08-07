@@ -22,6 +22,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: "Journal", href: "/journal" },
     { name: "Munro Bagging", href: "/munro-bagging" },
     { name: "Gallery", href: "/gallery" },
+    { name: "Milestones", href: "/milestones" },
     { name: "Hints & Tips", href: "/hints-tips" },
     { name: "Wishlist", href: "/wishlist" },
   ];
