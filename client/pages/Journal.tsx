@@ -443,7 +443,7 @@ export default function Journal() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 mb-4 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
               Capturing magical moments across the beautiful landscapes of
               Scotland
             </p>
