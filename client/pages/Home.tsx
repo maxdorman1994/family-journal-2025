@@ -99,14 +99,16 @@ export default function Home() {
       console.log("🏆 Loading milestones from database...");
 
       const [milestonesData, statsData] = await Promise.all([
-        getMilestonesWithProgress('demo-user'),
-        getMilestoneStats('demo-user'),
+        getMilestonesWithProgress("demo-user"),
+        getMilestoneStats("demo-user"),
       ]);
 
       setMilestones(milestonesData);
       setMilestoneStats(statsData);
 
-      console.log(`✅ Loaded ${milestonesData.length} milestones with ${statsData.completed_count} completed`);
+      console.log(
+        `✅ Loaded ${milestonesData.length} milestones with ${statsData.completed_count} completed`,
+      );
     } catch (error) {
       console.error("Error loading milestones:", error);
     } finally {
@@ -143,7 +145,7 @@ export default function Home() {
     loadMilestones();
 
     // Initialize milestone tracking
-    initializeMilestoneTracking('demo-user').catch(error => {
+    initializeMilestoneTracking("demo-user").catch((error) => {
       console.error("Error initializing milestone tracking:", error);
     });
 
@@ -167,16 +169,19 @@ export default function Home() {
       setRecentAdventures(adventures);
     });
 
-    const unsubscribeMilestones = subscribeToMilestoneUpdates('demo-user', (milestonesData) => {
-      console.log(
-        "🔄 Real-time milestones update received:",
-        milestonesData.length,
-        "milestones",
-      );
-      setMilestones(milestonesData);
-      // Recalculate stats
-      getMilestoneStats('demo-user').then(setMilestoneStats);
-    });
+    const unsubscribeMilestones = subscribeToMilestoneUpdates(
+      "demo-user",
+      (milestonesData) => {
+        console.log(
+          "🔄 Real-time milestones update received:",
+          milestonesData.length,
+          "milestones",
+        );
+        setMilestones(milestonesData);
+        // Recalculate stats
+        getMilestoneStats("demo-user").then(setMilestoneStats);
+      },
+    );
 
     return () => {
       unsubscribeFamilyMembers();
@@ -585,69 +590,69 @@ export default function Home() {
           {familyMembers
             .filter((member) => member.position_index <= 4) // Immediate family (positions 0-4)
             .map((member) => (
-            <Card
-              key={member.id}
-              className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
-            >
-              <CardContent className="p-6">
-                <div className="relative group w-20 h-20 mx-auto mb-4">
-                  <div
-                    className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
-                  >
-                    <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                      <img
-                        src={
-                          member.display_avatar ||
-                          member.avatar_url ||
-                          "/placeholder.svg"
-                        }
-                        alt={member.name}
-                        className="w-full h-full object-cover"
-                      />
+              <Card
+                key={member.id}
+                className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
+              >
+                <CardContent className="p-6">
+                  <div className="relative group w-20 h-20 mx-auto mb-4">
+                    <div
+                      className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
+                    >
+                      <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                        <img
+                          src={
+                            member.display_avatar ||
+                            member.avatar_url ||
+                            "/placeholder.svg"
+                          }
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Edit overlay */}
-                  <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="flex gap-1">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
-                        onClick={() => handlePhotoEdit(member.id)}
-                        disabled={isUploading}
-                      >
-                        {isUploading && editingMember === member.id ? (
-                          <Upload className="h-3 w-3 animate-pulse" />
-                        ) : (
-                          <Edit className="h-3 w-3" />
-                        )}
-                      </Button>
-                      {member.has_custom_avatar && (
+                    {/* Edit overlay */}
+                    <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="flex gap-1">
                         <Button
                           size="sm"
-                          variant="destructive"
-                          className="h-7 w-7 p-0"
-                          onClick={() => removePhoto(member.id)}
+                          variant="secondary"
+                          className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
+                          onClick={() => handlePhotoEdit(member.id)}
+                          disabled={isUploading}
                         >
-                          <X className="h-3 w-3" />
+                          {isUploading && editingMember === member.id ? (
+                            <Upload className="h-3 w-3 animate-pulse" />
+                          ) : (
+                            <Edit className="h-3 w-3" />
+                          )}
                         </Button>
-                      )}
+                        {member.has_custom_avatar && (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="h-7 w-7 p-0"
+                            onClick={() => removePhoto(member.id)}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                  {member.name}
-                </h3>
-                <p className="text-sm text-muted-foreground font-medium mb-3">
-                  {member.role}
-                </p>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {member.bio}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                  <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                    {member.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground font-medium mb-3">
+                    {member.role}
+                  </p>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {member.bio}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
         </div>
 
         {/* Hidden file input for photo editing */}
@@ -757,71 +762,73 @@ export default function Home() {
           {familyMembers
             .filter((member) => member.position_index > 4) // Extended family (positions 5+)
             .map((member) => (
-            <Card
-              key={member.id}
-              className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
-            >
-              <CardContent className="p-6">
-                <div className="relative group w-20 h-20 mx-auto mb-4">
-                  <div
-                    className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
-                  >
-                    <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                      <img
-                        src={
-                          member.display_avatar ||
-                          member.avatar_url ||
-                          "/placeholder.svg"
-                        }
-                        alt={member.name}
-                        className="w-full h-full object-cover"
-                      />
+              <Card
+                key={member.id}
+                className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
+              >
+                <CardContent className="p-6">
+                  <div className="relative group w-20 h-20 mx-auto mb-4">
+                    <div
+                      className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
+                    >
+                      <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                        <img
+                          src={
+                            member.display_avatar ||
+                            member.avatar_url ||
+                            "/placeholder.svg"
+                          }
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Edit overlay */}
-                  <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="flex gap-1">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
-                        onClick={() => handlePhotoEdit(member.id)}
-                        disabled={isUploading}
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
-                      {member.avatar_url && member.avatar_url !== "/placeholder.svg" && (
+                    {/* Edit overlay */}
+                    <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="flex gap-1">
                         <Button
                           size="sm"
-                          variant="destructive"
-                          className="h-7 w-7 p-0 bg-red-500/90 hover:bg-red-600"
-                          onClick={() => handlePhotoRemove(member.id)}
+                          variant="secondary"
+                          className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
+                          onClick={() => handlePhotoEdit(member.id)}
                           disabled={isUploading}
                         >
-                          <X className="h-3 w-3" />
+                          <Edit className="h-3 w-3" />
                         </Button>
-                      )}
+                        {member.avatar_url &&
+                          member.avatar_url !== "/placeholder.svg" && (
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="h-7 w-7 p-0 bg-red-500/90 hover:bg-red-600"
+                              onClick={() => handlePhotoRemove(member.id)}
+                              disabled={isUploading}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          )}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                  {member.name}
-                </h3>
-                <p className="text-sm text-muted-foreground font-medium mb-3">
-                  {member.role}
-                </p>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {member.bio}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                  <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                    {member.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground font-medium mb-3">
+                    {member.role}
+                  </p>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {member.bio}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
         </div>
 
         <div className="text-center mt-6">
           <p className="text-sm text-slate-500">
-            🏴󠁧󠁢󠁳󠁣󠁴󠁿 Our big Scottish family makes every adventure more memorable together!
+            🏴󠁧󠁢󠁳󠁣󠁴󠁿 Our big Scottish family makes every adventure more memorable
+            together!
           </p>
         </div>
       </section>
@@ -832,7 +839,7 @@ export default function Home() {
           {/* Dynamic Milestone Achievement Banner */}
           <div
             className="bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-2xl border-2 border-emerald-200/60 p-6 mb-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
-            onClick={() => window.location.href = '/milestones'}
+            onClick={() => (window.location.href = "/milestones")}
           >
             <div className="flex items-center justify-center gap-4">
               <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
@@ -849,14 +856,12 @@ export default function Home() {
                     <h3 className="text-xl font-bold text-emerald-800 mb-1">
                       {milestoneStats.completed_count > 0
                         ? `🏆 ${milestoneStats.completed_count} Milestones Completed • ${milestoneStats.total_xp} XP Earned!`
-                        : "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Start Your Scottish Adventure Journey!"
-                      }
+                        : "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Start Your Scottish Adventure Journey!"}
                     </h3>
                     <p className="text-sm text-emerald-600">
                       {milestoneStats.completed_count > 0
                         ? `🎉 Amazing progress! ${Math.round(milestoneStats.completion_percentage)}% complete • Click to view all milestones →`
-                        : "🌟 Begin exploring Scotland and unlock exciting milestones along the way • Click to view all achievements →"
-                      }
+                        : "🌟 Begin exploring Scotland and unlock exciting milestones along the way • Click to view all achievements →"}
                     </p>
                   </>
                 )}
@@ -866,77 +871,92 @@ export default function Home() {
 
           {/* Dynamic Milestone Progress Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {milestonesLoading ? (
-              // Loading skeleton
-              Array(3).fill(0).map((_, index) => (
-                <Card key={index} className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200/60">
-                  <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 bg-gray-300 animate-pulse rounded-full mx-auto mb-4"></div>
-                    <div className="h-4 bg-gray-300 animate-pulse rounded mb-2"></div>
-                    <div className="h-3 bg-gray-300 animate-pulse rounded mb-3"></div>
-                    <div className="h-6 bg-gray-300 animate-pulse rounded-full w-20 mx-auto"></div>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              // Show top 3 milestones (mix of completed and next available)
-              milestones.slice(0, 3).map((milestone) => {
-                const isCompleted = milestone.progress?.status === 'completed';
-                const isInProgress = milestone.progress?.status === 'in_progress';
-                const progressPercentage = milestone.progressPercentage || 0;
+            {milestonesLoading
+              ? // Loading skeleton
+                Array(3)
+                  .fill(0)
+                  .map((_, index) => (
+                    <Card
+                      key={index}
+                      className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200/60"
+                    >
+                      <CardContent className="p-6 text-center">
+                        <div className="w-16 h-16 bg-gray-300 animate-pulse rounded-full mx-auto mb-4"></div>
+                        <div className="h-4 bg-gray-300 animate-pulse rounded mb-2"></div>
+                        <div className="h-3 bg-gray-300 animate-pulse rounded mb-3"></div>
+                        <div className="h-6 bg-gray-300 animate-pulse rounded-full w-20 mx-auto"></div>
+                      </CardContent>
+                    </Card>
+                  ))
+              : // Show top 3 milestones (mix of completed and next available)
+                milestones.slice(0, 3).map((milestone) => {
+                  const isCompleted =
+                    milestone.progress?.status === "completed";
+                  const isInProgress =
+                    milestone.progress?.status === "in_progress";
+                  const progressPercentage = milestone.progressPercentage || 0;
 
-                // Icon mapping
-                const iconMap: { [key: string]: any } = {
-                  MapPin, Camera, Heart, Calendar, Users
-                };
-                const Icon = iconMap[milestone.icon] || MapPin;
+                  // Icon mapping
+                  const iconMap: { [key: string]: any } = {
+                    MapPin,
+                    Camera,
+                    Heart,
+                    Calendar,
+                    Users,
+                  };
+                  const Icon = iconMap[milestone.icon] || MapPin;
 
-                return (
-                  <Card
-                    key={milestone.id}
-                    className={`bg-gradient-to-br ${milestone.color_scheme.bgColor} border-2 ${milestone.color_scheme.borderColor} hover:shadow-lg transition-all duration-300 ${!isCompleted && !isInProgress ? 'opacity-75' : ''}`}
-                  >
-                    <CardContent className="p-6 text-center">
-                      <div className={`w-16 h-16 bg-gradient-to-r ${milestone.color_scheme.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg ${!isCompleted && !isInProgress ? 'opacity-50' : ''}`}>
-                        <Icon className="w-8 h-8 text-white" />
-                      </div>
-                      <h4 className={`font-bold mb-2 ${isCompleted ? 'text-emerald-800' : isInProgress ? 'text-amber-800' : 'text-gray-600'}`}>
-                        {milestone.title}
-                      </h4>
-                      <p className={`text-sm mb-3 ${isCompleted ? 'text-emerald-600' : isInProgress ? 'text-amber-600' : 'text-gray-500'}`}>
-                        {milestone.description}
-                      </p>
-
-                      {isCompleted && (
-                        <div className="bg-emerald-500 text-white text-xs px-3 py-1 rounded-full inline-block">
-                          ✅ Completed
+                  return (
+                    <Card
+                      key={milestone.id}
+                      className={`bg-gradient-to-br ${milestone.color_scheme.bgColor} border-2 ${milestone.color_scheme.borderColor} hover:shadow-lg transition-all duration-300 ${!isCompleted && !isInProgress ? "opacity-75" : ""}`}
+                    >
+                      <CardContent className="p-6 text-center">
+                        <div
+                          className={`w-16 h-16 bg-gradient-to-r ${milestone.color_scheme.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg ${!isCompleted && !isInProgress ? "opacity-50" : ""}`}
+                        >
+                          <Icon className="w-8 h-8 text-white" />
                         </div>
-                      )}
+                        <h4
+                          className={`font-bold mb-2 ${isCompleted ? "text-emerald-800" : isInProgress ? "text-amber-800" : "text-gray-600"}`}
+                        >
+                          {milestone.title}
+                        </h4>
+                        <p
+                          className={`text-sm mb-3 ${isCompleted ? "text-emerald-600" : isInProgress ? "text-amber-600" : "text-gray-500"}`}
+                        >
+                          {milestone.description}
+                        </p>
 
-                      {isInProgress && (
-                        <div className="space-y-2">
-                          <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
-                            <div
-                              className={`bg-gradient-to-r ${milestone.color_scheme.color} h-full rounded-full transition-all duration-500`}
-                              style={{ width: `${progressPercentage}%` }}
-                            ></div>
+                        {isCompleted && (
+                          <div className="bg-emerald-500 text-white text-xs px-3 py-1 rounded-full inline-block">
+                            ✅ Completed
                           </div>
-                          <div className="bg-amber-500 text-white text-xs px-3 py-1 rounded-full inline-block">
-                            🚀 In Progress
-                          </div>
-                        </div>
-                      )}
+                        )}
 
-                      {!isCompleted && !isInProgress && (
-                        <div className="bg-gray-400 text-white text-xs px-3 py-1 rounded-full inline-block">
-                          🔒 Locked
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })
-            )}
+                        {isInProgress && (
+                          <div className="space-y-2">
+                            <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
+                              <div
+                                className={`bg-gradient-to-r ${milestone.color_scheme.color} h-full rounded-full transition-all duration-500`}
+                                style={{ width: `${progressPercentage}%` }}
+                              ></div>
+                            </div>
+                            <div className="bg-amber-500 text-white text-xs px-3 py-1 rounded-full inline-block">
+                              🚀 In Progress
+                            </div>
+                          </div>
+                        )}
+
+                        {!isCompleted && !isInProgress && (
+                          <div className="bg-gray-400 text-white text-xs px-3 py-1 rounded-full inline-block">
+                            🔒 Locked
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
           </div>
 
           {/* Next Milestone Preview */}
@@ -949,13 +969,16 @@ export default function Home() {
                 Visit 5 different Scottish locations to unlock this achievement!
               </p>
               <div className="bg-amber-100 rounded-full h-3 mb-2 overflow-hidden">
-                <div className="bg-gradient-to-r from-amber-400 to-yellow-500 h-full rounded-full transition-all duration-500" style={{width: '20%'}}></div>
+                <div
+                  className="bg-gradient-to-r from-amber-400 to-yellow-500 h-full rounded-full transition-all duration-500"
+                  style={{ width: "20%" }}
+                ></div>
               </div>
               <p className="text-xs text-amber-600">1 of 5 locations visited</p>
             </div>
 
             <Button
-              onClick={() => window.location.href = '/milestones'}
+              onClick={() => (window.location.href = "/milestones")}
               className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Calendar className="mr-2 h-5 w-5" />

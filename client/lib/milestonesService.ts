@@ -24,7 +24,7 @@ export interface Milestone {
     bgColor: string;
     borderColor: string;
   };
-  milestone_type: 'simple' | 'progress' | 'locked';
+  milestone_type: "simple" | "progress" | "locked";
   target_value?: number;
   requirement_text?: string;
   required_milestone_ids?: string[];
@@ -36,7 +36,7 @@ export interface UserMilestoneProgress {
   id: string;
   user_id: string;
   milestone_id: string;
-  status: 'locked' | 'available' | 'in_progress' | 'completed';
+  status: "locked" | "available" | "in_progress" | "completed";
   current_progress: number;
   completion_date?: string;
   created_at: string;
@@ -89,7 +89,9 @@ export async function getMilestoneCategories(): Promise<MilestoneCategory[]> {
 /**
  * Get all milestones with user progress
  */
-export async function getMilestonesWithProgress(userId: string = 'demo-user'): Promise<MilestoneWithProgress[]> {
+export async function getMilestonesWithProgress(
+  userId: string = "demo-user",
+): Promise<MilestoneWithProgress[]> {
   if (!isSupabaseConfigured()) {
     return getFallbackMilestones();
   }
@@ -100,13 +102,15 @@ export async function getMilestonesWithProgress(userId: string = 'demo-user'): P
     // Get milestones with progress
     const { data: milestones, error: milestonesError } = await supabase
       .from("milestones")
-      .select(`
+      .select(
+        `
         *,
         user_milestone_progress!left(*)
-      `)
-      .eq('user_milestone_progress.user_id', userId)
-      .eq('is_active', true)
-      .order('sort_order');
+      `,
+      )
+      .eq("user_milestone_progress.user_id", userId)
+      .eq("is_active", true)
+      .order("sort_order");
 
     if (milestonesError) {
       console.error("Error fetching milestones:", milestonesError);
@@ -114,14 +118,17 @@ export async function getMilestonesWithProgress(userId: string = 'demo-user'): P
     }
 
     // Transform the data
-    const transformedMilestones: MilestoneWithProgress[] = (milestones || []).map(milestone => {
-      const progress = Array.isArray(milestone.user_milestone_progress) 
-        ? milestone.user_milestone_progress[0] 
+    const transformedMilestones: MilestoneWithProgress[] = (
+      milestones || []
+    ).map((milestone) => {
+      const progress = Array.isArray(milestone.user_milestone_progress)
+        ? milestone.user_milestone_progress[0]
         : milestone.user_milestone_progress;
 
-      const progressPercentage = milestone.target_value && progress?.current_progress 
-        ? (progress.current_progress / milestone.target_value) * 100 
-        : 0;
+      const progressPercentage =
+        milestone.target_value && progress?.current_progress
+          ? (progress.current_progress / milestone.target_value) * 100
+          : 0;
 
       return {
         ...milestone,
@@ -131,7 +138,9 @@ export async function getMilestonesWithProgress(userId: string = 'demo-user'): P
       };
     });
 
-    console.log(`✅ Loaded ${transformedMilestones.length} milestones with progress`);
+    console.log(
+      `✅ Loaded ${transformedMilestones.length} milestones with progress`,
+    );
     return transformedMilestones;
   } catch (error) {
     console.error("Error in getMilestonesWithProgress:", error);
@@ -142,7 +151,9 @@ export async function getMilestonesWithProgress(userId: string = 'demo-user'): P
 /**
  * Get milestone statistics for a user
  */
-export async function getMilestoneStats(userId: string = 'demo-user'): Promise<MilestoneStats> {
+export async function getMilestoneStats(
+  userId: string = "demo-user",
+): Promise<MilestoneStats> {
   if (!isSupabaseConfigured()) {
     return getFallbackStats();
   }
@@ -153,7 +164,7 @@ export async function getMilestoneStats(userId: string = 'demo-user'): Promise<M
     const { data: stats, error } = await supabase
       .from("milestone_leaderboard")
       .select("*")
-      .eq('user_id', userId)
+      .eq("user_id", userId)
       .single();
 
     if (error) {
@@ -183,7 +194,7 @@ export async function getMilestoneStats(userId: string = 'demo-user'): Promise<M
 export async function updateMilestoneProgress(
   userId: string,
   milestoneId: string,
-  progressIncrement: number = 1
+  progressIncrement: number = 1,
 ): Promise<boolean> {
   if (!isSupabaseConfigured()) {
     console.warn("Supabase not configured, cannot update milestone progress");
@@ -191,12 +202,14 @@ export async function updateMilestoneProgress(
   }
 
   try {
-    console.log(`🔄 Updating milestone progress: ${milestoneId} (+${progressIncrement})`);
+    console.log(
+      `🔄 Updating milestone progress: ${milestoneId} (+${progressIncrement})`,
+    );
 
-    const { data, error } = await supabase.rpc('update_milestone_progress', {
+    const { data, error } = await supabase.rpc("update_milestone_progress", {
       p_user_id: userId,
       p_milestone_id: milestoneId,
-      p_progress_increment: progressIncrement
+      p_progress_increment: progressIncrement,
     });
 
     if (error) {
@@ -217,7 +230,7 @@ export async function updateMilestoneProgress(
  */
 export function subscribeToMilestoneUpdates(
   userId: string,
-  callback: (milestones: MilestoneWithProgress[]) => void
+  callback: (milestones: MilestoneWithProgress[]) => void,
 ) {
   if (!isSupabaseConfigured()) {
     console.warn("Supabase not configured, skipping milestone subscription");
@@ -237,7 +250,10 @@ export function subscribeToMilestoneUpdates(
         filter: `user_id=eq.${userId}`,
       },
       async (payload) => {
-        console.log("📡 Real-time milestone progress change detected:", payload.eventType);
+        console.log(
+          "📡 Real-time milestone progress change detected:",
+          payload.eventType,
+        );
 
         try {
           const milestones = await getMilestonesWithProgress(userId);
@@ -246,7 +262,7 @@ export function subscribeToMilestoneUpdates(
         } catch (error) {
           console.error("Error in milestone progress subscription:", error);
         }
-      }
+      },
     )
     .subscribe((status) => {
       console.log("📡 Milestone progress subscription status:", status);
@@ -346,7 +362,8 @@ function getFallbackMilestones(): MilestoneWithProgress[] {
     {
       id: "first-adventure",
       title: "First Adventure",
-      description: "Record your first journal entry to start your Scottish exploration journey",
+      description:
+        "Record your first journal entry to start your Scottish exploration journey",
       category_id: "exploration",
       icon: "MapPin",
       xp_reward: 100,

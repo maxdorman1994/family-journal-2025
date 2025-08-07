@@ -54,18 +54,27 @@ export default function Milestones() {
         // Load all data in parallel
         const [categoriesData, milestonesData, statsData] = await Promise.all([
           getMilestoneCategories(),
-          getMilestonesWithProgress('demo-user'),
-          getMilestoneStats('demo-user'),
+          getMilestonesWithProgress("demo-user"),
+          getMilestoneStats("demo-user"),
         ]);
 
-        setCategories([{ id: "all", name: "All", icon: "Star" }, ...categoriesData]);
+        setCategories([
+          { id: "all", name: "All", icon: "Star" },
+          ...categoriesData,
+        ]);
         setMilestones(milestonesData);
         setStats(statsData);
 
-        console.log(`✅ Loaded milestone data: ${milestonesData.length} milestones, ${statsData.total_xp} XP`);
+        console.log(
+          `✅ Loaded milestone data: ${milestonesData.length} milestones, ${statsData.total_xp} XP`,
+        );
       } catch (error) {
         console.error("Error loading milestone data:", error);
-        setError(error instanceof Error ? error.message : "Failed to load milestone data");
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Failed to load milestone data",
+        );
       } finally {
         setIsLoading(false);
       }
@@ -74,32 +83,57 @@ export default function Milestones() {
     loadMilestoneData();
 
     // Set up real-time subscription
-    const unsubscribe = subscribeToMilestoneUpdates('demo-user', (updatedMilestones) => {
-      setMilestones(updatedMilestones);
-      // Recalculate stats
-      getMilestoneStats('demo-user').then(setStats);
-    });
+    const unsubscribe = subscribeToMilestoneUpdates(
+      "demo-user",
+      (updatedMilestones) => {
+        setMilestones(updatedMilestones);
+        // Recalculate stats
+        getMilestoneStats("demo-user").then(setStats);
+      },
+    );
 
     return unsubscribe;
   }, []);
 
   // Split milestones by status
-  const completedMilestones = milestones.filter(m => m.progress?.status === 'completed');
-  const inProgressMilestones = milestones.filter(m => m.progress?.status === 'in_progress');
-  const lockedMilestones = milestones.filter(m => !m.progress || m.progress.status === 'locked');
+  const completedMilestones = milestones.filter(
+    (m) => m.progress?.status === "completed",
+  );
+  const inProgressMilestones = milestones.filter(
+    (m) => m.progress?.status === "in_progress",
+  );
+  const lockedMilestones = milestones.filter(
+    (m) => !m.progress || m.progress.status === "locked",
+  );
 
   // Helper function to get the correct icon component
   const getIconComponent = (iconName: string) => {
     const iconMap: { [key: string]: any } = {
-      MapPin, Camera, Heart, Trophy, Star, Mountain, Users, Target,
-      CheckCircle, Lock, Award, Zap, Map, Eye, Calendar
+      MapPin,
+      Camera,
+      Heart,
+      Trophy,
+      Star,
+      Mountain,
+      Users,
+      Target,
+      CheckCircle,
+      Lock,
+      Award,
+      Zap,
+      Map,
+      Eye,
+      Calendar,
     };
     return iconMap[iconName] || MapPin;
   };
 
-  const filterMilestones = (milestones: MilestoneWithProgress[], category: string) => {
+  const filterMilestones = (
+    milestones: MilestoneWithProgress[],
+    category: string,
+  ) => {
     if (category === "all") return milestones;
-    return milestones.filter(m => m.category_id === category);
+    return milestones.filter((m) => m.category_id === category);
   };
 
   // Show loading state
@@ -108,7 +142,9 @@ export default function Milestones() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vibrant-blue mx-auto mb-4"></div>
-          <h2 className="text-xl font-semibold text-muted-foreground">Loading Milestones...</h2>
+          <h2 className="text-xl font-semibold text-muted-foreground">
+            Loading Milestones...
+          </h2>
         </div>
       </div>
     );
@@ -121,10 +157,7 @@ export default function Milestones() {
         <div className="text-center">
           <div className="text-red-500 mb-4">❌ Error loading milestones</div>
           <p className="text-muted-foreground">{error}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            className="mt-4"
-          >
+          <Button onClick={() => window.location.reload()} className="mt-4">
             Retry
           </Button>
         </div>
@@ -142,7 +175,8 @@ export default function Milestones() {
           </span>
         </h1>
         <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-          Track your progress, celebrate achievements, and unlock new adventures as you explore Scotland!
+          Track your progress, celebrate achievements, and unlock new adventures
+          as you explore Scotland!
         </p>
 
         {/* Progress Overview */}
@@ -152,7 +186,9 @@ export default function Milestones() {
               <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Trophy className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-emerald-800 mb-1">{stats.completed_count}</h3>
+              <h3 className="text-2xl font-bold text-emerald-800 mb-1">
+                {stats.completed_count}
+              </h3>
               <p className="text-sm text-emerald-600">Completed Milestones</p>
             </CardContent>
           </Card>
@@ -162,7 +198,9 @@ export default function Milestones() {
               <div className="w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-amber-800 mb-1">{stats.total_xp}</h3>
+              <h3 className="text-2xl font-bold text-amber-800 mb-1">
+                {stats.total_xp}
+              </h3>
               <p className="text-sm text-amber-600">Total XP Earned</p>
             </CardContent>
           </Card>
@@ -172,7 +210,9 @@ export default function Milestones() {
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Target className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-blue-800 mb-1">{Math.round(stats.completion_percentage)}%</h3>
+              <h3 className="text-2xl font-bold text-blue-800 mb-1">
+                {Math.round(stats.completion_percentage)}%
+              </h3>
               <p className="text-sm text-blue-600">Progress Complete</p>
             </CardContent>
           </Card>
@@ -210,39 +250,54 @@ export default function Milestones() {
             </span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filterMilestones(completedMilestones, selectedCategory).map((milestone) => {
-              const Icon = getIconComponent(milestone.icon);
-              const colorScheme = milestone.color_scheme;
-              return (
-                <Card
-                  key={milestone.id}
-                  className={`bg-gradient-to-br ${colorScheme.bgColor} border-2 ${colorScheme.borderColor} hover:shadow-lg transition-all duration-300 relative overflow-hidden`}
-                >
-                  <div className="absolute top-2 right-2">
-                    <CheckCircle className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <CardContent className="p-6">
-                    <div className={`w-16 h-16 bg-gradient-to-r ${colorScheme.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
-                      <Icon className="w-8 h-8 text-white" />
+            {filterMilestones(completedMilestones, selectedCategory).map(
+              (milestone) => {
+                const Icon = getIconComponent(milestone.icon);
+                const colorScheme = milestone.color_scheme;
+                return (
+                  <Card
+                    key={milestone.id}
+                    className={`bg-gradient-to-br ${colorScheme.bgColor} border-2 ${colorScheme.borderColor} hover:shadow-lg transition-all duration-300 relative overflow-hidden`}
+                  >
+                    <div className="absolute top-2 right-2">
+                      <CheckCircle className="w-6 h-6 text-emerald-600" />
                     </div>
-                    <h3 className="font-bold text-lg mb-2 text-center">{milestone.title}</h3>
-                    <p className="text-sm text-gray-600 mb-4 text-center">{milestone.description}</p>
-                    <div className="text-center space-y-2">
-                      <div className="bg-emerald-500 text-white text-xs px-3 py-1 rounded-full inline-block">
-                        ✅ Completed
+                    <CardContent className="p-6">
+                      <div
+                        className={`w-16 h-16 bg-gradient-to-r ${colorScheme.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}
+                      >
+                        <Icon className="w-8 h-8 text-white" />
                       </div>
-                      <p className="text-xs text-gray-500">
-                        Completed on {milestone.dateCompleted ? new Date(milestone.dateCompleted).toLocaleDateString() : 'N/A'}
+                      <h3 className="font-bold text-lg mb-2 text-center">
+                        {milestone.title}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-4 text-center">
+                        {milestone.description}
                       </p>
-                      <div className="flex items-center justify-center gap-1">
-                        <Zap className="w-4 h-4 text-amber-500" />
-                        <span className="text-sm font-medium text-amber-700">+{milestone.xp_reward} XP</span>
+                      <div className="text-center space-y-2">
+                        <div className="bg-emerald-500 text-white text-xs px-3 py-1 rounded-full inline-block">
+                          ✅ Completed
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          Completed on{" "}
+                          {milestone.dateCompleted
+                            ? new Date(
+                                milestone.dateCompleted,
+                              ).toLocaleDateString()
+                            : "N/A"}
+                        </p>
+                        <div className="flex items-center justify-center gap-1">
+                          <Zap className="w-4 h-4 text-amber-500" />
+                          <span className="text-sm font-medium text-amber-700">
+                            +{milestone.xp_reward} XP
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    </CardContent>
+                  </Card>
+                );
+              },
+            )}
           </div>
         </section>
       )}
@@ -256,42 +311,53 @@ export default function Milestones() {
             </span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filterMilestones(inProgressMilestones, selectedCategory).map((milestone) => {
-              const Icon = getIconComponent(milestone.icon);
-              const colorScheme = milestone.color_scheme;
-              const progressPercentage = milestone.progressPercentage || 0;
-              const currentProgress = milestone.progress?.current_progress || 0;
-              const targetValue = milestone.target_value || 1;
-              return (
-                <Card
-                  key={milestone.id}
-                  className={`bg-gradient-to-br ${colorScheme.bgColor} border-2 ${colorScheme.borderColor} hover:shadow-lg transition-all duration-300`}
-                >
-                  <CardContent className="p-6">
-                    <div className={`w-16 h-16 bg-gradient-to-r ${colorScheme.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
-                      <Icon className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="font-bold text-lg mb-2 text-center">{milestone.title}</h3>
-                    <p className="text-sm text-gray-600 mb-4 text-center">{milestone.description}</p>
-                    <div className="space-y-3">
-                      <div className="bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div
-                          className={`bg-gradient-to-r ${colorScheme.color} h-full rounded-full transition-all duration-500`}
-                          style={{ width: `${progressPercentage}%` }}
-                        ></div>
+            {filterMilestones(inProgressMilestones, selectedCategory).map(
+              (milestone) => {
+                const Icon = getIconComponent(milestone.icon);
+                const colorScheme = milestone.color_scheme;
+                const progressPercentage = milestone.progressPercentage || 0;
+                const currentProgress =
+                  milestone.progress?.current_progress || 0;
+                const targetValue = milestone.target_value || 1;
+                return (
+                  <Card
+                    key={milestone.id}
+                    className={`bg-gradient-to-br ${colorScheme.bgColor} border-2 ${colorScheme.borderColor} hover:shadow-lg transition-all duration-300`}
+                  >
+                    <CardContent className="p-6">
+                      <div
+                        className={`w-16 h-16 bg-gradient-to-r ${colorScheme.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}
+                      >
+                        <Icon className="w-8 h-8 text-white" />
                       </div>
-                      <p className="text-center text-sm font-medium">
-                        {currentProgress} / {targetValue}
+                      <h3 className="font-bold text-lg mb-2 text-center">
+                        {milestone.title}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-4 text-center">
+                        {milestone.description}
                       </p>
-                      <div className="flex items-center justify-center gap-1">
-                        <Zap className="w-4 h-4 text-amber-500" />
-                        <span className="text-sm font-medium text-amber-700">+{milestone.xp_reward} XP</span>
+                      <div className="space-y-3">
+                        <div className="bg-gray-200 rounded-full h-3 overflow-hidden">
+                          <div
+                            className={`bg-gradient-to-r ${colorScheme.color} h-full rounded-full transition-all duration-500`}
+                            style={{ width: `${progressPercentage}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-center text-sm font-medium">
+                          {currentProgress} / {targetValue}
+                        </p>
+                        <div className="flex items-center justify-center gap-1">
+                          <Zap className="w-4 h-4 text-amber-500" />
+                          <span className="text-sm font-medium text-amber-700">
+                            +{milestone.xp_reward} XP
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    </CardContent>
+                  </Card>
+                );
+              },
+            )}
           </div>
         </section>
       )}
@@ -305,37 +371,49 @@ export default function Milestones() {
             </span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filterMilestones(lockedMilestones, selectedCategory).map((milestone) => {
-              const Icon = getIconComponent(milestone.icon);
-              const colorScheme = milestone.color_scheme;
-              return (
-                <Card
-                  key={milestone.id}
-                  className={`bg-gradient-to-br ${colorScheme.bgColor} border-2 ${colorScheme.borderColor} opacity-75 relative`}
-                >
-                  <div className="absolute top-2 right-2">
-                    <Lock className="w-6 h-6 text-gray-500" />
-                  </div>
-                  <CardContent className="p-6">
-                    <div className={`w-16 h-16 bg-gradient-to-r ${colorScheme.color} rounded-full flex items-center justify-center mx-auto mb-4 opacity-50`}>
-                      <Icon className="w-8 h-8 text-white" />
+            {filterMilestones(lockedMilestones, selectedCategory).map(
+              (milestone) => {
+                const Icon = getIconComponent(milestone.icon);
+                const colorScheme = milestone.color_scheme;
+                return (
+                  <Card
+                    key={milestone.id}
+                    className={`bg-gradient-to-br ${colorScheme.bgColor} border-2 ${colorScheme.borderColor} opacity-75 relative`}
+                  >
+                    <div className="absolute top-2 right-2">
+                      <Lock className="w-6 h-6 text-gray-500" />
                     </div>
-                    <h3 className="font-bold text-lg mb-2 text-center text-gray-500">{milestone.title}</h3>
-                    <p className="text-sm text-gray-400 mb-4 text-center">{milestone.description}</p>
-                    <div className="text-center space-y-2">
-                      <div className="bg-gray-400 text-white text-xs px-3 py-1 rounded-full inline-block">
-                        🔒 Locked
+                    <CardContent className="p-6">
+                      <div
+                        className={`w-16 h-16 bg-gradient-to-r ${colorScheme.color} rounded-full flex items-center justify-center mx-auto mb-4 opacity-50`}
+                      >
+                        <Icon className="w-8 h-8 text-white" />
                       </div>
-                      <p className="text-xs text-gray-500">{milestone.requirement_text}</p>
-                      <div className="flex items-center justify-center gap-1 opacity-50">
-                        <Zap className="w-4 h-4 text-amber-500" />
-                        <span className="text-sm font-medium text-amber-700">+{milestone.xp_reward} XP</span>
+                      <h3 className="font-bold text-lg mb-2 text-center text-gray-500">
+                        {milestone.title}
+                      </h3>
+                      <p className="text-sm text-gray-400 mb-4 text-center">
+                        {milestone.description}
+                      </p>
+                      <div className="text-center space-y-2">
+                        <div className="bg-gray-400 text-white text-xs px-3 py-1 rounded-full inline-block">
+                          🔒 Locked
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          {milestone.requirement_text}
+                        </p>
+                        <div className="flex items-center justify-center gap-1 opacity-50">
+                          <Zap className="w-4 h-4 text-amber-500" />
+                          <span className="text-sm font-medium text-amber-700">
+                            +{milestone.xp_reward} XP
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    </CardContent>
+                  </Card>
+                );
+              },
+            )}
           </div>
         </section>
       )}
@@ -349,19 +427,21 @@ export default function Milestones() {
           </span>
         </h2>
         <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-          Continue your Scottish adventure to unlock new milestones and earn XP. Every journey creates memories and brings you closer to becoming a true Highland Explorer!
+          Continue your Scottish adventure to unlock new milestones and earn XP.
+          Every journey creates memories and brings you closer to becoming a
+          true Highland Explorer!
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             className="bg-gradient-to-r from-vibrant-blue to-scotland-loch hover:from-vibrant-blue/90 hover:to-scotland-loch/90"
-            onClick={() => window.location.href = '/journal'}
+            onClick={() => (window.location.href = "/journal")}
           >
             <Eye className="mr-2 h-5 w-5" />
             Add Journal Entry
           </Button>
           <Button
             variant="outline"
-            onClick={() => window.location.href = '/gallery'}
+            onClick={() => (window.location.href = "/gallery")}
           >
             <Camera className="mr-2 h-5 w-5" />
             Upload Photos

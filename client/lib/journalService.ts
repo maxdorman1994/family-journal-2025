@@ -59,7 +59,7 @@ export async function createJournalEntry(
 
     // Update milestones based on the new journal entry
     try {
-      await updateMilestonesFromJournalEntry(entry, 'demo-user', true);
+      await updateMilestonesFromJournalEntry(entry, "demo-user", true);
       console.log("✅ Milestones updated from new journal entry");
     } catch (milestoneError) {
       console.error("Error updating milestones:", milestoneError);
@@ -212,7 +212,7 @@ export async function updateJournalEntry(
 
   // Update milestones based on the updated journal entry
   try {
-    await updateMilestonesFromJournalEntry(entry, 'demo-user', false);
+    await updateMilestonesFromJournalEntry(entry, "demo-user", false);
     console.log("✅ Milestones updated from journal entry update");
   } catch (milestoneError) {
     console.error("Error updating milestones:", milestoneError);
