@@ -936,10 +936,10 @@ export default function Home() {
                 key={member.id}
                 className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
               >
-                <CardContent className="p-6">
-                  <div className="relative group w-34 h-34 mx-auto mb-4">
+                <CardContent className="p-8">
+                  <div className="relative group w-40 h-40 mx-auto mb-6">
                     <div
-                      className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
+                      className={`w-full h-full rounded-full overflow-hidden border-4 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-xl`}
                     >
                       <div className="w-full h-full rounded-full overflow-hidden bg-white">
                         <img
@@ -956,38 +956,38 @@ export default function Home() {
 
                     {/* Edit overlay */}
                     <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="flex gap-1">
+                      <div className="flex gap-2">
                         <Button
                           size="sm"
                           variant="secondary"
-                          className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
+                          className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
                           onClick={() => handlePhotoEdit(member.id)}
                           disabled={isUploading}
                         >
-                          <Edit className="h-3 w-3" />
+                          <Edit className="h-4 w-4" />
                         </Button>
                         {member.avatar_url &&
                           member.avatar_url !== "/placeholder.svg" && (
                             <Button
                               size="sm"
                               variant="destructive"
-                              className="h-7 w-7 p-0 bg-red-500/90 hover:bg-red-600"
+                              className="h-8 w-8 p-0 bg-red-500/90 hover:bg-red-600"
                               onClick={() => handlePhotoRemove(member.id)}
                               disabled={isUploading}
                             >
-                              <X className="h-3 w-3" />
+                              <X className="h-4 w-4" />
                             </Button>
                           )}
                       </div>
                     </div>
                   </div>
-                  <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                  <h3 className="font-semibold text-xl text-gray-800 mb-3">
                     {member.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground font-medium mb-3">
+                  <p className="text-base text-muted-foreground font-medium mb-4">
                     {member.role}
                   </p>
-                  <p className="text-xs text-slate-600 leading-relaxed">
+                  <p className="text-sm text-slate-600 leading-relaxed">
                     {member.bio}
                   </p>
                 </CardContent>
@@ -1970,7 +1970,7 @@ export default function Home() {
               <div className="flex justify-center gap-2 opacity-60">
                 <span className="text-red-600">📺</span>
                 <span className="text-pink-600">🎥</span>
-                <span className="text-red-600">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+                <span className="text-red-600">🏴����󠁢󠁳󠁣󠁴󠁿</span>
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
