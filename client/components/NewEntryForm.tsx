@@ -58,7 +58,7 @@ const moodOptions = [
   { value: "🤩 Amazed", label: "🤩 Amazed" },
   { value: "😄 Happy", label: "😄 Happy" },
   { value: "😊 Content", label: "😊 Content" },
-  { value: "���� Loved", label: "🥰 Loved" },
+  { value: "🥰 Loved", label: "🥰 Loved" },
   { value: "😴 Tired", label: "😴 Tired" },
   { value: "🤗 Blessed", label: "🤗 Blessed" },
 ];
@@ -434,9 +434,9 @@ export default function NewEntryForm({
                       Pet Notes & Requirements
                     </label>
                     <Input
-                      value={formData.petNotes}
+                      value={formData.pet_notes}
                       onChange={(e) =>
-                        handleInputChange("petNotes", e.target.value)
+                        handleInputChange("pet_notes", e.target.value)
                       }
                       placeholder="e.g., Dogs must be kept on leads, £2 dog entry fee, water bowls available"
                     />
