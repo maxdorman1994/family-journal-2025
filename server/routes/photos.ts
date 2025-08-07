@@ -10,8 +10,8 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024, // 10MB limit for Cloudflare Images
   },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/gif', 'image/svg+xml'];
-    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.heic', '.gif', '.svg'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
     const fileExtension = path.extname(file.originalname).toLowerCase();
 
     if (allowedTypes.includes(file.mimetype) || allowedExtensions.includes(fileExtension)) {
