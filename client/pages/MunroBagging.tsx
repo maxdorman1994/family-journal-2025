@@ -95,25 +95,44 @@ export default function MunroBagging() {
     return matchesFilter && matchesRegion && matchesDifficulty && matchesSearch;
   });
 
-  const toggleMunroComplete = (munroId: string) => {
-    setMunros(prev => {
-      const updatedMunros = prev.map(munro =>
-        munro.id === munroId
-          ? {
-              ...munro,
-              completed: !munro.completed,
-              completedDate: !munro.completed ? new Date().toISOString().split('T')[0] : undefined,
-              photoCount: !munro.completed ? Math.floor(Math.random() * 5) + 1 : 0
-            }
-          : munro
-      );
+  const toggleMunroComplete = async (munroId: string) => {
+    const munro = munros.find(m => m.id === munroId);
+    if (!munro) return;
 
-      // Save completed IDs to localStorage
-      const completedIds = updatedMunros.filter(m => m.completed).map(m => m.id);
-      localStorage.setItem('munro-completions', JSON.stringify(completedIds));
+    try {
+      if (munro.completed) {
+        // Uncomplete the Munro
+        await uncompleteMunro(munroId);
+        console.log(`✅ Munro ${munro.name} marked as not completed`);
+      } else {
+        // Complete the Munro
+        await completeMunro({
+          munro_id: munroId,
+          completed_date: new Date().toISOString().split('T')[0],
+          notes: `Completed ${munro.name} - what an adventure!`,
+          photo_count: Math.floor(Math.random() * 5) + 1,
+          weather_conditions: 'Perfect climbing conditions',
+          climbing_time: munro.estimated_time
+        });
+        console.log(`✅ Munro ${munro.name} marked as completed`);
+      }
 
-      return updatedMunros;
-    });
+      // Reload data to get updated state
+      await loadMunrosData();
+
+    } catch (error) {
+      console.error('Error toggling Munro completion:', error);
+      setError('Failed to update Munro completion status');
+    }
+  };
+
+  const testConnection = async () => {
+    try {
+      const result = await testMunroConnection();
+      setError(result.success ? `✅ ${result.message}` : `❌ ${result.message}: ${result.error}`);
+    } catch (error) {
+      setError(`❌ Connection test failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
   };
 
   const getDifficultyColor = (difficulty: string) => {
