@@ -113,6 +113,21 @@ export default function MunroBagging() {
 
   const regions = getAllRegions();
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-lg animate-pulse">
+            <Database className="h-8 w-8 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">Loading All 282 Munros</h3>
+          <p className="text-slate-600">Preparing your Scottish mountain adventure...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 relative overflow-hidden">
       {/* Decorative Background Elements */}
