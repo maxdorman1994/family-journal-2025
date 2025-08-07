@@ -158,34 +158,50 @@ export default function NewEntryForm({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit(formData);
+      try {
+        setIsSubmitting(true);
 
-      // Clean up photo preview URLs
-      cleanupPreviewUrls(formData.photos);
+        // Check if we have photos that need uploading
+        const photosNeedUploading = formData.photos.some(photo => !photo.cloudflareUrl);
+        if (photosNeedUploading) {
+          console.log('Photos detected, will upload during entry creation...');
+        }
 
-      // Reset form
-      setFormData({
-        title: "",
-        date: new Date().toISOString().split("T")[0],
-        location: "",
-        weather: "",
-        mood: "",
-        miles_traveled: "",
-        parking: "",
-        dog_friendly: false,
-        paid_activity: false,
-        adult_tickets: "",
-        child_tickets: "",
-        other_tickets: "",
-        pet_notes: "",
-        content: "",
-        tags: [],
-        photos: [],
-      });
-      onClose();
+        // Submit the form data (photos will be uploaded in handleNewEntry)
+        await onSubmit(formData);
+
+        // Clean up photo preview URLs only after successful submission
+        cleanupPreviewUrls(formData.photos);
+
+        // Reset form
+        setFormData({
+          title: "",
+          date: new Date().toISOString().split("T")[0],
+          location: "",
+          weather: "",
+          mood: "",
+          miles_traveled: "",
+          parking: "",
+          dog_friendly: false,
+          paid_activity: false,
+          adult_tickets: "",
+          child_tickets: "",
+          other_tickets: "",
+          pet_notes: "",
+          content: "",
+          tags: [],
+          photos: [],
+        });
+        onClose();
+      } catch (error) {
+        console.error('Failed to submit entry:', error);
+        setErrors({ submit: 'Failed to save entry. Please try again.' });
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
