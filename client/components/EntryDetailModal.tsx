@@ -59,7 +59,7 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="flex items-center text-sm text-gray-600">
                   <Route className="mr-2 h-4 w-4 text-vibrant-blue" />
-                  <span className="font-medium">{entry.milesTraveled} miles traveled</span>
+                  <span className="font-medium">{entry.miles_traveled} miles traveled</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Car className="mr-2 h-4 w-4 text-scotland-forest" />
@@ -68,29 +68,29 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
                 <div className="flex items-center text-sm text-gray-600">
                   <Dog className="mr-2 h-4 w-4 text-vibrant-pink" />
                   <span className="font-medium">
-                    {entry.dogFriendly ? "🐕 Dog friendly" : "❌ No dogs"}
+                    {entry.dog_friendly ? "🐕 Dog friendly" : "❌ No dogs"}
                   </span>
                 </div>
               </div>
 
               {/* Pet Notes */}
-              {entry.dogFriendly && entry.petNotes && (
+              {entry.dog_friendly && entry.pet_notes && (
                 <div className="mt-4 text-sm text-gray-600 italic border-l-2 border-vibrant-pink pl-3 bg-white/50 p-3 rounded">
-                  <span className="font-medium">Pet info: </span>{entry.petNotes}
+                  <span className="font-medium">Pet info: </span>{entry.pet_notes}
                 </div>
               )}
 
               {/* Ticket Information */}
-              {entry.paidActivity && (entry.adultTickets || entry.childTickets || entry.otherTickets) && (
+              {entry.paid_activity && (entry.adult_tickets || entry.child_tickets || entry.other_tickets) && (
                 <div className="mt-4 text-sm text-gray-600 border-l-2 border-vibrant-blue pl-3 bg-white/50 p-3 rounded">
                   <span className="font-medium flex items-center mb-2">
                     <Ticket className="mr-1 h-3 w-3" />
                     Tickets:
                   </span>
                   <div className="space-y-1">
-                    {entry.adultTickets && <div><strong>Adults:</strong> {entry.adultTickets}</div>}
-                    {entry.childTickets && <div><strong>Children:</strong> {entry.childTickets}</div>}
-                    {entry.otherTickets && <div><strong>Other:</strong> {entry.otherTickets}</div>}
+                    {entry.adult_tickets && <div><strong>Adults:</strong> {entry.adult_tickets}</div>}
+                    {entry.child_tickets && <div><strong>Children:</strong> {entry.child_tickets}</div>}
+                    {entry.other_tickets && <div><strong>Other:</strong> {entry.other_tickets}</div>}
                   </div>
                 </div>
               )}
