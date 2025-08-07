@@ -74,6 +74,23 @@ export default function Home() {
     }
   };
 
+  const loadRecentAdventures = async () => {
+    try {
+      setAdventuresLoading(true);
+      console.log('🏔️ Loading real recent adventures...');
+
+      const adventures = await getRecentAdventuresWithFallback();
+      setRecentAdventures(adventures);
+
+      console.log('✅ Recent adventures loaded:', adventures.length, 'adventures');
+    } catch (error) {
+      console.error('Error loading recent adventures:', error);
+      // Fallback is handled in the service
+    } finally {
+      setAdventuresLoading(false);
+    }
+  };
+
   // Load family members data and setup real-time sync
   useEffect(() => {
     loadFamilyMembersData();
