@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Heart, MapPin, Star, Calendar, DollarSign, Users, Plus, X, Edit, Check, Clock, Camera, Mountain, Car, Plane, Train, Home, Utensils, AlertCircle, Sparkles, Target, TrendingUp, BookOpen, Search, Filter, Eye, MoreHorizontal } from "lucide-react";
+import { Heart, MapPin, Star, Calendar, DollarSign, Users, Plus, X, Edit, Check, Clock, Camera, Mountain, Car, Plane, Train, Home, Utensils, AlertCircle, Sparkles, Target, TrendingUp, BookOpen, Search, Filter, Eye, MoreHorizontal, Loader2, Database, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,24 +7,20 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-interface WishlistItem {
-  id: string;
-  title: string;
-  location: string;
-  description: string;
-  priority: 'High' | 'Medium' | 'Low';
-  status: 'Planning' | 'Researching' | 'Ready' | 'Booked';
-  estimatedCost: number;
-  bestSeasons: string[];
-  duration: string;
-  category: 'Mountain' | 'Coast' | 'City' | 'Island' | 'Castle' | 'Nature' | 'Activity';
-  familyVotes: number;
-  notes: string;
-  createdDate: string;
-  targetDate?: string;
-  researched: boolean;
-}
+import {
+  getWishlistItems,
+  createWishlistItem,
+  deleteWishlistItem,
+  updateWishlistItem,
+  addVoteToItem,
+  removeVoteFromItem,
+  toggleResearchStatus,
+  getWishlistStats,
+  subscribeToWishlistItems,
+  testWishlistConnection,
+  WishlistItem,
+  CreateWishlistItemData
+} from "@/lib/wishlistService";
 
 export default function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
@@ -35,187 +31,292 @@ export default function Wishlist() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [editingItem, setEditingItem] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'priority' | 'votes' | 'cost' | 'date'>('priority');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState({
+    total_items: 0,
+    total_budget: 0,
+    average_votes: 0,
+    ready_items: 0
+  });
 
-  const [newItem, setNewItem] = useState<Partial<WishlistItem>>({
+  const [newItem, setNewItem] = useState<Partial<CreateWishlistItemData>>({
     title: '',
     location: '',
     description: '',
     priority: 'Medium',
     status: 'Planning',
-    estimatedCost: 500,
-    bestSeasons: ['Summer'],
+    estimated_cost: 500,
+    best_seasons: ['Summer'],
     duration: '3-4 days',
     category: 'Mountain',
-    familyVotes: 0,
-    notes: '',
-    researched: false
+    notes: ''
   });
 
-  // Load sample data
+  // Load wishlist data and setup real-time sync
   useEffect(() => {
-    loadSampleWishlist();
+    loadWishlistData();
+
+    // Setup real-time subscription
+    const unsubscribe = subscribeToWishlistItems((items) => {
+      setWishlistItems(items);
+      updateLocalStats(items);
+    });
+
+    return unsubscribe;
   }, []);
 
-  const loadSampleWishlist = () => {
-    const sampleItems: WishlistItem[] = [
-      {
-        id: '1',
-        title: 'Isle of Skye Adventure',
-        location: 'Isle of Skye, Scotland',
-        description: 'Explore the dramatic landscapes, fairy pools, and ancient castles of Skye',
-        priority: 'High',
-        status: 'Researching',
-        estimatedCost: 1200,
-        bestSeasons: ['Spring', 'Summer', 'Autumn'],
-        duration: '5-7 days',
-        category: 'Island',
-        familyVotes: 5,
-        notes: 'Need to book accommodation early. Check ferry times. Visit Fairy Pools and Old Man of Storr.',
-        createdDate: '2024-01-15',
-        targetDate: '2024-07-15',
-        researched: true
-      },
-      {
-        id: '2', 
-        title: 'Ben Nevis Summit Challenge',
-        location: 'Lochaber, Scotland',
-        description: 'Conquer Scotland\'s highest peak as a family adventure',
-        priority: 'High',
-        status: 'Planning',
-        estimatedCost: 600,
-        bestSeasons: ['Summer'],
-        duration: '2-3 days',
-        category: 'Mountain',
-        familyVotes: 4,
-        notes: 'Need proper hiking gear. Check weather conditions. Book accommodation in Fort William.',
-        createdDate: '2024-01-20',
-        researched: false
-      },
-      {
-        id: '3',
-        title: 'Edinburgh Festival Fringe',
-        location: 'Edinburgh, Scotland',
-        description: 'Experience the world\'s largest arts festival with family-friendly shows',
-        priority: 'Medium',
-        status: 'Ready',
-        estimatedCost: 800,
-        bestSeasons: ['Summer'],
-        duration: '4-5 days',
-        category: 'City',
-        familyVotes: 3,
-        notes: 'Book shows in advance. Consider Royal Mile walking tour. Visit Edinburgh Castle.',
-        createdDate: '2024-02-01',
-        targetDate: '2024-08-10',
-        researched: true
-      },
-      {
-        id: '4',
-        title: 'Loch Ness & Highlands Tour',
-        location: 'Scottish Highlands',
-        description: 'Scenic drive through the Highlands with Loch Ness monster hunting',
-        priority: 'Medium',
-        status: 'Planning',
-        estimatedCost: 900,
-        bestSeasons: ['Spring', 'Summer', 'Autumn'],
-        duration: '4-6 days',
-        category: 'Nature',
-        familyVotes: 4,
-        notes: 'Rent a car. Book Loch Ness cruise. Visit Urquhart Castle. Stop at whisky distillery.',
-        createdDate: '2024-02-10',
-        researched: false
-      },
-      {
-        id: '5',
-        title: 'Orkney Islands Exploration',
-        location: 'Orkney, Scotland',
-        description: 'Discover ancient history, stunning coastlines, and unique wildlife',
-        priority: 'Low',
-        status: 'Researching',
-        estimatedCost: 1000,
-        bestSeasons: ['Summer'],
-        duration: '6-8 days',
-        category: 'Island',
-        familyVotes: 2,
-        notes: 'Ferry from mainland. Visit Skara Brae. Check puffin viewing seasons.',
-        createdDate: '2024-02-15',
-        researched: true
+  const loadWishlistData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      console.log('🔄 Loading wishlist from Supabase...');
+      const [items, statsData] = await Promise.all([
+        getWishlistItems(),
+        getWishlistStats()
+      ]);
+
+      setWishlistItems(items);
+      setStats(statsData);
+
+      console.log(`✅ Loaded ${items.length} wishlist items successfully`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn('Failed to load from Supabase, using fallback:', errorMessage);
+
+      // Set appropriate error message
+      if (errorMessage.includes('not configured')) {
+        setError('📝 Development Mode: Supabase not configured - using local data');
+      } else if (errorMessage.includes('Could not find the table') || errorMessage.includes('relation "wishlist_items" does not exist')) {
+        setError('🎯 Database Setup Required: Please run the Wishlist SQL schema - using local data');
+      } else {
+        setError(`⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`);
       }
-    ];
-    setWishlistItems(sampleItems);
+
+      // Fallback to sample data
+      const fallbackItems: WishlistItem[] = [
+        {
+          id: '1',
+          title: 'Isle of Skye Adventure',
+          location: 'Isle of Skye, Scotland',
+          description: 'Explore the dramatic landscapes, fairy pools, and ancient castles of Skye',
+          priority: 'High',
+          status: 'Researching',
+          estimated_cost: 1200,
+          best_seasons: ['Spring', 'Summer', 'Autumn'],
+          duration: '5-7 days',
+          category: 'Island',
+          family_votes: 5,
+          notes: 'Need to book accommodation early. Check ferry times. Visit Fairy Pools and Old Man of Storr.',
+          target_date: '2024-07-15',
+          researched: true,
+          created_at: '2024-01-15'
+        }
+      ];
+
+      setWishlistItems(fallbackItems);
+      updateLocalStats(fallbackItems);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const addWishlistItem = () => {
+  const updateLocalStats = (items: WishlistItem[]) => {
+    const totalBudget = items.reduce((sum, item) => sum + item.estimated_cost, 0);
+    const averageVotes = items.length > 0 ? items.reduce((sum, item) => sum + item.family_votes, 0) / items.length : 0;
+    const readyItems = items.filter(i => i.status === 'Ready').length;
+
+    setStats({
+      total_items: items.length,
+      total_budget: totalBudget,
+      average_votes: averageVotes,
+      ready_items: readyItems
+    });
+  };
+
+  const addWishlistItem = async () => {
     if (!newItem.title || !newItem.location) return;
 
-    const item: WishlistItem = {
-      id: Date.now().toString(),
-      title: newItem.title!,
-      location: newItem.location!,
-      description: newItem.description || '',
-      priority: newItem.priority || 'Medium',
-      status: newItem.status || 'Planning',
-      estimatedCost: newItem.estimatedCost || 500,
-      bestSeasons: newItem.bestSeasons || ['Summer'],
-      duration: newItem.duration || '3-4 days',
-      category: newItem.category || 'Mountain',
-      familyVotes: 0,
-      notes: newItem.notes || '',
-      createdDate: new Date().toISOString().split('T')[0],
-      researched: false
-    };
+    try {
+      setIsLoading(true);
+      console.log('🎯 Adding wishlist item:', newItem.title);
 
-    setWishlistItems(prev => [...prev, item]);
-    setNewItem({
-      title: '',
-      location: '',
-      description: '',
-      priority: 'Medium',
-      status: 'Planning',
-      estimatedCost: 500,
-      bestSeasons: ['Summer'],
-      duration: '3-4 days',
-      category: 'Mountain',
-      familyVotes: 0,
-      notes: '',
-      researched: false
-    });
-    setShowAddForm(false);
+      if (error && error.includes('Database Setup Required')) {
+        // If database isn't set up, use local state only
+        console.log('📦 Using local state for wishlist item (database not available)');
+        const localItem: WishlistItem = {
+          id: Date.now().toString(),
+          title: newItem.title!,
+          location: newItem.location!,
+          description: newItem.description || '',
+          priority: newItem.priority || 'Medium',
+          status: newItem.status || 'Planning',
+          estimated_cost: newItem.estimated_cost || 500,
+          best_seasons: newItem.best_seasons || ['Summer'],
+          duration: newItem.duration || '3-4 days',
+          category: newItem.category || 'Mountain',
+          family_votes: 0,
+          notes: newItem.notes || '',
+          researched: false,
+          created_at: new Date().toISOString()
+        };
+
+        setWishlistItems(prev => [...prev, localItem]);
+        updateLocalStats([...wishlistItems, localItem]);
+      } else {
+        // Use database
+        await createWishlistItem({
+          title: newItem.title!,
+          location: newItem.location!,
+          description: newItem.description,
+          priority: newItem.priority || 'Medium',
+          status: newItem.status,
+          estimated_cost: newItem.estimated_cost,
+          best_seasons: newItem.best_seasons,
+          duration: newItem.duration,
+          category: newItem.category || 'Mountain',
+          notes: newItem.notes,
+          target_date: newItem.target_date
+        });
+
+        // Reload data to get updated state
+        await loadWishlistData();
+      }
+
+      setNewItem({
+        title: '',
+        location: '',
+        description: '',
+        priority: 'Medium',
+        status: 'Planning',
+        estimated_cost: 500,
+        best_seasons: ['Summer'],
+        duration: '3-4 days',
+        category: 'Mountain',
+        notes: ''
+      });
+      setShowAddForm(false);
+
+      console.log('✅ Wishlist item added successfully');
+    } catch (dbError) {
+      console.error('Database error, falling back to local state:', dbError);
+      setError('📱 Using local tracking (database unavailable)');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const deleteItem = (id: string) => {
-    setWishlistItems(prev => prev.filter(item => item.id !== id));
+  const deleteItem = async (id: string) => {
+    try {
+      if (error && error.includes('Database Setup Required')) {
+        // Local only
+        setWishlistItems(prev => prev.filter(item => item.id !== id));
+      } else {
+        await deleteWishlistItem(id);
+        await loadWishlistData();
+      }
+    } catch (dbError) {
+      console.error('Database error, using local state:', dbError);
+      setWishlistItems(prev => prev.filter(item => item.id !== id));
+    }
   };
 
-  const toggleResearched = (id: string) => {
-    setWishlistItems(prev => 
-      prev.map(item => 
-        item.id === id ? { ...item, researched: !item.researched } : item
-      )
-    );
+  const toggleResearched = async (id: string) => {
+    try {
+      if (error && error.includes('Database Setup Required')) {
+        // Local only
+        setWishlistItems(prev =>
+          prev.map(item =>
+            item.id === id ? { ...item, researched: !item.researched } : item
+          )
+        );
+      } else {
+        await toggleResearchStatus(id);
+      }
+    } catch (dbError) {
+      console.error('Database error, using local state:', dbError);
+      setWishlistItems(prev =>
+        prev.map(item =>
+          item.id === id ? { ...item, researched: !item.researched } : item
+        )
+      );
+    }
   };
 
-  const addVote = (id: string) => {
-    setWishlistItems(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, familyVotes: item.familyVotes + 1 } : item
-      )
-    );
+  const addVote = async (id: string) => {
+    try {
+      if (error && error.includes('Database Setup Required')) {
+        // Local only
+        setWishlistItems(prev =>
+          prev.map(item =>
+            item.id === id ? { ...item, family_votes: item.family_votes + 1 } : item
+          )
+        );
+      } else {
+        await addVoteToItem(id);
+      }
+    } catch (dbError) {
+      console.error('Database error, using local state:', dbError);
+      setWishlistItems(prev =>
+        prev.map(item =>
+          item.id === id ? { ...item, family_votes: item.family_votes + 1 } : item
+        )
+      );
+    }
   };
 
-  const removeVote = (id: string) => {
-    setWishlistItems(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, familyVotes: Math.max(0, item.familyVotes - 1) } : item
-      )
-    );
+  const removeVote = async (id: string) => {
+    try {
+      if (error && error.includes('Database Setup Required')) {
+        // Local only
+        setWishlistItems(prev =>
+          prev.map(item =>
+            item.id === id ? { ...item, family_votes: Math.max(0, item.family_votes - 1) } : item
+          )
+        );
+      } else {
+        await removeVoteFromItem(id);
+      }
+    } catch (dbError) {
+      console.error('Database error, using local state:', dbError);
+      setWishlistItems(prev =>
+        prev.map(item =>
+          item.id === id ? { ...item, family_votes: Math.max(0, item.family_votes - 1) } : item
+        )
+      );
+    }
   };
 
-  const updateStatus = (id: string, status: WishlistItem['status']) => {
-    setWishlistItems(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, status } : item
-      )
-    );
+  const updateStatus = async (id: string, status: WishlistItem['status']) => {
+    try {
+      if (error && error.includes('Database Setup Required')) {
+        // Local only
+        setWishlistItems(prev =>
+          prev.map(item =>
+            item.id === id ? { ...item, status } : item
+          )
+        );
+      } else {
+        await updateWishlistItem(id, { status });
+      }
+    } catch (dbError) {
+      console.error('Database error, using local state:', dbError);
+      setWishlistItems(prev =>
+        prev.map(item =>
+          item.id === id ? { ...item, status } : item
+        )
+      );
+    }
+  };
+
+  const testConnection = async () => {
+    try {
+      const result = await testWishlistConnection();
+      setError(result.success ? `✅ ${result.message}` : `❌ ${result.message}: ${result.error}`);
+    } catch (error) {
+      setError(`❌ Connection test failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
   };
 
   const filteredAndSortedItems = () => {
@@ -237,11 +338,11 @@ export default function Wishlist() {
           const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
           return priorityOrder[b.priority] - priorityOrder[a.priority];
         case 'votes':
-          return b.familyVotes - a.familyVotes;
+          return b.family_votes - a.family_votes;
         case 'cost':
-          return a.estimatedCost - b.estimatedCost;
+          return a.estimated_cost - b.estimated_cost;
         case 'date':
-          return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime();
+          return new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime();
         default:
           return 0;
       }
@@ -282,8 +383,20 @@ export default function Wishlist() {
     }
   };
 
-  const totalBudget = wishlistItems.reduce((sum, item) => sum + item.estimatedCost, 0);
-  const averageVotes = wishlistItems.length > 0 ? wishlistItems.reduce((sum, item) => sum + item.familyVotes, 0) / wishlistItems.length : 0;
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg animate-pulse">
+            <Database className="h-8 w-8 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">Loading Adventure Wishlist</h3>
+          <p className="text-slate-600">Gathering your dream destinations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50">
@@ -311,28 +424,73 @@ export default function Wishlist() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-8">
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">{wishlistItems.length}</div>
+                <div className="text-3xl font-bold text-purple-600 mb-2">{stats.total_items}</div>
                 <div className="text-sm font-semibold text-slate-600">Adventures Planned</div>
               </CardContent>
             </Card>
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-pink-600 mb-2">£{totalBudget.toLocaleString()}</div>
+                <div className="text-3xl font-bold text-pink-600 mb-2">£{stats.total_budget.toLocaleString()}</div>
                 <div className="text-sm font-semibold text-slate-600">Total Budget</div>
               </CardContent>
             </Card>
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">{Math.round(averageVotes * 10) / 10}</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">{Math.round(stats.average_votes * 10) / 10}</div>
                 <div className="text-sm font-semibold text-slate-600">Avg Family Rating</div>
               </CardContent>
             </Card>
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">{wishlistItems.filter(i => i.status === 'Ready').length}</div>
+                <div className="text-3xl font-bold text-green-600 mb-2">{stats.ready_items}</div>
                 <div className="text-sm font-semibold text-slate-600">Ready to Book</div>
               </CardContent>
             </Card>
+
+            {/* Error Display */}
+            {error && (
+              <div className="md:col-span-4">
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-4 text-amber-800 shadow-lg">
+                  <div className="flex items-center justify-center mb-2">
+                    <AlertCircle className="h-5 w-5 mr-2" />
+                    <span className="font-semibold text-sm">System Status</span>
+                  </div>
+                  <p className="text-xs text-center leading-relaxed mb-3">{error}</p>
+
+                  {error.includes('Database Setup Required') && (
+                    <div className="bg-white/50 rounded-lg p-3 mb-3 text-xs">
+                      <div className="font-semibold mb-1">📋 Setup Instructions:</div>
+                      <ol className="list-decimal list-inside space-y-1 text-amber-700 text-xs">
+                        <li>Go to Supabase Dashboard → SQL Editor</li>
+                        <li>Run the wishlist-schema.sql file</li>
+                        <li>Refresh page to enable cross-device sync</li>
+                      </ol>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 justify-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={testConnection}
+                      className="border-amber-300 text-amber-700 hover:bg-amber-100 text-xs px-2 py-1"
+                    >
+                      <Database className="h-3 w-3 mr-1" />
+                      Test
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={loadWishlistData}
+                      className="border-amber-300 text-amber-700 hover:bg-amber-100 text-xs px-2 py-1"
+                    >
+                      <RefreshCw className="h-3 w-3 mr-1" />
+                      Retry
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -419,8 +577,8 @@ export default function Wishlist() {
                   <label className="block text-sm font-semibold text-slate-700 mb-2">Estimated Cost (£)</label>
                   <Input
                     type="number"
-                    value={newItem.estimatedCost}
-                    onChange={(e) => setNewItem(prev => ({ ...prev, estimatedCost: parseInt(e.target.value) || 0 }))}
+                    value={newItem.estimated_cost}
+                    onChange={(e) => setNewItem(prev => ({ ...prev, estimated_cost: parseInt(e.target.value) || 0 }))}
                     className="border-2 border-slate-200 focus:border-purple-400"
                   />
                 </div>
@@ -634,7 +792,7 @@ export default function Wishlist() {
                     <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
                       <div className="flex items-center gap-2">
                         <DollarSign className="h-4 w-4 text-green-500" />
-                        <span className="font-semibold">£{item.estimatedCost.toLocaleString()}</span>
+                        <span className="font-semibold">£{item.estimated_cost.toLocaleString()}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Clock className="h-4 w-4 text-blue-500" />
@@ -651,13 +809,13 @@ export default function Wishlist() {
                             <Star
                               key={i}
                               className={`h-4 w-4 ${
-                                i < item.familyVotes 
-                                  ? 'text-yellow-400 fill-current' 
+                                i < item.family_votes
+                                  ? 'text-yellow-400 fill-current'
                                   : 'text-slate-300'
                               }`}
                             />
                           ))}
-                          <span className="text-sm text-slate-600 ml-1">({item.familyVotes})</span>
+                          <span className="text-sm text-slate-600 ml-1">({item.family_votes})</span>
                         </div>
                       </div>
                     </div>
@@ -703,10 +861,10 @@ export default function Wishlist() {
                     )}
 
                     {/* Target Date */}
-                    {item.targetDate && (
+                    {item.target_date && (
                       <div className="mt-2 flex items-center gap-1 text-xs text-purple-600">
                         <Calendar className="h-3 w-3" />
-                        Target: {new Date(item.targetDate).toLocaleDateString()}
+                        Target: {new Date(item.target_date).toLocaleDateString()}
                       </div>
                     )}
                   </CardContent>
