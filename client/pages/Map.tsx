@@ -149,7 +149,20 @@ export default function MapPage() {
       });
 
       // Immediately update local state for instant UI feedback
-      setPins(currentPins => [addedPin, ...currentPins]);
+      setPins(currentPins => {
+        const newPins = [addedPin, ...currentPins];
+        // Update stats immediately
+        setStats({
+          total: newPins.length,
+          byCategory: {
+            adventure: newPins.filter(p => p.category === "adventure").length,
+            photo: newPins.filter(p => p.category === "photo").length,
+            memory: newPins.filter(p => p.category === "memory").length,
+            wishlist: newPins.filter(p => p.category === "wishlist").length,
+          }
+        });
+        return newPins;
+      });
 
       setIsDialogOpen(false);
       setSelectedLocation(null);
