@@ -79,12 +79,12 @@ export async function convertHeicToJpeg(file: File): Promise<File> {
     console.error('Detailed error:', errorMessage);
 
     // Provide specific error messages based on common issues
-    if (errorMessage.includes('ERR_LIBHEIF') || errorMessage.includes('format not supported')) {
-      throw new Error(`Browser doesn't support HEIC format. Please convert to JPEG first or use a different browser.`);
+    if (errorMessage.includes('ERR_LIBHEIF') || errorMessage.includes('format not supported') || errorMessage.includes('Browser lacks HEIF decoder')) {
+      throw new Error(`Browser doesn't support HEIC conversion. Cloudflare Images will handle HEIC directly.`);
     } else if (errorMessage.includes('not supported in this browser')) {
-      throw new Error(`HEIC conversion not available in this browser. Please convert to JPEG first.`);
+      throw new Error(`HEIC conversion not available. Cloudflare Images supports HEIC natively.`);
     } else {
-      throw new Error(`HEIC conversion failed: ${errorMessage}. Try converting to JPEG first.`);
+      throw new Error(`HEIC conversion failed: ${errorMessage}. Cloudflare Images can handle HEIC files.`);
     }
   }
 }
