@@ -4,12 +4,27 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
+console.log('🔧 Supabase Configuration Check:', {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  urlFormat: supabaseUrl ? (supabaseUrl.startsWith('https://') ? 'Valid HTTPS URL' : 'Invalid URL format') : 'Missing',
+  keyFormat: supabaseAnonKey ? (supabaseAnonKey.length > 100 ? 'Valid length' : 'Too short') : 'Missing'
+});
+
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('⚠️  Supabase configuration missing. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+  console.warn('Environment variables:', {
+    VITE_SUPABASE_URL: supabaseUrl ? 'Set' : 'Missing',
+    VITE_SUPABASE_ANON_KEY: supabaseAnonKey ? 'Set' : 'Missing'
+  });
 }
 
 // Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: false
+  }
+});
 
 // Database types for Supabase tables
 export interface JournalEntry {
