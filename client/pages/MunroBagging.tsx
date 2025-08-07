@@ -251,9 +251,9 @@ export default function MunroBagging() {
   });
 
   const toggleMunroComplete = async (munroId: string) => {
-    // Check authentication before allowing munro completion toggle
-    if (!requestAuth()) {
-      return; // Will show password prompt
+    // Only allow munro completion toggle if authenticated
+    if (!isAuthenticated) {
+      return;
     }
 
     const munro = munros.find((m) => m.id === munroId);
