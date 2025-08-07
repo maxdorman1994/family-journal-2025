@@ -930,19 +930,27 @@ export default function Home() {
             .filter(
               (member) =>
                 (member.name === "John Dorman" ||
-                 member.name === "Rachel Dorman" ||
-                 member.name === "Lewis" ||
-                 member.name === "Zara" ||
-                 member.name === "Kira" ||
-                 member.name === "Frankie" ||
-                 member.name === "Iris") &&
+                  member.name === "Rachel Dorman" ||
+                  member.name === "Lewis" ||
+                  member.name === "Zara" ||
+                  member.name === "Kira" ||
+                  member.name === "Frankie" ||
+                  member.name === "Iris") &&
                 member.position_index > 4 &&
                 member.name !== "Charlie" &&
                 member.name !== "Fern",
             )
             .sort((a, b) => {
               // Sort to put parents first, then children
-              const order = ["John Dorman", "Rachel Dorman", "Lewis", "Zara", "Kira", "Frankie", "Iris"];
+              const order = [
+                "John Dorman",
+                "Rachel Dorman",
+                "Lewis",
+                "Zara",
+                "Kira",
+                "Frankie",
+                "Iris",
+              ];
               return order.indexOf(a.name) - order.indexOf(b.name);
             })
             .map((member) => (
