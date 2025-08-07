@@ -839,13 +839,13 @@ export default function Home() {
               <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
                 {/* Text Content - Left Side */}
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-3xl font-bold text-amber-800 mb-3">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-amber-800 mb-3">
                     Charlie
                   </h3>
-                  <p className="text-lg font-medium text-amber-600 mb-6">
+                  <p className="text-base sm:text-lg font-medium text-amber-600 mb-4 sm:mb-6">
                     ADVENTURE DOG
                   </p>
-                  <p className="text-base text-amber-700 leading-relaxed mb-6">
+                  <p className="text-sm sm:text-base text-amber-700 leading-relaxed mb-4 sm:mb-6">
                     Our loyal four-legged family member who never misses an
                     adventure! Charlie is the ultimate Scottish explorer, always
                     ready to hike through the Highlands, chase waves on Scottish
