@@ -179,7 +179,7 @@ export async function uploadPhotoToCloudflare(
   onProgress?: (progress: number) => void
 ): Promise<string> {
   const formData = new FormData();
-  formData.append('file', photo.file);
+  formData.append('photo', photo.file);
   formData.append('originalName', photo.originalFile.name);
   formData.append('photoId', photo.id);
 
