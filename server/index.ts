@@ -37,14 +37,29 @@ export function createServer() {
     res.json(status);
   });
 
-  // Serve static files from dist/spa in production
-  if (process.env.NODE_ENV === 'production') {
+  // Log environment info
+  console.log('🔧 Server Environment Check:', {
+    NODE_ENV: process.env.NODE_ENV,
+    distExists: require('fs').existsSync('dist/spa'),
+    cwd: process.cwd()
+  });
+
+  // Serve static files from dist/spa (force for all non-dev environments)
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const hasDistFolder = require('fs').existsSync('dist/spa');
+
+  if (!isDevelopment && hasDistFolder) {
+    console.log('✅ Serving static files from dist/spa/');
     app.use(express.static('dist/spa'));
 
     // Serve index.html for all non-API routes (SPA fallback)
     app.get('*', (_req, res) => {
-      res.sendFile(path.resolve('dist/spa/index.html'));
+      const indexPath = path.resolve('dist/spa/index.html');
+      console.log('📄 Serving SPA fallback:', indexPath);
+      res.sendFile(indexPath);
     });
+  } else {
+    console.log('⚠️ Not serving static files - development mode or no dist folder');
   }
 
   return app;
