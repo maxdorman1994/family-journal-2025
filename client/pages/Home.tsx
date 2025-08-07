@@ -900,7 +900,7 @@ export default function Home() {
                 className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
               >
                 <CardContent className="p-6">
-                  <div className="relative group w-34 h-34 mx-auto mb-4">
+                  <div className="relative group w-40 h-40 mx-auto mb-4">
                     <div
                       className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
                     >
@@ -1910,7 +1910,7 @@ export default function Home() {
               <div className="flex justify-center gap-2 opacity-60">
                 <span className="text-red-600">📺</span>
                 <span className="text-pink-600">🎥</span>
-                <span className="text-red-600">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+                <span className="text-red-600">🏴���󠁢󠁳󠁣󠁴󠁿</span>
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
