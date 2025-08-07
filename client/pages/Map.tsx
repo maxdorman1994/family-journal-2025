@@ -173,7 +173,11 @@ export default function MapPage() {
       console.log("🗺️ Deleting pin:", pinId);
       console.log("🗺️ Current pins before delete:", pins.length);
 
+      // Delete from database
       await deleteMapPin(pinId);
+
+      // Immediately update local state for instant UI feedback
+      setPins(currentPins => currentPins.filter(pin => pin.id !== pinId));
       setSelectedPin(null);
 
       console.log("✅ Pin deleted successfully and will sync across devices");
