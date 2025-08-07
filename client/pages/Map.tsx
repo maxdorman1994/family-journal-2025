@@ -222,12 +222,25 @@ export default function MapPage() {
       await deleteMapPin(pinId);
 
       // Immediately update local state for instant UI feedback
-      setPins(currentPins => currentPins.filter(pin => pin.id !== pinId));
+      setPins(currentPins => {
+        const newPins = currentPins.filter(pin => pin.id !== pinId);
+        // Update stats immediately
+        setStats({
+          total: newPins.length,
+          byCategory: {
+            adventure: newPins.filter(p => p.category === "adventure").length,
+            photo: newPins.filter(p => p.category === "photo").length,
+            memory: newPins.filter(p => p.category === "memory").length,
+            wishlist: newPins.filter(p => p.category === "wishlist").length,
+          }
+        });
+        return newPins;
+      });
       setSelectedPin(null);
 
       console.log("✅ Pin deleted successfully and will sync across devices");
     } catch (error) {
-      console.error("❌ Error deleting pin:", error);
+      console.error("�� Error deleting pin:", error);
       alert(`Error deleting pin: ${error.message || error}`);
     }
   };
