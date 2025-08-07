@@ -222,6 +222,46 @@ export default function Home() {
     };
   }, []);
 
+  // Subscribe to cross-device sync events
+  useEffect(() => {
+    const unsubscribeFamilySync = subscribe('family_members', (event) => {
+      console.log('🔄 Cross-device family sync:', event.eventType, event.new?.name);
+
+      if (event.new?._refresh) {
+        loadFamilyMembersData();
+        return;
+      }
+
+      switch (event.eventType) {
+        case 'INSERT':
+          if (event.new) {
+            setFamilyMembers(prev => {
+              const exists = prev.find(member => member.id === event.new.id);
+              if (!exists) {
+                return [...prev, event.new];
+              }
+              return prev;
+            });
+          }
+          break;
+        case 'UPDATE':
+          if (event.new) {
+            setFamilyMembers(prev => prev.map(member =>
+              member.id === event.new.id ? { ...member, ...event.new } : member
+            ));
+          }
+          break;
+        case 'DELETE':
+          if (event.old) {
+            setFamilyMembers(prev => prev.filter(member => member.id !== event.old.id));
+          }
+          break;
+      }
+    });
+
+    return unsubscribeFamilySync;
+  }, [subscribe]);
+
   const loadFamilyMembersData = async () => {
     try {
       setIsLoading(true);
