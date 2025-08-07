@@ -17,7 +17,8 @@ import {
   addMapPin,
   updateMapPin,
   deleteMapPin,
-  subscribeToMapPins
+  subscribeToMapPins,
+  getMapPinsStats
 } from "@/lib/mapPinsService";
 import "mapbox-gl/dist/mapbox-gl.css";
 
