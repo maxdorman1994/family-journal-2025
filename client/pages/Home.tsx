@@ -1401,17 +1401,6 @@ export default function Home() {
           </Button>
         </div>
 
-        {/* Achievement Banner */}
-        <div className="mt-12 text-center">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-emerald-200/50 rounded-full shadow-lg">
-            <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm">🏆</span>
-            </div>
-            <span className="text-sm font-semibold text-slate-700">
-              Adventure Milestone: First Month of Scottish Exploration Complete!
-            </span>
-          </div>
-        </div>
       </section>
 
       {/* Recent Adventures */}
