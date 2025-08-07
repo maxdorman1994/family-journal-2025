@@ -194,7 +194,7 @@ export default function Journal() {
         );
       } else {
         setError(
-          `⚠️ Database Error: Using sample data (${errorMessage.substring(0, 100)}${errorMessage.length > 100 ? "..." : ""})`,
+          `��️ Database Error: Using sample data (${errorMessage.substring(0, 100)}${errorMessage.length > 100 ? "..." : ""})`,
         );
       }
 
@@ -969,8 +969,12 @@ export default function Journal() {
       {/* Forms and Modals */}
       <NewEntryForm
         isOpen={isNewEntryFormOpen}
-        onClose={() => setIsNewEntryFormOpen(false)}
-        onSubmit={handleNewEntry}
+        onClose={() => {
+          setIsNewEntryFormOpen(false);
+          setEditingEntry(null);
+        }}
+        onSubmit={handleSaveEntry}
+        editingEntry={editingEntry}
       />
 
       <EntryDetailModal
