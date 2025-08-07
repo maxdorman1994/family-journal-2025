@@ -49,6 +49,24 @@ export default function Home() {
   const [statsLoading, setStatsLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const loadRealStats = async () => {
+    try {
+      setStatsLoading(true);
+      console.log('📊 Loading real adventure statistics...');
+
+      const { primary, additional } = await getAllRealStats();
+      const formattedStats = formatStatsForDisplay(primary, additional);
+      setRealStats(formattedStats);
+
+      console.log('✅ Real stats loaded:', formattedStats);
+    } catch (error) {
+      console.error('Error loading real stats:', error);
+      // Keep realStats as null to show fallback values
+    } finally {
+      setStatsLoading(false);
+    }
+  };
+
   // Load family members data and setup real-time sync
   useEffect(() => {
     loadFamilyMembersData();
@@ -576,7 +594,7 @@ export default function Home() {
           {error && (
             <div
               className={`max-w-md mx-auto border-2 rounded-xl p-3 text-center ${
-                error.startsWith("✅")
+                error.startsWith("���")
                   ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800"
                   : "bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 text-amber-800"
               }`}
