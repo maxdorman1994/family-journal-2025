@@ -166,10 +166,14 @@ export default function Home() {
         "members",
       );
 
-      // Verify Charlie is included in real-time updates
+      // Verify both dogs are included in real-time updates
       const charlieExists = members.find(m => m.name === "Charlie");
+      const fernExists = members.find(m => m.name === "Fern");
       if (charlieExists) {
         console.log("🐕 Charlie sync confirmed - photos will sync across devices");
+      }
+      if (fernExists) {
+        console.log("🌿 Fern sync confirmed - photos will sync across devices");
       }
 
       setFamilyMembers(members);
@@ -956,7 +960,7 @@ export default function Home() {
 
         <div className="text-center mt-6">
           <p className="text-sm text-slate-500">
-            🏴󠁧󠁢���󠁣󠁴󠁿 Our big Scottish family makes every adventure more memorable
+            🏴󠁧󠁢󠁳󠁣󠁴󠁿 Our big Scottish family makes every adventure more memorable
             together!
           </p>
         </div>
@@ -1459,7 +1463,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-bold">🗓️</span>
+                    <span className="text-xs text-white font-bold">����️</span>
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-3">
