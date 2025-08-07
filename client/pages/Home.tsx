@@ -458,7 +458,15 @@ export default function Home() {
         editingMember,
         fileName: file.name
       });
-      alert(`Failed to upload photo: ${dbError instanceof Error ? dbError.message : String(dbError)}`);
+
+      // Test connectivity if it's a network error
+      if (dbError instanceof Error && dbError.message.includes('Network connection failed')) {
+        console.log("🔍 Network error detected, testing connectivity...");
+        // Auto-test connectivity and provide helpful message
+        alert(`Network connection failed while uploading photo. Please check your internet connection and try again.\n\nThe photo may have been processed but not saved to the database.`);
+      } else {
+        alert(`Failed to upload photo: ${dbError instanceof Error ? dbError.message : String(dbError)}`);
+      }
     } finally {
       setIsUploading(false);
     }
