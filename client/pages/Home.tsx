@@ -760,6 +760,97 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Our Furry Family Member */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          <span className="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 bg-clip-text text-transparent">
+            Our Furry Adventure Companion
+          </span>
+        </h2>
+        <div className="flex justify-center">
+          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-amber-50 to-orange-100 backdrop-blur-sm border-2 border-amber-200/60 max-w-md">
+            <CardContent className="p-8">
+              <div className="relative group w-32 h-32 mx-auto mb-6">
+                <div className="w-full h-full rounded-full overflow-hidden border-4 bg-gradient-to-r from-amber-500 to-orange-600 p-1 shadow-xl">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                    <img
+                      src={
+                        familyMembers.find(m => m.name === "Charlie")?.display_avatar ||
+                        familyMembers.find(m => m.name === "Charlie")?.avatar_url ||
+                        "/placeholder.svg"
+                      }
+                      alt="Charlie"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                {/* Edit overlay */}
+                <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div className="flex gap-1">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                      onClick={() => {
+                        const charlieMember = familyMembers.find(m => m.name === "Charlie");
+                        if (charlieMember) handlePhotoEdit(charlieMember.id);
+                      }}
+                      disabled={isUploading}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    {(() => {
+                      const charlieMember = familyMembers.find(m => m.name === "Charlie");
+                      return charlieMember?.avatar_url && charlieMember.avatar_url !== "/placeholder.svg" && (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="h-8 w-8 p-0 bg-white/90 hover:bg-white text-red-600 hover:text-red-700"
+                          onClick={() => handlePhotoRemove(charlieMember.id)}
+                          disabled={isUploading}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      );
+                    })()}
+                  </div>
+                </div>
+
+                {/* Upload indicator */}
+                {isUploading && editingMember === familyMembers.find(m => m.name === "Charlie")?.id && (
+                  <div className="absolute inset-0 bg-black/70 rounded-full flex items-center justify-center">
+                    <Upload className="h-6 w-6 text-white animate-spin" />
+                  </div>
+                )}
+              </div>
+
+              <h3 className="text-2xl font-bold text-amber-800 mb-3">Charlie</h3>
+              <p className="text-sm font-medium text-amber-600 mb-4">ADVENTURE DOG</p>
+              <p className="text-sm text-amber-700 leading-relaxed">
+                Our loyal four-legged family member who never misses an adventure! Charlie is the ultimate Scottish explorer,
+                always ready to hike through the Highlands, chase waves on Scottish beaches, and provide endless entertainment
+                around the campfire. With boundless energy and an adventurous spirit, Charlie reminds us to stay curious,
+                live in the moment, and find joy in every trail we explore together. 🐕
+              </p>
+
+              {/* Paw print decorations */}
+              <div className="flex justify-center gap-2 mt-4 opacity-40">
+                <span className="text-amber-600">🐾</span>
+                <span className="text-orange-600">🐾</span>
+                <span className="text-amber-600">🐾</span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="text-center mt-6">
+          <p className="text-sm text-amber-600">
+            🐕 Our trusted adventure companion, making every Scottish journey more memorable!
+          </p>
+        </div>
+      </section>
+
       {/* Extended Family */}
       <section className="mb-16">
         <h2 className="text-3xl font-bold text-center mb-8">
@@ -959,7 +1050,7 @@ export default function Home() {
 
                         {!isCompleted && !isInProgress && (
                           <div className="bg-gray-400 text-white text-xs px-3 py-1 rounded-full inline-block">
-                            🔒 Locked
+                            �� Locked
                           </div>
                         )}
                       </CardContent>
