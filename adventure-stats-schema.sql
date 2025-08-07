@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS adventure_stats (
 );
 
 -- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_adventure_stats_type ON adventure_stats(stat_type);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_adventure_stats_type_unique ON adventure_stats(stat_type);
 CREATE INDEX IF NOT EXISTS idx_adventure_stats_updated ON adventure_stats(last_updated);
 
 -- Enable Row Level Security
