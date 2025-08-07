@@ -477,12 +477,12 @@ export default function MapPage() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Map */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-3 order-1">
           <Card className="overflow-hidden">
             <CardContent className="p-0">
-              <div className="h-[600px] w-full relative">
+              <div className="h-[400px] sm:h-[500px] lg:h-[600px] w-full relative">
                 <ReactMapGL
                   ref={mapRef}
                   {...viewState}
