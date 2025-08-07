@@ -110,7 +110,16 @@ export default function Home() {
         `✅ Loaded ${milestonesData.length} milestones with ${statsData.completed_count} completed`,
       );
     } catch (error) {
-      console.error("Error loading milestones:", error);
+      console.error("Error loading milestones:", error instanceof Error ? error.message : String(error));
+      // Set empty milestone state on error
+      setMilestones([]);
+      setMilestoneStats({
+        completed_count: 0,
+        in_progress_count: 0,
+        locked_count: 0,
+        total_xp: 0,
+        completion_percentage: 0,
+      });
     } finally {
       setMilestonesLoading(false);
     }
