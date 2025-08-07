@@ -167,9 +167,21 @@ export default function Home() {
       setRecentAdventures(adventures);
     });
 
+    const unsubscribeMilestones = subscribeToMilestoneUpdates('demo-user', (milestonesData) => {
+      console.log(
+        "🔄 Real-time milestones update received:",
+        milestonesData.length,
+        "milestones",
+      );
+      setMilestones(milestonesData);
+      // Recalculate stats
+      getMilestoneStats('demo-user').then(setMilestoneStats);
+    });
+
     return () => {
       unsubscribeFamilyMembers();
       unsubscribeAdventures();
+      unsubscribeMilestones();
     };
   }, []);
 
@@ -687,7 +699,7 @@ export default function Home() {
               {error.includes("Database Setup Required") && (
                 <div className="bg-white/50 rounded-lg p-2 mb-2 text-xs">
                   <div className="font-semibold mb-1">
-                    �� Setup Instructions:
+                    📋 Setup Instructions:
                   </div>
                   <ol className="list-decimal list-inside space-y-1 text-amber-700 text-xs">
                     <li>Go to Supabase Dashboard → SQL Editor</li>
