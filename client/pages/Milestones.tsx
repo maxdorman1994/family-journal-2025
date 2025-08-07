@@ -95,7 +95,7 @@ export default function Milestones() {
       },
     );
 
-    return unsubscribe;
+    return unsubscribeMilestones;
   }, []);
 
   // Split milestones by status
