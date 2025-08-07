@@ -1804,32 +1804,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="text-center bg-gradient-to-r from-vibrant-blue/10 via-scotland-thistle/10 to-vibrant-pink/10 rounded-2xl p-8 border border-scotland-thistle/20">
-        <Users className="w-16 h-16 mx-auto mb-4 text-vibrant-blue" />
-        <h2 className="text-2xl font-bold mb-4">
-          <span className="bg-gradient-to-r from-vibrant-blue to-scotland-loch bg-clip-text text-transparent">
-            Start Your Own Adventure
-          </span>
-        </h2>
-        <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-          Inspired to explore Scotland? Check out our hints and tips, browse our
-          wishlist for future adventures, or see which Munros we're planning to
-          bag next!
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild variant="outline">
-            <Link to="/hints-tips">Hints & Tips</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to="/wishlist">Our Wishlist</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to="/munro-bagging">Munro Bagging</Link>
-          </Button>
-        </div>
-      </section>
-
       {/* Contact & YouTube Section */}
       <section className="mt-20 mb-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
