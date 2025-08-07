@@ -448,10 +448,35 @@ export default function Journal() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-slate-600 mb-4 max-w-2xl mx-auto leading-relaxed">
               Capturing magical moments across the beautiful landscapes of
               Scotland
             </p>
+
+            {/* Auth Status */}
+            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm mb-6 ${
+              isAuthenticated
+                ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
+                : 'bg-orange-50 border border-orange-200 text-orange-700'
+            }`}>
+              <Lock className="w-4 h-4" />
+              <span>
+                {isAuthenticated
+                  ? `Edit mode (${sessionTimeRemaining}m left)`
+                  : "View only mode"
+                }
+              </span>
+              {isAuthenticated && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={logout}
+                  className="h-5 px-2 text-xs ml-2"
+                >
+                  Lock
+                </Button>
+              )}
+            </div>
 
             <Button
               size="lg"
