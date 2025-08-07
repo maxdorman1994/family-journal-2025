@@ -427,8 +427,12 @@ export default function MunroBagging() {
                       key={munro.id}
                       className={`relative group cursor-pointer transition-all duration-200 ${
                         munro.completed
-                          ? 'bg-gradient-to-br from-green-500 to-emerald-600 shadow-md transform scale-110'
-                          : 'bg-gradient-to-br from-slate-200 to-slate-300 hover:from-green-200 hover:to-green-300'
+                          ? munro.is_custom
+                            ? 'bg-gradient-to-br from-purple-500 to-pink-600 shadow-md transform scale-110'
+                            : 'bg-gradient-to-br from-green-500 to-emerald-600 shadow-md transform scale-110'
+                          : munro.is_custom
+                            ? 'bg-gradient-to-br from-purple-200 to-pink-300 hover:from-purple-300 hover:to-pink-400'
+                            : 'bg-gradient-to-br from-slate-200 to-slate-300 hover:from-green-200 hover:to-green-300'
                       } rounded-full aspect-square flex items-center justify-center`}
                       onClick={() => toggleMunroComplete(munro.id)}
                       title={`${munro.name} (${munro.height}m) - ${munro.completed ? 'Completed' : 'Not completed'}`}
