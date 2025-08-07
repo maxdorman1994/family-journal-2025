@@ -348,7 +348,7 @@ export default function MunroBagging() {
         ),
       );
 
-      setError("�� Using local tracking (database unavailable)");
+      setError("📱 Using local tracking (database unavailable)");
     }
   };
 
@@ -504,7 +504,7 @@ export default function MunroBagging() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 mb-4 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
               Conquering Scotland's 282 magnificent peaks over 3,000 feet
             </p>
 
