@@ -66,7 +66,7 @@ function MapClickHandler({
 }: {
   onMapClick: (latlng: L.LatLng) => void;
 }) {
-  useMapEvents({
+  const map = useMapEvents({
     click: (event) => {
       onMapClick(event.latlng);
     },
