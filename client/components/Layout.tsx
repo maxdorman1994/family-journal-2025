@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Edit, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AuthFooter from "./AuthFooter";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  processPhoto,
+  uploadPhotoToCloudflare,
+  validatePhotoFile,
+} from "@/lib/photoUtils";
 
 interface LayoutProps {
   children: React.ReactNode;
