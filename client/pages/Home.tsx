@@ -29,6 +29,11 @@ import {
   testFamilyMembersConnection,
   FamilyMember,
 } from "@/lib/familyMembersService";
+import {
+  getAllRealStats,
+  formatStatsForDisplay,
+  RealAdventureStats
+} from "@/lib/realStatsService";
 
 export default function Home() {
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
