@@ -398,9 +398,9 @@ export default function NewEntryForm({
                         Other Tickets
                       </label>
                       <Input
-                        value={formData.otherTickets}
+                        value={formData.other_tickets}
                         onChange={(e) =>
-                          handleInputChange("otherTickets", e.target.value)
+                          handleInputChange("other_tickets", e.target.value)
                         }
                         placeholder="e.g., Senior £8 or Family £30"
                       />
