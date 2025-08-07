@@ -36,5 +36,15 @@ export function createServer() {
     res.json(status);
   });
 
+  // Serve static files from dist/spa in production
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('dist/spa'));
+
+    // Serve index.html for all non-API routes (SPA fallback)
+    app.get('*', (_req, res) => {
+      res.sendFile(path.resolve('dist/spa/index.html'));
+    });
+  }
+
   return app;
 }
