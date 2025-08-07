@@ -224,6 +224,8 @@ export default function Journal() {
 
   const handleSaveEntry = async (entryData: any) => {
     const isEditing = editingEntry !== null;
+    console.log("🔄 HandleSaveEntry called:", { isEditing, editingEntry: editingEntry?.id, entryData });
+
     try {
       setIsLoading(true);
       setError(null);
