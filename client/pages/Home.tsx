@@ -774,7 +774,10 @@ export default function Home() {
       <section className="mb-16">
         <div className="max-w-4xl mx-auto">
           {/* Milestone Achievement Banner */}
-          <div className="bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-2xl border-2 border-emerald-200/60 p-6 mb-8 shadow-lg">
+          <div
+            className="bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-2xl border-2 border-emerald-200/60 p-6 mb-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
+            onClick={() => window.location.href = '/milestones'}
+          >
             <div className="flex items-center justify-center gap-4">
               <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
                 <Calendar className="w-6 h-6 text-white" />
@@ -784,7 +787,7 @@ export default function Home() {
                   Adventure Milestone: First Month of Scottish Exploration Complete!
                 </h3>
                 <p className="text-sm text-emerald-600">
-                  🎉 Congratulations on beginning your Scottish adventure journey!
+                  🎉 Congratulations on beginning your Scottish adventure journey! Click to view all milestones →
                 </p>
               </div>
             </div>
