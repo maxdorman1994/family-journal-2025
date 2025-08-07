@@ -40,7 +40,8 @@ export async function getCommentsForEntry(entryId: string): Promise<JournalComme
 
     return data || [];
   } catch (error) {
-    console.error('Error in getCommentsForEntry:', error);
+    console.error('Error in getCommentsForEntry:', JSON.stringify(error, null, 2));
+    console.error('Error details:', error);
     throw error;
   }
 }
