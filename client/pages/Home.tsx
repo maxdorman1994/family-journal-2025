@@ -163,6 +163,24 @@ export default function Home() {
             </Card>
           ))}
         </div>
+
+        {/* Hidden file input for photo editing */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+
+        {/* Edit instructions */}
+        {Object.keys(memberPhotos).length === 0 && (
+          <div className="text-center mt-4">
+            <p className="text-sm text-slate-500">
+              💡 Hover over any family member's photo and click the edit button to upload a custom picture!
+            </p>
+          </div>
+        )}
       </section>
 
       {/* Adventure Stats */}
