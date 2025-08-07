@@ -18,7 +18,7 @@ export interface MapPin {
 export async function getMapPins(): Promise<MapPin[]> {
   try {
     console.log("📍 Fetching map pins from database...");
-    
+
     const { data, error } = await supabase
       .from("map_pins")
       .select("*")
@@ -40,20 +40,24 @@ export async function getMapPins(): Promise<MapPin[]> {
 /**
  * Add a new map pin to the database
  */
-export async function addMapPin(pin: Omit<MapPin, "id" | "created_at" | "updated_at">): Promise<MapPin> {
+export async function addMapPin(
+  pin: Omit<MapPin, "id" | "created_at" | "updated_at">,
+): Promise<MapPin> {
   try {
     console.log("📍 Adding new map pin:", pin.title);
-    
+
     const { data, error } = await supabase
       .from("map_pins")
-      .insert([{
-        latitude: pin.latitude,
-        longitude: pin.longitude,
-        title: pin.title,
-        description: pin.description,
-        category: pin.category,
-        date: pin.date
-      }])
+      .insert([
+        {
+          latitude: pin.latitude,
+          longitude: pin.longitude,
+          title: pin.title,
+          description: pin.description,
+          category: pin.category,
+          date: pin.date,
+        },
+      ])
       .select()
       .single();
 
@@ -73,15 +77,18 @@ export async function addMapPin(pin: Omit<MapPin, "id" | "created_at" | "updated
 /**
  * Update an existing map pin
  */
-export async function updateMapPin(id: string, updates: Partial<Omit<MapPin, "id" | "created_at" | "updated_at">>): Promise<MapPin> {
+export async function updateMapPin(
+  id: string,
+  updates: Partial<Omit<MapPin, "id" | "created_at" | "updated_at">>,
+): Promise<MapPin> {
   try {
     console.log("📍 Updating map pin:", id);
-    
+
     const { data, error } = await supabase
       .from("map_pins")
       .update({
         ...updates,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", id)
       .select()
@@ -132,12 +139,14 @@ export async function deleteMapPin(id: string): Promise<void> {
 /**
  * Subscribe to real-time map pin changes
  */
-export function subscribeToMapPins(callback: (pins: MapPin[]) => void): () => void {
+export function subscribeToMapPins(
+  callback: (pins: MapPin[]) => void,
+): () => void {
   console.log("📍 Setting up real-time sync for map pins...");
-  
+
   // Initial fetch
   getMapPins().then(callback).catch(console.error);
-  
+
   // Set up real-time subscription
   const subscription = supabase
     .channel("map_pins_changes")
@@ -146,14 +155,14 @@ export function subscribeToMapPins(callback: (pins: MapPin[]) => void): () => vo
       {
         event: "*",
         schema: "public",
-        table: "map_pins"
+        table: "map_pins",
       },
       (payload) => {
         console.log("📍 Real-time map pin change detected:", payload.eventType);
-        
+
         // Refetch all pins when any change occurs
         getMapPins().then(callback).catch(console.error);
-      }
+      },
     )
     .subscribe();
 
@@ -167,10 +176,12 @@ export function subscribeToMapPins(callback: (pins: MapPin[]) => void): () => vo
 /**
  * Get map pins by category
  */
-export async function getMapPinsByCategory(category: MapPin["category"]): Promise<MapPin[]> {
+export async function getMapPinsByCategory(
+  category: MapPin["category"],
+): Promise<MapPin[]> {
   try {
     console.log("📍 Fetching map pins by category:", category);
-    
+
     const { data, error } = await supabase
       .from("map_pins")
       .select("*")
@@ -182,7 +193,9 @@ export async function getMapPinsByCategory(category: MapPin["category"]): Promis
       throw error;
     }
 
-    console.log(`✅ Successfully fetched ${data?.length || 0} ${category} pins`);
+    console.log(
+      `✅ Successfully fetched ${data?.length || 0} ${category} pins`,
+    );
     return data || [];
   } catch (error) {
     console.error("Error in getMapPinsByCategory:", error);
@@ -199,15 +212,15 @@ export async function getMapPinsStats(): Promise<{
 }> {
   try {
     const pins = await getMapPins();
-    
+
     const stats = {
       total: pins.length,
       byCategory: {
-        adventure: pins.filter(p => p.category === "adventure").length,
-        photo: pins.filter(p => p.category === "photo").length,
-        memory: pins.filter(p => p.category === "memory").length,
-        wishlist: pins.filter(p => p.category === "wishlist").length,
-      }
+        adventure: pins.filter((p) => p.category === "adventure").length,
+        photo: pins.filter((p) => p.category === "photo").length,
+        memory: pins.filter((p) => p.category === "memory").length,
+        wishlist: pins.filter((p) => p.category === "wishlist").length,
+      },
     };
 
     console.log("📍 Map pins stats:", stats);

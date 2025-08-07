@@ -79,9 +79,10 @@ export async function compressImage(
   options: Partial<CompressionOptions> = {},
 ): Promise<File> {
   // Use smart compression if no custom options provided
-  const smartOptions = Object.keys(options).length === 0
-    ? getSmartCompressionOptions(file)
-    : { ...defaultCompressionOptions, ...options };
+  const smartOptions =
+    Object.keys(options).length === 0
+      ? getSmartCompressionOptions(file)
+      : { ...defaultCompressionOptions, ...options };
 
   const compressionOptions = smartOptions;
 

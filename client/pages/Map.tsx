@@ -11,7 +11,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MapPin, Trash2, Edit, Calendar, ExternalLink, Info, Wifi, WifiOff, Lock } from "lucide-react";
+import {
+  MapPin,
+  Trash2,
+  Edit,
+  Calendar,
+  ExternalLink,
+  Info,
+  Wifi,
+  WifiOff,
+  Lock,
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import {
   MapPin as MapPinType,
@@ -19,7 +29,7 @@ import {
   updateMapPin,
   deleteMapPin,
   subscribeToMapPins,
-  getMapPinsStats
+  getMapPinsStats,
 } from "@/lib/mapPinsService";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -38,7 +48,8 @@ const categoryLabels = {
 };
 
 // Your personal Mapbox token
-const MAPBOX_TOKEN = 'pk.eyJ1IjoibWF4ZG9ybWFuMTciLCJhIjoiY21keHpjOHJhMWNmbjJrcXczem9hNzBvdCJ9.BKW3-ffrkz1oPVI6lYEKtA';
+const MAPBOX_TOKEN =
+  "pk.eyJ1IjoibWF4ZG9ybWFuMTciLCJhIjoiY21keHpjOHJhMWNmbjJrcXczem9hNzBvdCJ9.BKW3-ffrkz1oPVI6lYEKtA";
 
 export default function MapPage() {
   const [pins, setPins] = useState<MapPinType[]>([]);
@@ -51,14 +62,10 @@ export default function MapPage() {
       photo: 0,
       memory: 0,
       wishlist: 0,
-    }
+    },
   });
 
-  const {
-    isAuthenticated,
-    sessionTimeRemaining,
-    logout
-  } = useAuth();
+  const { isAuthenticated, sessionTimeRemaining, logout } = useAuth();
 
   const [viewState, setViewState] = useState<ViewState>({
     longitude: -4.2026,
@@ -66,7 +73,7 @@ export default function MapPage() {
     zoom: 6.5,
     bearing: 0,
     pitch: 0,
-    padding: { top: 0, bottom: 0, left: 0, right: 0 }
+    padding: { top: 0, bottom: 0, left: 0, right: 0 },
   });
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -98,11 +105,12 @@ export default function MapPage() {
       const newStats = {
         total: updatedPins.length,
         byCategory: {
-          adventure: updatedPins.filter(p => p.category === "adventure").length,
-          photo: updatedPins.filter(p => p.category === "photo").length,
-          memory: updatedPins.filter(p => p.category === "memory").length,
-          wishlist: updatedPins.filter(p => p.category === "wishlist").length,
-        }
+          adventure: updatedPins.filter((p) => p.category === "adventure")
+            .length,
+          photo: updatedPins.filter((p) => p.category === "photo").length,
+          memory: updatedPins.filter((p) => p.category === "memory").length,
+          wishlist: updatedPins.filter((p) => p.category === "wishlist").length,
+        },
       };
       setStats(newStats);
       setIsLoading(false);
@@ -112,39 +120,42 @@ export default function MapPage() {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     // Cleanup function
     return () => {
       console.log("����️ Cleaning up map pins subscriptions");
       unsubscribe();
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   const mapRef = useRef<any>();
 
-  const handleMapClick = useCallback((event: any) => {
-    const { lng, lat } = event.lngLat;
+  const handleMapClick = useCallback(
+    (event: any) => {
+      const { lng, lat } = event.lngLat;
 
-    // Only allow pin creation if authenticated
-    if (!isAuthenticated) {
-      return;
-    }
+      // Only allow pin creation if authenticated
+      if (!isAuthenticated) {
+        return;
+      }
 
-    setSelectedLocation({ latitude: lat, longitude: lng });
-    setSelectedPin(null);
-    setEditingPin(null);
-    setNewPin({
-      title: "",
-      description: "",
-      category: "adventure",
-      date: new Date().toISOString().split("T")[0],
-    });
-    setIsDialogOpen(true);
-  }, [isAuthenticated]);
+      setSelectedLocation({ latitude: lat, longitude: lng });
+      setSelectedPin(null);
+      setEditingPin(null);
+      setNewPin({
+        title: "",
+        description: "",
+        category: "adventure",
+        date: new Date().toISOString().split("T")[0],
+      });
+      setIsDialogOpen(true);
+    },
+    [isAuthenticated],
+  );
 
   const handleAddPin = async () => {
     if (!selectedLocation || !newPin.title.trim()) return;
@@ -161,17 +172,17 @@ export default function MapPage() {
       });
 
       // Immediately update local state for instant UI feedback
-      setPins(currentPins => {
+      setPins((currentPins) => {
         const newPins = [addedPin, ...currentPins];
         // Update stats immediately
         setStats({
           total: newPins.length,
           byCategory: {
-            adventure: newPins.filter(p => p.category === "adventure").length,
-            photo: newPins.filter(p => p.category === "photo").length,
-            memory: newPins.filter(p => p.category === "memory").length,
-            wishlist: newPins.filter(p => p.category === "wishlist").length,
-          }
+            adventure: newPins.filter((p) => p.category === "adventure").length,
+            photo: newPins.filter((p) => p.category === "photo").length,
+            memory: newPins.filter((p) => p.category === "memory").length,
+            wishlist: newPins.filter((p) => p.category === "wishlist").length,
+          },
         });
         return newPins;
       });
@@ -215,19 +226,19 @@ export default function MapPage() {
       });
 
       // Immediately update local state for instant UI feedback
-      setPins(currentPins => {
-        const newPins = currentPins.map(pin =>
-          pin.id === editingPin.id ? updatedPin : pin
+      setPins((currentPins) => {
+        const newPins = currentPins.map((pin) =>
+          pin.id === editingPin.id ? updatedPin : pin,
         );
         // Update stats immediately
         setStats({
           total: newPins.length,
           byCategory: {
-            adventure: newPins.filter(p => p.category === "adventure").length,
-            photo: newPins.filter(p => p.category === "photo").length,
-            memory: newPins.filter(p => p.category === "memory").length,
-            wishlist: newPins.filter(p => p.category === "wishlist").length,
-          }
+            adventure: newPins.filter((p) => p.category === "adventure").length,
+            photo: newPins.filter((p) => p.category === "photo").length,
+            memory: newPins.filter((p) => p.category === "memory").length,
+            wishlist: newPins.filter((p) => p.category === "wishlist").length,
+          },
         });
         return newPins;
       });
@@ -255,17 +266,17 @@ export default function MapPage() {
       await deleteMapPin(pinId);
 
       // Immediately update local state for instant UI feedback
-      setPins(currentPins => {
-        const newPins = currentPins.filter(pin => pin.id !== pinId);
+      setPins((currentPins) => {
+        const newPins = currentPins.filter((pin) => pin.id !== pinId);
         // Update stats immediately
         setStats({
           total: newPins.length,
           byCategory: {
-            adventure: newPins.filter(p => p.category === "adventure").length,
-            photo: newPins.filter(p => p.category === "photo").length,
-            memory: newPins.filter(p => p.category === "memory").length,
-            wishlist: newPins.filter(p => p.category === "wishlist").length,
-          }
+            adventure: newPins.filter((p) => p.category === "adventure").length,
+            photo: newPins.filter((p) => p.category === "photo").length,
+            memory: newPins.filter((p) => p.category === "memory").length,
+            wishlist: newPins.filter((p) => p.category === "wishlist").length,
+          },
         });
         return newPins;
       });
@@ -282,7 +293,7 @@ export default function MapPage() {
     mapRef.current?.flyTo({
       center: [longitude, latitude],
       zoom: 12,
-      duration: 2000
+      duration: 2000,
     });
   };
 
@@ -297,8 +308,7 @@ export default function MapPage() {
         <p className="text-center text-muted-foreground mb-6">
           {isAuthenticated
             ? "Click anywhere on the map to add a new pin for your Scottish adventures!"
-            : "Login in the footer to start adding pins for your Scottish adventures!"
-          }
+            : "Login in the footer to start adding pins for your Scottish adventures!"}
         </p>
 
         {/* Category Legend */}
@@ -321,39 +331,46 @@ export default function MapPage() {
             <span>
               {isAuthenticated
                 ? "Interactive map powered by Mapbox - Click to add pins, drag to explore Scotland!"
-                : "Interactive map powered by Mapbox - Login in footer to add pins and edit adventures"
-              }
+                : "Interactive map powered by Mapbox - Login in footer to add pins and edit adventures"}
             </span>
           </div>
 
           {/* Sync Status */}
-          <div className={`rounded-lg px-4 py-2 flex items-center gap-2 text-sm ${
-            isOnline
-              ? 'bg-green-50 border border-green-200 text-green-700'
-              : 'bg-red-50 border border-red-200 text-red-700'
-          }`}>
-            {isOnline ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4" />}
+          <div
+            className={`rounded-lg px-4 py-2 flex items-center gap-2 text-sm ${
+              isOnline
+                ? "bg-green-50 border border-green-200 text-green-700"
+                : "bg-red-50 border border-red-200 text-red-700"
+            }`}
+          >
+            {isOnline ? (
+              <Wifi className="w-4 h-4" />
+            ) : (
+              <WifiOff className="w-4 h-4" />
+            )}
             <span>
               {isLoading
                 ? "Loading pins..."
                 : isOnline
                   ? `${pins.length} pins synced`
-                  : "Offline mode"
-              }
+                  : "Offline mode"}
             </span>
           </div>
-
         </div>
       </div>
 
       {/* Stats Section */}
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4 text-center">Adventure Statistics</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-center">
+          Adventure Statistics
+        </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
           {/* Total Pins */}
           <Card className="text-center">
             <CardContent className="p-4">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">{stats.total}</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">
+                {stats.total}
+              </div>
               <div className="text-sm text-muted-foreground">Total Pins</div>
             </CardContent>
           </Card>
@@ -362,11 +379,15 @@ export default function MapPage() {
           <Card className="text-center">
             <CardContent className="p-4">
               <div className="flex justify-center mb-2">
-                <div className={`w-6 h-6 rounded-full ${categoryColors.adventure} flex items-center justify-center`}>
+                <div
+                  className={`w-6 h-6 rounded-full ${categoryColors.adventure} flex items-center justify-center`}
+                >
                   <MapPin className="w-3 h-3 text-white" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-emerald-500 mb-1">{stats.byCategory.adventure}</div>
+              <div className="text-2xl font-bold text-emerald-500 mb-1">
+                {stats.byCategory.adventure}
+              </div>
               <div className="text-xs text-muted-foreground">Adventures</div>
             </CardContent>
           </Card>
@@ -375,11 +396,15 @@ export default function MapPage() {
           <Card className="text-center">
             <CardContent className="p-4">
               <div className="flex justify-center mb-2">
-                <div className={`w-6 h-6 rounded-full ${categoryColors.photo} flex items-center justify-center`}>
+                <div
+                  className={`w-6 h-6 rounded-full ${categoryColors.photo} flex items-center justify-center`}
+                >
                   <MapPin className="w-3 h-3 text-white" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-blue-500 mb-1">{stats.byCategory.photo}</div>
+              <div className="text-2xl font-bold text-blue-500 mb-1">
+                {stats.byCategory.photo}
+              </div>
               <div className="text-xs text-muted-foreground">Photo Spots</div>
             </CardContent>
           </Card>
@@ -388,11 +413,15 @@ export default function MapPage() {
           <Card className="text-center">
             <CardContent className="p-4">
               <div className="flex justify-center mb-2">
-                <div className={`w-6 h-6 rounded-full ${categoryColors.memory} flex items-center justify-center`}>
+                <div
+                  className={`w-6 h-6 rounded-full ${categoryColors.memory} flex items-center justify-center`}
+                >
                   <MapPin className="w-3 h-3 text-white" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-purple-500 mb-1">{stats.byCategory.memory}</div>
+              <div className="text-2xl font-bold text-purple-500 mb-1">
+                {stats.byCategory.memory}
+              </div>
               <div className="text-xs text-muted-foreground">Memories</div>
             </CardContent>
           </Card>
@@ -401,11 +430,15 @@ export default function MapPage() {
           <Card className="text-center">
             <CardContent className="p-4">
               <div className="flex justify-center mb-2">
-                <div className={`w-6 h-6 rounded-full ${categoryColors.wishlist} flex items-center justify-center`}>
+                <div
+                  className={`w-6 h-6 rounded-full ${categoryColors.wishlist} flex items-center justify-center`}
+                >
                   <MapPin className="w-3 h-3 text-white" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-orange-500 mb-1">{stats.byCategory.wishlist}</div>
+              <div className="text-2xl font-bold text-orange-500 mb-1">
+                {stats.byCategory.wishlist}
+              </div>
               <div className="text-xs text-muted-foreground">Wishlist</div>
             </CardContent>
           </Card>
@@ -438,7 +471,9 @@ export default function MapPage() {
                         </div>
                       )}
                     </div>
-                    <Badge className={`${categoryColors[pins[0].category]} text-white`}>
+                    <Badge
+                      className={`${categoryColors[pins[0].category]} text-white`}
+                    >
                       {categoryLabels[pins[0].category]}
                     </Badge>
                   </div>
@@ -454,17 +489,35 @@ export default function MapPage() {
               <CardContent>
                 <div className="space-y-2">
                   {Object.entries(stats.byCategory).map(([category, count]) => (
-                    <div key={category} className="flex items-center justify-between">
+                    <div
+                      key={category}
+                      className="flex items-center justify-between"
+                    >
                       <div className="flex items-center">
-                        <div className={`w-3 h-3 rounded-full ${categoryColors[category as keyof typeof categoryColors]} mr-2`}></div>
-                        <span className="text-sm">{categoryLabels[category as keyof typeof categoryLabels]}</span>
+                        <div
+                          className={`w-3 h-3 rounded-full ${categoryColors[category as keyof typeof categoryColors]} mr-2`}
+                        ></div>
+                        <span className="text-sm">
+                          {
+                            categoryLabels[
+                              category as keyof typeof categoryLabels
+                            ]
+                          }
+                        </span>
                       </div>
                       <div className="flex items-center">
-                        <span className="text-sm font-medium mr-2">{count}</span>
+                        <span className="text-sm font-medium mr-2">
+                          {count}
+                        </span>
                         <div className="w-16 bg-gray-200 rounded-full h-2">
                           <div
                             className={`h-2 rounded-full ${categoryColors[category as keyof typeof categoryColors]}`}
-                            style={{ width: stats.total > 0 ? `${(count / stats.total) * 100}%` : '0%' }}
+                            style={{
+                              width:
+                                stats.total > 0
+                                  ? `${(count / stats.total) * 100}%`
+                                  : "0%",
+                            }}
                           ></div>
                         </div>
                       </div>
@@ -486,7 +539,7 @@ export default function MapPage() {
                 <ReactMapGL
                   ref={mapRef}
                   {...viewState}
-                  onMove={evt => setViewState(evt.viewState)}
+                  onMove={(evt) => setViewState(evt.viewState)}
                   onClick={handleMapClick}
                   mapStyle="mapbox://styles/mapbox/outdoors-v12"
                   mapboxAccessToken={MAPBOX_TOKEN}
@@ -498,7 +551,7 @@ export default function MapPage() {
                   touchRotate={false}
                   keyboard={true}
                   attributionControl={true}
-                  style={{ width: '100%', height: '100%' }}
+                  style={{ width: "100%", height: "100%" }}
                 >
                   {/* Adventure Pins */}
                   {pins.map((pin) => (
@@ -512,7 +565,9 @@ export default function MapPage() {
                         setSelectedPin(pin);
                       }}
                     >
-                      <div className={`w-8 h-8 rounded-full ${categoryColors[pin.category]} border-3 border-white shadow-lg flex items-center justify-center cursor-pointer transform transition-transform hover:scale-110`}>
+                      <div
+                        className={`w-8 h-8 rounded-full ${categoryColors[pin.category]} border-3 border-white shadow-lg flex items-center justify-center cursor-pointer transform transition-transform hover:scale-110`}
+                      >
                         <MapPin className="w-4 h-4 text-white" />
                       </div>
                     </Marker>
@@ -530,7 +585,9 @@ export default function MapPage() {
                     >
                       <div className="p-3 min-w-[200px]">
                         <div className="flex items-center justify-between mb-2">
-                          <Badge className={`${categoryColors[selectedPin.category]} text-white text-xs`}>
+                          <Badge
+                            className={`${categoryColors[selectedPin.category]} text-white text-xs`}
+                          >
                             {categoryLabels[selectedPin.category]}
                           </Badge>
                           {isAuthenticated && (
@@ -554,7 +611,9 @@ export default function MapPage() {
                             </div>
                           )}
                         </div>
-                        <h3 className="font-semibold text-sm mb-1">{selectedPin.title}</h3>
+                        <h3 className="font-semibold text-sm mb-1">
+                          {selectedPin.title}
+                        </h3>
                         {selectedPin.description && (
                           <p className="text-xs text-muted-foreground mb-2">
                             {selectedPin.description}
@@ -583,7 +642,7 @@ export default function MapPage() {
                         latitude: 56.4907,
                         zoom: 6.5,
                         bearing: 0,
-                        pitch: 0
+                        pitch: 0,
                       });
                     }}
                     className="bg-white/90 backdrop-blur-sm hover:bg-white"
@@ -670,8 +729,7 @@ export default function MapPage() {
                     <p className="text-xs">
                       {isAuthenticated
                         ? "Click on the map to add your first adventure pin."
-                        : "Login in the footer to start adding adventure pins."
-                      }
+                        : "Login in the footer to start adding adventure pins."}
                     </p>
                   </div>
                 )}
@@ -691,7 +749,9 @@ export default function MapPage() {
           <div className="space-y-4">
             {selectedLocation && !editingPin && (
               <div className="bg-muted/50 rounded-lg p-3 text-sm">
-                <strong>Location:</strong> {selectedLocation.latitude.toFixed(4)}, {selectedLocation.longitude.toFixed(4)}
+                <strong>Location:</strong>{" "}
+                {selectedLocation.latitude.toFixed(4)},{" "}
+                {selectedLocation.longitude.toFixed(4)}
               </div>
             )}
 
@@ -760,7 +820,6 @@ export default function MapPage() {
           </div>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }

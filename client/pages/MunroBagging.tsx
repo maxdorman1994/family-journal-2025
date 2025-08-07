@@ -52,11 +52,7 @@ export default function MunroBagging() {
     "all",
   );
 
-  const {
-    isAuthenticated,
-    sessionTimeRemaining,
-    logout
-  } = useAuth();
+  const { isAuthenticated, sessionTimeRemaining, logout } = useAuth();
   const [regionFilter, setRegionFilter] = useState<string>("all");
   const [difficultyFilter, setDifficultyFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -508,7 +504,6 @@ export default function MunroBagging() {
               Conquering Scotland's 282 magnificent peaks over 3,000 feet
             </p>
 
-
             {/* Error Display */}
             {error && (
               <div className="mb-8 max-w-3xl mx-auto">
@@ -541,8 +536,8 @@ export default function MunroBagging() {
                   )}
 
                   <div className="text-xs text-center text-amber-600 mb-4">
-                    ���� Your progress is being tracked locally until database is
-                    connected
+                    ���� Your progress is being tracked locally until database
+                    is connected
                   </div>
 
                   <div className="flex gap-2 justify-center">
@@ -1163,7 +1158,6 @@ export default function MunroBagging() {
           </div>
         )}
       </div>
-
     </div>
   );
 }

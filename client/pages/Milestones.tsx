@@ -301,12 +301,12 @@ export default function Milestones() {
                     </CardContent>
                   </Card>
                 );
-              },
-            )}
+              })}
           </div>
 
           {/* View More/Less Button */}
-          {filterMilestones(completedMilestones, selectedCategory).length > 3 && (
+          {filterMilestones(completedMilestones, selectedCategory).length >
+            3 && (
             <div className="text-center mt-6">
               <Button
                 variant="outline"
@@ -316,8 +316,7 @@ export default function Milestones() {
                 <Eye className="w-4 h-4 mr-2" />
                 {showAllCompleted
                   ? `View Less (showing ${filterMilestones(completedMilestones, selectedCategory).length})`
-                  : `View More (${filterMilestones(completedMilestones, selectedCategory).length - 3} more)`
-                }
+                  : `View More (${filterMilestones(completedMilestones, selectedCategory).length - 3} more)`}
               </Button>
             </div>
           )}

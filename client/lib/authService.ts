@@ -12,20 +12,20 @@ const SESSION_DURATION = 24 * 60 * 60 * 1000;
 export function isAuthenticated(): boolean {
   const token = localStorage.getItem(AUTH_KEY);
   const expiry = localStorage.getItem(AUTH_EXPIRY_KEY);
-  
+
   if (!token || !expiry) {
     return false;
   }
-  
+
   const expiryTime = parseInt(expiry);
   const now = Date.now();
-  
+
   if (now > expiryTime) {
     // Session expired, clear storage
     logout();
     return false;
   }
-  
+
   return token === "authenticated";
 }
 
@@ -56,11 +56,11 @@ export function logout(): void {
 export function getSessionTimeRemaining(): number {
   const expiry = localStorage.getItem(AUTH_EXPIRY_KEY);
   if (!expiry) return 0;
-  
+
   const expiryTime = parseInt(expiry);
   const now = Date.now();
   const remaining = expiryTime - now;
-  
+
   return Math.max(0, Math.floor(remaining / (60 * 1000)));
 }
 

@@ -56,9 +56,7 @@ export default function Home() {
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const {
-    isAuthenticated
-  } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState<
     "connected" | "connecting" | "disconnected" | "local"
@@ -2042,7 +2040,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
     </div>
   );
 }

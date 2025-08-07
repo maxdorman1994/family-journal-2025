@@ -78,7 +78,6 @@ export default function Layout({ children }: LayoutProps) {
       // Update logo URL
       setLogoUrl(cloudflareUrl);
       console.log("✅ Logo updated successfully:", cloudflareUrl);
-
     } catch (error) {
       console.error("❌ Error uploading logo:", error);
       alert("Failed to upload logo. Please try again.");
@@ -86,7 +85,7 @@ export default function Layout({ children }: LayoutProps) {
       setIsUploadingLogo(false);
       // Reset input value to allow selecting the same file again
       if (logoFileInputRef.current) {
-        logoFileInputRef.current.value = '';
+        logoFileInputRef.current.value = "";
       }
     }
   };
@@ -100,11 +99,15 @@ export default function Layout({ children }: LayoutProps) {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
               <div
-                className={`w-10 h-10 rounded-full bg-gradient-to-br from-vibrant-blue to-scotland-loch overflow-hidden border-2 border-white shadow-lg relative group ${isAuthenticated ? 'cursor-pointer' : ''}`}
-                onClick={isAuthenticated ? (e) => {
-                  e.preventDefault();
-                  handleLogoEdit();
-                } : undefined}
+                className={`w-10 h-10 rounded-full bg-gradient-to-br from-vibrant-blue to-scotland-loch overflow-hidden border-2 border-white shadow-lg relative group ${isAuthenticated ? "cursor-pointer" : ""}`}
+                onClick={
+                  isAuthenticated
+                    ? (e) => {
+                        e.preventDefault();
+                        handleLogoEdit();
+                      }
+                    : undefined
+                }
               >
                 <img
                   src={logoUrl}

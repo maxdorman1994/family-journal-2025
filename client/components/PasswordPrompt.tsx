@@ -24,7 +24,7 @@ export default function PasswordPrompt({
   onAuthenticate,
   onCancel,
   title = "Family Access Required",
-  description = "Please enter the family password to edit content."
+  description = "Please enter the family password to edit content.",
 }: PasswordPromptProps) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +38,7 @@ export default function PasswordPrompt({
 
     try {
       const success = onAuthenticate(password);
-      
+
       if (success) {
         setPassword("");
         setError("");

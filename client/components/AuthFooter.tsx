@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Lock, 
-  Unlock, 
-  Eye, 
-  EyeOff, 
-  Shield, 
+import {
+  Lock,
+  Unlock,
+  Eye,
+  EyeOff,
+  Shield,
   Clock,
   User,
   LogOut,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -23,12 +23,8 @@ export default function AuthFooter() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { 
-    isAuthenticated, 
-    sessionTimeRemaining,
-    authenticate, 
-    logout
-  } = useAuth();
+  const { isAuthenticated, sessionTimeRemaining, authenticate, logout } =
+    useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +33,7 @@ export default function AuthFooter() {
 
     try {
       const success = authenticate(password);
-      
+
       if (success) {
         setPassword("");
         setError("");
@@ -67,11 +63,13 @@ export default function AuthFooter() {
         <div className="flex items-center justify-between py-2 sm:py-3">
           {/* Left Side - Status */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm ${
-              isAuthenticated
-                ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
-                : 'bg-orange-50 border border-orange-200 text-orange-700'
-            }`}>
+            <div
+              className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm ${
+                isAuthenticated
+                  ? "bg-emerald-50 border border-emerald-200 text-emerald-700"
+                  : "bg-orange-50 border border-orange-200 text-orange-700"
+              }`}
+            >
               {isAuthenticated ? (
                 <>
                   <Unlock className="w-4 h-4" />
@@ -137,9 +135,12 @@ export default function AuthFooter() {
                     <Shield className="w-5 h-5 text-emerald-600" />
                   </div>
                 </div>
-                <h3 className="font-semibold text-sm">Family Access Required</h3>
+                <h3 className="font-semibold text-sm">
+                  Family Access Required
+                </h3>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Enter the family password to edit content, add photos, create journal entries, and mark Munros complete.
+                  Enter the family password to edit content, add photos, create
+                  journal entries, and mark Munros complete.
                 </p>
               </div>
 

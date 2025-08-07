@@ -19,7 +19,7 @@
     },
     {
       "src": "/placeholder.svg",
-      "sizes": "512x512", 
+      "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
@@ -32,7 +32,7 @@
       "form_factor": "wide"
     },
     {
-      "src": "/placeholder.svg", 
+      "src": "/placeholder.svg",
       "sizes": "750x1334",
       "type": "image/svg+xml",
       "form_factor": "narrow"
@@ -41,7 +41,7 @@
   "shortcuts": [
     {
       "name": "Journal",
-      "short_name": "Journal", 
+      "short_name": "Journal",
       "description": "View our adventure journal entries",
       "url": "/journal",
       "icons": [
@@ -55,7 +55,7 @@
       "name": "Map",
       "short_name": "Map",
       "description": "Explore our adventure map",
-      "url": "/map", 
+      "url": "/map",
       "icons": [
         {
           "src": "/placeholder.svg",
@@ -70,7 +70,7 @@
       "url": "/gallery",
       "icons": [
         {
-          "src": "/placeholder.svg", 
+          "src": "/placeholder.svg",
           "sizes": "96x96"
         }
       ]

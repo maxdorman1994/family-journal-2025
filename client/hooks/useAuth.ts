@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { isAuthenticated, authenticate, logout, getSessionTimeRemaining } from "@/lib/authService";
+import {
+  isAuthenticated,
+  authenticate,
+  logout,
+  getSessionTimeRemaining,
+} from "@/lib/authService";
 
 export function useAuth() {
   const [isAuth, setIsAuth] = useState(false);

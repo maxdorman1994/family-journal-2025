@@ -5,11 +5,12 @@ import { Download, X, Smartphone, Monitor } from "lucide-react";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
 }
 
 export default function PWAInstaller() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
 
@@ -17,9 +18,9 @@ export default function PWAInstaller() {
     // Check if already installed (standalone mode)
     const checkStandalone = () => {
       setIsStandalone(
-        window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as any).standalone ||
-        document.referrer.includes('android-app://')
+        window.matchMedia("(display-mode: standalone)").matches ||
+          (window.navigator as any).standalone ||
+          document.referrer.includes("android-app://"),
       );
     };
 
@@ -27,10 +28,10 @@ export default function PWAInstaller() {
 
     // Listen for the beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
-      console.log('📱 PWA install prompt available');
+      console.log("📱 PWA install prompt available");
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      
+
       // Show our custom install prompt after a delay
       setTimeout(() => {
         setShowInstallPrompt(true);
@@ -39,31 +40,35 @@ export default function PWAInstaller() {
 
     // Listen for app installed event
     const handleAppInstalled = () => {
-      console.log('✅ PWA was installed');
+      console.log("✅ PWA was installed");
       setShowInstallPrompt(false);
       setDeferredPrompt(null);
       setIsStandalone(true);
     };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
 
     // Register service worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("/sw.js")
           .then((registration) => {
-            console.log('✅ SW registered: ', registration);
+            console.log("✅ SW registered: ", registration);
           })
           .catch((registrationError) => {
-            console.log('❌ SW registration failed: ', registrationError);
+            console.log("❌ SW registration failed: ", registrationError);
           });
       });
     }
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt,
+      );
+      window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
 
@@ -87,11 +92,15 @@ export default function PWAInstaller() {
   const handleDismiss = () => {
     setShowInstallPrompt(false);
     // Don't show again for this session
-    sessionStorage.setItem('pwa-install-dismissed', 'true');
+    sessionStorage.setItem("pwa-install-dismissed", "true");
   };
 
   // Don't show if already installed or dismissed this session
-  if (isStandalone || !showInstallPrompt || sessionStorage.getItem('pwa-install-dismissed')) {
+  if (
+    isStandalone ||
+    !showInstallPrompt ||
+    sessionStorage.getItem("pwa-install-dismissed")
+  ) {
     return null;
   }
 
@@ -106,7 +115,9 @@ export default function PWAInstaller() {
               </div>
               <div>
                 <h3 className="font-semibold text-sm">Install App</h3>
-                <p className="text-xs text-emerald-100">Get the full experience</p>
+                <p className="text-xs text-emerald-100">
+                  Get the full experience
+                </p>
               </div>
             </div>
             <Button

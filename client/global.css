@@ -20,7 +20,8 @@
   }
 
   /* Better touch targets */
-  button, a {
+  button,
+  a {
     touch-action: manipulation;
   }
 

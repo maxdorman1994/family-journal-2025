@@ -123,7 +123,9 @@ export default function NewEntryForm({
       console.log("🔧 Populating form for editing:", editingEntry);
       setFormData({
         title: editingEntry.title || "",
-        date: editingEntry.date ? new Date(editingEntry.date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+        date: editingEntry.date
+          ? new Date(editingEntry.date).toISOString().split("T")[0]
+          : new Date().toISOString().split("T")[0],
         location: editingEntry.location || "",
         weather: editingEntry.weather || "",
         mood: editingEntry.mood || "",
@@ -209,13 +211,16 @@ export default function NewEntryForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("📝 Form submission started", { editingEntry: !!editingEntry, formData });
+    console.log("📝 Form submission started", {
+      editingEntry: !!editingEntry,
+      formData,
+    });
     console.log("🔍 Checking required fields:", {
       title: formData.title,
       location: formData.location,
       content: formData.content,
       weather: formData.weather,
-      mood: formData.mood
+      mood: formData.mood,
     });
 
     if (validateForm()) {
@@ -291,7 +296,9 @@ export default function NewEntryForm({
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             <span className="bg-gradient-to-r from-vibrant-blue via-scotland-loch to-vibrant-teal bg-clip-text text-transparent">
-              {editingEntry ? "Edit Adventure Entry" : "Create New Adventure Entry"}
+              {editingEntry
+                ? "Edit Adventure Entry"
+                : "Create New Adventure Entry"}
             </span>
           </DialogTitle>
         </DialogHeader>
@@ -658,8 +665,10 @@ export default function NewEntryForm({
                     ? "Uploading Photos..."
                     : "Saving..."}
                 </>
+              ) : editingEntry ? (
+                "Update Adventure"
               ) : (
-                editingEntry ? "Update Adventure" : "Save Adventure"
+                "Save Adventure"
               )}
             </Button>
           </div>

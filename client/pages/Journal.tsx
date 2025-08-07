@@ -68,11 +68,7 @@ export default function Journal() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
 
-  const {
-    isAuthenticated,
-    sessionTimeRemaining,
-    logout
-  } = useAuth();
+  const { isAuthenticated, sessionTimeRemaining, logout } = useAuth();
 
   // Fallback data for development when Supabase is not configured
   const journalEntriesData: JournalEntry[] = [
@@ -224,7 +220,11 @@ export default function Journal() {
 
   const handleSaveEntry = async (entryData: any) => {
     const isEditing = editingEntry !== null;
-    console.log("🔄 HandleSaveEntry called:", { isEditing, editingEntry: editingEntry?.id, entryData });
+    console.log("🔄 HandleSaveEntry called:", {
+      isEditing,
+      editingEntry: editingEntry?.id,
+      entryData,
+    });
 
     try {
       setIsLoading(true);
@@ -286,15 +286,25 @@ export default function Journal() {
         photos: uploadedPhotoUrls,
       };
 
-      console.log(isEditing ? "Updating journal entry with data:" : "Creating journal entry with data:", supabaseEntryData);
+      console.log(
+        isEditing
+          ? "Updating journal entry with data:"
+          : "Creating journal entry with data:",
+        supabaseEntryData,
+      );
 
       // Try to save to Supabase first
       try {
         if (isEditing && editingEntry) {
-          const updatedEntry = await updateJournalEntry(editingEntry.id, supabaseEntryData);
-          setEntries((prev) => prev.map(entry =>
-            entry.id === editingEntry.id ? updatedEntry : entry
-          ));
+          const updatedEntry = await updateJournalEntry(
+            editingEntry.id,
+            supabaseEntryData,
+          );
+          setEntries((prev) =>
+            prev.map((entry) =>
+              entry.id === editingEntry.id ? updatedEntry : entry,
+            ),
+          );
           console.log("✅ Entry updated in Supabase successfully");
         } else {
           const savedEntry = await createJournalEntry(supabaseEntryData);
@@ -475,7 +485,6 @@ export default function Journal() {
               Capturing magical moments across the beautiful landscapes of
               Scotland
             </p>
-
 
             <Button
               size="lg"
@@ -1046,7 +1055,6 @@ export default function Journal() {
           </div>
         </div>
       )}
-
     </div>
   );
 }
