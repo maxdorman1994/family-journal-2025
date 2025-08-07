@@ -46,6 +46,7 @@ END;
 $$ language 'plpgsql';
 
 -- Create trigger to automatically update updated_at when row is modified
+DROP TRIGGER IF EXISTS update_journal_entries_updated_at ON journal_entries;
 CREATE TRIGGER update_journal_entries_updated_at
     BEFORE UPDATE ON journal_entries
     FOR EACH ROW
