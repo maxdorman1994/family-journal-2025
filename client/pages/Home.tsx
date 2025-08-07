@@ -1396,7 +1396,7 @@ export default function Home() {
                     <MapPin className="h-8 w-8 text-white" />
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-bold">🗺���</span>
+                    <span className="text-xs text-white font-bold">🗺️</span>
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-3">
@@ -2043,14 +2043,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Password Prompt */}
-      <PasswordPrompt
-        isOpen={showPasswordPrompt}
-        onAuthenticate={authenticate}
-        onCancel={cancelAuth}
-        title="Family Access Required"
-        description="Please enter the family password to edit family photos."
-      />
     </div>
   );
 }
