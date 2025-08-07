@@ -1253,6 +1253,30 @@ export default function Wishlist() {
                           </span>
                         </div>
                       </div>
+
+                      {/* Quick Vote Buttons */}
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => addVote(item.id)}
+                          className="h-7 w-7 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          title="Add a family vote"
+                        >
+                          <Heart className="h-3 w-3 fill-current" />
+                        </Button>
+                        {item.family_votes > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeVote(item.id)}
+                            className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            title="Remove a family vote"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Action Buttons */}
