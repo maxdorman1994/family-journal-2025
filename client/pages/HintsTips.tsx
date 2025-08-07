@@ -552,36 +552,36 @@ export default function HintsTips() {
               <div>
                 <h3 className="font-bold text-slate-800 mb-2">Weather Resources</h3>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• mwis.org.uk - Mountain weather</li>
-                  <li>• metoffice.gov.uk - General forecast</li>
-                  <li>• windy.com - Visual weather maps</li>
+                  <li>• <a href="https://mwis.org.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">mwis.org.uk</a> - Mountain weather</li>
+                  <li>• <a href="https://metoffice.gov.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">metoffice.gov.uk</a> - General forecast</li>
+                  <li>• <a href="https://windy.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">windy.com</a> - Visual weather maps</li>
                 </ul>
               </div>
-              
+
               <div>
                 <h3 className="font-bold text-slate-800 mb-2">Navigation</h3>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• OS Maps app - Official mapping</li>
-                  <li>• ViewRanger - Offline maps</li>
-                  <li>• what3words - Emergency location</li>
+                  <li>• <a href="https://shop.ordnancesurvey.co.uk/apps/os-maps/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">OS Maps app</a> - Official mapping</li>
+                  <li>• <a href="https://www.viewranger.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">ViewRanger</a> - Offline maps</li>
+                  <li>• <a href="https://what3words.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">what3words</a> - Emergency location</li>
                 </ul>
               </div>
-              
+
               <div>
                 <h3 className="font-bold text-slate-800 mb-2">Accommodation</h3>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• booking.com - Hotels & B&Bs</li>
-                  <li>• syha.org.uk - Youth hostels</li>
-                  <li>• airbnb.com - Self-catering</li>
+                  <li>• <a href="https://booking.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">booking.com</a> - Hotels & B&Bs</li>
+                  <li>• <a href="https://syha.org.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">syha.org.uk</a> - Youth hostels</li>
+                  <li>• <a href="https://airbnb.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">airbnb.com</a> - Self-catering</li>
                 </ul>
               </div>
-              
+
               <div>
                 <h3 className="font-bold text-slate-800 mb-2">Travel & Tides</h3>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• calmac.co.uk - West coast ferries</li>
-                  <li>• tidetimes.org.uk - UK tide times</li>
-                  <li>• bbc.co.uk/weather - Includes tides</li>
+                  <li>• <a href="https://calmac.co.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">calmac.co.uk</a> - West coast ferries</li>
+                  <li>• <a href="https://tidetimes.org.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">tidetimes.org.uk</a> - UK tide times</li>
+                  <li>• <a href="https://bbc.co.uk/weather" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline transition-colors">bbc.co.uk/weather</a> - Includes tides</li>
                 </ul>
               </div>
             </div>
