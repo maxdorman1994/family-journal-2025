@@ -88,8 +88,13 @@ export async function getWishlistItems(): Promise<WishlistItem[]> {
     console.error("Error in getWishlistItems:", error);
 
     // Check if it's a network error
-    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
     }
 
     if (error instanceof Error) {
@@ -145,8 +150,13 @@ export async function createWishlistItem(
     console.error("Error in createWishlistItem:", error);
 
     // Check if it's a network error
-    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
     }
 
     if (error instanceof Error) {
@@ -188,8 +198,13 @@ export async function updateWishlistItem(
     console.error("Error in updateWishlistItem:", error);
 
     // Check if it's a network error
-    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
     }
 
     if (error instanceof Error) {
@@ -225,8 +240,13 @@ export async function deleteWishlistItem(id: string): Promise<void> {
     console.error("Error in deleteWishlistItem:", error);
 
     // Check if it's a network error
-    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
     }
 
     if (error instanceof Error) {
@@ -278,8 +298,13 @@ export async function addVoteToItem(id: string): Promise<WishlistItem> {
     console.error("Error in addVoteToItem:", error);
 
     // Check if it's a network error
-    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
     }
 
     if (error instanceof Error) {
@@ -331,8 +356,13 @@ export async function removeVoteFromItem(id: string): Promise<WishlistItem> {
     console.error("Error in removeVoteFromItem:", error);
 
     // Check if it's a network error
-    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
     }
 
     if (error instanceof Error) {

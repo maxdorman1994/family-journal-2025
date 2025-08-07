@@ -408,9 +408,9 @@ export default function Home() {
       const processedPhoto = await processPhoto(file);
       console.log(`✅ Photo processed successfully:`, {
         id: processedPhoto.id,
-        preview: processedPhoto.preview?.substring(0, 50) + '...',
+        preview: processedPhoto.preview?.substring(0, 50) + "...",
         hasFile: !!processedPhoto.file,
-        fileSize: processedPhoto.file?.size
+        fileSize: processedPhoto.file?.size,
       });
 
       if (error && error.includes("Database Setup Required")) {
@@ -441,7 +441,7 @@ export default function Home() {
           id: updatedMember.id,
           name: updatedMember.name,
           avatar_url: updatedMember.avatar_url,
-          display_avatar: updatedMember.display_avatar
+          display_avatar: updatedMember.display_avatar,
         });
 
         // Reload data to get updated state
@@ -457,16 +457,23 @@ export default function Home() {
         message: dbError instanceof Error ? dbError.message : String(dbError),
         stack: dbError instanceof Error ? dbError.stack : undefined,
         editingMember,
-        fileName: file.name
+        fileName: file.name,
       });
 
       // Test connectivity if it's a network error
-      if (dbError instanceof Error && dbError.message.includes('Network connection failed')) {
+      if (
+        dbError instanceof Error &&
+        dbError.message.includes("Network connection failed")
+      ) {
         console.log("🔍 Network error detected, testing connectivity...");
         // Auto-test connectivity and provide helpful message
-        alert(`Network connection failed while uploading photo. Please check your internet connection and try again.\n\nThe photo may have been processed but not saved to the database.`);
+        alert(
+          `Network connection failed while uploading photo. Please check your internet connection and try again.\n\nThe photo may have been processed but not saved to the database.`,
+        );
       } else {
-        alert(`Failed to upload photo: ${dbError instanceof Error ? dbError.message : String(dbError)}`);
+        alert(
+          `Failed to upload photo: ${dbError instanceof Error ? dbError.message : String(dbError)}`,
+        );
       }
     } finally {
       setIsUploading(false);
@@ -500,8 +507,13 @@ export default function Home() {
       console.error("Database error, using local state:", dbError);
 
       // Check if it's a network error and show user-friendly message
-      if (dbError instanceof Error && dbError.message.includes('Network connection failed')) {
-        alert('Network connection failed. The photo will be removed locally, but you may need to try again when online.');
+      if (
+        dbError instanceof Error &&
+        dbError.message.includes("Network connection failed")
+      ) {
+        alert(
+          "Network connection failed. The photo will be removed locally, but you may need to try again when online.",
+        );
       } else {
         console.log("Using local state fallback due to database error");
       }

@@ -26,9 +26,9 @@ export default function Layout({ children }: LayoutProps) {
 
   // Load stored logo URL from localStorage on component mount
   useEffect(() => {
-    const storedLogoUrl = localStorage.getItem('family_logo_url');
-    if (storedLogoUrl && storedLogoUrl !== '/placeholder.svg') {
-      console.log('📸 Loading stored logo URL:', storedLogoUrl);
+    const storedLogoUrl = localStorage.getItem("family_logo_url");
+    if (storedLogoUrl && storedLogoUrl !== "/placeholder.svg") {
+      console.log("📸 Loading stored logo URL:", storedLogoUrl);
       setLogoUrl(storedLogoUrl);
     }
   }, []);
@@ -36,9 +36,9 @@ export default function Layout({ children }: LayoutProps) {
   // Save logo URL to localStorage whenever it changes
   const updateLogoUrl = (newUrl: string) => {
     setLogoUrl(newUrl);
-    if (newUrl !== '/placeholder.svg') {
-      localStorage.setItem('family_logo_url', newUrl);
-      console.log('💾 Logo URL saved to localStorage:', newUrl);
+    if (newUrl !== "/placeholder.svg") {
+      localStorage.setItem("family_logo_url", newUrl);
+      console.log("💾 Logo URL saved to localStorage:", newUrl);
     }
   };
 
@@ -138,7 +138,7 @@ export default function Layout({ children }: LayoutProps) {
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     {isUploadingLogo ? (
                       <Upload className="h-4 w-4 text-white animate-spin" />
-                    ) : logoUrl !== '/placeholder.svg' ? (
+                    ) : logoUrl !== "/placeholder.svg" ? (
                       <div className="flex gap-1">
                         <button
                           onClick={(e) => {
@@ -155,8 +155,8 @@ export default function Layout({ children }: LayoutProps) {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            updateLogoUrl('/placeholder.svg');
-                            localStorage.removeItem('family_logo_url');
+                            updateLogoUrl("/placeholder.svg");
+                            localStorage.removeItem("family_logo_url");
                           }}
                           className="p-1 hover:bg-white/20 rounded"
                           title="Reset to default"

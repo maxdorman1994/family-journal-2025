@@ -4,7 +4,10 @@ import { uploadPhotoToCloudflare, ProcessedPhoto } from "./photoUtils";
 /**
  * Test network connectivity to Supabase
  */
-export async function testSupabaseConnection(): Promise<{ success: boolean; error?: string }> {
+export async function testSupabaseConnection(): Promise<{
+  success: boolean;
+  error?: string;
+}> {
   if (!isSupabaseConfigured()) {
     return { success: false, error: "Supabase not configured" };
   }
@@ -14,8 +17,8 @@ export async function testSupabaseConnection(): Promise<{ success: boolean; erro
 
     // Simple query to test connectivity
     const { data, error } = await supabase
-      .from('family_members')
-      .select('count')
+      .from("family_members")
+      .select("count")
       .limit(1);
 
     if (error) {
@@ -27,8 +30,15 @@ export async function testSupabaseConnection(): Promise<{ success: boolean; erro
     return { success: true };
   } catch (error) {
     console.error("❌ Network error during connection test:", error);
-    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      return { success: false, error: "Network connection failed. Please check your internet connection." };
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      return {
+        success: false,
+        error:
+          "Network connection failed. Please check your internet connection.",
+      };
     }
     return { success: false, error: String(error) };
   }
@@ -195,8 +205,13 @@ export async function updateFamilyMemberAvatar(
     console.error("Error in updateFamilyMemberAvatar:", error);
 
     // Check if it's a network error
-    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
     }
 
     if (error instanceof Error) {
@@ -227,7 +242,10 @@ export async function removeFamilyMemberAvatar(
       .single();
 
     if (error) {
-      console.error("Error removing family member avatar:", JSON.stringify(error, null, 2));
+      console.error(
+        "Error removing family member avatar:",
+        JSON.stringify(error, null, 2),
+      );
       throw new Error(`Failed to remove avatar: ${error.message}`);
     }
 
@@ -237,8 +255,13 @@ export async function removeFamilyMemberAvatar(
     console.error("Error in removeFamilyMemberAvatar:", error);
 
     // Check if it's a network error
-    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
     }
 
     if (error instanceof Error) {

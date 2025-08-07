@@ -316,13 +316,15 @@ export default function Wishlist() {
     } catch (dbError) {
       console.error("Database error, falling back to local state:", dbError);
 
-      const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
+      const errorMessage =
+        dbError instanceof Error ? dbError.message : String(dbError);
 
       // Check if it's a network error and provide user-friendly feedback
-      if (errorMessage.includes("Network connection failed") ||
-          errorMessage.includes("Failed to fetch") ||
-          errorMessage.includes("ERR_NETWORK")) {
-
+      if (
+        errorMessage.includes("Network connection failed") ||
+        errorMessage.includes("Failed to fetch") ||
+        errorMessage.includes("ERR_NETWORK")
+      ) {
         // Network error - save locally as fallback
         const localItem: WishlistItem = {
           id: Date.now().toString(),
@@ -344,7 +346,9 @@ export default function Wishlist() {
         setWishlistItems((prev) => [...prev, localItem]);
         updateLocalStats([...wishlistItems, localItem]);
         setSyncStatus("disconnected");
-        setError("🌐 Connection lost - adventure saved locally, will sync when connection restored");
+        setError(
+          "🌐 Connection lost - adventure saved locally, will sync when connection restored",
+        );
 
         // Clear form on successful local save
         setNewItem({
@@ -384,13 +388,18 @@ export default function Wishlist() {
     } catch (dbError) {
       console.error("Database error, using local state:", dbError);
 
-      const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
+      const errorMessage =
+        dbError instanceof Error ? dbError.message : String(dbError);
 
-      if (errorMessage.includes("Network connection failed") ||
-          errorMessage.includes("Failed to fetch")) {
+      if (
+        errorMessage.includes("Network connection failed") ||
+        errorMessage.includes("Failed to fetch")
+      ) {
         console.log("🌐 Network error during delete, removing locally");
         setSyncStatus("disconnected");
-        setError("🌐 Connection lost - item removed locally, will sync when connection restored");
+        setError(
+          "🌐 Connection lost - item removed locally, will sync when connection restored",
+        );
       }
 
       // Always remove from local state as fallback
@@ -436,26 +445,31 @@ export default function Wishlist() {
         await loadWishlistData(); // Reload to get updated data
       }
     } catch (dbError) {
-    console.error("Database error, using local state:", dbError);
+      console.error("Database error, using local state:", dbError);
 
-    const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
+      const errorMessage =
+        dbError instanceof Error ? dbError.message : String(dbError);
 
-    if (errorMessage.includes("Network connection failed") ||
-        errorMessage.includes("Failed to fetch")) {
-      console.log("🌐 Network error during vote, updating locally");
-      setSyncStatus("disconnected");
-      setError("🌐 Connection lost - vote saved locally, will sync when connection restored");
+      if (
+        errorMessage.includes("Network connection failed") ||
+        errorMessage.includes("Failed to fetch")
+      ) {
+        console.log("🌐 Network error during vote, updating locally");
+        setSyncStatus("disconnected");
+        setError(
+          "🌐 Connection lost - vote saved locally, will sync when connection restored",
+        );
+      }
+
+      // Always update local state as fallback
+      setWishlistItems((prev) =>
+        prev.map((item) =>
+          item.id === id
+            ? { ...item, family_votes: item.family_votes + 1 }
+            : item,
+        ),
+      );
     }
-
-    // Always update local state as fallback
-    setWishlistItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, family_votes: item.family_votes + 1 }
-          : item,
-      ),
-    );
-  }
   };
 
   const removeVote = async (id: string) => {
@@ -476,13 +490,18 @@ export default function Wishlist() {
     } catch (dbError) {
       console.error("Database error, using local state:", dbError);
 
-      const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
+      const errorMessage =
+        dbError instanceof Error ? dbError.message : String(dbError);
 
-      if (errorMessage.includes("Network connection failed") ||
-          errorMessage.includes("Failed to fetch")) {
+      if (
+        errorMessage.includes("Network connection failed") ||
+        errorMessage.includes("Failed to fetch")
+      ) {
         console.log("🌐 Network error during vote removal, updating locally");
         setSyncStatus("disconnected");
-        setError("🌐 Connection lost - vote removed locally, will sync when connection restored");
+        setError(
+          "🌐 Connection lost - vote removed locally, will sync when connection restored",
+        );
       }
 
       // Always update local state as fallback
