@@ -63,9 +63,37 @@ export default function MapPage() {
   const [newPin, setNewPin] = useState({
     title: "",
     description: "",
-    category: "adventure" as MapPin["category"],
+    category: "adventure" as MapPinType["category"],
     date: "",
   });
+
+  // Set up real-time sync and online status monitoring
+  useEffect(() => {
+    console.log("🗺️ Setting up map pins real-time sync...");
+    setIsLoading(true);
+
+    // Subscribe to real-time updates
+    const unsubscribe = subscribeToMapPins((updatedPins) => {
+      console.log(`🗺️ Received ${updatedPins.length} pins from database`);
+      setPins(updatedPins);
+      setIsLoading(false);
+    });
+
+    // Monitor online status
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    // Cleanup function
+    return () => {
+      console.log("🗺️ Cleaning up map pins subscriptions");
+      unsubscribe();
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   const mapRef = useRef<any>();
 
