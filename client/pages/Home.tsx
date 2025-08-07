@@ -12,11 +12,36 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
   const familyMembers = [
-    { name: "Max Dorman", role: "DAD", avatar: "/placeholder.svg" },
-    { name: "Charlotte Foster", role: "MUM", avatar: "/placeholder.svg" },
-    { name: "Oscar", role: "SON", avatar: "/placeholder.svg" },
-    { name: "Rose", role: "DAUGHTER", avatar: "/placeholder.svg" },
-    { name: "Lola", role: "DAUGHTER", avatar: "/placeholder.svg" },
+    {
+      name: "Max Dorman",
+      role: "DAD",
+      avatar: "/placeholder.svg",
+      bio: "Adventure enthusiast and family trip organizer. Loves planning routes, discovering hidden gems, and capturing the perfect Highland sunset photos."
+    },
+    {
+      name: "Charlotte Foster",
+      role: "MUM",
+      avatar: "/placeholder.svg",
+      bio: "Nature lover and family historian. Documents our adventures and ensures everyone stays safe while exploring Scotland's wild landscapes."
+    },
+    {
+      name: "Oscar",
+      role: "SON",
+      avatar: "/placeholder.svg",
+      bio: "Young explorer with boundless energy. Always the first to spot wildlife and loves climbing rocks and splashing in Highland streams."
+    },
+    {
+      name: "Rose",
+      role: "DAUGHTER",
+      avatar: "/placeholder.svg",
+      bio: "Curious adventurer who collects interesting stones and leaves. Has an amazing memory for the stories behind each place we visit."
+    },
+    {
+      name: "Lola",
+      role: "DAUGHTER",
+      avatar: "/placeholder.svg",
+      bio: "Our youngest adventurer with the biggest smile. Brings joy to every journey and reminds us to appreciate the simple moments."
+    },
   ];
 
   const recentAdventures = [
