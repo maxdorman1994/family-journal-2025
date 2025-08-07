@@ -2,6 +2,39 @@ import { supabase, isSupabaseConfigured } from "./supabase";
 import { uploadPhotoToCloudflare, ProcessedPhoto } from "./photoUtils";
 
 /**
+ * Test network connectivity to Supabase
+ */
+export async function testSupabaseConnection(): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase not configured" };
+  }
+
+  try {
+    console.log("🔍 Testing Supabase connection...");
+
+    // Simple query to test connectivity
+    const { data, error } = await supabase
+      .from('family_members')
+      .select('count')
+      .limit(1);
+
+    if (error) {
+      console.error("❌ Supabase connection test failed:", error);
+      return { success: false, error: error.message };
+    }
+
+    console.log("✅ Supabase connection test successful");
+    return { success: true };
+  } catch (error) {
+    console.error("❌ Network error during connection test:", error);
+    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+      return { success: false, error: "Network connection failed. Please check your internet connection." };
+    }
+    return { success: false, error: String(error) };
+  }
+}
+
+/**
  * Supabase Family Members Service
  * Handles all database operations for family member profile pictures and data
  */
