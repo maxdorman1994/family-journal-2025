@@ -277,6 +277,37 @@ export default function Home() {
     return unsubscribeFamilySync;
   }, [subscribe]);
 
+  // Subscribe to comprehensive home page sync
+  useEffect(() => {
+    console.log("🔄 Setting up comprehensive home page sync...");
+
+    const unsubscribeHomeSync = subscribeToHomePageSync((data) => {
+      console.log("🔄 Home page data synced:", data);
+
+      if (data.stats) {
+        console.log("📊 Stats updated from sync:", data.stats);
+        // You can add state updates here if you want to show live stats
+      }
+
+      if (data.family_members) {
+        console.log("👨‍👩‍👧‍👦 Family members updated from sync");
+        setFamilyMembers(data.family_members);
+      }
+
+      if (data.recent_adventures) {
+        console.log("📖 Recent adventures updated from sync");
+        setRecentAdventures(data.recent_adventures);
+      }
+
+      if (data.milestones) {
+        console.log("🎯 Milestones updated from sync");
+        setMilestones(data.milestones);
+      }
+    });
+
+    return unsubscribeHomeSync;
+  }, []);
+
   const loadFamilyMembersData = async () => {
     try {
       setIsLoading(true);
