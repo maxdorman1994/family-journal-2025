@@ -40,6 +40,13 @@ import {
   RecentAdventure,
 } from "@/lib/recentAdventuresService";
 import { initializeMilestoneTracking } from "@/lib/milestoneTracker";
+import {
+  getMilestonesWithProgress,
+  getMilestoneStats,
+  subscribeToMilestoneUpdates,
+  MilestoneWithProgress,
+  MilestoneStats,
+} from "@/lib/milestonesService";
 
 export default function Home() {
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
