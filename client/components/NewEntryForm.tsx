@@ -271,7 +271,7 @@ export default function NewEntryForm({
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             <span className="bg-gradient-to-r from-vibrant-blue via-scotland-loch to-vibrant-teal bg-clip-text text-transparent">
-              Create New Adventure Entry
+              {editingEntry ? "Edit Adventure Entry" : "Create New Adventure Entry"}
             </span>
           </DialogTitle>
         </DialogHeader>
