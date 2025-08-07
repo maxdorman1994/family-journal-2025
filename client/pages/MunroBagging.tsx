@@ -16,15 +16,48 @@ interface MunroWithCompletion extends CompleteMunro {
 }
 
 export default function MunroBagging() {
-  const [munros, setMunros] = useState<Munro[]>(sampleMunros);
+  const [munros, setMunros] = useState<MunroWithCompletion[]>([]);
   const [filter, setFilter] = useState<'all' | 'completed' | 'remaining'>('all');
   const [regionFilter, setRegionFilter] = useState<string>('all');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Initialize Munros data with completion status from localStorage
+  useEffect(() => {
+    const initializeMunros = () => {
+      try {
+        // Get completed Munros from localStorage
+        const savedCompletions = localStorage.getItem('munro-completions');
+        const completedIds = savedCompletions ? JSON.parse(savedCompletions) : [];
+
+        // Mark Ben Nevis as completed by default for demo
+        if (completedIds.length === 0) {
+          completedIds.push('1');
+          localStorage.setItem('munro-completions', JSON.stringify(completedIds));
+        }
+
+        // Create Munros with completion status
+        const munrosWithCompletion: MunroWithCompletion[] = COMPLETE_MUNROS_LIST.map(munro => ({
+          ...munro,
+          completed: completedIds.includes(munro.id),
+          completedDate: completedIds.includes(munro.id) ? '2025-08-03' : undefined,
+          photoCount: completedIds.includes(munro.id) ? Math.floor(Math.random() * 5) + 1 : 0
+        }));
+
+        setMunros(munrosWithCompletion);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error initializing Munros:', error);
+        setIsLoading(false);
+      }
+    };
+
+    initializeMunros();
+  }, []);
 
   const completedCount = munros.filter(m => m.completed).length;
-  const totalMunros = 282; // Total number of Munros in Scotland
-  const completionPercentage = Math.round((completedCount / totalMunros) * 100);
+  const completionPercentage = Math.round((completedCount / TOTAL_MUNROS) * 100);
 
   const filteredMunros = munros.filter(munro => {
     const matchesFilter = filter === 'all' || 
@@ -76,7 +109,7 @@ export default function MunroBagging() {
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 text-6xl opacity-5 animate-bounce">⛰️</div>
-        <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">���️</div>
+        <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">🏔️</div>
         <div className="absolute bottom-20 left-20 text-5xl opacity-5 animate-bounce" style={{animationDelay: '1s'}}>🗻</div>
         <div className="absolute top-60 left-1/3 text-3xl opacity-10 animate-pulse" style={{animationDelay: '2s'}}>⛷️</div>
         <div className="absolute bottom-40 right-10 text-4xl opacity-5 animate-bounce" style={{animationDelay: '1.5s'}}>🧗</div>
