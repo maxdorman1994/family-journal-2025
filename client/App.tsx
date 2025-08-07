@@ -44,5 +44,10 @@ const App = () => (
 );
 
 const container = document.getElementById("root")!;
-const root = createRoot(container);
-root.render(<App />);
+
+// Prevent double mounting in development
+if (!container.hasAttribute('data-root-created')) {
+  const root = createRoot(container);
+  container.setAttribute('data-root-created', 'true');
+  root.render(<App />);
+}
