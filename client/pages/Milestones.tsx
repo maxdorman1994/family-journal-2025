@@ -55,11 +55,23 @@ export default function Milestones() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { subscribe } = useSync();
 
-  // Load milestone data
+  // Load real milestone data from journal entries
   useEffect(() => {
-    const loadMilestoneData = async () => {
+    const loadRealMilestoneData = async () => {
       try {
         setIsLoading(true);
+        setError(null);
+
+        console.log("🔄 Loading real milestones from journal data...");
+
+        // Calculate milestones from actual journal entries
+        const realMilestones = await calculateRealMilestones();
+        const realStats = await getRealMilestoneStats();
+
+        setMilestones(realMilestones);
+        setStats(realStats);
+
+        console.log(`✅ Loaded ${realMilestones.length} real milestones, ${realStats.completed_milestones} completed`);
         setError(null);
 
         console.log("🔄 Loading milestone data...");
