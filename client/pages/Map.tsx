@@ -241,7 +241,7 @@ export default function MapPage() {
       setEditingPin(null);
       console.log("✅ Pin updated successfully and will sync across devices");
     } catch (error) {
-      console.error("❌ Error updating pin:", error);
+      console.error("�� Error updating pin:", error);
       alert(`Error updating pin: ${error.message || error}`);
     }
   };
@@ -320,7 +320,12 @@ export default function MapPage() {
         <div className="flex justify-center mb-6 gap-4">
           <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 flex items-center gap-2 text-sm text-blue-700">
             <Info className="w-4 h-4" />
-            <span>Interactive map powered by Mapbox - Click to add pins, drag to explore Scotland!</span>
+            <span>
+              {isAuthenticated
+                ? "Interactive map powered by Mapbox - Click to add pins, drag to explore Scotland!"
+                : "Interactive map powered by Mapbox - Viewing mode (password required to edit)"
+              }
+            </span>
           </div>
 
           {/* Sync Status */}
