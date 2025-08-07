@@ -66,6 +66,11 @@ export async function getAllMunrosWithCompletion(): Promise<MunroWithCompletion[
 
     if (munrosError) {
       console.error('Error fetching Munros:', munrosError);
+      // Check if it's a table not found error
+      if (munrosError.message.includes('Could not find the table') ||
+          munrosError.message.includes('relation "munros" does not exist')) {
+        throw new Error('SCHEMA_MISSING: Database tables not found');
+      }
       throw new Error(`Failed to fetch Munros: ${munrosError.message}`);
     }
 
@@ -75,7 +80,12 @@ export async function getAllMunrosWithCompletion(): Promise<MunroWithCompletion[
 
     if (completionsError) {
       console.error('Error fetching completions:', completionsError);
-      throw new Error(`Failed to fetch completions: ${completionsError.message}`);
+      // For completions, we can continue without them if the table doesn't exist
+      if (!completionsError.message.includes('Could not find the table') &&
+          !completionsError.message.includes('relation "munro_completions" does not exist')) {
+        throw new Error(`Failed to fetch completions: ${completionsError.message}`);
+      }
+      console.warn('Completions table not found, continuing without completion data');
     }
 
     // Combine Munros with completion data
@@ -201,6 +211,11 @@ export async function getMunroCompletionStats(): Promise<{
 
     if (error) {
       console.error('Error fetching stats:', error);
+      // Check if it's a table not found error
+      if (error.message.includes('Could not find the table') ||
+          error.message.includes('relation "munro_completion_stats" does not exist')) {
+        throw new Error('SCHEMA_MISSING: Database tables not found');
+      }
       throw new Error(`Failed to fetch stats: ${error.message}`);
     }
 
@@ -238,6 +253,11 @@ export async function getMunroRegions(): Promise<string[]> {
       .order('region');
 
     if (error) {
+      // Check if it's a table not found error
+      if (error.message.includes('Could not find the table') ||
+          error.message.includes('relation "munros" does not exist')) {
+        throw new Error('SCHEMA_MISSING: Database tables not found');
+      }
       throw new Error(`Failed to fetch regions: ${error.message}`);
     }
 
