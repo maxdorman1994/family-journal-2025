@@ -758,6 +758,11 @@ export default function Home() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Sync Status Indicator */}
+      <div className="flex justify-end mb-4">
+        <HomePageSyncIndicator />
+      </div>
+
       {/* Hero Section */}
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
