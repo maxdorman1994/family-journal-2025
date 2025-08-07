@@ -35,7 +35,7 @@ export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load family members data and setup real-time sync
-  useState(() => {
+  useEffect(() => {
     loadFamilyMembersData();
 
     // Setup real-time subscription
