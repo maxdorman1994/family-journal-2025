@@ -153,8 +153,8 @@ export default function Journal() {
 
   // Subscribe to real-time journal entry changes
   useEffect(() => {
-    const unsubscribe = subscribe('journal_entries', (event) => {
-      console.log('🔄 Journal sync event:', event.eventType, event.new?.id);
+    const unsubscribe = subscribe("journal_entries", (event) => {
+      console.log("🔄 Journal sync event:", event.eventType, event.new?.id);
 
       if (event.new?._refresh) {
         // Force refresh from sync service
@@ -163,21 +163,25 @@ export default function Journal() {
       }
 
       switch (event.eventType) {
-        case 'INSERT':
+        case "INSERT":
           if (event.new) {
-            setEntries(prev => [event.new, ...prev]);
+            setEntries((prev) => [event.new, ...prev]);
           }
           break;
-        case 'UPDATE':
+        case "UPDATE":
           if (event.new) {
-            setEntries(prev => prev.map(entry =>
-              entry.id === event.new.id ? { ...entry, ...event.new } : entry
-            ));
+            setEntries((prev) =>
+              prev.map((entry) =>
+                entry.id === event.new.id ? { ...entry, ...event.new } : entry,
+              ),
+            );
           }
           break;
-        case 'DELETE':
+        case "DELETE":
           if (event.old) {
-            setEntries(prev => prev.filter(entry => entry.id !== event.old.id));
+            setEntries((prev) =>
+              prev.filter((entry) => entry.id !== event.old.id),
+            );
           }
           break;
       }

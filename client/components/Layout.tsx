@@ -37,7 +37,7 @@ export default function Layout({ children }: LayoutProps) {
     }
 
     // Initialize cross-device sync
-    initializeSync().catch(error => {
+    initializeSync().catch((error) => {
       console.error("Failed to initialize sync:", error);
     });
   }, [initializeSync]);

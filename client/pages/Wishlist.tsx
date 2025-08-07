@@ -118,8 +118,12 @@ export default function Wishlist() {
 
   // Subscribe to cross-device sync events
   useEffect(() => {
-    const unsubscribe = subscribe('wishlist_items', (event) => {
-      console.log('🔄 Cross-device wishlist sync:', event.eventType, event.new?.id);
+    const unsubscribe = subscribe("wishlist_items", (event) => {
+      console.log(
+        "🔄 Cross-device wishlist sync:",
+        event.eventType,
+        event.new?.id,
+      );
 
       if (event.new?._refresh) {
         loadWishlistData();
@@ -127,10 +131,10 @@ export default function Wishlist() {
       }
 
       switch (event.eventType) {
-        case 'INSERT':
+        case "INSERT":
           if (event.new) {
-            setWishlistItems(prev => {
-              const exists = prev.find(item => item.id === event.new.id);
+            setWishlistItems((prev) => {
+              const exists = prev.find((item) => item.id === event.new.id);
               if (!exists) {
                 return [event.new, ...prev];
               }
@@ -138,16 +142,20 @@ export default function Wishlist() {
             });
           }
           break;
-        case 'UPDATE':
+        case "UPDATE":
           if (event.new) {
-            setWishlistItems(prev => prev.map(item =>
-              item.id === event.new.id ? { ...item, ...event.new } : item
-            ));
+            setWishlistItems((prev) =>
+              prev.map((item) =>
+                item.id === event.new.id ? { ...item, ...event.new } : item,
+              ),
+            );
           }
           break;
-        case 'DELETE':
+        case "DELETE":
           if (event.old) {
-            setWishlistItems(prev => prev.filter(item => item.id !== event.old.id));
+            setWishlistItems((prev) =>
+              prev.filter((item) => item.id !== event.old.id),
+            );
           }
           break;
       }

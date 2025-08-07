@@ -3,7 +3,7 @@ import { debugNetworkError } from "./debug";
 
 export interface SyncEvent {
   table: string;
-  eventType: 'INSERT' | 'UPDATE' | 'DELETE';
+  eventType: "INSERT" | "UPDATE" | "DELETE";
   old: any;
   new: any;
 }
@@ -23,7 +23,8 @@ class SyncService {
     conflictCount: 0,
   };
 
-  private syncCallbacks: Map<string, Set<(event: SyncEvent) => void>> = new Map();
+  private syncCallbacks: Map<string, Set<(event: SyncEvent) => void>> =
+    new Map();
   private statusCallbacks: Set<(status: SyncStatus) => void> = new Set();
   private subscriptions: any[] = [];
 
@@ -35,37 +36,36 @@ class SyncService {
       console.log("🔄 Initializing cross-device sync...");
 
       // Journal entries sync
-      await this.subscribeToTable('journal_entries', (payload) => {
-        this.handleSyncEvent('journal_entries', payload);
+      await this.subscribeToTable("journal_entries", (payload) => {
+        this.handleSyncEvent("journal_entries", payload);
       });
 
-      // Family members sync  
-      await this.subscribeToTable('family_members', (payload) => {
-        this.handleSyncEvent('family_members', payload);
+      // Family members sync
+      await this.subscribeToTable("family_members", (payload) => {
+        this.handleSyncEvent("family_members", payload);
       });
 
       // Wishlist sync
-      await this.subscribeToTable('wishlist_items', (payload) => {
-        this.handleSyncEvent('wishlist_items', payload);
+      await this.subscribeToTable("wishlist_items", (payload) => {
+        this.handleSyncEvent("wishlist_items", payload);
       });
 
       // Milestones sync
-      await this.subscribeToTable('milestones', (payload) => {
-        this.handleSyncEvent('milestones', payload);
+      await this.subscribeToTable("milestones", (payload) => {
+        this.handleSyncEvent("milestones", payload);
       });
 
       // Journal comments and likes sync
-      await this.subscribeToTable('journal_comments', (payload) => {
-        this.handleSyncEvent('journal_comments', payload);
+      await this.subscribeToTable("journal_comments", (payload) => {
+        this.handleSyncEvent("journal_comments", payload);
       });
 
-      await this.subscribeToTable('journal_likes', (payload) => {
-        this.handleSyncEvent('journal_likes', payload);
+      await this.subscribeToTable("journal_likes", (payload) => {
+        this.handleSyncEvent("journal_likes", payload);
       });
 
       this.updateSyncStatus({ connected: true, lastSync: new Date() });
       console.log("✅ Cross-device sync initialized successfully");
-      
     } catch (error) {
       console.error("❌ Failed to initialize sync:", error);
       this.updateSyncStatus({ connected: false });
@@ -76,17 +76,20 @@ class SyncService {
   /**
    * Subscribe to real-time changes for a specific table
    */
-  private async subscribeToTable(tableName: string, callback: (payload: any) => void): Promise<void> {
+  private async subscribeToTable(
+    tableName: string,
+    callback: (payload: any) => void,
+  ): Promise<void> {
     const subscription = supabase
       .channel(`${tableName}_changes`)
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
+          event: "*",
+          schema: "public",
           table: tableName,
         },
-        callback
+        callback,
       )
       .subscribe();
 
@@ -104,7 +107,11 @@ class SyncService {
       new: payload.new,
     };
 
-    console.log(`🔄 Sync event for ${table}:`, syncEvent.eventType, syncEvent.new?.id || syncEvent.old?.id);
+    console.log(
+      `🔄 Sync event for ${table}:`,
+      syncEvent.eventType,
+      syncEvent.new?.id || syncEvent.old?.id,
+    );
 
     // Update last sync time
     this.updateSyncStatus({ lastSync: new Date() });
@@ -112,7 +119,7 @@ class SyncService {
     // Notify table-specific subscribers
     const tableCallbacks = this.syncCallbacks.get(table);
     if (tableCallbacks) {
-      tableCallbacks.forEach(callback => {
+      tableCallbacks.forEach((callback) => {
         try {
           callback(syncEvent);
         } catch (error) {
@@ -132,7 +139,7 @@ class SyncService {
     if (!this.syncCallbacks.has(table)) {
       this.syncCallbacks.set(table, new Set());
     }
-    
+
     this.syncCallbacks.get(table)!.add(callback);
 
     // Return unsubscribe function
@@ -152,7 +159,7 @@ class SyncService {
    */
   subscribeToStatus(callback: (status: SyncStatus) => void): () => void {
     this.statusCallbacks.add(callback);
-    
+
     // Return unsubscribe function
     return () => {
       this.statusCallbacks.delete(callback);
@@ -171,8 +178,8 @@ class SyncService {
    */
   private updateSyncStatus(updates: Partial<SyncStatus>): void {
     this.syncStatus = { ...this.syncStatus, ...updates };
-    
-    this.statusCallbacks.forEach(callback => {
+
+    this.statusCallbacks.forEach((callback) => {
       try {
         callback(this.syncStatus);
       } catch (error) {
@@ -187,11 +194,14 @@ class SyncService {
   private storeOfflineChange(event: SyncEvent): void {
     try {
       const key = `offline_${event.table}_changes`;
-      const existing = JSON.parse(localStorage.getItem(key) || '[]');
-      const changes = [...existing, {
-        ...event,
-        timestamp: new Date().toISOString(),
-      }].slice(-100); // Keep last 100 changes
+      const existing = JSON.parse(localStorage.getItem(key) || "[]");
+      const changes = [
+        ...existing,
+        {
+          ...event,
+          timestamp: new Date().toISOString(),
+        },
+      ].slice(-100); // Keep last 100 changes
 
       localStorage.setItem(key, JSON.stringify(changes));
     } catch (error) {
@@ -205,7 +215,7 @@ class SyncService {
   getOfflineChanges(table: string): SyncEvent[] {
     try {
       const key = `offline_${table}_changes`;
-      return JSON.parse(localStorage.getItem(key) || '[]');
+      return JSON.parse(localStorage.getItem(key) || "[]");
     } catch (error) {
       console.error("Failed to get offline changes:", error);
       return [];
@@ -218,15 +228,15 @@ class SyncService {
   async forceSync(): Promise<void> {
     console.log("🔄 Force syncing data...");
     this.updateSyncStatus({ lastSync: new Date() });
-    
+
     // Trigger a refresh by notifying all subscribers
     for (const [table, callbacks] of this.syncCallbacks) {
-      callbacks.forEach(callback => {
+      callbacks.forEach((callback) => {
         try {
           // Send a refresh event
           callback({
             table,
-            eventType: 'UPDATE',
+            eventType: "UPDATE",
             old: null,
             new: { _refresh: true },
           });
@@ -243,10 +253,10 @@ class SyncService {
   async checkConnection(): Promise<boolean> {
     try {
       const { data, error } = await supabase
-        .from('journal_entries')
-        .select('count')
+        .from("journal_entries")
+        .select("count")
         .limit(1);
-      
+
       const connected = !error;
       this.updateSyncStatus({ connected });
       return connected;
@@ -261,29 +271,33 @@ class SyncService {
    */
   destroy(): void {
     console.log("🔄 Destroying sync service...");
-    
+
     // Unsubscribe from all real-time subscriptions
-    this.subscriptions.forEach(subscription => {
+    this.subscriptions.forEach((subscription) => {
       supabase.removeChannel(subscription);
     });
-    
+
     this.subscriptions = [];
     this.syncCallbacks.clear();
     this.statusCallbacks.clear();
-    
+
     this.updateSyncStatus({ connected: false });
   }
 
   /**
    * Handle conflicts when same data is edited on multiple devices
    */
-  async resolveConflict(table: string, localData: any, remoteData: any): Promise<any> {
+  async resolveConflict(
+    table: string,
+    localData: any,
+    remoteData: any,
+  ): Promise<any> {
     console.log(`⚠️ Conflict detected in ${table}:`, { localData, remoteData });
-    
+
     // Simple conflict resolution: most recent timestamp wins
     const localTime = new Date(localData.updated_at || localData.created_at);
     const remoteTime = new Date(remoteData.updated_at || remoteData.created_at);
-    
+
     if (remoteTime > localTime) {
       console.log("🔄 Remote data is newer, using remote version");
       return remoteData;
@@ -303,8 +317,10 @@ export const syncService = new SyncService();
 export function useSync() {
   return {
     initializeSync: () => syncService.initializeSync(),
-    subscribe: (table: string, callback: (event: SyncEvent) => void) => syncService.subscribe(table, callback),
-    subscribeToStatus: (callback: (status: SyncStatus) => void) => syncService.subscribeToStatus(callback),
+    subscribe: (table: string, callback: (event: SyncEvent) => void) =>
+      syncService.subscribe(table, callback),
+    subscribeToStatus: (callback: (status: SyncStatus) => void) =>
+      syncService.subscribeToStatus(callback),
     getStatus: () => syncService.getStatus(),
     forceSync: () => syncService.forceSync(),
     checkConnection: () => syncService.checkConnection(),

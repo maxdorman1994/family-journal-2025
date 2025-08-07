@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Wifi, WifiOff, RefreshCw, AlertCircle, CheckCircle } from "lucide-react";
+import {
+  Wifi,
+  WifiOff,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSync, SyncStatus as SyncStatusType } from "@/lib/syncService";
 
@@ -8,7 +14,10 @@ interface SyncStatusProps {
   showDetails?: boolean;
 }
 
-export default function SyncStatus({ className = "", showDetails = false }: SyncStatusProps) {
+export default function SyncStatus({
+  className = "",
+  showDetails = false,
+}: SyncStatusProps) {
   const [status, setStatus] = useState<SyncStatusType>({
     connected: false,
     lastSync: null,
@@ -16,7 +25,7 @@ export default function SyncStatus({ className = "", showDetails = false }: Sync
     conflictCount: 0,
   });
   const [isRefreshing, setIsRefreshing] = useState(false);
-  
+
   const { subscribeToStatus, forceSync, checkConnection } = useSync();
 
   useEffect(() => {
@@ -42,12 +51,12 @@ export default function SyncStatus({ className = "", showDetails = false }: Sync
 
   const formatLastSync = (lastSync: Date | null) => {
     if (!lastSync) return "Never";
-    
+
     const now = new Date();
     const diff = now.getTime() - lastSync.getTime();
     const minutes = Math.floor(diff / 60000);
     const seconds = Math.floor(diff / 1000);
-    
+
     if (minutes > 0) return `${minutes}m ago`;
     if (seconds > 10) return `${seconds}s ago`;
     return "Just now";
@@ -57,19 +66,19 @@ export default function SyncStatus({ className = "", showDetails = false }: Sync
     if (isRefreshing) {
       return <RefreshCw className="h-4 w-4 animate-spin text-blue-500" />;
     }
-    
+
     if (!status.connected) {
       return <WifiOff className="h-4 w-4 text-red-500" />;
     }
-    
+
     if (status.conflictCount > 0) {
       return <AlertCircle className="h-4 w-4 text-yellow-500" />;
     }
-    
+
     if (status.pendingChanges > 0) {
       return <RefreshCw className="h-4 w-4 text-blue-500" />;
     }
-    
+
     return <CheckCircle className="h-4 w-4 text-green-500" />;
   };
 
@@ -107,7 +116,7 @@ export default function SyncStatus({ className = "", showDetails = false }: Sync
             </span>
           </Button>
         </div>
-        
+
         <div className="space-y-2 text-sm">
           <div className="flex items-center justify-between">
             <span>Connection</span>
@@ -117,26 +126,28 @@ export default function SyncStatus({ className = "", showDetails = false }: Sync
               ) : (
                 <WifiOff className="h-4 w-4 text-red-500" />
               )}
-              <span className={status.connected ? "text-green-600" : "text-red-600"}>
+              <span
+                className={status.connected ? "text-green-600" : "text-red-600"}
+              >
                 {status.connected ? "Connected" : "Offline"}
               </span>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <span>Last Sync</span>
             <span className="text-gray-600">
               {formatLastSync(status.lastSync)}
             </span>
           </div>
-          
+
           {status.pendingChanges > 0 && (
             <div className="flex items-center justify-between">
               <span>Pending Changes</span>
               <span className="text-blue-600">{status.pendingChanges}</span>
             </div>
           )}
-          
+
           {status.conflictCount > 0 && (
             <div className="flex items-center justify-between">
               <span>Conflicts</span>
@@ -144,7 +155,7 @@ export default function SyncStatus({ className = "", showDetails = false }: Sync
             </div>
           )}
         </div>
-        
+
         <div className="mt-3 p-2 bg-gray-50 rounded text-xs text-gray-600">
           💡 Changes sync automatically across all your devices in real-time
         </div>
