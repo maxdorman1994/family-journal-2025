@@ -6,7 +6,9 @@ interface SyncIndicatorProps {
   className?: string;
 }
 
-export default function HomePageSyncIndicator({ className = "" }: SyncIndicatorProps) {
+export default function HomePageSyncIndicator({
+  className = "",
+}: SyncIndicatorProps) {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
   const [syncActivity, setSyncActivity] = useState<string | null>(null);
@@ -15,14 +17,14 @@ export default function HomePageSyncIndicator({ className = "" }: SyncIndicatorP
     // Listen for online/offline status
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
-    
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     // Subscribe to sync events
     const unsubscribeSync = subscribeToHomePageSync((data) => {
       setLastSyncTime(new Date());
-      
+
       // Show what synced
       if (data.family_members) {
         setSyncActivity("Family photos synced");
@@ -33,14 +35,14 @@ export default function HomePageSyncIndicator({ className = "" }: SyncIndicatorP
       } else if (data.milestones) {
         setSyncActivity("Milestones synced");
       }
-      
+
       // Clear activity message after 3 seconds
       setTimeout(() => setSyncActivity(null), 3000);
     });
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
       unsubscribeSync();
     };
   }, []);
@@ -51,7 +53,7 @@ export default function HomePageSyncIndicator({ className = "" }: SyncIndicatorP
     const diff = now.getTime() - date.getTime();
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
-    
+
     if (minutes === 0) return "Just now";
     if (minutes === 1) return "1 minute ago";
     if (minutes < 60) return `${minutes} minutes ago`;
@@ -66,7 +68,7 @@ export default function HomePageSyncIndicator({ className = "" }: SyncIndicatorP
       ) : (
         <WifiOff className="h-4 w-4 text-red-500" />
       )}
-      
+
       {/* Sync Activity */}
       {syncActivity ? (
         <div className="flex items-center gap-1 text-blue-600">

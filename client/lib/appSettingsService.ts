@@ -22,15 +22,15 @@ const DEFAULT_SETTINGS: AppSettings = {
 export async function loadAppSettings(): Promise<AppSettings> {
   try {
     console.log("🔄 Loading app settings from database...");
-    
+
     const { data, error } = await supabase
-      .from('app_settings')
-      .select('*')
+      .from("app_settings")
+      .select("*")
       .limit(1)
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
+      if (error.code === "PGRST116") {
         // No settings found, create default
         console.log("📝 No app settings found, creating defaults...");
         return await createAppSettings(DEFAULT_SETTINGS);
@@ -39,22 +39,22 @@ export async function loadAppSettings(): Promise<AppSettings> {
     }
 
     console.log("✅ App settings loaded from database:", data);
-    
+
     // Cache in localStorage for offline access
-    localStorage.setItem('app_settings', JSON.stringify(data));
-    
+    localStorage.setItem("app_settings", JSON.stringify(data));
+
     return data;
   } catch (error) {
     console.error("❌ Failed to load app settings:", error);
     debugNetworkError(error);
-    
+
     // Fallback to localStorage
-    const cached = localStorage.getItem('app_settings');
+    const cached = localStorage.getItem("app_settings");
     if (cached) {
       console.log("📱 Using cached app settings");
       return JSON.parse(cached);
     }
-    
+
     // Final fallback to defaults
     console.log("🔄 Using default app settings");
     return DEFAULT_SETTINGS;
@@ -64,10 +64,12 @@ export async function loadAppSettings(): Promise<AppSettings> {
 /**
  * Create initial app settings
  */
-export async function createAppSettings(settings: AppSettings): Promise<AppSettings> {
+export async function createAppSettings(
+  settings: AppSettings,
+): Promise<AppSettings> {
   try {
     const { data, error } = await supabase
-      .from('app_settings')
+      .from("app_settings")
       .insert([settings])
       .select()
       .single();
@@ -75,8 +77,8 @@ export async function createAppSettings(settings: AppSettings): Promise<AppSetti
     if (error) throw error;
 
     console.log("✅ App settings created:", data);
-    localStorage.setItem('app_settings', JSON.stringify(data));
-    
+    localStorage.setItem("app_settings", JSON.stringify(data));
+
     return data;
   } catch (error) {
     console.error("❌ Failed to create app settings:", error);
@@ -88,18 +90,20 @@ export async function createAppSettings(settings: AppSettings): Promise<AppSetti
 /**
  * Update app settings (logo, title, etc.)
  */
-export async function updateAppSettings(updates: Partial<AppSettings>): Promise<AppSettings> {
+export async function updateAppSettings(
+  updates: Partial<AppSettings>,
+): Promise<AppSettings> {
   try {
     console.log("🔄 Updating app settings:", updates);
-    
+
     // First try to get existing settings
     let { data: existing, error: fetchError } = await supabase
-      .from('app_settings')
-      .select('*')
+      .from("app_settings")
+      .select("*")
       .limit(1)
       .single();
 
-    if (fetchError && fetchError.code === 'PGRST116') {
+    if (fetchError && fetchError.code === "PGRST116") {
       // No settings exist, create them
       const newSettings = { ...DEFAULT_SETTINGS, ...updates };
       return await createAppSettings(newSettings);
@@ -109,33 +113,33 @@ export async function updateAppSettings(updates: Partial<AppSettings>): Promise<
 
     // Update existing settings
     const { data, error } = await supabase
-      .from('app_settings')
+      .from("app_settings")
       .update({
         ...updates,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', existing.id)
+      .eq("id", existing.id)
       .select()
       .single();
 
     if (error) throw error;
 
     console.log("✅ App settings updated:", data);
-    
+
     // Update localStorage cache
-    localStorage.setItem('app_settings', JSON.stringify(data));
-    
+    localStorage.setItem("app_settings", JSON.stringify(data));
+
     return data;
   } catch (error) {
     console.error("❌ Failed to update app settings:", error);
     debugNetworkError(error);
-    
+
     // Update localStorage as fallback
-    const cached = localStorage.getItem('app_settings');
+    const cached = localStorage.getItem("app_settings");
     const currentSettings = cached ? JSON.parse(cached) : DEFAULT_SETTINGS;
     const updatedSettings = { ...currentSettings, ...updates };
-    localStorage.setItem('app_settings', JSON.stringify(updatedSettings));
-    
+    localStorage.setItem("app_settings", JSON.stringify(updatedSettings));
+
     return updatedSettings;
   }
 }
@@ -146,25 +150,25 @@ export async function updateAppSettings(updates: Partial<AppSettings>): Promise<
 export async function updateLogoUrl(logoUrl: string): Promise<void> {
   try {
     console.log("🔄 Syncing logo URL across devices:", logoUrl);
-    
+
     const settings = await updateAppSettings({ logo_url: logoUrl });
-    
+
     // Also update localStorage for immediate access
-    if (logoUrl !== '/placeholder.svg') {
-      localStorage.setItem('family_logo_url', logoUrl);
+    if (logoUrl !== "/placeholder.svg") {
+      localStorage.setItem("family_logo_url", logoUrl);
     } else {
-      localStorage.removeItem('family_logo_url');
+      localStorage.removeItem("family_logo_url");
     }
-    
+
     console.log("✅ Logo URL synced across devices");
   } catch (error) {
     console.error("❌ Failed to sync logo URL:", error);
-    
+
     // Fallback to localStorage only
-    if (logoUrl !== '/placeholder.svg') {
-      localStorage.setItem('family_logo_url', logoUrl);
+    if (logoUrl !== "/placeholder.svg") {
+      localStorage.setItem("family_logo_url", logoUrl);
     } else {
-      localStorage.removeItem('family_logo_url');
+      localStorage.removeItem("family_logo_url");
     }
   }
 }
@@ -172,35 +176,40 @@ export async function updateLogoUrl(logoUrl: string): Promise<void> {
 /**
  * Subscribe to app settings changes for real-time sync
  */
-export function subscribeToAppSettings(callback: (settings: AppSettings) => void): () => void {
+export function subscribeToAppSettings(
+  callback: (settings: AppSettings) => void,
+): () => void {
   console.log("🔄 Setting up real-time app settings sync...");
-  
+
   const subscription = supabase
-    .channel('app_settings_changes')
+    .channel("app_settings_changes")
     .on(
-      'postgres_changes',
+      "postgres_changes",
       {
-        event: '*',
-        schema: 'public',
-        table: 'app_settings',
+        event: "*",
+        schema: "public",
+        table: "app_settings",
       },
       (payload) => {
         console.log("🔄 App settings changed:", payload);
-        
+
         if (payload.new) {
           // Update localStorage cache
-          localStorage.setItem('app_settings', JSON.stringify(payload.new));
-          
+          localStorage.setItem("app_settings", JSON.stringify(payload.new));
+
           // Update legacy logo cache
-          if (payload.new.logo_url && payload.new.logo_url !== '/placeholder.svg') {
-            localStorage.setItem('family_logo_url', payload.new.logo_url);
+          if (
+            payload.new.logo_url &&
+            payload.new.logo_url !== "/placeholder.svg"
+          ) {
+            localStorage.setItem("family_logo_url", payload.new.logo_url);
           } else {
-            localStorage.removeItem('family_logo_url');
+            localStorage.removeItem("family_logo_url");
           }
-          
+
           callback(payload.new as AppSettings);
         }
-      }
+      },
     )
     .subscribe();
 
@@ -214,16 +223,16 @@ export function subscribeToAppSettings(callback: (settings: AppSettings) => void
  * Get current logo URL from cache or defaults
  */
 export function getCurrentLogoUrl(): string {
-  const legacyLogo = localStorage.getItem('family_logo_url');
-  if (legacyLogo && legacyLogo !== '/placeholder.svg') {
+  const legacyLogo = localStorage.getItem("family_logo_url");
+  if (legacyLogo && legacyLogo !== "/placeholder.svg") {
     return legacyLogo;
   }
-  
-  const cached = localStorage.getItem('app_settings');
+
+  const cached = localStorage.getItem("app_settings");
   if (cached) {
     const settings = JSON.parse(cached);
     return settings.logo_url || DEFAULT_SETTINGS.logo_url;
   }
-  
+
   return DEFAULT_SETTINGS.logo_url;
 }

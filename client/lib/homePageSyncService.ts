@@ -24,14 +24,15 @@ export interface SyncedHomeData {
 export async function loadHomePageData(): Promise<SyncedHomeData> {
   try {
     console.log("🔄 Loading comprehensive home page data...");
-    
+
     // Load all data in parallel for better performance
-    const [statsData, adventuresData, familyData, milestonesData] = await Promise.all([
-      loadDynamicStats(),
-      loadRecentAdventures(),
-      loadFamilyMembersData(),
-      loadMilestonesData(),
-    ]);
+    const [statsData, adventuresData, familyData, milestonesData] =
+      await Promise.all([
+        loadDynamicStats(),
+        loadRecentAdventures(),
+        loadFamilyMembersData(),
+        loadMilestonesData(),
+      ]);
 
     const homeData: SyncedHomeData = {
       stats: statsData,
@@ -48,20 +49,20 @@ export async function loadHomePageData(): Promise<SyncedHomeData> {
     });
 
     // Cache for offline access
-    localStorage.setItem('home_page_data', JSON.stringify(homeData));
-    
+    localStorage.setItem("home_page_data", JSON.stringify(homeData));
+
     return homeData;
   } catch (error) {
     console.error("❌ Failed to load home page data:", error);
     debugNetworkError(error);
-    
+
     // Fallback to cached data
-    const cached = localStorage.getItem('home_page_data');
+    const cached = localStorage.getItem("home_page_data");
     if (cached) {
       console.log("📱 Using cached home page data");
       return JSON.parse(cached);
     }
-    
+
     // Return empty data structure
     return {
       stats: {
@@ -85,26 +86,26 @@ export async function loadHomePageData(): Promise<SyncedHomeData> {
  */
 async function loadDynamicStats(): Promise<HomePageStats> {
   console.log("📊 Loading dynamic home page stats...");
-  
+
   const { data: journalStats, error: journalError } = await supabase
-    .from('recent_adventures_view')
-    .select('*');
+    .from("recent_adventures_view")
+    .select("*");
 
   if (journalError) {
     console.error("Failed to load journal stats:", journalError);
   }
 
   const { data: familyStats, error: familyError } = await supabase
-    .from('family_members')
-    .select('id, display_avatar');
+    .from("family_members")
+    .select("id, display_avatar");
 
   if (familyError) {
     console.error("Failed to load family stats:", familyError);
   }
 
   const { data: milestoneStats, error: milestoneError } = await supabase
-    .from('milestones')
-    .select('id, completed, milestone_type');
+    .from("milestones")
+    .select("id, completed, milestone_type");
 
   if (milestoneError) {
     console.error("Failed to load milestone stats:", milestoneError);
@@ -113,16 +114,25 @@ async function loadDynamicStats(): Promise<HomePageStats> {
   // Calculate comprehensive stats
   const stats: HomePageStats = {
     total_adventures: journalStats?.length || 0,
-    total_distance: journalStats?.reduce((sum, adv) => sum + (adv.distance || 0), 0) || 0,
-    total_elevation: journalStats?.reduce((sum, adv) => sum + (adv.elevation_gain || 0), 0) || 0,
-    munros_completed: milestoneStats?.filter(m => m.milestone_type === 'munro' && m.completed).length || 0,
-    family_photos_count: familyStats?.filter(f => f.display_avatar && f.display_avatar !== '/placeholder.svg').length || 0,
-    recent_adventure_count: journalStats?.filter(adv => {
-      const adventureDate = new Date(adv.date);
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      return adventureDate > thirtyDaysAgo;
-    }).length || 0,
+    total_distance:
+      journalStats?.reduce((sum, adv) => sum + (adv.distance || 0), 0) || 0,
+    total_elevation:
+      journalStats?.reduce((sum, adv) => sum + (adv.elevation_gain || 0), 0) ||
+      0,
+    munros_completed:
+      milestoneStats?.filter((m) => m.milestone_type === "munro" && m.completed)
+        .length || 0,
+    family_photos_count:
+      familyStats?.filter(
+        (f) => f.display_avatar && f.display_avatar !== "/placeholder.svg",
+      ).length || 0,
+    recent_adventure_count:
+      journalStats?.filter((adv) => {
+        const adventureDate = new Date(adv.date);
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        return adventureDate > thirtyDaysAgo;
+      }).length || 0,
     updated_at: new Date().toISOString(),
   };
 
@@ -135,11 +145,11 @@ async function loadDynamicStats(): Promise<HomePageStats> {
  */
 async function loadRecentAdventures(): Promise<any[]> {
   console.log("📖 Loading recent adventures...");
-  
+
   const { data, error } = await supabase
-    .from('recent_adventures_view')
-    .select('*')
-    .order('date', { ascending: false })
+    .from("recent_adventures_view")
+    .select("*")
+    .order("date", { ascending: false })
     .limit(5);
 
   if (error) {
@@ -155,11 +165,11 @@ async function loadRecentAdventures(): Promise<any[]> {
  */
 async function loadFamilyMembersData(): Promise<any[]> {
   console.log("👨‍👩‍👧‍👦 Loading family members...");
-  
+
   const { data, error } = await supabase
-    .from('family_members')
-    .select('*')
-    .order('created_at', { ascending: true });
+    .from("family_members")
+    .select("*")
+    .order("created_at", { ascending: true });
 
   if (error) {
     console.error("Failed to load family members:", error);
@@ -174,11 +184,11 @@ async function loadFamilyMembersData(): Promise<any[]> {
  */
 async function loadMilestonesData(): Promise<any[]> {
   console.log("🎯 Loading milestones...");
-  
+
   const { data, error } = await supabase
-    .from('milestones')
-    .select('*')
-    .order('created_at', { ascending: false })
+    .from("milestones")
+    .select("*")
+    .order("created_at", { ascending: false })
     .limit(10);
 
   if (error) {
@@ -192,46 +202,64 @@ async function loadMilestonesData(): Promise<any[]> {
 /**
  * Subscribe to home page data changes for real-time sync
  */
-export function subscribeToHomePageSync(callback: (data: Partial<SyncedHomeData>) => void): () => void {
+export function subscribeToHomePageSync(
+  callback: (data: Partial<SyncedHomeData>) => void,
+): () => void {
   console.log("🔄 Setting up comprehensive home page sync...");
-  
+
   const subscriptions: any[] = [];
 
   // Subscribe to journal entries (affects stats and recent adventures)
   const journalSub = supabase
-    .channel('home_journal_sync')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'journal_entries' }, (payload) => {
-      console.log("🔄 Journal changed, refreshing home data");
-      loadDynamicStats().then(stats => callback({ stats }));
-      loadRecentAdventures().then(recent_adventures => callback({ recent_adventures }));
-    })
+    .channel("home_journal_sync")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "journal_entries" },
+      (payload) => {
+        console.log("🔄 Journal changed, refreshing home data");
+        loadDynamicStats().then((stats) => callback({ stats }));
+        loadRecentAdventures().then((recent_adventures) =>
+          callback({ recent_adventures }),
+        );
+      },
+    )
     .subscribe();
 
   // Subscribe to family members
   const familySub = supabase
-    .channel('home_family_sync')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'family_members' }, (payload) => {
-      console.log("🔄 Family members changed, refreshing home data");
-      loadFamilyMembersData().then(family_members => callback({ family_members }));
-      loadDynamicStats().then(stats => callback({ stats }));
-    })
+    .channel("home_family_sync")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "family_members" },
+      (payload) => {
+        console.log("🔄 Family members changed, refreshing home data");
+        loadFamilyMembersData().then((family_members) =>
+          callback({ family_members }),
+        );
+        loadDynamicStats().then((stats) => callback({ stats }));
+      },
+    )
     .subscribe();
 
   // Subscribe to milestones
   const milestonesSub = supabase
-    .channel('home_milestones_sync')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'milestones' }, (payload) => {
-      console.log("🔄 Milestones changed, refreshing home data");
-      loadMilestonesData().then(milestones => callback({ milestones }));
-      loadDynamicStats().then(stats => callback({ stats }));
-    })
+    .channel("home_milestones_sync")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "milestones" },
+      (payload) => {
+        console.log("🔄 Milestones changed, refreshing home data");
+        loadMilestonesData().then((milestones) => callback({ milestones }));
+        loadDynamicStats().then((stats) => callback({ stats }));
+      },
+    )
     .subscribe();
 
   subscriptions.push(journalSub, familySub, milestonesSub);
 
   // Return cleanup function
   return () => {
-    subscriptions.forEach(sub => supabase.removeChannel(sub));
+    subscriptions.forEach((sub) => supabase.removeChannel(sub));
   };
 }
 
@@ -248,7 +276,7 @@ export async function forceRefreshHomeData(): Promise<SyncedHomeData> {
  */
 export function getCachedHomeData(): SyncedHomeData | null {
   try {
-    const cached = localStorage.getItem('home_page_data');
+    const cached = localStorage.getItem("home_page_data");
     return cached ? JSON.parse(cached) : null;
   } catch (error) {
     console.error("Failed to get cached home data:", error);
