@@ -103,6 +103,15 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
     loadData();
   }, [entryId]);
 
+  // Check like status when visitor name changes (debounced)
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      checkUserLikeStatus(visitorName);
+    }, 500); // Wait 500ms after user stops typing
+
+    return () => clearTimeout(timeoutId);
+  }, [visitorName, entryId]);
+
   const handleLike = async () => {
     if (!visitorName.trim()) {
       toast({
