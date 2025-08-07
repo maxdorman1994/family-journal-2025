@@ -361,7 +361,13 @@ export async function testFamilyMembersConnection(): Promise<{
   try {
     console.log('🔍 Testing family members database connection...');
 
+    // Debug: Check what tables are available
+    console.log('🔍 Checking available tables...');
+    const availableTables = await debugAvailableTables();
+    console.log('📋 Available tables:', availableTables);
+
     // Test 1: Check if base table exists
+    console.log('🔍 Testing family_members table...');
     const { data, error, count } = await supabase
       .from('family_members')
       .select('*', { count: 'exact', head: true });
