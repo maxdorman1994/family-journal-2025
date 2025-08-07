@@ -18,6 +18,15 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  getMilestoneCategories,
+  getMilestonesWithProgress,
+  getMilestoneStats,
+  subscribeToMilestoneUpdates,
+  MilestoneCategory,
+  MilestoneWithProgress,
+  MilestoneStats,
+} from "@/lib/milestonesService";
 
 export default function Milestones() {
   const [selectedCategory, setSelectedCategory] = useState("all");
