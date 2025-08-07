@@ -153,6 +153,8 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
   const id = uuidv4();
   let processedFile = file;
   let conversionAttempted = false;
+  let compressionAttempted = false;
+  const warnings: string[] = [];
 
   try {
     // Convert HEIC to JPEG if needed
@@ -164,65 +166,74 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
         processedFile = await convertHeicToJpeg(file);
         console.log(`HEIC conversion successful for: ${file.name}`);
       } catch (heicError) {
-        console.warn(`HEIC conversion failed for ${file.name}, using original file:`, heicError);
+        console.warn(`HEIC conversion failed for ${file.name}:`, heicError);
+        warnings.push('HEIC conversion failed - uploading original file');
 
-        // Fallback: treat as regular image file and attempt compression
-        // This allows the user to still upload the file, even if HEIC conversion fails
-        processedFile = new File([file], file.name.replace(/\.heic$/i, '.jpg'), {
-          type: 'image/jpeg', // Assume it might work as JPEG
+        // Keep the original file but change the name for clarity
+        processedFile = new File([file], file.name.replace(/\.heic$/i, '.heic'), {
+          type: file.type,
           lastModified: file.lastModified
         });
-
-        // If that doesn't work, we'll catch it in the outer try-catch
       }
     }
 
-    // Compress the image
-    console.log(`Compressing image: ${processedFile.name}`);
-    const compressedFile = await compressImage(processedFile);
+    // Try to compress the image
+    console.log(`Attempting compression for: ${processedFile.name}`);
+    compressionAttempted = true;
+
+    try {
+      const compressedFile = await compressImage(processedFile);
+      processedFile = compressedFile;
+      console.log(`Compression successful for: ${file.name}`);
+    } catch (compressionError) {
+      console.warn(`Compression failed for ${processedFile.name}:`, compressionError);
+      warnings.push('Compression failed - using original size');
+      // Keep the uncompressed file
+    }
 
     // Create preview URL
-    const preview = URL.createObjectURL(compressedFile);
+    let preview: string;
+    try {
+      preview = URL.createObjectURL(processedFile);
+    } catch (previewError) {
+      console.warn('Failed to create preview, using placeholder');
+      preview = '/placeholder.svg';
+      warnings.push('Preview generation failed');
+    }
 
-    console.log(`Photo processed successfully: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) -> ${compressedFile.name} (${(compressedFile.size / 1024 / 1024).toFixed(2)}MB)`);
+    console.log(`Photo processing completed: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) -> ${processedFile.name} (${(processedFile.size / 1024 / 1024).toFixed(2)}MB)`);
 
     return {
       id,
-      file: compressedFile,
+      file: processedFile,
       originalFile: file,
       preview,
       isProcessing: false,
       uploadProgress: 0,
-      ...(conversionAttempted && {
-        error: processedFile === file ? 'HEIC conversion failed, but file may still upload' : undefined
-      })
+      error: warnings.length > 0 ? warnings.join('; ') : undefined
     };
   } catch (error) {
     console.error('Photo processing failed completely:', error);
 
-    // Final fallback: return the original file with error message
+    // Ultimate fallback: return the original file with detailed error
+    let fallbackPreview = '/placeholder.svg';
     try {
-      const fallbackPreview = URL.createObjectURL(file);
-      return {
-        id,
-        file,
-        originalFile: file,
-        preview: fallbackPreview,
-        isProcessing: false,
-        uploadProgress: 0,
-        error: `Processing failed: ${error instanceof Error ? error.message : 'Unknown error'}. File may still upload as-is.`
-      };
+      fallbackPreview = URL.createObjectURL(file);
     } catch (previewError) {
-      return {
-        id,
-        file,
-        originalFile: file,
-        preview: '/placeholder.svg',
-        isProcessing: false,
-        uploadProgress: 0,
-        error: 'Photo processing and preview failed. Please try a different image format.'
-      };
+      console.warn('Even fallback preview failed');
     }
+
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
+    return {
+      id,
+      file,
+      originalFile: file,
+      preview: fallbackPreview,
+      isProcessing: false,
+      uploadProgress: 0,
+      error: `Processing failed: ${errorMessage}. Uploading original file.`
+    };
   }
 }
 
