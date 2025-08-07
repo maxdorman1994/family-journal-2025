@@ -34,6 +34,11 @@ import {
   formatStatsForDisplay,
   RealAdventureStats
 } from "@/lib/realStatsService";
+import {
+  getRecentAdventuresWithFallback,
+  subscribeToAdventureUpdates,
+  RecentAdventure
+} from "@/lib/recentAdventuresService";
 
 export default function Home() {
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
