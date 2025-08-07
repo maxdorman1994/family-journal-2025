@@ -19,9 +19,6 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    {/* Temporarily removed TooltipProvider to fix React useState error */}
-    <Toaster />
-    <Sonner />
     <BrowserRouter>
       <Layout>
         <Routes>
