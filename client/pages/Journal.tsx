@@ -349,6 +349,14 @@ export default function Journal() {
     }
   };
 
+  const handleEditClick = (entry: JournalEntry) => {
+    if (!isAuthenticated) {
+      return;
+    }
+    setEditingEntry(entry);
+    setIsNewEntryFormOpen(true);
+  };
+
   const handleDeleteClick = (entry: JournalEntry) => {
     setDeleteEntry(entry);
   };
