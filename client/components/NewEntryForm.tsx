@@ -208,9 +208,12 @@ export default function NewEntryForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("📝 Form submission started", { editingEntry: !!editingEntry, formData });
+
     if (validateForm()) {
       try {
         setIsSubmitting(true);
+        console.log("✅ Form validation passed, submitting...");
 
         // Check if we have photos that need uploading
         const photosNeedUploading = formData.photos.some(
@@ -220,7 +223,8 @@ export default function NewEntryForm({
           console.log("Photos detected, will upload during entry creation...");
         }
 
-        // Submit the form data (photos will be uploaded in handleNewEntry)
+        // Submit the form data (photos will be uploaded in handleSaveEntry)
+        console.log("🚀 Calling onSubmit with data:", formData);
         await onSubmit(formData);
 
         // Clean up photo preview URLs only after successful submission
