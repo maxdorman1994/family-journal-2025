@@ -249,6 +249,16 @@ export default function Journal() {
     setSelectedEntry(null);
   };
 
+  const testConnection = async () => {
+    try {
+      setConnectionTest('Testing connection...');
+      const result = await testSupabaseConnection();
+      setConnectionTest(result.success ? `✅ ${result.message}` : `❌ ${result.message}: ${result.error}`);
+    } catch (error) {
+      setConnectionTest(`❌ Connection test failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+
   // Fun statistics with animations
   const stats = [
     {
