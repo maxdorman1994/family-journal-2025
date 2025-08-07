@@ -249,10 +249,14 @@ export default function Milestones() {
             <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
               🏆 Completed Achievements
             </span>
+            <span className="text-sm font-normal text-gray-500 ml-2">
+              ({filterMilestones(completedMilestones, selectedCategory).length})
+            </span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filterMilestones(completedMilestones, selectedCategory).map(
-              (milestone) => {
+            {filterMilestones(completedMilestones, selectedCategory)
+              .slice(0, showAllCompleted ? undefined : 3)
+              .map((milestone) => {
                 const Icon = getIconComponent(milestone.icon);
                 const colorScheme = milestone.color_scheme;
                 return (
