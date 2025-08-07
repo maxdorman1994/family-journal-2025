@@ -4,6 +4,7 @@ import {
   validateSupabaseConfig,
   debugNetworkError,
 } from "./debug";
+import { updateMilestonesFromJournalEntry } from "./milestoneTracker";
 
 /**
  * Supabase Journal Service
