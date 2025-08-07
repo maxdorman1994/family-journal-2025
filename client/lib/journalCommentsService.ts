@@ -219,13 +219,14 @@ export async function getEntryStats(entryId: string): Promise<{ commentCount: nu
       .single();
 
     if (error) {
-      console.error('Error fetching entry stats:', error);
+      console.error('Error fetching entry stats:', JSON.stringify(error, null, 2));
+      console.error('Error details:', error);
       // Fallback to individual queries if view doesn't exist yet
       const [comments, likes] = await Promise.all([
         getCommentsForEntry(entryId),
         getLikesForEntry(entryId),
       ]);
-      
+
       return {
         commentCount: comments.length,
         likeCount: likes.length,
