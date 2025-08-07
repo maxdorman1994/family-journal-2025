@@ -456,7 +456,11 @@ export default function Journal() {
             <Button
               size="lg"
               className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 text-lg px-8 py-4 rounded-full"
-              onClick={() => setIsNewEntryFormOpen(true)}
+              onClick={() => {
+                if (requestAuth()) {
+                  setIsNewEntryFormOpen(true);
+                }
+              }}
             >
               <Plus className="mr-3 h-6 w-6" />
               Start New Adventure
