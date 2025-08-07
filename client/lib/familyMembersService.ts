@@ -46,22 +46,32 @@ export async function getFamilyMembers(): Promise<FamilyMember[]> {
 
   try {
     console.log('🔄 Fetching family members...');
+    console.log('🔍 Supabase client config:', {
+      url: import.meta.env.VITE_SUPABASE_URL ? 'configured' : 'missing',
+      key: import.meta.env.VITE_SUPABASE_ANON_KEY ? 'configured' : 'missing'
+    });
 
     // First try the view, then fallback to base table
+    console.log('📋 Attempting to query family_members_with_stats view...');
     let { data: members, error } = await supabase
       .from('family_members_with_stats')
       .select('*')
       .order('position_index', { ascending: true });
 
+    console.log('📋 View query result:', { members, error });
+
     // If view doesn't exist, try base table
     if (error && (error.message.includes('Could not find the table') ||
-                  error.message.includes('relation "family_members_with_stats" does not exist'))) {
-      console.log('📋 View not found, trying base table...');
+                  error.message.includes('relation "family_members_with_stats" does not exist') ||
+                  error.code === 'PGRST116')) {
+      console.log('📋 View not found, trying base table family_members...');
 
       const baseQuery = await supabase
         .from('family_members')
         .select('*')
         .order('position_index', { ascending: true });
+
+      console.log('📋 Base table query result:', { data: baseQuery.data, error: baseQuery.error });
 
       members = baseQuery.data;
       error = baseQuery.error;
