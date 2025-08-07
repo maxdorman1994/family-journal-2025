@@ -119,7 +119,7 @@ export default function AuthFooter() {
           </div>
 
           {/* Right Side - App Info */}
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
             <User className="w-3 h-3" />
             <span>A Wee Adventure</span>
             <span>•</span>
