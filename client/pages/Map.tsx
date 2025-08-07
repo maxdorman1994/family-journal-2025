@@ -117,7 +117,7 @@ export default function MapPage() {
 
     try {
       console.log("🗺️ Adding new pin:", newPin.title);
-      await addMapPin({
+      const addedPin = await addMapPin({
         latitude: selectedLocation.latitude,
         longitude: selectedLocation.longitude,
         title: newPin.title,
@@ -126,12 +126,15 @@ export default function MapPage() {
         date: newPin.date,
       });
 
+      // Immediately update local state for instant UI feedback
+      setPins(currentPins => [addedPin, ...currentPins]);
+
       setIsDialogOpen(false);
       setSelectedLocation(null);
       console.log("✅ Pin added successfully and will sync across devices");
     } catch (error) {
       console.error("❌ Error adding pin:", error);
-      // You could add a toast notification here
+      alert(`Error adding pin: ${error.message || error}`);
     }
   };
 
