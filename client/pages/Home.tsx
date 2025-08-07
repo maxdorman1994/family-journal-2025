@@ -58,7 +58,8 @@ export default function Home() {
 
       setFamilyMembers(members);
       setSyncStatus('connected');
-      setError(null);
+      // Temporarily force an error to show test button
+      setError('🔍 Debug Mode: Database connected but forcing test button visibility');
       console.log(`✅ Loaded ${members.length} family members successfully`);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
