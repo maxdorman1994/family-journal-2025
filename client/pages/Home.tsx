@@ -697,19 +697,21 @@ export default function Home() {
                     {/* Edit overlay */}
                     <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <div className="flex gap-1">
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
-                          onClick={() => handlePhotoEdit(member.id)}
-                          disabled={isUploading}
-                        >
-                          {isUploading && editingMember === member.id ? (
-                            <Upload className="h-3 w-3 animate-pulse" />
-                          ) : (
-                            <Edit className="h-3 w-3" />
-                          )}
-                        </Button>
+                        {isAuthenticated && (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
+                            onClick={() => handlePhotoEdit(member.id)}
+                            disabled={isUploading}
+                          >
+                            {isUploading && editingMember === member.id ? (
+                              <Upload className="h-3 w-3 animate-pulse" />
+                            ) : (
+                              <Edit className="h-3 w-3" />
+                            )}
+                          </Button>
+                        )}
                         {member.has_custom_avatar && (
                           <Button
                             size="sm"
