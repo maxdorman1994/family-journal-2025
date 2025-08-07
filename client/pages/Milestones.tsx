@@ -494,7 +494,7 @@ export default function Milestones() {
                           🔒 Locked
                         </div>
                         <p className="text-xs text-gray-500">
-                          {milestone.requirement_text}
+                          {milestone.unlock_condition || "Complete previous milestones to unlock"}
                         </p>
                         <div className="flex items-center justify-center gap-1 opacity-50">
                           <Zap className="w-4 h-4 text-amber-500" />
