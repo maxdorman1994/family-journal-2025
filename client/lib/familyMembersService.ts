@@ -306,17 +306,19 @@ export async function testFamilyMembersConnection(): Promise<{
   try {
     console.log('🔍 Testing family members database connection...');
 
+    // Test 1: Check if base table exists
     const { data, error, count } = await supabase
       .from('family_members')
       .select('*', { count: 'exact', head: true });
 
     if (error) {
-      if (error.message.includes('Could not find the table') || 
+      console.error('Base table test failed:', error);
+      if (error.message.includes('Could not find the table') ||
           error.message.includes('relation "family_members" does not exist')) {
         return {
           success: false,
           message: 'Database tables not found - please run family-members-schema.sql',
-          error: 'Tables missing: family_members'
+          error: 'Missing: family_members table. Run the SQL schema to create all required tables and views.'
         };
       }
       return {
@@ -326,10 +328,27 @@ export async function testFamilyMembersConnection(): Promise<{
       };
     }
 
+    // Test 2: Check if view exists
+    const { error: viewError } = await supabase
+      .from('family_members_with_stats')
+      .select('*', { count: 'exact', head: true });
+
+    let viewStatus = '';
+    if (viewError) {
+      if (viewError.message.includes('Could not find the table') ||
+          viewError.message.includes('relation "family_members_with_stats" does not exist')) {
+        viewStatus = ' (View missing - using fallback)';
+      } else {
+        viewStatus = ' (View error - using fallback)';
+      }
+    } else {
+      viewStatus = ' (View working)';
+    }
+
     const memberCount = count || 0;
     return {
       success: true,
-      message: `✅ Family members database connected! Found ${memberCount} member${memberCount !== 1 ? 's' : ''}.`
+      message: `✅ Family members database connected! Found ${memberCount} member${memberCount !== 1 ? 's' : ''}${viewStatus}.`
     };
   } catch (error) {
     return {
