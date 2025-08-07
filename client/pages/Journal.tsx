@@ -65,6 +65,7 @@ export default function Journal() {
   const [connectionTest, setConnectionTest] = useState<string | null>(null);
   const [deleteEntry, setDeleteEntry] = useState<JournalEntry | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
 
   const {
     isAuthenticated,
