@@ -24,6 +24,8 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
+    sourcemap: false, // Disable sourcemaps in production
+    minify: 'esbuild', // Ensure proper minification
   },
   plugins: [react(), expressPlugin()],
   resolve: {
