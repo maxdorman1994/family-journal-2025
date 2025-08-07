@@ -362,6 +362,21 @@ export default function Home() {
     );
   }
 
+  // Helper functions to get real or fallback stat values
+  const getStatValue = (statType: string, fallback: number): number => {
+    if (realStats && realStats[statType]) {
+      return realStats[statType].value;
+    }
+    return fallback;
+  };
+
+  const getStatDescription = (statType: string, fallback: string): string => {
+    if (realStats && realStats[statType]) {
+      return realStats[statType].description;
+    }
+    return fallback;
+  };
+
   const hardcodedMembers = [
     {
       name: "Max Dorman",
