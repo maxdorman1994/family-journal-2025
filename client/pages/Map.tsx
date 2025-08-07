@@ -247,6 +247,11 @@ export default function MapPage() {
   };
 
   const handleDeletePin = async (pinId: string) => {
+    // Check authentication before allowing delete
+    if (!requestAuth()) {
+      return; // Will show password prompt
+    }
+
     try {
       console.log("🗺️ Deleting pin:", pinId);
       console.log("🗺️ Current pins before delete:", pins.length);
