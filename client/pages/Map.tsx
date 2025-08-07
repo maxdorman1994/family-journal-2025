@@ -11,7 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MapPin, Trash2, Edit, Calendar, ExternalLink, Info, Wifi, WifiOff } from "lucide-react";
+import { MapPin, Trash2, Edit, Calendar, ExternalLink, Info, Wifi, WifiOff, Lock } from "lucide-react";
+import PasswordPrompt from "@/components/PasswordPrompt";
+import { useAuth } from "@/hooks/useAuth";
 import {
   MapPin as MapPinType,
   addMapPin,
