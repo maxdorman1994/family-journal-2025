@@ -698,187 +698,69 @@ export default function Home() {
           </span>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-6">
-          {/* John Dorman - Grandad */}
-          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-slate-50 to-slate-100 backdrop-blur-sm border-2 border-slate-200">
-            <CardContent className="p-6">
-              <div className="relative group w-20 h-20 mx-auto mb-4">
-                <div className="w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r from-slate-400 to-slate-600 p-0.5 shadow-lg">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                    <img
-                      src="/placeholder.svg"
-                      alt="John Dorman"
-                      className="w-full h-full object-cover"
-                    />
+          {familyMembers
+            .filter((member) => member.position_index > 4) // Extended family (positions 5+)
+            .map((member) => (
+            <Card
+              key={member.id}
+              className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
+            >
+              <CardContent className="p-6">
+                <div className="relative group w-20 h-20 mx-auto mb-4">
+                  <div
+                    className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
+                  >
+                    <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                      <img
+                        src={
+                          member.display_avatar ||
+                          member.avatar_url ||
+                          "/placeholder.svg"
+                        }
+                        alt={member.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </div>
-                </div>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                John Dorman
-              </h3>
-              <p className="text-sm text-muted-foreground font-medium mb-3">
-                GRANDAD
-              </p>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                The wise storyteller of our family adventures, sharing tales of Scotland's history with every grandchild.
-              </p>
-            </CardContent>
-          </Card>
 
-          {/* Rachel Dorman - Granny */}
-          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-rose-50 to-pink-100 backdrop-blur-sm border-2 border-rose-200">
-            <CardContent className="p-6">
-              <div className="relative group w-20 h-20 mx-auto mb-4">
-                <div className="w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r from-rose-400 to-pink-600 p-0.5 shadow-lg">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Rachel Dorman"
-                      className="w-full h-full object-cover"
-                    />
+                  {/* Edit overlay */}
+                  <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="flex gap-1">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
+                        onClick={() => handlePhotoEdit(member.id)}
+                        disabled={isUploading}
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      {member.avatar_url && member.avatar_url !== "/placeholder.svg" && (
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="h-7 w-7 p-0 bg-red-500/90 hover:bg-red-600"
+                          onClick={() => handlePhotoRemove(member.id)}
+                          disabled={isUploading}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                Rachel Dorman
-              </h3>
-              <p className="text-sm text-muted-foreground font-medium mb-3">
-                GRANNY DAVE
-              </p>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                The heart of our family, always ensuring everyone is well-fed and happy on our Scottish journeys.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Dave Lewis - Uncle */}
-          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-amber-50 to-orange-100 backdrop-blur-sm border-2 border-amber-200">
-            <CardContent className="p-6">
-              <div className="relative group w-20 h-20 mx-auto mb-4">
-                <div className="w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r from-amber-400 to-orange-600 p-0.5 shadow-lg">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Dave Lewis"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                Dave Lewis
-              </h3>
-              <p className="text-sm text-muted-foreground font-medium mb-3">
-                UNCLE
-              </p>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                The adventure planner who knows all the hidden gems and best routes for our Scottish explorations.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Zara - Aunty */}
-          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-teal-50 to-cyan-100 backdrop-blur-sm border-2 border-teal-200">
-            <CardContent className="p-6">
-              <div className="relative group w-20 h-20 mx-auto mb-4">
-                <div className="w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r from-teal-400 to-cyan-600 p-0.5 shadow-lg">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Zara"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                Zara
-              </h3>
-              <p className="text-sm text-muted-foreground font-medium mb-3">
-                AUNTY
-              </p>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                The photographer who captures all our precious moments and teaches the kids about Scottish wildlife.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Kira - Aunty */}
-          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-violet-50 to-purple-100 backdrop-blur-sm border-2 border-violet-200">
-            <CardContent className="p-6">
-              <div className="relative group w-20 h-20 mx-auto mb-4">
-                <div className="w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r from-violet-400 to-purple-600 p-0.5 shadow-lg">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Kira"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                Kira
-              </h3>
-              <p className="text-sm text-muted-foreground font-medium mb-3">
-                AUNTY
-              </p>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                The fun-loving aunt who brings games and laughter to every adventure, making memories extra special.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Frankie - Aunty */}
-          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-emerald-50 to-green-100 backdrop-blur-sm border-2 border-emerald-200">
-            <CardContent className="p-6">
-              <div className="relative group w-20 h-20 mx-auto mb-4">
-                <div className="w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r from-emerald-400 to-green-600 p-0.5 shadow-lg">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Frankie"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                Frankie
-              </h3>
-              <p className="text-sm text-muted-foreground font-medium mb-3">
-                AUNTY
-              </p>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                The creative spirit who finds art and beauty in every Scottish landscape we visit together.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Iris - Cousin */}
-          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-indigo-50 to-blue-100 backdrop-blur-sm border-2 border-indigo-200">
-            <CardContent className="p-6">
-              <div className="relative group w-20 h-20 mx-auto mb-4">
-                <div className="w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r from-indigo-400 to-blue-600 p-0.5 shadow-lg">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Iris"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                Iris
-              </h3>
-              <p className="text-sm text-muted-foreground font-medium mb-3">
-                COUSIN
-              </p>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                The adventure buddy who joins the kids in exploring castles and climbing hills across Scotland.
-              </p>
-            </CardContent>
-          </Card>
+                <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                  {member.name}
+                </h3>
+                <p className="text-sm text-muted-foreground font-medium mb-3">
+                  {member.role}
+                </p>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {member.bio}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         <div className="text-center mt-6">
