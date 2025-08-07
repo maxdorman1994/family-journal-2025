@@ -182,7 +182,7 @@ export default function Milestones() {
       {/* Category Filter */}
       <div className="flex flex-wrap justify-center gap-4 mb-8">
         {categories.map((category) => {
-          const Icon = category.icon;
+          const Icon = getIconComponent(category.icon);
           return (
             <Button
               key={category.id}
