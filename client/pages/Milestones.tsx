@@ -35,18 +35,25 @@ import {
 
 export default function Milestones() {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [categories, setCategories] = useState<MilestoneCategory[]>([]);
-  const [milestones, setMilestones] = useState<MilestoneWithProgress[]>([]);
+  const [milestones, setMilestones] = useState<RealMilestone[]>([]);
   const [stats, setStats] = useState<MilestoneStats>({
-    completed_count: 0,
-    in_progress_count: 0,
-    locked_count: 0,
-    total_xp: 0,
+    total_adventures: 0,
+    total_distance: 0,
+    total_locations: 0,
+    total_photos: 0,
+    unique_weather_conditions: 0,
+    dog_friendly_adventures: 0,
+    paid_activities: 0,
     completion_percentage: 0,
+    total_xp: 0,
+    completed_milestones: 0,
+    available_milestones: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAllCompleted, setShowAllCompleted] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { subscribe } = useSync();
 
   // Load milestone data
   useEffect(() => {
