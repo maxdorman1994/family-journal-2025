@@ -399,9 +399,18 @@ export default function Home() {
       console.log(
         `📸 Processing and uploading photo for member: ${editingMember}`,
       );
+      console.log(`📋 Current error state: ${error}`);
+      console.log(`📋 Sync status: ${syncStatus}`);
 
       // Process the photo
+      console.log(`🔄 Processing photo: ${file.name}`);
       const processedPhoto = await processPhoto(file);
+      console.log(`✅ Photo processed successfully:`, {
+        id: processedPhoto.id,
+        preview: processedPhoto.preview?.substring(0, 50) + '...',
+        hasFile: !!processedPhoto.file,
+        fileSize: processedPhoto.file?.size
+      });
 
       if (error && error.includes("Database Setup Required")) {
         // If database isn't set up, use local state only
@@ -419,15 +428,23 @@ export default function Home() {
         );
       } else {
         // Upload to Cloudflare and update database
-        await uploadFamilyMemberAvatar(
+        console.log(`☁️ Starting Cloudflare upload and database update...`);
+        const updatedMember = await uploadFamilyMemberAvatar(
           editingMember,
           processedPhoto,
           (progress) => {
-            console.log(`Upload progress: ${progress}%`);
+            console.log(`📈 Upload progress: ${progress}%`);
           },
         );
+        console.log(`✅ Upload completed, updated member:`, {
+          id: updatedMember.id,
+          name: updatedMember.name,
+          avatar_url: updatedMember.avatar_url,
+          display_avatar: updatedMember.display_avatar
+        });
 
         // Reload data to get updated state
+        console.log(`🔄 Reloading family members data...`);
         await loadFamilyMembersData();
       }
 
