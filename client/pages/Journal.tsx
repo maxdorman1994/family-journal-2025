@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Search, Filter, Plus, BookOpen, MapPin, Heart, Calendar, Route, Car, Dog, Edit, Trash2, Printer, Ticket, Loader2, AlertCircle } from "lucide-react";
+import { Search, Filter, Plus, BookOpen, MapPin, Heart, Calendar, Route, Car, Dog, Edit, Trash2, Printer, Ticket, Loader2, AlertCircle, Eye, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import NewEntryForm from "@/components/NewEntryForm";
+import EntryDetailModal from "@/components/EntryDetailModal";
 import {
   getJournalEntries,
   getJournalStats,
@@ -23,6 +24,8 @@ export default function Journal() {
   const [selectedTag, setSelectedTag] = useState("");
   const [hoveredEntry, setHoveredEntry] = useState<number | null>(null);
   const [isNewEntryFormOpen, setIsNewEntryFormOpen] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -205,6 +208,16 @@ export default function Journal() {
 
   const allTags = Array.from(new Set(entries.flatMap(entry => entry.tags)));
 
+  const handleEntryClick = (entry: JournalEntry) => {
+    setSelectedEntry(entry);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsDetailModalOpen(false);
+    setSelectedEntry(null);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
@@ -329,8 +342,8 @@ export default function Journal() {
 
               {/* Entry Card */}
               <div className="ml-20">
-                <Card 
-                  className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-white/90 backdrop-blur-sm border-scotland-thistle/20 cursor-pointer"
+                <Card
+                  className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-white/90 backdrop-blur-sm border-scotland-thistle/20"
                   onMouseEnter={() => setHoveredEntry(entry.id)}
                   onMouseLeave={() => setHoveredEntry(null)}
                 >
@@ -414,19 +427,37 @@ export default function Journal() {
                       )}
                     </div>
 
-                    {/* Photos Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                      {entry.photos.map((photo, photoIndex) => (
-                        <div key={photoIndex} className="aspect-square rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer">
-                          <img
-                            src={photo}
-                            alt={`Photo ${photoIndex + 1}`}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
+                    {/* Photos Grid - Show only first 3 photos */}
+                    {entry.photos && entry.photos.length > 0 && (
+                      <div className="mb-4">
+                        <div className="grid grid-cols-3 gap-3">
+                          {entry.photos.slice(0, 3).map((photo, photoIndex) => (
+                            <div key={photoIndex} className="aspect-square rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer">
+                              <img
+                                src={photo}
+                                alt={`Photo ${photoIndex + 1}`}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                                onClick={() => handleEntryClick(entry)}
+                              />
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
+                        {entry.photos.length > 3 && (
+                          <div className="mt-3 text-center">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEntryClick(entry)}
+                              className="text-vibrant-blue border-vibrant-blue hover:bg-vibrant-blue hover:text-white"
+                            >
+                              <Eye className="h-4 w-4 mr-1" />
+                              View all {entry.photos.length} photos
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -440,16 +471,35 @@ export default function Journal() {
                       ))}
                     </div>
 
-                    {/* Content Preview */}
-                    <p className="text-gray-700 leading-relaxed mb-4">
-                      {entry.content}
-                    </p>
-
-                    {/* View More Link */}
-                    <div className="text-center pt-4 border-t border-scotland-thistle/20">
-                      <p className="text-sm text-muted-foreground">
-                        Click anywhere to view full story & photos
+                    {/* Content Preview - Show first 200 characters */}
+                    <div className="mb-4">
+                      <p className="text-gray-700 leading-relaxed">
+                        {entry.content.length > 200
+                          ? `${entry.content.substring(0, 200)}...`
+                          : entry.content
+                        }
                       </p>
+                      {entry.content.length > 200 && (
+                        <Button
+                          variant="link"
+                          className="p-0 h-auto text-vibrant-blue"
+                          onClick={() => handleEntryClick(entry)}
+                        >
+                          Read more
+                        </Button>
+                      )}
+                    </div>
+
+                    {/* View More Button */}
+                    <div className="text-center pt-4 border-t border-scotland-thistle/20">
+                      <Button
+                        variant="outline"
+                        className="w-full border-scotland-thistle/30 hover:bg-scotland-thistle/10"
+                        onClick={() => handleEntryClick(entry)}
+                      >
+                        <MoreHorizontal className="h-4 w-4 mr-2" />
+                        See Full Entry
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -473,6 +523,13 @@ export default function Journal() {
         isOpen={isNewEntryFormOpen}
         onClose={() => setIsNewEntryFormOpen(false)}
         onSubmit={handleNewEntry}
+      />
+
+      {/* Entry Detail Modal */}
+      <EntryDetailModal
+        entry={selectedEntry}
+        isOpen={isDetailModalOpen}
+        onClose={handleCloseModal}
       />
     </div>
   );
