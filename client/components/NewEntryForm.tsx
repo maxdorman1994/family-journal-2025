@@ -209,10 +209,16 @@ export default function NewEntryForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("📝 Form submission started", { editingEntry: !!editingEntry, formData });
-    alert("Form submit button clicked!");
+    console.log("🔍 Checking required fields:", {
+      title: formData.title,
+      location: formData.location,
+      content: formData.content,
+      weather: formData.weather,
+      mood: formData.mood
+    });
 
     if (validateForm()) {
-      alert("Validation passed, proceeding with save...");
+      console.log("✅ Validation passed, proceeding with save...");
       try {
         setIsSubmitting(true);
         console.log("✅ Form validation passed, submitting...");
