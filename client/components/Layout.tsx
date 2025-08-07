@@ -9,6 +9,12 @@ import SyncStatus from "./SyncStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { useSync } from "@/lib/syncService";
 import {
+  loadAppSettings,
+  updateLogoUrl,
+  subscribeToAppSettings,
+  getCurrentLogoUrl,
+} from "@/lib/appSettingsService";
+import {
   processPhoto,
   uploadPhotoToCloudflare,
   validatePhotoFile,
