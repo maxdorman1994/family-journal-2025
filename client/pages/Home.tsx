@@ -740,7 +740,7 @@ export default function Home() {
                 Rachel Dorman
               </h3>
               <p className="text-sm text-muted-foreground font-medium mb-3">
-                GRANNY
+                GRANNY DAVE
               </p>
               <p className="text-xs text-slate-600 leading-relaxed">
                 The heart of our family, always ensuring everyone is well-fed and happy on our Scottish journeys.
