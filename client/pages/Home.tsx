@@ -12,15 +12,11 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
   const familyMembers = [
-    { name: "Sarah", role: "Adventure Planner", avatar: "/placeholder.svg" },
-    { name: "Jamie", role: "Photographer", avatar: "/placeholder.svg" },
-    { name: "Little Alex", role: "Chief Explorer", avatar: "/placeholder.svg" },
-    {
-      name: "Bonnie",
-      role: "Trail Guide",
-      avatar: "/placeholder.svg",
-      isPet: true,
-    },
+    { name: "Max Dorman", role: "DAD", avatar: "/placeholder.svg" },
+    { name: "Charlotte Foster", role: "MUM", avatar: "/placeholder.svg" },
+    { name: "Oscar", role: "SON", avatar: "/placeholder.svg" },
+    { name: "Rose", role: "DAUGHTER", avatar: "/placeholder.svg" },
+    { name: "Lola", role: "DAUGHTER", avatar: "/placeholder.svg" },
   ];
 
   const recentAdventures = [
