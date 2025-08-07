@@ -448,30 +448,6 @@ export default function Journal() {
               Scotland
             </p>
 
-            {/* Auth Status */}
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm mb-6 ${
-              isAuthenticated
-                ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
-                : 'bg-orange-50 border border-orange-200 text-orange-700'
-            }`}>
-              <Lock className="w-4 h-4" />
-              <span>
-                {isAuthenticated
-                  ? `Edit mode (${sessionTimeRemaining}m left)`
-                  : "View only mode"
-                }
-              </span>
-              {isAuthenticated && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={logout}
-                  className="h-5 px-2 text-xs ml-2"
-                >
-                  Lock
-                </Button>
-              )}
-            </div>
 
             <Button
               size="lg"
