@@ -155,35 +155,105 @@ export async function getMilestoneStats(
   userId: string = "demo-user",
 ): Promise<MilestoneStats> {
   if (!isSupabaseConfigured()) {
+    console.log("⚠️ Supabase not configured, using fallback stats");
     return getFallbackStats();
   }
 
   try {
     console.log("🔄 Fetching milestone statistics from database...");
 
+    // First try to get stats from the leaderboard view
     const { data: stats, error } = await supabase
       .from("milestone_leaderboard")
       .select("*")
       .eq("user_id", userId)
-      .single();
+      .maybeSingle(); // Use maybeSingle instead of single to handle no results gracefully
 
     if (error) {
-      console.error("Error fetching milestone stats:", error);
-      return getFallbackStats();
+      console.error("Error fetching milestone stats from leaderboard:", error.message || error);
+
+      // Fallback: Calculate stats manually from user_milestone_progress table
+      return await calculateStatsManually(userId);
+    }
+
+    // If no stats found in leaderboard (user has no progress yet), return empty stats
+    if (!stats) {
+      console.log("📊 No milestone stats found for user, returning empty stats");
+      return {
+        completed_count: 0,
+        in_progress_count: 0,
+        locked_count: 0,
+        total_xp: 0,
+        completion_percentage: 0,
+      };
     }
 
     const result: MilestoneStats = {
-      completed_count: stats?.completed_milestones || 0,
+      completed_count: stats.completed_milestones || 0,
       in_progress_count: 0, // We'll calculate this separately if needed
       locked_count: 0, // We'll calculate this separately if needed
-      total_xp: stats?.total_xp || 0,
-      completion_percentage: stats?.completion_percentage || 0,
+      total_xp: stats.total_xp || 0,
+      completion_percentage: stats.completion_percentage || 0,
     };
 
     console.log("✅ Milestone stats loaded:", result);
     return result;
   } catch (error) {
-    console.error("Error in getMilestoneStats:", error);
+    console.error("Error in getMilestoneStats:", error instanceof Error ? error.message : String(error));
+    return getFallbackStats();
+  }
+}
+
+/**
+ * Calculate milestone stats manually when leaderboard view fails
+ */
+async function calculateStatsManually(userId: string): Promise<MilestoneStats> {
+  try {
+    console.log("🔄 Calculating milestone stats manually...");
+
+    // Get user progress directly
+    const { data: progressData, error: progressError } = await supabase
+      .from("user_milestone_progress")
+      .select(`
+        status,
+        milestone_id,
+        milestones!inner(xp_reward)
+      `)
+      .eq("user_id", userId);
+
+    if (progressError) {
+      console.error("Error fetching user progress:", progressError.message);
+      return getFallbackStats();
+    }
+
+    const progress = progressData || [];
+
+    const completed_count = progress.filter(p => p.status === 'completed').length;
+    const in_progress_count = progress.filter(p => p.status === 'in_progress').length;
+    const total_xp = progress
+      .filter(p => p.status === 'completed')
+      .reduce((sum, p) => sum + (p.milestones?.xp_reward || 0), 0);
+
+    // Get total milestone count for percentage calculation
+    const { count: totalMilestones } = await supabase
+      .from("milestones")
+      .select("*", { count: "exact", head: true })
+      .eq("is_active", true);
+
+    const completion_percentage = totalMilestones ? (completed_count / totalMilestones) * 100 : 0;
+
+    const result = {
+      completed_count,
+      in_progress_count,
+      locked_count: (totalMilestones || 0) - completed_count - in_progress_count,
+      total_xp,
+      completion_percentage,
+    };
+
+    console.log("✅ Manually calculated milestone stats:", result);
+    return result;
+  } catch (error) {
+    console.error("Error calculating stats manually:", error instanceof Error ? error.message : String(error));
     return getFallbackStats();
   }
 }
