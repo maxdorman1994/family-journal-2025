@@ -204,6 +204,15 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Authentication Footer */}
       <AuthFooter />
+
+      {/* Hidden file input for logo upload */}
+      <input
+        ref={logoFileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleLogoUpload}
+        className="hidden"
+      />
     </div>
   );
 }
