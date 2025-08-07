@@ -52,6 +52,8 @@ export default function Home() {
   const [isStatsExpanded, setIsStatsExpanded] = useState(false);
   const [realStats, setRealStats] = useState<any>(null);
   const [statsLoading, setStatsLoading] = useState(true);
+  const [recentAdventures, setRecentAdventures] = useState<RecentAdventure[]>([]);
+  const [adventuresLoading, setAdventuresLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadRealStats = async () => {
