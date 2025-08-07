@@ -26,7 +26,7 @@ export interface AdventureStats {
 }
 
 /**
- * Get recent adventures from the database (latest 3)
+ * Get recent adventures from the database (latest 3 journal entries)
  */
 export async function getRecentAdventures(): Promise<RecentAdventure[]> {
   if (!isSupabaseConfigured()) {
@@ -36,32 +36,75 @@ export async function getRecentAdventures(): Promise<RecentAdventure[]> {
   }
 
   try {
-    console.log("🔄 Fetching recent adventures from database...");
+    console.log("🔄 Fetching latest 3 journal entries for recent adventures...");
 
-    const { data: adventures, error } = await supabase
-      .from("recent_adventures")
-      .select("*");
+    // Directly query journal_entries for the latest 3 entries
+    const { data: journalEntries, error } = await supabase
+      .from("journal_entries")
+      .select("*")
+      .order("date", { ascending: false })
+      .limit(3);
 
     if (error) {
-      console.error("Error fetching recent adventures:", error);
-      // Check if it's a table/view not found error
-      if (
-        error.message.includes("Could not find the table") ||
-        error.message.includes('relation "recent_adventures" does not exist')
-      ) {
-        throw new Error("SCHEMA_MISSING: Database views not found");
-      }
-      throw new Error(`Failed to fetch recent adventures: ${error.message}`);
+      console.error("Error fetching journal entries:", error);
+      throw new Error(`Failed to fetch journal entries: ${error.message}`);
     }
 
-    console.log(`✅ Loaded ${adventures?.length || 0} recent adventures`);
-    return adventures || [];
+    if (!journalEntries || journalEntries.length === 0) {
+      console.log("📦 No journal entries found, returning empty array");
+      return [];
+    }
+
+    // Transform journal entries into RecentAdventure format
+    const recentAdventures: RecentAdventure[] = journalEntries.map((entry, index) => ({
+      id: entry.id,
+      title: entry.title,
+      location: entry.location,
+      formatted_date: entry.date,
+      featured_image: entry.photos && entry.photos.length > 0 ? entry.photos[0] : "/placeholder.svg",
+      tags: entry.tags || [],
+      adventure_type: entry.tags && entry.tags.length > 0 ? entry.tags[0] : "Adventure",
+      photo_count: entry.photos ? entry.photos.length : 0,
+      excerpt: entry.content ? entry.content.substring(0, 150) + "..." : "A wonderful Scottish adventure!",
+      time_ago: formatTimeAgo(entry.date)
+    }));
+
+    console.log(`✅ Loaded ${recentAdventures.length} recent adventures from journal entries`);
+    return recentAdventures;
   } catch (error) {
     console.error("Error in getRecentAdventures:", error);
     if (error instanceof Error) {
       throw error;
     }
     throw new Error(`Failed to fetch recent adventures: ${String(error)}`);
+  }
+}
+
+/**
+ * Helper function to format time ago
+ */
+function formatTimeAgo(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInDays === 0) {
+      return "Today";
+    } else if (diffInDays === 1) {
+      return "Yesterday";
+    } else if (diffInDays < 7) {
+      return `${diffInDays} days ago`;
+    } else if (diffInDays < 30) {
+      const weeks = Math.floor(diffInDays / 7);
+      return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    } else {
+      const months = Math.floor(diffInDays / 30);
+      return `${months} month${months > 1 ? 's' : ''} ago`;
+    }
+  } catch (error) {
+    return dateString; // Fallback to original date string
   }
 }
 
