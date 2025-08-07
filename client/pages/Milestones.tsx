@@ -154,11 +154,10 @@ export default function Milestones() {
   };
 
   const filterMilestones = (
-    milestones: MilestoneWithProgress[],
+    milestones: RealMilestone[],
     category: string,
   ) => {
-    if (category === "all") return milestones;
-    return milestones.filter((m) => m.category_id === category);
+    return filterMilestonesByCategory(milestones, category);
   };
 
   // Show loading state
