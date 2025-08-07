@@ -473,6 +473,17 @@ export default function Wishlist() {
       }
     } catch (dbError) {
       console.error("Database error, using local state:", dbError);
+
+      const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
+
+      if (errorMessage.includes("Network connection failed") ||
+          errorMessage.includes("Failed to fetch")) {
+        console.log("🌐 Network error during vote removal, updating locally");
+        setSyncStatus("disconnected");
+        setError("🌐 Connection lost - vote removed locally, will sync when connection restored");
+      }
+
+      // Always update local state as fallback
       setWishlistItems((prev) =>
         prev.map((item) =>
           item.id === id
