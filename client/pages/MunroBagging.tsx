@@ -335,14 +335,6 @@ export default function MunroBagging() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 text-6xl opacity-5 animate-bounce">⛰️</div>
-        <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">🏔️</div>
-        <div className="absolute bottom-20 left-20 text-5xl opacity-5 animate-bounce" style={{animationDelay: '1s'}}>🗻</div>
-        <div className="absolute top-60 left-1/3 text-3xl opacity-10 animate-pulse" style={{animationDelay: '2s'}}>⛷️</div>
-        <div className="absolute bottom-40 right-10 text-4xl opacity-5 animate-bounce" style={{animationDelay: '1.5s'}}>🧗</div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
         {/* Hero Header */}
@@ -350,21 +342,19 @@ export default function MunroBagging() {
           <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-green-400/20 to-purple-400/20 rounded-full blur-3xl transform -rotate-6"></div>
           <div className="relative">
             <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border-2 border-green-200/50 shadow-lg">
-              <Mountain className="h-6 w-6 text-green-600 animate-pulse" />
+              <Mountain className="h-6 w-6 text-green-600" />
               <span className="text-sm font-medium text-green-700">Munro Bagging Adventure</span>
-              <Mountain className="h-6 w-6 text-green-600 animate-pulse" style={{animationDelay: '0.5s'}} />
+              <Mountain className="h-6 w-6 text-green-600" />
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6 relative">
               <span className="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
                 Munro Bagging
               </span>
-              <div className="absolute -top-4 -right-4 text-2xl animate-spin">⛰️</div>
             </h1>
             
             <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
               Conquering Scotland's 282 magnificent peaks over 3,000 feet
-              <span className="inline-block ml-2 text-2xl animate-bounce">🏔️</span>
             </p>
 
             {/* Error Display */}
