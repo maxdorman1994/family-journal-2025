@@ -12,7 +12,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { MapPin, Trash2, Edit, Calendar, ExternalLink, Info, Wifi, WifiOff, Lock } from "lucide-react";
-import PasswordPrompt from "@/components/PasswordPrompt";
 import { useAuth } from "@/hooks/useAuth";
 import {
   MapPin as MapPinType,
@@ -96,7 +95,7 @@ export default function MapPage() {
 
     // Subscribe to real-time updates
     const unsubscribe = subscribeToMapPins((updatedPins) => {
-      console.log(`🗺️ Received ${updatedPins.length} pins from database`);
+      console.log(`��️ Received ${updatedPins.length} pins from database`);
       setPins(updatedPins);
 
       // Update stats
