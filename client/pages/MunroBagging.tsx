@@ -266,7 +266,7 @@ export default function MunroBagging() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <TrendingUp className="h-8 w-8 text-white" />
                 </div>
-                <div className="text-4xl font-bold text-slate-800 mb-2 text-center">{munros.reduce((max, m) => m.completed ? Math.max(max, m.height) : max, 0)}m</div>
+                <div className="text-4xl font-bold text-slate-800 mb-2 text-center">{stats.highest_completed}m</div>
                 <div className="text-sm font-semibold text-slate-600 text-center">Highest Conquered</div>
               </div>
             </CardContent>
