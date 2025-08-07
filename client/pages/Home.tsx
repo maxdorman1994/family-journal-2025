@@ -727,6 +727,214 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Photos Captured */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-amber-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-amber-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <Camera className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">📸</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent mb-3">
+                  127
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Photos Captured</div>
+                <div className="text-sm text-slate-500">Beautiful moments frozen in time</div>
+                <div className="mt-4 flex justify-center space-x-0.5">
+                  {[...Array(12)].map((_, i) => (
+                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-orange-400 to-amber-400 rounded-full"></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Miles Traveled */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-blue-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-blue-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">⚡</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-3">
+                  342
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Miles Traveled</div>
+                <div className="text-sm text-slate-500">Across Scotland's stunning terrain</div>
+                <div className="mt-4 flex justify-center space-x-0.5">
+                  {[...Array(10)].map((_, i) => (
+                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-indigo-400 to-blue-400 rounded-full"></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Munros Climbed */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-lime-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-lime-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-green-500 to-lime-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l7 7-7 7M19 3l-7 7 7 7" />
+                    </svg>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">⛰️</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-green-600 to-lime-600 bg-clip-text text-transparent mb-3">
+                  3
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Munros Climbed</div>
+                <div className="text-sm text-slate-500">Scottish peaks conquered together</div>
+                <div className="mt-4 flex justify-center space-x-1">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="w-2 h-2 bg-gradient-to-r from-green-400 to-lime-400 rounded-full"></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Adventures This Year */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-400 to-purple-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-purple-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">🗓️</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-3">
+                  12
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Adventures This Year</div>
+                <div className="text-sm text-slate-500">Family expeditions & discoveries</div>
+                <div className="mt-4 flex justify-center space-x-0.5">
+                  {[...Array(12)].map((_, i) => (
+                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full"></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Wildlife Spotted */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-green-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-green-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">🦌</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent mb-3">
+                  23
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Wildlife Spotted</div>
+                <div className="text-sm text-slate-500">Amazing creatures encountered</div>
+                <div className="mt-4 flex justify-center space-x-0.5">
+                  {[...Array(8)].map((_, i) => (
+                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full"></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Castles Visited */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-pink-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-pink-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V9a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">🏰</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent mb-3">
+                  4
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Castles Explored</div>
+                <div className="text-sm text-slate-500">Historic fortresses & legends</div>
+                <div className="mt-4 flex justify-center space-x-1">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-400 rounded-full"></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Weather Days */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                    </svg>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">☁️</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-3">
+                  8
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Weather Adventures</div>
+                <div className="text-sm text-slate-500">Sunshine, rain & Scottish mists</div>
+                <div className="mt-4 flex justify-center space-x-1">
+                  {[...Array(8)].map((_, i) => (
+                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Achievement Banner */}
