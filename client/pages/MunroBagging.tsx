@@ -489,9 +489,9 @@ export default function MunroBagging() {
                     )}
                   </div>
 
-                  {munro.completed && munro.completedDate && (
+                  {munro.completed && munro.completion?.completed_date && (
                     <div className="text-xs text-green-600 font-medium">
-                      ✅ Completed {new Date(munro.completedDate).toLocaleDateString()}
+                      ✅ Completed {new Date(munro.completion.completed_date).toLocaleDateString()}
                     </div>
                   )}
                 </div>
