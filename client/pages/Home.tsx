@@ -641,7 +641,7 @@ export default function Home() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Journal Entries */}
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
@@ -661,11 +661,6 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Journal Entries</div>
                 <div className="text-sm text-slate-500">Stories captured & memories preserved</div>
-                <div className="mt-4 flex justify-center space-x-1">
-                  {[...Array(6)].map((_, i) => (
-                    <div key={i} className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -689,11 +684,6 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Places Explored</div>
                 <div className="text-sm text-slate-500">Across Scotland's breathtaking landscapes</div>
-                <div className="mt-4 flex justify-center space-x-1">
-                  {[...Array(6)].map((_, i) => (
-                    <div key={i} className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full"></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -717,21 +707,12 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Memory Tags</div>
                 <div className="text-sm text-slate-500">Special moments & magical experiences</div>
-                <div className="mt-4 flex justify-center flex-wrap gap-1 max-w-32 mx-auto">
-                  {[...Array(19)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-1.5 h-1.5 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full"
-                      style={{ animationDelay: `${i * 0.1}s` }}
-                    ></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Photos Captured */}
-          <div className="group relative">
+          {/* Photos Captured - Hidden by default */}
+          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
             <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-amber-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-amber-500"></div>
@@ -749,11 +730,6 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Photos Captured</div>
                 <div className="text-sm text-slate-500">Beautiful moments frozen in time</div>
-                <div className="mt-4 flex justify-center space-x-0.5">
-                  {[...Array(12)].map((_, i) => (
-                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-orange-400 to-amber-400 rounded-full"></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -779,11 +755,6 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Miles Traveled</div>
                 <div className="text-sm text-slate-500">Across Scotland's stunning terrain</div>
-                <div className="mt-4 flex justify-center space-x-0.5">
-                  {[...Array(10)].map((_, i) => (
-                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-indigo-400 to-blue-400 rounded-full"></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -809,11 +780,6 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Munros Climbed</div>
                 <div className="text-sm text-slate-500">Scottish peaks conquered together</div>
-                <div className="mt-4 flex justify-center space-x-1">
-                  {[...Array(3)].map((_, i) => (
-                    <div key={i} className="w-2 h-2 bg-gradient-to-r from-green-400 to-lime-400 rounded-full"></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -839,11 +805,6 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Adventures This Year</div>
                 <div className="text-sm text-slate-500">Family expeditions & discoveries</div>
-                <div className="mt-4 flex justify-center space-x-0.5">
-                  {[...Array(12)].map((_, i) => (
-                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full"></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -869,11 +830,6 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Wildlife Spotted</div>
                 <div className="text-sm text-slate-500">Amazing creatures encountered</div>
-                <div className="mt-4 flex justify-center space-x-0.5">
-                  {[...Array(8)].map((_, i) => (
-                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full"></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -899,11 +855,6 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Castles Explored</div>
                 <div className="text-sm text-slate-500">Historic fortresses & legends</div>
-                <div className="mt-4 flex justify-center space-x-1">
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-400 rounded-full"></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -929,11 +880,6 @@ export default function Home() {
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Weather Adventures</div>
                 <div className="text-sm text-slate-500">Sunshine, rain & Scottish mists</div>
-                <div className="mt-4 flex justify-center space-x-1">
-                  {[...Array(8)].map((_, i) => (
-                    <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"></div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </div>
