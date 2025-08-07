@@ -26,6 +26,7 @@ export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const logoFileInputRef = useRef<HTMLInputElement>(null);
   const { isAuthenticated } = useAuth();
+  const { initializeSync } = useSync();
 
   // Load stored logo URL from localStorage on component mount
   useEffect(() => {
