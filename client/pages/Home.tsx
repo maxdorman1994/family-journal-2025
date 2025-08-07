@@ -57,13 +57,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   const {
-    isAuthenticated,
-    showPasswordPrompt,
-    sessionTimeRemaining,
-    requestAuth,
-    authenticate,
-    logout,
-    cancelAuth
+    isAuthenticated
   } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState<
@@ -1713,7 +1707,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-bold">���️</span>
+                    <span className="text-xs text-white font-bold">☁️</span>
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-3">
@@ -2038,7 +2032,7 @@ export default function Home() {
               <div className="flex justify-center gap-2 opacity-60">
                 <span className="text-red-600">📺</span>
                 <span className="text-pink-600">🎥</span>
-                <span className="text-red-600">🏴󠁧󠁢󠁳����󠁴󠁿</span>
+                <span className="text-red-600">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
