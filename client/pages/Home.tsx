@@ -461,14 +461,75 @@ export default function Home() {
           className="hidden"
         />
 
-        {/* Edit instructions */}
-        {Object.keys(memberPhotos).length === 0 && (
-          <div className="text-center mt-4">
-            <p className="text-sm text-slate-500">
-              💡 Hover over any family member's photo and click the edit button to upload a custom picture!
-            </p>
+        {/* Sync Status & Instructions */}
+        <div className="mt-6 space-y-4">
+          {/* Sync Status Indicator */}
+          <div className="flex items-center justify-center gap-2">
+            <div className={`w-3 h-3 rounded-full animate-pulse ${
+              syncStatus === 'connected' ? 'bg-green-500' :
+              syncStatus === 'connecting' ? 'bg-yellow-500' :
+              syncStatus === 'local' ? 'bg-blue-500' : 'bg-red-500'
+            }`} />
+            <span className="text-xs font-medium text-slate-600">
+              {syncStatus === 'connected' ? '🌐 Profile photos sync across devices' :
+               syncStatus === 'connecting' ? '🔄 Connecting...' :
+               syncStatus === 'local' ? '📱 Local mode only' : '❌ Sync disconnected'}
+            </span>
           </div>
-        )}
+
+          {/* Error Display */}
+          {error && (
+            <div className={`max-w-md mx-auto border-2 rounded-xl p-3 text-center ${
+              error.startsWith('✅') ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800' :
+              'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 text-amber-800'
+            }`}>
+              <p className="text-xs leading-relaxed mb-2">{error}</p>
+
+              {error.includes('Database Setup Required') && (
+                <div className="bg-white/50 rounded-lg p-2 mb-2 text-xs">
+                  <div className="font-semibold mb-1">📋 Setup Instructions:</div>
+                  <ol className="list-decimal list-inside space-y-1 text-amber-700 text-xs">
+                    <li>Go to Supabase Dashboard → SQL Editor</li>
+                    <li>Paste contents of family-members-schema.sql</li>
+                    <li>Run the schema to create tables</li>
+                    <li>Click "Test" button below to verify</li>
+                  </ol>
+                </div>
+              )}
+
+              <div className="flex gap-2 justify-center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={testConnection}
+                  disabled={syncStatus === 'connecting'}
+                  className="text-xs px-2 py-1"
+                >
+                  {syncStatus === 'connecting' ? (
+                    <>
+                      <Upload className="h-3 w-3 mr-1 animate-spin" />
+                      Testing...
+                    </>
+                  ) : (
+                    <>
+                      <Users className="h-3 w-3 mr-1" />
+                      Test Connection
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Edit instructions */}
+          {!error || error.startsWith('✅') ? (
+            <div className="text-center">
+              <p className="text-sm text-slate-500">
+                💡 Hover over any family member's photo and click the edit button to upload a custom picture!
+              </p>
+            </div>
+          ) : null}
+        </div>
       </section>
 
       {/* Adventure Stats */}
