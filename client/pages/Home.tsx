@@ -142,15 +142,17 @@ export default function Home() {
           {familyMembers.map((member, index) => (
             <Card
               key={index}
-              className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm border-scotland-thistle/20"
+              className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
             >
               <CardContent className="p-6">
-                <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-3 border-gradient-to-r from-vibrant-blue to-scotland-loch shadow-lg">
-                  <img
-                    src={member.avatar}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
+                <div className={`w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}>
+                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                    <img
+                      src={member.avatar}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
                 <h3 className="font-semibold text-lg text-gray-800 mb-2">
                   {member.name}
