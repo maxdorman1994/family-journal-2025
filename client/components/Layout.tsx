@@ -179,16 +179,16 @@ export default function Layout({ children }: LayoutProps) {
           {/* Mobile Navigation */}
           {isMobileMenuOpen && (
             <div className="md:hidden pb-4">
-              <nav className="flex flex-col space-y-2">
+              <nav className="flex flex-col space-y-1">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     to={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    className={`px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 touch-manipulation ${
                       isActivePage(item.href)
                         ? "text-vibrant-blue bg-scotland-thistle/20 shadow-sm"
-                        : "text-gray-700 dark:text-gray-200 hover:text-vibrant-blue hover:bg-scotland-thistle/10"
+                        : "text-gray-700 dark:text-gray-200 hover:text-vibrant-blue hover:bg-scotland-thistle/10 active:bg-scotland-thistle/20"
                     }`}
                   >
                     {item.name}
