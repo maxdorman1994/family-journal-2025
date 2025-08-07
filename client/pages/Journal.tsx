@@ -342,21 +342,17 @@ export default function Journal() {
           <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 via-pink-400/20 to-blue-400/20 rounded-full blur-3xl transform -rotate-6"></div>
           <div className="relative">
             <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border-2 border-purple-200/50 shadow-lg">
-              <Sparkles className="h-6 w-6 text-purple-500 animate-pulse" />
               <span className="text-sm font-medium text-purple-700">Scottish Family Adventures</span>
-              <Sparkles className="h-6 w-6 text-purple-500 animate-pulse" style={{animationDelay: '0.5s'}} />
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6 relative">
               <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
                 Our Wee Adventures
               </span>
-              <div className="absolute -top-4 -right-4 text-2xl animate-spin">🍀</div>
             </h1>
             
             <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Capturing magical moments across the beautiful landscapes of Scotland 
-              <span className="inline-block ml-2 text-2xl animate-bounce">✨</span>
+              Capturing magical moments across the beautiful landscapes of Scotland
             </p>
 
             <Button
@@ -509,9 +505,6 @@ export default function Journal() {
           <div className="absolute left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-400 via-blue-400 via-purple-400 to-pink-400 rounded-full shadow-lg"></div>
           
           {/* Timeline Sparkles */}
-          <div className="absolute left-10 top-20 w-5 h-5 bg-yellow-400 rounded-full animate-ping"></div>
-          <div className="absolute left-10 top-96 w-3 h-3 bg-blue-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute left-10 bottom-40 w-4 h-4 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '2s'}}></div>
 
           <div className="space-y-12">
             {filteredEntries.map((entry, index) => (
@@ -531,7 +524,6 @@ export default function Journal() {
                           <div className="flex-1">
                             <h3 className="text-2xl md:text-3xl font-bold text-slate-800 mb-3 group-hover/card:text-blue-600 transition-colors duration-300">
                               {entry.title}
-                              <span className="ml-2 text-lg animate-bounce">✨</span>
                             </h3>
                             <div className="flex flex-wrap items-center gap-4 text-slate-600 mb-4">
                               <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border-2 border-slate-200">
