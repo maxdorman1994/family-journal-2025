@@ -38,7 +38,7 @@ import { ProcessedPhoto, cleanupPreviewUrls } from "@/lib/photoUtils";
 interface NewEntryFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (entry: any) => void;
+  onSubmit: (entry: any) => Promise<void>;
 }
 
 const weatherOptions = [
