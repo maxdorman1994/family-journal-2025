@@ -94,14 +94,14 @@ SELECT
   CASE
     WHEN date::date = CURRENT_DATE THEN 'Today'
     WHEN date::date = CURRENT_DATE - 1 THEN 'Yesterday'
-    WHEN date::date > CURRENT_DATE - 7 THEN EXTRACT(DAY FROM CURRENT_DATE - date::date) || ' days ago'
-    WHEN date::date > CURRENT_DATE - 30 THEN EXTRACT(DAY FROM CURRENT_DATE - date::date) || ' days ago'
-    WHEN date::date > CURRENT_DATE - 365 THEN 
-      CASE 
-        WHEN EXTRACT(MONTH FROM CURRENT_DATE - date::date) = 1 THEN '1 month ago'
-        ELSE EXTRACT(MONTH FROM CURRENT_DATE - date::date) || ' months ago'
+    WHEN date::date > CURRENT_DATE - 7 THEN (CURRENT_DATE - date::date) || ' days ago'
+    WHEN date::date > CURRENT_DATE - 30 THEN (CURRENT_DATE - date::date) || ' days ago'
+    WHEN date::date > CURRENT_DATE - 365 THEN
+      CASE
+        WHEN (CURRENT_DATE - date::date) < 60 THEN '1 month ago'
+        ELSE ROUND((CURRENT_DATE - date::date) / 30.0) || ' months ago'
       END
-    ELSE EXTRACT(YEAR FROM CURRENT_DATE - date::date) || ' year(s) ago'
+    ELSE ROUND((CURRENT_DATE - date::date) / 365.0) || ' year(s) ago'
   END as time_ago
 FROM journal_entries
 ORDER BY date DESC, created_at DESC;
