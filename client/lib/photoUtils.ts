@@ -27,13 +27,63 @@ const defaultCompressionOptions: CompressionOptions = {
 };
 
 /**
- * Compress an image file
+ * Get compression options based on file size for optimal results
+ */
+function getSmartCompressionOptions(file: File): CompressionOptions {
+  const fileSizeMB = file.size / 1024 / 1024;
+
+  // For very large files (>8MB), be more aggressive
+  if (fileSizeMB > 8) {
+    return {
+      maxSizeMB: 0.6,
+      maxWidthOrHeight: 1400,
+      useWebWorker: true,
+      quality: 0.8,
+    };
+  }
+
+  // For large files (4-8MB), moderate compression
+  if (fileSizeMB > 4) {
+    return {
+      maxSizeMB: 0.7,
+      maxWidthOrHeight: 1500,
+      useWebWorker: true,
+      quality: 0.82,
+    };
+  }
+
+  // For medium files (1-4MB), light compression
+  if (fileSizeMB > 1) {
+    return {
+      maxSizeMB: 0.8,
+      maxWidthOrHeight: 1600,
+      useWebWorker: true,
+      quality: 0.85,
+    };
+  }
+
+  // For small files (<1MB), minimal compression
+  return {
+    maxSizeMB: 0.9,
+    maxWidthOrHeight: 1920,
+    useWebWorker: true,
+    quality: 0.9,
+  };
+}
+
+/**
+ * Compress an image file with smart compression based on file size
  */
 export async function compressImage(
   file: File,
   options: Partial<CompressionOptions> = {},
 ): Promise<File> {
-  const compressionOptions = { ...defaultCompressionOptions, ...options };
+  // Use smart compression if no custom options provided
+  const smartOptions = Object.keys(options).length === 0
+    ? getSmartCompressionOptions(file)
+    : { ...defaultCompressionOptions, ...options };
+
+  const compressionOptions = smartOptions;
 
   try {
     console.log(`Starting compression for: ${file.name} (${file.type})`);
