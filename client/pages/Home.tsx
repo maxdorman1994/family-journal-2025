@@ -45,6 +45,8 @@ export default function Home() {
     "connected" | "connecting" | "disconnected" | "local"
   >("connecting");
   const [isStatsExpanded, setIsStatsExpanded] = useState(false);
+  const [realStats, setRealStats] = useState<any>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load family members data and setup real-time sync
@@ -563,7 +565,7 @@ export default function Home() {
               {syncStatus === "connected"
                 ? "🌐 Profile photos sync across devices"
                 : syncStatus === "connecting"
-                  ? "🔄 Connecting..."
+                  ? "��� Connecting..."
                   : syncStatus === "local"
                     ? "📱 Local mode only"
                     : "❌ Sync disconnected"}
