@@ -48,9 +48,19 @@ export default function MunroBagging() {
       const munrosData = await getAllMunrosWithCompletion();
       setMunros(munrosData);
 
-      // Load statistics
-      const statsData = await getMunroCompletionStats();
-      setStats(statsData);
+      // Load statistics (with fallback)
+      try {
+        const statsData = await getMunroCompletionStats();
+        setStats(statsData);
+      } catch (statsError) {
+        console.warn('Could not load stats, using defaults:', statsError);
+        setStats({
+          completed_count: munrosData.filter(m => m.completed).length,
+          total_munros: 282,
+          completion_percentage: Math.round((munrosData.filter(m => m.completed).length / 282) * 100),
+          highest_completed: munrosData.filter(m => m.completed).reduce((max, m) => Math.max(max, m.height), 0)
+        });
+      }
 
       console.log(`✅ Loaded ${munrosData.length} Munros successfully`);
     } catch (error) {
