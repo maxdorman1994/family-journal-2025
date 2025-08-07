@@ -923,23 +923,26 @@ export default function Home() {
             Our Extended Adventure Family
           </span>
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-6">
+
+        {/* Parents Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8 justify-items-center">
           {familyMembers
             .filter(
               (member) =>
+                (member.name === "John Dorman" || member.name === "Rachel Dorman") &&
                 member.position_index > 4 &&
                 member.name !== "Charlie" &&
                 member.name !== "Fern",
-            ) // Extended family (positions 5+), excluding dogs
+            )
             .map((member) => (
               <Card
                 key={member.id}
                 className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
               >
-                <CardContent className="p-8">
-                  <div className="relative group w-40 h-40 mx-auto mb-6">
+                <CardContent className="p-6">
+                  <div className="relative group w-34 h-34 mx-auto mb-4">
                     <div
-                      className={`w-full h-full rounded-full overflow-hidden border-4 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-xl`}
+                      className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
                     >
                       <div className="w-full h-full rounded-full overflow-hidden bg-white">
                         <img
@@ -956,38 +959,112 @@ export default function Home() {
 
                     {/* Edit overlay */}
                     <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="flex gap-2">
+                      <div className="flex gap-1">
                         <Button
                           size="sm"
                           variant="secondary"
-                          className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                          className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
                           onClick={() => handlePhotoEdit(member.id)}
                           disabled={isUploading}
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-3 w-3" />
                         </Button>
                         {member.avatar_url &&
                           member.avatar_url !== "/placeholder.svg" && (
                             <Button
                               size="sm"
                               variant="destructive"
-                              className="h-8 w-8 p-0 bg-red-500/90 hover:bg-red-600"
+                              className="h-7 w-7 p-0 bg-red-500/90 hover:bg-red-600"
                               onClick={() => handlePhotoRemove(member.id)}
                               disabled={isUploading}
                             >
-                              <X className="h-4 w-4" />
+                              <X className="h-3 w-3" />
                             </Button>
                           )}
                       </div>
                     </div>
                   </div>
-                  <h3 className="font-semibold text-xl text-gray-800 mb-3">
+                  <h3 className="font-semibold text-lg text-gray-800 mb-2">
                     {member.name}
                   </h3>
-                  <p className="text-base text-muted-foreground font-medium mb-4">
+                  <p className="text-sm text-muted-foreground font-medium mb-3">
                     {member.role}
                   </p>
-                  <p className="text-sm text-slate-600 leading-relaxed">
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {member.bio}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+        </div>
+
+        {/* Children Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          {familyMembers
+            .filter(
+              (member) =>
+                (member.name === "Lewis" || member.name === "Zara" || member.name === "Kira" || member.name === "Frankie" || member.name === "Iris") &&
+                member.position_index > 4 &&
+                member.name !== "Charlie" &&
+                member.name !== "Fern",
+            )
+            .map((member) => (
+              <Card
+                key={member.id}
+                className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
+              >
+                <CardContent className="p-6">
+                  <div className="relative group w-34 h-34 mx-auto mb-4">
+                    <div
+                      className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
+                    >
+                      <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                        <img
+                          src={
+                            member.display_avatar ||
+                            member.avatar_url ||
+                            "/placeholder.svg"
+                          }
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Edit overlay */}
+                    <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="flex gap-1">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
+                          onClick={() => handlePhotoEdit(member.id)}
+                          disabled={isUploading}
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        {member.avatar_url &&
+                          member.avatar_url !== "/placeholder.svg" && (
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="h-7 w-7 p-0 bg-red-500/90 hover:bg-red-600"
+                              onClick={() => handlePhotoRemove(member.id)}
+                              disabled={isUploading}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                    {member.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground font-medium mb-3">
+                    {member.role}
+                  </p>
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     {member.bio}
                   </p>
                 </CardContent>
@@ -1970,7 +2047,7 @@ export default function Home() {
               <div className="flex justify-center gap-2 opacity-60">
                 <span className="text-red-600">📺</span>
                 <span className="text-pink-600">🎥</span>
-                <span className="text-red-600">🏴����󠁢󠁳󠁣󠁴󠁿</span>
+                <span className="text-red-600">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
