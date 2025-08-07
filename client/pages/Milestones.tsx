@@ -332,7 +332,7 @@ export default function Milestones() {
               .slice(0, showAllCompleted ? undefined : 3)
               .map((milestone) => {
                 const Icon = getIconComponent(milestone.icon);
-                const colorScheme = milestone.color_scheme;
+                const colorScheme = getColorScheme(milestone);
                 return (
                   <Card
                     key={milestone.id}
