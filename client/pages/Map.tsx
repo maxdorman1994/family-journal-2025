@@ -198,11 +198,22 @@ export default function MapPage() {
       });
 
       // Immediately update local state for instant UI feedback
-      setPins(currentPins =>
-        currentPins.map(pin =>
+      setPins(currentPins => {
+        const newPins = currentPins.map(pin =>
           pin.id === editingPin.id ? updatedPin : pin
-        )
-      );
+        );
+        // Update stats immediately
+        setStats({
+          total: newPins.length,
+          byCategory: {
+            adventure: newPins.filter(p => p.category === "adventure").length,
+            photo: newPins.filter(p => p.category === "photo").length,
+            memory: newPins.filter(p => p.category === "memory").length,
+            wishlist: newPins.filter(p => p.category === "wishlist").length,
+          }
+        });
+        return newPins;
+      });
 
       setIsDialogOpen(false);
       setEditingPin(null);
@@ -240,7 +251,7 @@ export default function MapPage() {
 
       console.log("✅ Pin deleted successfully and will sync across devices");
     } catch (error) {
-      console.error("�� Error deleting pin:", error);
+      console.error("❌ Error deleting pin:", error);
       alert(`Error deleting pin: ${error.message || error}`);
     }
   };
