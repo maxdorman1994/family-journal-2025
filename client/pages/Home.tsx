@@ -2049,6 +2049,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Password Prompt */}
+      <PasswordPrompt
+        isOpen={showPasswordPrompt}
+        onAuthenticate={authenticate}
+        onCancel={cancelAuth}
+        title="Family Access Required"
+        description="Please enter the family password to edit family photos."
+      />
     </div>
   );
 }
