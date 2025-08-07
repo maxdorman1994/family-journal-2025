@@ -204,6 +204,29 @@ export default function MunroBagging() {
               <span className="inline-block ml-2 text-2xl animate-bounce">🏔️</span>
             </p>
 
+            {/* Error Display */}
+            {error && (
+              <div className="mb-8 max-w-2xl mx-auto">
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-6 text-amber-800 shadow-lg">
+                  <div className="flex items-center justify-center mb-3">
+                    <AlertCircle className="h-6 w-6 mr-2" />
+                    <span className="font-semibold">System Status</span>
+                  </div>
+                  <p className="text-sm text-center leading-relaxed">{error}</p>
+                  <div className="mt-4 text-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={testConnection}
+                      className="border-amber-300 text-amber-700 hover:bg-amber-100"
+                    >
+                      Test Database Connection
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Progress Overview */}
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-green-200/50 shadow-xl max-w-2xl mx-auto">
               <div className="flex items-center justify-between mb-4">
