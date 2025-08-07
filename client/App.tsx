@@ -34,7 +34,7 @@ const App = () => (
             <Route path="/hints-tips" element={<HintsTips />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/milestones" element={<Milestones />} />
-            <Route path="/map" element={<MapSimple />} />
+            <Route path="/map" element={<Map />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
