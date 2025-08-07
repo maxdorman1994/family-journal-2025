@@ -261,8 +261,7 @@ export async function getEntryStats(entryId: string): Promise<{ commentCount: nu
     const { data, error } = await supabase
       .from('journal_entry_stats')
       .select('comment_count, like_count')
-      .eq('id', entryId)
-      .single();
+      .eq('id', entryId);
 
     if (error) {
       console.error('Error fetching entry stats:', JSON.stringify(error, null, 2));
@@ -279,9 +278,24 @@ export async function getEntryStats(entryId: string): Promise<{ commentCount: nu
       };
     }
 
+    // Handle case where no stats exist for this entry (empty result)
+    if (!data || data.length === 0) {
+      const [comments, likes] = await Promise.all([
+        getCommentsForEntry(entryId),
+        getLikesForEntry(entryId),
+      ]);
+
+      return {
+        commentCount: comments.length,
+        likeCount: likes.length,
+      };
+    }
+
+    // Use the first (and should be only) result
+    const stats = data[0];
     return {
-      commentCount: data.comment_count || 0,
-      likeCount: data.like_count || 0,
+      commentCount: stats.comment_count || 0,
+      likeCount: stats.like_count || 0,
     };
   } catch (error) {
     console.error('Error in getEntryStats:', JSON.stringify(error, null, 2));
