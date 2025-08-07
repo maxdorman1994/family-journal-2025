@@ -5,10 +5,9 @@ INSERT INTO family_members (
   id,
   name,
   role,
-  description,
+  bio,
   colors,
-  position_index,
-  is_active
+  position_index
 ) VALUES (
   'charlie-dog',
   'Charlie',
@@ -20,13 +19,12 @@ INSERT INTO family_members (
     "accent": "from-amber-500 to-orange-600",
     "text": "text-amber-800"
   }',
-  99,
-  true
+  99
 )
 ON CONFLICT (id) DO UPDATE SET
   name = EXCLUDED.name,
   role = EXCLUDED.role,
-  description = EXCLUDED.description,
+  bio = EXCLUDED.bio,
   colors = EXCLUDED.colors,
   updated_at = NOW();
 
