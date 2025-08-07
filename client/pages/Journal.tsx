@@ -222,7 +222,8 @@ export default function Journal() {
     return matchesSearch && matchesTag;
   });
 
-  const handleNewEntry = async (entryData: any) => {
+  const handleSaveEntry = async (entryData: any) => {
+    const isEditing = editingEntry !== null;
     try {
       setIsLoading(true);
       setError(null);
