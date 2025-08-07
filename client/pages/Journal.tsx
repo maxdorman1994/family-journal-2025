@@ -261,6 +261,42 @@ export default function Journal() {
     }
   };
 
+  const handleDeleteClick = (entry: JournalEntry) => {
+    setDeleteEntry(entry);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteEntry) return;
+
+    try {
+      setIsDeleting(true);
+
+      // Try to delete from Supabase first
+      try {
+        await deleteJournalEntry(deleteEntry.id);
+        console.log('✅ Entry deleted from Supabase successfully');
+      } catch (supabaseError) {
+        console.warn('Failed to delete from Supabase, removing locally:', supabaseError);
+      }
+
+      // Remove from local state regardless
+      setEntries(prev => prev.filter(entry => entry.id !== deleteEntry.id));
+
+      // Close delete dialog
+      setDeleteEntry(null);
+
+    } catch (error) {
+      console.error('Failed to delete journal entry:', error);
+      setError('Failed to delete entry');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteEntry(null);
+  };
+
   // Fun statistics with animations
   const stats = [
     {
