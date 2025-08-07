@@ -33,6 +33,8 @@ export default function Wishlist() {
   const [sortBy, setSortBy] = useState<'priority' | 'votes' | 'cost' | 'date'>('priority');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [syncStatus, setSyncStatus] = useState<'connected' | 'connecting' | 'disconnected' | 'local'>('connecting');
+  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
   const [stats, setStats] = useState({
     total_items: 0,
     total_budget: 0,
@@ -57,10 +59,13 @@ export default function Wishlist() {
   useEffect(() => {
     loadWishlistData();
 
-    // Setup real-time subscription
+    // Setup real-time subscription with sync status tracking
     const unsubscribe = subscribeToWishlistItems((items) => {
+      console.log('🔄 Real-time sync update received:', items.length, 'items');
       setWishlistItems(items);
       updateLocalStats(items);
+      setSyncStatus('connected');
+      setLastSyncTime(new Date());
     });
 
     return unsubscribe;
@@ -81,16 +86,21 @@ export default function Wishlist() {
       setStats(statsData);
 
       console.log(`✅ Loaded ${items.length} wishlist items successfully`);
+      setSyncStatus('connected');
+      setLastSyncTime(new Date());
+      setError(null);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       console.warn('Failed to load from Supabase, using fallback:', errorMessage);
 
-      // Set appropriate error message
+      // Set sync status and appropriate error message
+      setSyncStatus('local');
       if (errorMessage.includes('not configured')) {
         setError('📝 Development Mode: Supabase not configured - using local data');
       } else if (errorMessage.includes('SCHEMA_MISSING') || errorMessage.includes('Could not find the table') || errorMessage.includes('relation "wishlist_items" does not exist')) {
         setError('🎯 Database Setup Required: Please run the Wishlist SQL schema - using local data');
       } else {
+        setSyncStatus('disconnected');
         setError(`⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`);
       }
 
@@ -232,8 +242,10 @@ export default function Wishlist() {
       setShowAddForm(false);
 
       console.log('✅ Wishlist item added successfully');
+      setLastSyncTime(new Date());
     } catch (dbError) {
       console.error('Database error, falling back to local state:', dbError);
+      setSyncStatus('local');
       setError('📱 Using local tracking (database unavailable)');
     } finally {
       setIsLoading(false);
@@ -345,9 +357,36 @@ export default function Wishlist() {
 
   const testConnection = async () => {
     try {
+      setSyncStatus('connecting');
+      setError('🔍 Testing database connection...');
+
       const result = await testWishlistConnection();
-      setError(result.success ? `✅ ${result.message}` : `❌ ${result.message}: ${result.error}`);
+
+      if (result.success) {
+        setSyncStatus('connected');
+        setLastSyncTime(new Date());
+        setError(`✅ ${result.message}`);
+
+        // Reload data after successful connection
+        await loadWishlistData();
+      } else {
+        setSyncStatus('disconnected');
+        setError(`❌ ${result.message}${result.error ? ': ' + result.error : ''}`);
+
+        // Show connection details if available
+        if (result.details) {
+          const details = result.details;
+          const status = [
+            details.tables_exist ? '✅ Tables exist' : '❌ Tables missing',
+            details.can_read ? '✅ Can read' : '❌ Read failed',
+            details.can_write ? '✅ Can write' : '❌ Write failed',
+            details.real_time_enabled ? '✅ Real-time enabled' : '❌ Real-time disabled'
+          ].join(' | ');
+          console.log('Connection details:', status);
+        }
+      }
     } catch (error) {
+      setSyncStatus('disconnected');
       setError(`❌ Connection test failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
@@ -480,10 +519,33 @@ export default function Wishlist() {
               </CardContent>
             </Card>
 
-            {/* Error Display */}
-            {error && (
-              <div className="md:col-span-4">
-                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-4 text-amber-800 shadow-lg">
+            {/* Sync Status & Error Display */}
+            <div className="md:col-span-4">
+              {/* Sync Status Indicator */}
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <div className={`w-3 h-3 rounded-full animate-pulse ${
+                  syncStatus === 'connected' ? 'bg-green-500' :
+                  syncStatus === 'connecting' ? 'bg-yellow-500' :
+                  syncStatus === 'local' ? 'bg-blue-500' : 'bg-red-500'
+                }`} />
+                <span className="text-xs font-medium text-slate-600">
+                  {syncStatus === 'connected' ? '🌐 Cross-device sync active' :
+                   syncStatus === 'connecting' ? '🔄 Connecting...' :
+                   syncStatus === 'local' ? '📱 Local mode only' : '❌ Sync disconnected'}
+                </span>
+                {lastSyncTime && syncStatus === 'connected' && (
+                  <span className="text-xs text-slate-500">
+                    • Last sync: {lastSyncTime.toLocaleTimeString()}
+                  </span>
+                )}
+              </div>
+
+              {/* Error Display */}
+              {error && (
+                <div className={`border-2 rounded-2xl p-4 shadow-lg ${
+                  error.startsWith('✅') ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800' :
+                  'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 text-amber-800'
+                }`}>
                   <div className="flex items-center justify-center mb-2">
                     <AlertCircle className="h-5 w-5 mr-2" />
                     <span className="font-semibold text-sm">System Status</span>
@@ -495,9 +557,10 @@ export default function Wishlist() {
                       <div className="font-semibold mb-1">📋 Setup Instructions:</div>
                       <ol className="list-decimal list-inside space-y-1 text-amber-700 text-xs">
                         <li>Go to Supabase Dashboard → SQL Editor</li>
-                        <li>Create new query and copy wishlist-schema.sql</li>
-                        <li>Run the schema to create wishlist tables</li>
-                        <li>Refresh page to enable cross-device sync</li>
+                        <li>Create new query and paste contents of wishlist-schema.sql</li>
+                        <li>Run the schema to create wishlist tables and views</li>
+                        <li>Click "Test" button below to verify connection</li>
+                        <li>Refresh page to enable full cross-device sync</li>
                       </ol>
                     </div>
                   )}
@@ -507,24 +570,40 @@ export default function Wishlist() {
                       variant="outline"
                       size="sm"
                       onClick={testConnection}
-                      className="border-amber-300 text-amber-700 hover:bg-amber-100 text-xs px-2 py-1"
+                      disabled={syncStatus === 'connecting'}
+                      className={`text-xs px-2 py-1 ${
+                        error.startsWith('✅') ? 'border-green-300 text-green-700 hover:bg-green-100' :
+                        'border-amber-300 text-amber-700 hover:bg-amber-100'
+                      }`}
                     >
-                      <Database className="h-3 w-3 mr-1" />
-                      Test
+                      {syncStatus === 'connecting' ? (
+                        <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                      ) : (
+                        <Database className="h-3 w-3 mr-1" />
+                      )}
+                      {syncStatus === 'connecting' ? 'Testing...' : 'Test Connection'}
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={loadWishlistData}
-                      className="border-amber-300 text-amber-700 hover:bg-amber-100 text-xs px-2 py-1"
+                      disabled={isLoading}
+                      className={`text-xs px-2 py-1 ${
+                        error.startsWith('✅') ? 'border-green-300 text-green-700 hover:bg-green-100' :
+                        'border-amber-300 text-amber-700 hover:bg-amber-100'
+                      }`}
                     >
-                      <RefreshCw className="h-3 w-3 mr-1" />
-                      Retry
+                      {isLoading ? (
+                        <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                      ) : (
+                        <RefreshCw className="h-3 w-3 mr-1" />
+                      )}
+                      {isLoading ? 'Loading...' : 'Refresh Data'}
                     </Button>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
