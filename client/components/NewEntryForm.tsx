@@ -549,7 +549,7 @@ export default function NewEntryForm({
             <CardHeader>
               <CardTitle className="text-lg flex items-center">
                 <Camera className="mr-2 h-5 w-5 text-vibrant-blue" />
-                Adventure Photos ({formData.photos.length}/8)
+                Adventure Photos ({formData.photos.length}/20)
               </CardTitle>
             </CardHeader>
             <CardContent>
