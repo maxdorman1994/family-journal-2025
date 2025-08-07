@@ -195,7 +195,7 @@ export default function Layout({ children }: LayoutProps) {
                           <Edit className="h-3 w-3 text-white" />
                         </button>
                         <button
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             await updateLogoUrlLocal("/placeholder.svg");
