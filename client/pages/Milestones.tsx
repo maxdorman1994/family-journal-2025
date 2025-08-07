@@ -409,7 +409,7 @@ export default function Milestones() {
             {filterMilestones(inProgressMilestones, selectedCategory).map(
               (milestone) => {
                 const Icon = getIconComponent(milestone.icon);
-                const colorScheme = milestone.color_scheme;
+                const colorScheme = getColorScheme(milestone);
                 const progressPercentage = milestone.progressPercentage || 0;
                 const currentProgress =
                   milestone.progress?.current_progress || 0;
