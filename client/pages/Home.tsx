@@ -711,8 +711,8 @@ export default function Home() {
             </Card>
           </div>
 
-          {/* Photos Captured - Hidden by default */}
-          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
+          {/* Photos Captured */}
+          <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-amber-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-amber-500"></div>
