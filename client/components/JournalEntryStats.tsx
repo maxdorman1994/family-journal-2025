@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Heart, MessageCircle } from 'lucide-react';
-import { getEntryStats } from '@/lib/journalCommentsService';
+import React, { useState, useEffect } from "react";
+import { Heart, MessageCircle } from "lucide-react";
+import { getEntryStats } from "@/lib/journalCommentsService";
 
 interface JournalEntryStatsProps {
   entryId: string;
   className?: string;
 }
 
-export default function JournalEntryStats({ entryId, className = "" }: JournalEntryStatsProps) {
+export default function JournalEntryStats({
+  entryId,
+  className = "",
+}: JournalEntryStatsProps) {
   const [stats, setStats] = useState({ commentCount: 0, likeCount: 0 });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -17,7 +20,7 @@ export default function JournalEntryStats({ entryId, className = "" }: JournalEn
         const entryStats = await getEntryStats(entryId);
         setStats(entryStats);
       } catch (error) {
-        console.error('Error loading entry stats:', error);
+        console.error("Error loading entry stats:", error);
       } finally {
         setIsLoading(false);
       }
@@ -28,7 +31,9 @@ export default function JournalEntryStats({ entryId, className = "" }: JournalEn
 
   if (isLoading) {
     return (
-      <div className={`flex items-center gap-3 text-sm text-gray-500 ${className}`}>
+      <div
+        className={`flex items-center gap-3 text-sm text-gray-500 ${className}`}
+      >
         <div className="animate-pulse flex items-center gap-1">
           <Heart className="h-4 w-4" />
           <span>-</span>

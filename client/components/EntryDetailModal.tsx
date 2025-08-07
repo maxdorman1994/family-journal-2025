@@ -1,8 +1,22 @@
 import React from "react";
-import { X, MapPin, Route, Car, Dog, Ticket, Calendar, Eye } from "lucide-react";
+import {
+  X,
+  MapPin,
+  Route,
+  Car,
+  Dog,
+  Ticket,
+  Calendar,
+  Eye,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { JournalEntry } from "@/lib/supabase";
 import JournalCommentsLikes from "./JournalCommentsLikes";
 
@@ -12,7 +26,11 @@ interface EntryDetailModalProps {
   onClose: () => void;
 }
 
-export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetailModalProps) {
+export default function EntryDetailModal({
+  entry,
+  isOpen,
+  onClose,
+}: EntryDetailModalProps) {
   if (!entry) return null;
 
   return (
@@ -37,7 +55,7 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
                 {entry.location}
               </div>
             </div>
-            
+
             {/* Weather and Mood */}
             <div className="flex gap-4">
               <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
@@ -56,11 +74,13 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
                 <Route className="mr-2 h-4 w-4" />
                 Travel Details
               </h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="flex items-center text-sm text-gray-600">
                   <Route className="mr-2 h-4 w-4 text-vibrant-blue" />
-                  <span className="font-medium">{entry.miles_traveled} miles traveled</span>
+                  <span className="font-medium">
+                    {entry.miles_traveled} miles traveled
+                  </span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Car className="mr-2 h-4 w-4 text-scotland-forest" />
@@ -77,24 +97,40 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
               {/* Pet Notes */}
               {entry.dog_friendly && entry.pet_notes && (
                 <div className="mt-4 text-sm text-gray-600 italic border-l-2 border-vibrant-pink pl-3 bg-white/50 p-3 rounded">
-                  <span className="font-medium">Pet info: </span>{entry.pet_notes}
+                  <span className="font-medium">Pet info: </span>
+                  {entry.pet_notes}
                 </div>
               )}
 
               {/* Ticket Information */}
-              {entry.paid_activity && (entry.adult_tickets || entry.child_tickets || entry.other_tickets) && (
-                <div className="mt-4 text-sm text-gray-600 border-l-2 border-vibrant-blue pl-3 bg-white/50 p-3 rounded">
-                  <span className="font-medium flex items-center mb-2">
-                    <Ticket className="mr-1 h-3 w-3" />
-                    Tickets:
-                  </span>
-                  <div className="space-y-1">
-                    {entry.adult_tickets && <div><strong>Adults:</strong> {entry.adult_tickets}</div>}
-                    {entry.child_tickets && <div><strong>Children:</strong> {entry.child_tickets}</div>}
-                    {entry.other_tickets && <div><strong>Other:</strong> {entry.other_tickets}</div>}
+              {entry.paid_activity &&
+                (entry.adult_tickets ||
+                  entry.child_tickets ||
+                  entry.other_tickets) && (
+                  <div className="mt-4 text-sm text-gray-600 border-l-2 border-vibrant-blue pl-3 bg-white/50 p-3 rounded">
+                    <span className="font-medium flex items-center mb-2">
+                      <Ticket className="mr-1 h-3 w-3" />
+                      Tickets:
+                    </span>
+                    <div className="space-y-1">
+                      {entry.adult_tickets && (
+                        <div>
+                          <strong>Adults:</strong> {entry.adult_tickets}
+                        </div>
+                      )}
+                      {entry.child_tickets && (
+                        <div>
+                          <strong>Children:</strong> {entry.child_tickets}
+                        </div>
+                      )}
+                      {entry.other_tickets && (
+                        <div>
+                          <strong>Other:</strong> {entry.other_tickets}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </CardContent>
           </Card>
 
@@ -107,7 +143,10 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {entry.photos.map((photo, photoIndex) => (
-                  <div key={photoIndex} className="relative aspect-square rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer group">
+                  <div
+                    key={photoIndex}
+                    className="relative aspect-square rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer group"
+                  >
                     <img
                       src={photo}
                       alt={`Photo ${photoIndex + 1} from ${entry.title}`}
@@ -140,7 +179,9 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
 
           {/* Full Content */}
           <div>
-            <h3 className="font-semibold text-gray-800 mb-3">Our Adventure Story</h3>
+            <h3 className="font-semibold text-gray-800 mb-3">
+              Our Adventure Story
+            </h3>
             <div className="prose prose-gray max-w-none">
               <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {entry.content}
@@ -150,10 +191,7 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
 
           {/* Comments and Likes */}
           <div className="border-t border-scotland-thistle/20 pt-6">
-            <JournalCommentsLikes
-              entryId={entry.id}
-              entryTitle={entry.title}
-            />
+            <JournalCommentsLikes entryId={entry.id} entryTitle={entry.title} />
           </div>
         </div>
       </DialogContent>

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Heart, MessageCircle, Send, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { toast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import React, { useState, useEffect } from "react";
+import { Heart, MessageCircle, Send, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import {
   getCommentsForEntry,
   getLikesForEntry,
@@ -19,14 +19,17 @@ import {
   checkCommentsLikesTables,
   type JournalComment,
   type JournalLike,
-} from '@/lib/journalCommentsService';
+} from "@/lib/journalCommentsService";
 
 interface JournalCommentsLikesProps {
   entryId: string;
   entryTitle: string;
 }
 
-export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCommentsLikesProps) {
+export default function JournalCommentsLikes({
+  entryId,
+  entryTitle,
+}: JournalCommentsLikesProps) {
   const { isAuthenticated } = useAuth();
   const [comments, setComments] = useState<JournalComment[]>([]);
   const [likes, setLikes] = useState<JournalLike[]>([]);
@@ -37,13 +40,13 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
-  const [visitorName, setVisitorName] = useState('');
-  const [commentText, setCommentText] = useState('');
+  const [visitorName, setVisitorName] = useState("");
+  const [commentText, setCommentText] = useState("");
   const [showCommentForm, setShowCommentForm] = useState(false);
 
   // Load stored visitor name from localStorage
   useEffect(() => {
-    const storedName = localStorage.getItem('visitor_name');
+    const storedName = localStorage.getItem("visitor_name");
     if (storedName) {
       setVisitorName(storedName);
     }
@@ -52,7 +55,7 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
   // Save visitor name to localStorage when it changes
   useEffect(() => {
     if (visitorName.trim()) {
-      localStorage.setItem('visitor_name', visitorName.trim());
+      localStorage.setItem("visitor_name", visitorName.trim());
     }
   }, [visitorName]);
 
@@ -75,7 +78,7 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
       setLikeCount(statsData.likeCount);
       setCommentCount(statsData.commentCount);
     } catch (error) {
-      console.error('Error loading comments and likes:', error);
+      console.error("Error loading comments and likes:", error);
       toast({
         title: "Error",
         description: "Failed to load comments and likes",
@@ -97,7 +100,7 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
       const userLiked = await checkIfUserLiked(entryId, name);
       setIsLiked(userLiked);
     } catch (error) {
-      console.error('Error checking user like status:', error);
+      console.error("Error checking user like status:", error);
       setIsLiked(false);
     }
   };
@@ -129,15 +132,15 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
       const result = await toggleLike(entryId, visitorName);
       setIsLiked(result.liked);
       setLikeCount(result.likeCount);
-      
+
       toast({
         title: result.liked ? "❤️ Liked!" : "Like removed",
-        description: result.liked 
-          ? "Thanks for liking this adventure!" 
+        description: result.liked
+          ? "Thanks for liking this adventure!"
           : "Your like has been removed",
       });
     } catch (error) {
-      console.error('Error toggling like:', error);
+      console.error("Error toggling like:", error);
       toast({
         title: "Error",
         description: "Failed to update like status",
@@ -148,7 +151,7 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!visitorName.trim() || !commentText.trim()) {
       toast({
         title: "Missing information",
@@ -161,17 +164,17 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
     try {
       setIsSubmitting(true);
       const newComment = await addComment(entryId, visitorName, commentText);
-      setComments(prev => [...prev, newComment]);
-      setCommentCount(prev => prev + 1);
-      setCommentText('');
+      setComments((prev) => [...prev, newComment]);
+      setCommentCount((prev) => prev + 1);
+      setCommentText("");
       setShowCommentForm(false);
-      
+
       toast({
         title: "💬 Comment added!",
         description: "Thanks for sharing your thoughts on this adventure!",
       });
     } catch (error) {
-      console.error('Error adding comment:', error);
+      console.error("Error adding comment:", error);
       toast({
         title: "Error",
         description: "Failed to add comment",
@@ -185,15 +188,15 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
   const handleDeleteComment = async (commentId: string) => {
     try {
       await deleteComment(commentId);
-      setComments(prev => prev.filter(c => c.id !== commentId));
-      setCommentCount(prev => prev - 1);
-      
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+      setCommentCount((prev) => prev - 1);
+
       toast({
         title: "Comment deleted",
         description: "The comment has been removed",
       });
     } catch (error) {
-      console.error('Error deleting comment:', error);
+      console.error("Error deleting comment:", error);
       toast({
         title: "Error",
         description: "Failed to delete comment",
@@ -205,8 +208,8 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
   const handleDeleteLike = async (likeId: string, visitorName: string) => {
     try {
       await deleteLike(likeId);
-      setLikes(prev => prev.filter(l => l.id !== likeId));
-      setLikeCount(prev => prev - 1);
+      setLikes((prev) => prev.filter((l) => l.id !== likeId));
+      setLikeCount((prev) => prev - 1);
 
       // If this was the current user's like, update the liked state
       if (visitorName === visitorName.trim()) {
@@ -218,7 +221,7 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
         description: `Removed like from ${visitorName}`,
       });
     } catch (error) {
-      console.error('Error deleting like:', error);
+      console.error("Error deleting like:", error);
       toast({
         title: "Error",
         description: "Failed to remove like",
@@ -228,12 +231,12 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(dateString).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -267,13 +270,15 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
           </div>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Like and Comment Actions */}
         <div className="flex flex-col gap-4">
           {/* Visitor Name Input */}
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-700">Your Name</label>
+            <label className="text-sm font-medium text-gray-700">
+              Your Name
+            </label>
             <Input
               type="text"
               placeholder="Enter your name (e.g., Grandma, Uncle Rob, etc.)"
@@ -290,8 +295,8 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
               variant={isLiked ? "default" : "outline"}
               size="sm"
               className={`flex items-center gap-2 ${
-                isLiked 
-                  ? "bg-red-500 hover:bg-red-600 text-white" 
+                isLiked
+                  ? "bg-red-500 hover:bg-red-600 text-white"
                   : "hover:bg-red-50 hover:text-red-600"
               }`}
               disabled={!visitorName.trim()}
@@ -299,7 +304,7 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
               <Heart className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`} />
               {isLiked ? "Liked" : "Like"} ({likeCount})
             </Button>
-            
+
             <Button
               onClick={() => setShowCommentForm(!showCommentForm)}
               variant="outline"
@@ -315,7 +320,10 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
 
         {/* Comment Form */}
         {showCommentForm && (
-          <form onSubmit={handleSubmitComment} className="space-y-3 p-4 bg-gray-50 rounded-lg">
+          <form
+            onSubmit={handleSubmitComment}
+            className="space-y-3 p-4 bg-gray-50 rounded-lg"
+          >
             <Textarea
               placeholder="Share your thoughts about this adventure..."
               value={commentText}
@@ -334,7 +342,7 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
                   size="sm"
                   onClick={() => {
                     setShowCommentForm(false);
-                    setCommentText('');
+                    setCommentText("");
                   }}
                 >
                   Cancel
@@ -358,18 +366,26 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
           <div className="space-y-4">
             <h4 className="text-lg font-semibold text-gray-800">Comments</h4>
             {comments.map((comment) => (
-              <div key={comment.id} className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+              <div
+                key={comment.id}
+                className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm"
+              >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-medium text-gray-900">{comment.visitor_name}</span>
+                      <span className="font-medium text-gray-900">
+                        {comment.visitor_name}
+                      </span>
                       <span className="text-xs text-gray-500">
                         {formatDate(comment.created_at)}
                       </span>
                     </div>
-                    <p className="text-gray-700 leading-relaxed">{comment.comment_text}</p>
+                    <p className="text-gray-700 leading-relaxed">
+                      {comment.comment_text}
+                    </p>
                   </div>
-                  {(visitorName.trim() === comment.visitor_name || isAuthenticated) && (
+                  {(visitorName.trim() === comment.visitor_name ||
+                    isAuthenticated) && (
                     <Button
                       onClick={() => handleDeleteComment(comment.id)}
                       variant="ghost"
@@ -379,7 +395,11 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
                           ? "text-red-500 hover:text-red-700 hover:bg-red-50"
                           : "text-gray-400 hover:text-red-600"
                       }`}
-                      title={isAuthenticated ? "Admin: Delete comment" : "Delete your comment"}
+                      title={
+                        isAuthenticated
+                          ? "Admin: Delete comment"
+                          : "Delete your comment"
+                      }
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -395,7 +415,9 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
           <div className="text-center py-8 text-gray-500">
             <MessageCircle className="h-12 w-12 mx-auto mb-3 text-gray-300" />
             <p className="text-lg font-medium mb-1">No comments yet</p>
-            <p className="text-sm">Be the first to share your thoughts about this adventure!</p>
+            <p className="text-sm">
+              Be the first to share your thoughts about this adventure!
+            </p>
           </div>
         )}
 
@@ -404,20 +426,29 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
           <div className="pt-4 border-t border-gray-200">
             <div className="flex items-center gap-2 mb-3">
               <Heart className="h-4 w-4 text-red-500 fill-current" />
-              <span className="text-sm font-medium text-gray-700">Liked by:</span>
+              <span className="text-sm font-medium text-gray-700">
+                Liked by:
+              </span>
             </div>
             <div className="space-y-2">
               {likes.map((like) => (
-                <div key={like.id} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
+                <div
+                  key={like.id}
+                  className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2"
+                >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-700 font-medium">{like.visitor_name}</span>
+                    <span className="text-sm text-gray-700 font-medium">
+                      {like.visitor_name}
+                    </span>
                     <span className="text-xs text-gray-500">
                       {formatDate(like.created_at)}
                     </span>
                   </div>
                   {isAuthenticated && (
                     <Button
-                      onClick={() => handleDeleteLike(like.id, like.visitor_name)}
+                      onClick={() =>
+                        handleDeleteLike(like.id, like.visitor_name)
+                      }
                       variant="ghost"
                       size="sm"
                       className="text-red-500 hover:text-red-700 hover:bg-red-100 h-8 w-8 p-0"
