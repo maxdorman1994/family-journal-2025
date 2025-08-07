@@ -145,21 +145,18 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
   const warnings: string[] = [];
 
   try {
-    // Convert HEIC to JPEG if needed
+    // Handle HEIC files
     if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-      console.log(`Attempting HEIC conversion for: ${file.name}`);
-      conversionAttempted = true;
+      console.log(`HEIC file detected: ${file.name}`);
 
-      try {
-        processedFile = await convertHeicToJpeg(file);
-        console.log(`HEIC conversion successful for: ${file.name}`);
-      } catch (heicError) {
-        console.warn(`HEIC conversion failed for ${file.name}:`, heicError);
-        warnings.push('Browser doesn\'t support HEIC conversion - Cloudflare Images will handle it directly');
+      // Skip conversion entirely - most browsers don't support HEIC conversion
+      // Cloudflare Images will handle HEIC files natively
+      console.log(`Skipping browser HEIC conversion - Cloudflare Images supports HEIC natively`);
+      warnings.push('HEIC file will be processed by Cloudflare Images (supports HEIC natively)');
 
-        // Keep the original HEIC file unchanged
-        processedFile = file;
-      }
+      // Keep the original HEIC file unchanged
+      processedFile = file;
+      conversionAttempted = true; // Mark as attempted so compression is skipped
     }
 
     // Try to compress the image (skip for HEIC files when conversion failed)
