@@ -675,17 +675,32 @@ export default function Journal() {
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteClick(entry);
-                              }}
-                              className="border-red-300 text-red-700 hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                            {isAuthenticated && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEditClick(entry);
+                                }}
+                                className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            )}
+                            {isAuthenticated && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteClick(entry);
+                                }}
+                                className="border-red-300 text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
                           </div>
                         </div>
                       </div>
