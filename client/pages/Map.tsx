@@ -668,7 +668,10 @@ export default function MapPage() {
                     <MapPin className="w-8 h-8 mx-auto mb-2 opacity-50" />
                     <p className="text-sm">No pins yet!</p>
                     <p className="text-xs">
-                      Click on the map to add your first adventure pin.
+                      {isAuthenticated
+                        ? "Click on the map to add your first adventure pin."
+                        : "Login in the footer to start adding adventure pins."
+                      }
                     </p>
                   </div>
                 )}
