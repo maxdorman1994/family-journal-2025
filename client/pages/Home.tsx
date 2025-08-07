@@ -631,7 +631,7 @@ export default function Home() {
                 className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
               >
                 <CardContent className="p-6">
-                  <div className="relative group w-20 h-20 mx-auto mb-4">
+                  <div className="relative group w-24 h-24 mx-auto mb-4">
                     <div
                       className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}
                     >
@@ -1914,7 +1914,7 @@ export default function Home() {
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
-                Subscribe for weekly Scottish adventure vlogs! 🎬
+                Subscribe for weekly Scottish adventure vlogs! ����
               </p>
             </div>
           </div>
