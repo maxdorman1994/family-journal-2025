@@ -193,8 +193,8 @@ BEGIN
   PERFORM update_milestone_progress_advanced(p_user_id, 'consistent-adventurer', consecutive_days);
   
   -- Award photo variety based on number of entries with photos
-  PERFORM update_milestone_progress_advanced(p_user_id, 'photo-variety', 
-    (SELECT COUNT(*) FROM journal_entries WHERE photos IS NOT NULL AND array_length(photos, 1) > 0));
+  PERFORM update_milestone_progress_advanced(p_user_id, 'photo-variety',
+    (SELECT COUNT(*)::INTEGER FROM journal_entries WHERE photos IS NOT NULL AND array_length(photos, 1) > 0));
 
   -- Award initial milestones if any journal entries exist
   IF journal_count > 0 THEN
