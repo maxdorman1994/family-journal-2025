@@ -3,9 +3,11 @@
 // Force production environment
 process.env.NODE_ENV = 'production';
 
-// Ensure we're in the right directory
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 console.log('🚀 Starting Scottish Adventure App in Production Mode');
 console.log('📂 Working directory:', process.cwd());
@@ -30,4 +32,4 @@ if (!fs.existsSync(serverPath)) {
 
 // Start the server
 console.log('✅ Starting production server...');
-require('./dist/server/node-build.mjs');
+import('./dist/server/node-build.mjs');
