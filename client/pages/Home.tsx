@@ -208,13 +208,44 @@ export default function Home() {
               className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
             >
               <CardContent className="p-6">
-                <div className={`w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}>
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                    <img
-                      src={member.avatar}
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                    />
+                <div className="relative group w-20 h-20 mx-auto mb-4">
+                  <div className={`w-full h-full rounded-full overflow-hidden border-3 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-lg`}>
+                    <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                      <img
+                        src={memberPhotos[index] || member.avatar}
+                        alt={member.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Edit overlay */}
+                  <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="flex gap-1">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="h-7 w-7 p-0 bg-white/90 hover:bg-white"
+                        onClick={() => handlePhotoEdit(index)}
+                        disabled={isUploading}
+                      >
+                        {isUploading && editingMember === index ? (
+                          <Upload className="h-3 w-3 animate-pulse" />
+                        ) : (
+                          <Edit className="h-3 w-3" />
+                        )}
+                      </Button>
+                      {memberPhotos[index] && (
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="h-7 w-7 p-0"
+                          onClick={() => removePhoto(index)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <h3 className="font-semibold text-lg text-gray-800 mb-2">
