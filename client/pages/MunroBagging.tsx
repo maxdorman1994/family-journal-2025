@@ -151,10 +151,8 @@ export default function MunroBagging() {
     { name: "Double Digits", description: "Complete 10 Munros", unlocked: completedCount >= 10, icon: Award },
     { name: "Quarter Century", description: "Complete 25 Munros", unlocked: completedCount >= 25, icon: Star },
     { name: "Half Century", description: "Complete 50 Munros", unlocked: completedCount >= 50, icon: Trophy },
-    { name: "Munro Completer", description: "Complete all 282 Munros", unlocked: completedCount >= TOTAL_MUNROS, icon: Zap }
+    { name: "Munro Completer", description: "Complete all 282 Munros", unlocked: completedCount >= totalMunros, icon: Zap }
   ];
-
-  const regions = getAllRegions();
 
   // Show loading state
   if (isLoading) {
