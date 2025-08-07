@@ -340,30 +340,6 @@ export default function MapPage() {
             </span>
           </div>
 
-          {/* Auth Status */}
-          <div className={`rounded-lg px-4 py-2 flex items-center gap-2 text-sm ${
-            isAuthenticated
-              ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
-              : 'bg-orange-50 border border-orange-200 text-orange-700'
-          }`}>
-            <Lock className="w-4 h-4" />
-            <span>
-              {isAuthenticated
-                ? `Edit mode (${sessionTimeRemaining}m left)`
-                : "View only mode"
-              }
-            </span>
-            {isAuthenticated && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={logout}
-                className="h-5 px-2 text-xs"
-              >
-                Lock
-              </Button>
-            )}
-          </div>
         </div>
       </div>
 
