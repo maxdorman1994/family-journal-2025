@@ -72,15 +72,24 @@ export default function MunroBagging() {
   });
 
   const toggleMunroComplete = (munroId: string) => {
-    setMunros(prev => prev.map(munro => 
-      munro.id === munroId 
-        ? { 
-            ...munro, 
-            completed: !munro.completed,
-            completedDate: !munro.completed ? new Date().toISOString().split('T')[0] : undefined
-          }
-        : munro
-    ));
+    setMunros(prev => {
+      const updatedMunros = prev.map(munro =>
+        munro.id === munroId
+          ? {
+              ...munro,
+              completed: !munro.completed,
+              completedDate: !munro.completed ? new Date().toISOString().split('T')[0] : undefined,
+              photoCount: !munro.completed ? Math.floor(Math.random() * 5) + 1 : 0
+            }
+          : munro
+      );
+
+      // Save completed IDs to localStorage
+      const completedIds = updatedMunros.filter(m => m.completed).map(m => m.id);
+      localStorage.setItem('munro-completions', JSON.stringify(completedIds));
+
+      return updatedMunros;
+    });
   };
 
   const getDifficultyColor = (difficulty: string) => {
