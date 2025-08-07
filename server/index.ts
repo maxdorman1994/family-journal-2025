@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
+import { fileURLToPath } from "url";
 import { handleDemo } from "./routes/demo";
 import {
   uploadPhoto,
@@ -12,6 +13,14 @@ import {
   deletePhoto,
 } from "./routes/photos";
 import { logR2Status, getR2Status } from "./utils/r2Config";
+
+// Fix for serverless environments where import.meta.url might be undefined
+let __dirname: string;
+try {
+  __dirname = path.dirname(fileURLToPath(import.meta.url));
+} catch {
+  __dirname = process.cwd();
+}
 
 export function createServer() {
   const app = express();
