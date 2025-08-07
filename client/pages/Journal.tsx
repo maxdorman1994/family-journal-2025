@@ -428,7 +428,7 @@ export default function Journal() {
       count: new Set(entries.map((e) => e.location)).size,
       label: "Places Discovered",
       gradient: "from-amber-500 via-orange-500 to-red-500",
-      bgPattern: "���",
+      bgPattern: "🧭",
       description: "Unique locations",
     },
     {
@@ -693,7 +693,7 @@ export default function Journal() {
                           </div>
 
                           {/* Action Buttons */}
-                          <div className="flex gap-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
+                          <div className="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover/card:opacity-100 transition-opacity duration-300">
                             <Button
                               size="sm"
                               variant="outline"
