@@ -178,10 +178,19 @@ export async function uploadPhotoToCloudflare(
   photo: ProcessedPhoto,
   onProgress?: (progress: number) => void
 ): Promise<string> {
+  console.log(`🔼 Starting upload for photo: ${photo.originalFile.name} (${photo.id})`);
+
   const formData = new FormData();
   formData.append('photo', photo.file);
   formData.append('originalName', photo.originalFile.name);
   formData.append('photoId', photo.id);
+
+  console.log(`📤 FormData prepared:`, {
+    fileName: photo.originalFile.name,
+    fileSize: photo.file.size,
+    fileType: photo.file.type,
+    photoId: photo.id
+  });
 
   try {
     // Create XMLHttpRequest to track upload progress
