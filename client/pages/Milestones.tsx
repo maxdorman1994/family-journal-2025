@@ -97,10 +97,40 @@ export default function Milestones() {
     return iconMap[iconName] || MapPin;
   };
 
-  const filterMilestones = (milestones: any[], category: string) => {
+  const filterMilestones = (milestones: MilestoneWithProgress[], category: string) => {
     if (category === "all") return milestones;
-    return milestones.filter(m => m.category === category);
+    return milestones.filter(m => m.category_id === category);
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vibrant-blue mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold text-muted-foreground">Loading Milestones...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">❌ Error loading milestones</div>
+          <p className="text-muted-foreground">{error}</p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="mt-4"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
