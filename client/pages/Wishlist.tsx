@@ -116,6 +116,46 @@ export default function Wishlist() {
     return unsubscribe;
   }, []);
 
+  // Subscribe to cross-device sync events
+  useEffect(() => {
+    const unsubscribe = subscribe('wishlist_items', (event) => {
+      console.log('🔄 Cross-device wishlist sync:', event.eventType, event.new?.id);
+
+      if (event.new?._refresh) {
+        loadWishlistData();
+        return;
+      }
+
+      switch (event.eventType) {
+        case 'INSERT':
+          if (event.new) {
+            setWishlistItems(prev => {
+              const exists = prev.find(item => item.id === event.new.id);
+              if (!exists) {
+                return [event.new, ...prev];
+              }
+              return prev;
+            });
+          }
+          break;
+        case 'UPDATE':
+          if (event.new) {
+            setWishlistItems(prev => prev.map(item =>
+              item.id === event.new.id ? { ...item, ...event.new } : item
+            ));
+          }
+          break;
+        case 'DELETE':
+          if (event.old) {
+            setWishlistItems(prev => prev.filter(item => item.id !== event.old.id));
+          }
+          break;
+      }
+    });
+
+    return unsubscribe;
+  }, [subscribe]);
+
   const loadWishlistData = async () => {
     try {
       setIsLoading(true);
