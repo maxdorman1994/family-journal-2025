@@ -14,7 +14,8 @@ import {
   getJournalEntriesByTag,
   subscribeToJournalEntries,
   createJournalEntry,
-  deleteJournalEntry
+  deleteJournalEntry,
+  testSupabaseConnection
 } from "@/lib/journalService";
 import { JournalEntry } from "@/lib/supabase";
 import { ProcessedPhoto } from "@/lib/photoUtils";
