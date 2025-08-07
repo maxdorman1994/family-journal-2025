@@ -556,7 +556,7 @@ export default function NewEntryForm({
               <PhotoUpload
                 photos={formData.photos}
                 onPhotosChange={handlePhotosChange}
-                maxPhotos={8}
+                maxPhotos={20}
               />
             </CardContent>
           </Card>
