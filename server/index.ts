@@ -41,13 +41,13 @@ export function createServer() {
   // Log environment info
   console.log('🔧 Server Environment Check:', {
     NODE_ENV: process.env.NODE_ENV,
-    distExists: require('fs').existsSync('dist/spa'),
+    distExists: fs.existsSync('dist/spa'),
     cwd: process.cwd()
   });
 
   // Serve static files from dist/spa (force for all non-dev environments)
   const isDevelopment = process.env.NODE_ENV === 'development';
-  const hasDistFolder = require('fs').existsSync('dist/spa');
+  const hasDistFolder = fs.existsSync('dist/spa');
 
   if (!isDevelopment && hasDistFolder) {
     console.log('✅ Serving static files from dist/spa/');
