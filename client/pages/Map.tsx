@@ -295,7 +295,10 @@ export default function MapPage() {
           </span>
         </h1>
         <p className="text-center text-muted-foreground mb-6">
-          Click anywhere on the map to add a new pin for your Scottish adventures!
+          {isAuthenticated
+            ? "Click anywhere on the map to add a new pin for your Scottish adventures!"
+            : "Login in the footer to start adding pins for your Scottish adventures!"
+          }
         </p>
 
         {/* Category Legend */}
