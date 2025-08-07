@@ -840,7 +840,7 @@ export default function Home() {
 
           {/* Next Milestone Preview */}
           <div className="mt-8 text-center">
-            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border-2 border-amber-200/60 p-4">
+            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border-2 border-amber-200/60 p-4 mb-6">
               <h4 className="font-semibold text-amber-800 mb-2">
                 🎯 Next Milestone: Highland Explorer
               </h4>
@@ -852,6 +852,14 @@ export default function Home() {
               </div>
               <p className="text-xs text-amber-600">1 of 5 locations visited</p>
             </div>
+
+            <Button
+              onClick={() => window.location.href = '/milestones'}
+              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Calendar className="mr-2 h-5 w-5" />
+              View All Milestones
+            </Button>
           </div>
         </div>
       </section>
