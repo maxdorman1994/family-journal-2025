@@ -104,14 +104,14 @@ export default function MunroBagging() {
 
   const achievements = [
     { name: "First Peak", description: "Complete your first Munro", unlocked: completedCount >= 1, icon: Flag },
-    { name: "High Achiever", description: "Climb Scotland's highest peak", unlocked: munros.find(m => m.name === "Ben Nevis")?.completed, icon: Crown },
+    { name: "High Achiever", description: "Climb Scotland's highest peak", unlocked: munros.find(m => m.name === "Ben Nevis")?.completed || false, icon: Crown },
     { name: "Double Digits", description: "Complete 10 Munros", unlocked: completedCount >= 10, icon: Award },
     { name: "Quarter Century", description: "Complete 25 Munros", unlocked: completedCount >= 25, icon: Star },
     { name: "Half Century", description: "Complete 50 Munros", unlocked: completedCount >= 50, icon: Trophy },
-    { name: "Munro Completer", description: "Complete all 282 Munros", unlocked: completedCount >= 282, icon: Zap }
+    { name: "Munro Completer", description: "Complete all 282 Munros", unlocked: completedCount >= TOTAL_MUNROS, icon: Zap }
   ];
 
-  const regions = Array.from(new Set(munros.map(m => m.region)));
+  const regions = getAllRegions();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 relative overflow-hidden">
