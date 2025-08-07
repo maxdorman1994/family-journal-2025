@@ -65,7 +65,6 @@ export function createServer() {
 
   // Serve static files from dist/spa (force for all non-dev environments)
   const isDevelopment = process.env.NODE_ENV === "development";
-  const distPath = path.join(__dirname, "../dist/spa");
   const hasDistFolder = fs.existsSync(distPath);
 
   if (!isDevelopment && hasDistFolder) {
