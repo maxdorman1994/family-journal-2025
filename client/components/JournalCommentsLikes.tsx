@@ -14,6 +14,7 @@ import {
   toggleLike,
   checkIfUserLiked,
   getEntryStats,
+  checkCommentsLikesTables,
   type JournalComment,
   type JournalLike,
 } from '@/lib/journalCommentsService';
