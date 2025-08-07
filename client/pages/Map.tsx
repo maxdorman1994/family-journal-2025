@@ -1,4 +1,5 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
+import Map, { Marker, Popup, ViewState } from "react-map-gl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,14 +11,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MapPin, Trash2, Edit, Calendar, ExternalLink } from "lucide-react";
+import { MapPin, Trash2, Edit, Calendar, ExternalLink, Info } from "lucide-react";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 interface MapPin {
   id: string;
-  x: number; // X position on map (percentage)
-  y: number; // Y position on map (percentage)
-  lat?: number; // Optional real latitude
-  lng?: number; // Optional real longitude
+  latitude: number;
+  longitude: number;
   title: string;
   description: string;
   category: "adventure" | "photo" | "memory" | "wishlist";
@@ -38,14 +38,15 @@ const categoryLabels = {
   wishlist: "Wishlist",
 };
 
-export default function Map() {
+// Mapbox public token - you can use this demo token or replace with your own
+const MAPBOX_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+
+export default function MapPage() {
   const [pins, setPins] = useState<MapPin[]>([
     {
       id: "1",
-      x: 25,
-      y: 40,
-      lat: 56.8198,
-      lng: -5.1044,
+      latitude: 56.8198,
+      longitude: -5.1044,
       title: "Ben Nevis Base",
       description: "Started our epic climb to the highest peak in Scotland!",
       category: "adventure",
@@ -53,23 +54,40 @@ export default function Map() {
     },
     {
       id: "2",
-      x: 60,
-      y: 30,
-      lat: 57.1474,
-      lng: -2.0942,
+      latitude: 57.1474,
+      longitude: -2.0942,
       title: "Cairngorms Photography",
       description: "Amazing sunset shots with the whole family.",
       category: "photo",
       date: "2024-07-02",
     },
+    {
+      id: "3",
+      latitude: 55.9533,
+      longitude: -3.1883,
+      title: "Edinburgh Castle",
+      description: "Explored the historic castle with amazing city views.",
+      category: "memory",
+      date: "2024-05-20",
+    },
   ]);
+
+  const [viewState, setViewState] = useState<ViewState>({
+    longitude: -4.2026,
+    latitude: 56.4907,
+    zoom: 6.5,
+    bearing: 0,
+    pitch: 0,
+    padding: { top: 0, bottom: 0, left: 0, right: 0 }
+  });
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPin, setEditingPin] = useState<MapPin | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<{
-    x: number;
-    y: number;
+    latitude: number;
+    longitude: number;
   } | null>(null);
+  const [selectedPin, setSelectedPin] = useState<MapPin | null>(null);
 
   const [newPin, setNewPin] = useState({
     title: "",
@@ -78,16 +96,13 @@ export default function Map() {
     date: "",
   });
 
-  const mapRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<any>();
 
-  const handleMapClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    if (!mapRef.current) return;
+  const handleMapClick = useCallback((event: any) => {
+    const { lng, lat } = event.lngLat;
     
-    const rect = mapRef.current.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-    setSelectedLocation({ x, y });
+    setSelectedLocation({ latitude: lat, longitude: lng });
+    setSelectedPin(null);
     setEditingPin(null);
     setNewPin({
       title: "",
@@ -103,8 +118,8 @@ export default function Map() {
 
     const pin: MapPin = {
       id: Date.now().toString(),
-      x: selectedLocation.x,
-      y: selectedLocation.y,
+      latitude: selectedLocation.latitude,
+      longitude: selectedLocation.longitude,
       title: newPin.title,
       description: newPin.description,
       category: newPin.category,
@@ -118,6 +133,7 @@ export default function Map() {
 
   const handleEditPin = (pin: MapPin) => {
     setEditingPin(pin);
+    setSelectedPin(null);
     setNewPin({
       title: pin.title,
       description: pin.description,
@@ -141,6 +157,15 @@ export default function Map() {
 
   const handleDeletePin = (pinId: string) => {
     setPins(pins.filter((pin) => pin.id !== pinId));
+    setSelectedPin(null);
+  };
+
+  const flyToLocation = (latitude: number, longitude: number) => {
+    mapRef.current?.flyTo({
+      center: [longitude, latitude],
+      zoom: 12,
+      duration: 2000
+    });
   };
 
   return (
@@ -152,8 +177,7 @@ export default function Map() {
           </span>
         </h1>
         <p className="text-center text-muted-foreground mb-6">
-          Click anywhere on the map to add a new pin for your Scottish
-          adventures!
+          Click anywhere on the map to add a new pin for your Scottish adventures!
         </p>
 
         {/* Category Legend */}
@@ -168,6 +192,14 @@ export default function Map() {
             </Badge>
           ))}
         </div>
+
+        {/* Info Banner */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 flex items-center gap-2 text-sm text-blue-700">
+            <Info className="w-4 h-4" />
+            <span>Interactive map powered by Mapbox - Click to add pins, drag to explore Scotland!</span>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -175,118 +207,112 @@ export default function Map() {
         <div className="lg:col-span-3">
           <Card className="overflow-hidden">
             <CardContent className="p-0">
-              <div className="relative">
-                {/* Scotland Map Image */}
-                <div
+              <div className="h-[600px] w-full relative">
+                <Map
                   ref={mapRef}
-                  className="relative h-[600px] w-full bg-gradient-to-br from-blue-100 via-green-50 to-blue-200 cursor-crosshair overflow-hidden"
+                  {...viewState}
+                  onMove={evt => setViewState(evt.viewState)}
                   onClick={handleMapClick}
-                  style={{
-                    backgroundImage: `
-                      radial-gradient(circle at 30% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 20%),
-                      radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
-                      radial-gradient(circle at 45% 60%, rgba(168, 85, 247, 0.1) 0%, transparent 30%),
-                      radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.1) 0%, transparent 20%)
-                    `,
-                  }}
+                  mapStyle="mapbox://styles/mapbox/outdoors-v12"
+                  mapboxAccessToken={MAPBOX_TOKEN}
+                  doubleClickZoom={true}
+                  scrollZoom={true}
+                  dragPan={true}
+                  dragRotate={false}
+                  touchZoom={true}
+                  touchRotate={false}
+                  keyboard={true}
+                  attributionControl={true}
+                  style={{ width: '100%', height: '100%' }}
                 >
-                  {/* Scotland Outline Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-100/30 via-transparent to-blue-100/30" />
-                  
-                  {/* Grid overlay for visual reference */}
-                  <div className="absolute inset-0" style={{
-                    backgroundImage: `
-                      linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px)
-                    `,
-                    backgroundSize: '50px 50px'
-                  }} />
-
-                  {/* Map Title */}
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-sm">
-                    <h3 className="font-bold text-emerald-700">Scotland</h3>
-                    <p className="text-xs text-muted-foreground">Click to add pins</p>
-                  </div>
-
-                  {/* External Map Link */}
-                  <div className="absolute top-4 right-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open('https://www.openstreetmap.org/#map=7/56.4907/-4.2026', '_blank');
-                      }}
-                      className="bg-white/90 backdrop-blur-sm hover:bg-white"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View Full Map
-                    </Button>
-                  </div>
-
                   {/* Adventure Pins */}
                   {pins.map((pin) => (
-                    <div
+                    <Marker
                       key={pin.id}
-                      className="absolute group cursor-pointer transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        left: `${pin.x}%`,
-                        top: `${pin.y}%`,
+                      latitude={pin.latitude}
+                      longitude={pin.longitude}
+                      anchor="bottom"
+                      onClick={(e) => {
+                        e.originalEvent.stopPropagation();
+                        setSelectedPin(pin);
                       }}
                     >
-                      {/* Pin Icon */}
-                      <div className={`w-6 h-6 rounded-full ${categoryColors[pin.category]} border-2 border-white shadow-lg flex items-center justify-center transform transition-transform group-hover:scale-125`}>
-                        <MapPin className="w-3 h-3 text-white" />
+                      <div className={`w-8 h-8 rounded-full ${categoryColors[pin.category]} border-3 border-white shadow-lg flex items-center justify-center cursor-pointer transform transition-transform hover:scale-110`}>
+                        <MapPin className="w-4 h-4 text-white" />
                       </div>
-                      
-                      {/* Pin Tooltip */}
-                      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-3 min-w-[200px] opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
+                    </Marker>
+                  ))}
+
+                  {/* Pin Popup */}
+                  {selectedPin && (
+                    <Popup
+                      latitude={selectedPin.latitude}
+                      longitude={selectedPin.longitude}
+                      anchor="top"
+                      onClose={() => setSelectedPin(null)}
+                      closeButton={true}
+                      closeOnClick={false}
+                    >
+                      <div className="p-3 min-w-[200px]">
                         <div className="flex items-center justify-between mb-2">
-                          <Badge className={`${categoryColors[pin.category]} text-white text-xs`}>
-                            {categoryLabels[pin.category]}
+                          <Badge className={`${categoryColors[selectedPin.category]} text-white text-xs`}>
+                            {categoryLabels[selectedPin.category]}
                           </Badge>
                           <div className="flex gap-1">
                             <Button
                               size="sm"
                               variant="ghost"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEditPin(pin);
-                              }}
-                              className="h-6 w-6 p-0 pointer-events-auto"
+                              onClick={() => handleEditPin(selectedPin)}
+                              className="h-6 w-6 p-0"
                             >
                               <Edit className="h-3 w-3" />
                             </Button>
                             <Button
                               size="sm"
                               variant="ghost"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeletePin(pin.id);
-                              }}
-                              className="h-6 w-6 p-0 text-red-500 hover:text-red-700 pointer-events-auto"
+                              onClick={() => handleDeletePin(selectedPin.id)}
+                              className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
                             >
                               <Trash2 className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
-                        <h3 className="font-semibold text-sm mb-1">{pin.title}</h3>
-                        {pin.description && (
+                        <h3 className="font-semibold text-sm mb-1">{selectedPin.title}</h3>
+                        {selectedPin.description && (
                           <p className="text-xs text-muted-foreground mb-2">
-                            {pin.description}
+                            {selectedPin.description}
                           </p>
                         )}
-                        {pin.date && (
+                        {selectedPin.date && (
                           <div className="flex items-center text-xs text-muted-foreground">
                             <Calendar className="w-3 h-3 mr-1" />
-                            {new Date(pin.date).toLocaleDateString()}
+                            {new Date(selectedPin.date).toLocaleDateString()}
                           </div>
                         )}
-                        {/* Tooltip arrow */}
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rotate-45 shadow-lg" />
                       </div>
-                    </div>
-                  ))}
+                    </Popup>
+                  )}
+                </Map>
+
+                {/* Map Controls Overlay */}
+                <div className="absolute top-4 right-4 space-y-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setViewState({
+                        ...viewState,
+                        longitude: -4.2026,
+                        latitude: 56.4907,
+                        zoom: 6.5,
+                        bearing: 0,
+                        pitch: 0
+                      });
+                    }}
+                    className="bg-white/90 backdrop-blur-sm hover:bg-white"
+                  >
+                    Reset View
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -307,7 +333,8 @@ export default function Map() {
                 {pins.map((pin) => (
                   <div
                     key={pin.id}
-                    className="p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                    className="p-3 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                    onClick={() => flyToLocation(pin.latitude, pin.longitude)}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <Badge
@@ -319,7 +346,10 @@ export default function Map() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => handleEditPin(pin)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditPin(pin);
+                          }}
                           className="h-6 w-6 p-0"
                         >
                           <Edit className="h-3 w-3" />
@@ -327,7 +357,10 @@ export default function Map() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => handleDeletePin(pin.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeletePin(pin.id);
+                          }}
                           className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
                         >
                           <Trash2 className="h-3 w-3" />
@@ -346,6 +379,9 @@ export default function Map() {
                         {new Date(pin.date).toLocaleDateString()}
                       </div>
                     )}
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Click to view on map
+                    </div>
                   </div>
                 ))}
                 {pins.length === 0 && (
@@ -371,6 +407,12 @@ export default function Map() {
           </DialogHeader>
 
           <div className="space-y-4">
+            {selectedLocation && !editingPin && (
+              <div className="bg-muted/50 rounded-lg p-3 text-sm">
+                <strong>Location:</strong> {selectedLocation.latitude.toFixed(4)}, {selectedLocation.longitude.toFixed(4)}
+              </div>
+            )}
+
             <div>
               <label className="text-sm font-medium">Title *</label>
               <Input
