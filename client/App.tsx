@@ -22,21 +22,25 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/journal" element={<Journal />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/munro-bagging" element={<MunroBagging />} />
-          <Route path="/hints-tips" element={<HintsTips />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/milestones" element={<Milestones />} />
-          <Route path="/map" element={<Map />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Layout>
-    </BrowserRouter>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/journal" element={<Journal />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/munro-bagging" element={<MunroBagging />} />
+            <Route path="/hints-tips" element={<HintsTips />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/milestones" element={<Milestones />} />
+            <Route path="/map" element={<Map />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
