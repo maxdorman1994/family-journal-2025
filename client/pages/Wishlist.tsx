@@ -1058,15 +1058,19 @@ export default function Wishlist() {
               </h3>
               <p className="text-slate-600 mb-6">
                 {wishlistItems.length === 0
-                  ? "Start planning your dream Scottish adventures!"
+                  ? isAuthenticated
+                    ? "Start planning your dream Scottish adventures!"
+                    : "Login in the footer to start planning your dream Scottish adventures!"
                   : "Try adjusting your search filters."}
               </p>
-              <Button
-                onClick={() => setShowAddForm(true)}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-              >
-                Add First Adventure
-              </Button>
+              {isAuthenticated && (
+                <Button
+                  onClick={() => setShowAddForm(true)}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                >
+                  Add First Adventure
+                </Button>
+              )}
             </div>
           </div>
         ) : (
