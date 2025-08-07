@@ -55,6 +55,16 @@ export default function MapPage() {
     }
   });
 
+  const {
+    isAuthenticated,
+    showPasswordPrompt,
+    sessionTimeRemaining,
+    requestAuth,
+    authenticate,
+    logout,
+    cancelAuth
+  } = useAuth();
+
   const [viewState, setViewState] = useState<ViewState>({
     longitude: -4.2026,
     latitude: 56.4907,
