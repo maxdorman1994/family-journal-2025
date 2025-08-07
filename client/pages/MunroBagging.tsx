@@ -32,6 +32,19 @@ export default function MunroBagging() {
     completion_percentage: 0,
     highest_completed: 0
   });
+  const [showAddMunro, setShowAddMunro] = useState(false);
+  const [addMunroForm, setAddMunroForm] = useState<CreateMunroData>({
+    name: '',
+    height: 914, // Minimum Munro height
+    region: '',
+    difficulty: 'Moderate',
+    latitude: 56.0,
+    longitude: -4.0,
+    description: '',
+    estimated_time: '4-6 hours',
+    best_seasons: ['May', 'June', 'July', 'August', 'September'],
+    os_grid_ref: ''
+  });
 
   // Load Munros data from Supabase
   useEffect(() => {
