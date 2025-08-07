@@ -127,7 +127,7 @@ export default function Journal() {
       date: "Saturday 15 July 2025",
       location: "Edinburgh, Midlothian",
       weather: "🌧️ Light Rain",
-      mood: "���� Amazed",
+      mood: "🤩 Amazed",
       miles_traveled: 123,
       parking: "£12",
       dog_friendly: false,
@@ -477,7 +477,7 @@ export default function Journal() {
               size="lg"
               className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 text-lg px-8 py-4 rounded-full"
               onClick={() => {
-                if (requestAuth()) {
+                if (isAuthenticated) {
                   setIsNewEntryFormOpen(true);
                 }
               }}
