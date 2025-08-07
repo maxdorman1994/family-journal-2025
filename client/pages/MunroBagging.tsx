@@ -15,6 +15,7 @@ import {
   testMunroConnection,
   MunroWithCompletion
 } from "@/lib/munroService";
+import { COMPLETE_MUNROS_LIST } from "@/data/complete-munros";
 
 export default function MunroBagging() {
   const [munros, setMunros] = useState<MunroWithCompletion[]>([]);
