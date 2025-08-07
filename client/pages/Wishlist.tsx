@@ -433,6 +433,7 @@ export default function Wishlist() {
         );
       } else {
         await addVoteToItem(id);
+        await loadWishlistData(); // Reload to get updated data
       }
     } catch (dbError) {
     console.error("Database error, using local state:", dbError);
