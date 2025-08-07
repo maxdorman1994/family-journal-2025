@@ -625,45 +625,120 @@ export default function Home() {
       </section>
 
       {/* Adventure Stats */}
-      <section className="mb-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="text-center bg-gradient-to-br from-vibrant-blue/10 to-scotland-loch/10 border-vibrant-blue/20 hover:shadow-lg transition-shadow">
-            <CardContent className="p-6">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-vibrant-blue to-scotland-loch flex items-center justify-center">
-                <Calendar className="h-6 w-6 text-white" />
-              </div>
-              <div className="text-3xl font-bold text-vibrant-blue mb-2">6</div>
-              <div className="text-sm text-muted-foreground">
-                Journal Entries
-              </div>
-            </CardContent>
-          </Card>
+      <section className="mb-20">
+        {/* Section Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Our Adventure Journey
+            </span>
+          </h2>
+          <p className="text-slate-600 max-w-2xl mx-auto">
+            Every adventure tells a story, every place holds a memory, and every moment becomes a treasured part of our Scottish family legacy.
+          </p>
+        </div>
 
-          <Card className="text-center bg-gradient-to-br from-scotland-forest/10 to-vibrant-teal/10 border-scotland-forest/20 hover:shadow-lg transition-shadow">
-            <CardContent className="p-6">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-scotland-forest to-vibrant-teal flex items-center justify-center">
-                <MapPin className="h-6 w-6 text-white" />
-              </div>
-              <div className="text-3xl font-bold text-scotland-forest mb-2">
-                6
-              </div>
-              <div className="text-sm text-muted-foreground">
-                Places Visited
-              </div>
-            </CardContent>
-          </Card>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Journal Entries */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <Calendar className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">📖</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
+                  6
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Journal Entries</div>
+                <div className="text-sm text-slate-500">Stories captured & memories preserved</div>
+                <div className="mt-4 flex justify-center space-x-1">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-          <Card className="text-center bg-gradient-to-br from-vibrant-pink/10 to-scotland-heather/10 border-vibrant-pink/20 hover:shadow-lg transition-shadow">
-            <CardContent className="p-6">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-vibrant-pink to-scotland-heather flex items-center justify-center">
-                <Heart className="h-6 w-6 text-white" />
-              </div>
-              <div className="text-3xl font-bold text-vibrant-pink mb-2">
-                19
-              </div>
-              <div className="text-sm text-muted-foreground">Memory Tags</div>
-            </CardContent>
-          </Card>
+          {/* Places Visited */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <MapPin className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">🗺️</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-3">
+                  6
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Places Explored</div>
+                <div className="text-sm text-slate-500">Across Scotland's breathtaking landscapes</div>
+                <div className="mt-4 flex justify-center space-x-1">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full"></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Memory Tags */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-rose-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-rose-500"></div>
+              <CardContent className="p-8">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
+                    <Heart className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">💝</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-3">
+                  19
+                </div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">Memory Tags</div>
+                <div className="text-sm text-slate-500">Special moments & magical experiences</div>
+                <div className="mt-4 flex justify-center flex-wrap gap-1 max-w-32 mx-auto">
+                  {[...Array(19)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="w-1.5 h-1.5 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full"
+                      style={{ animationDelay: `${i * 0.1}s` }}
+                    ></div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Achievement Banner */}
+        <div className="mt-12 text-center">
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-emerald-200/50 rounded-full shadow-lg">
+            <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm">🏆</span>
+            </div>
+            <span className="text-sm font-semibold text-slate-700">
+              Adventure Milestone: First Month of Scottish Exploration Complete!
+            </span>
+          </div>
         </div>
       </section>
 
