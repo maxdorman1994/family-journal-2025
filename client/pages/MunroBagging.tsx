@@ -67,10 +67,11 @@ export default function MunroBagging() {
         setStats(statsData);
       } catch (statsError) {
         console.warn('Could not load stats, using defaults:', statsError);
+        const completedCount = munrosData.filter(m => m.completed).length;
         setStats({
-          completed_count: munrosData.filter(m => m.completed).length,
-          total_munros: 282,
-          completion_percentage: Math.round((munrosData.filter(m => m.completed).length / 282) * 100),
+          completed_count: completedCount,
+          total_munros: 282, // Always track against full 282 official Munros
+          completion_percentage: Math.round((completedCount / 282) * 100 * 10) / 10,
           highest_completed: munrosData.filter(m => m.completed).reduce((max, m) => Math.max(max, m.height), 0)
         });
       }
@@ -106,10 +107,11 @@ export default function MunroBagging() {
       }));
 
       setMunros(fallbackMunros);
+      const completedCount = fallbackMunros.filter(m => m.completed).length;
       setStats({
-        completed_count: 1,
-        total_munros: 282,
-        completion_percentage: 0.4,
+        completed_count: completedCount,
+        total_munros: 282, // Always show progress against full 282 official Munros
+        completion_percentage: Math.round((completedCount / 282) * 100 * 10) / 10,
         highest_completed: 1345
       });
 
