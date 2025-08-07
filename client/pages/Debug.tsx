@@ -133,6 +133,8 @@ export default function Debug() {
             </div>
           </div>
         </div>
+
+        <SyncStatus showDetails={true} className="border-2 border-blue-200" />
       </div>
     </div>
   );
