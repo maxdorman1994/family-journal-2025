@@ -210,7 +210,15 @@ export default function Home() {
       setFamilyMembers(members);
       setSyncStatus("connected");
       setError(null);
+
+      // Check if Charlie is loaded for sync verification
+      const charlieExists = members.find(m => m.name === "Charlie");
       console.log(`✅ Loaded ${members.length} family members successfully`);
+      if (charlieExists) {
+        console.log(`🐕 Charlie loaded successfully with ID: ${charlieExists.id}`);
+      } else {
+        console.warn("⚠️ Charlie not found in family members - may need to run SQL");
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
@@ -1338,7 +1346,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-bold">🗓️</span>
+                    <span className="text-xs text-white font-bold">🗓��</span>
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-3">
