@@ -64,6 +64,11 @@ class SyncService {
         this.handleSyncEvent("journal_likes", payload);
       });
 
+      // App settings sync (logo, theme, etc.)
+      await this.subscribeToTable("app_settings", (payload) => {
+        this.handleSyncEvent("app_settings", payload);
+      });
+
       this.updateSyncStatus({ connected: true, lastSync: new Date() });
       console.log("✅ Cross-device sync initialized successfully");
     } catch (error) {
