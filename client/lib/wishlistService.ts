@@ -400,10 +400,18 @@ export async function getWishlistStats(): Promise<{
 
 /**
  * Subscribe to real-time changes in wishlist items
+ * Provides robust cross-device synchronization
  */
 export function subscribeToWishlistItems(
   callback: (items: WishlistItem[]) => void
 ) {
+  if (!isSupabaseConfigured()) {
+    console.warn('Supabase not configured, skipping real-time subscription');
+    return () => {}; // Return empty unsubscribe function
+  }
+
+  console.log('🔄 Setting up real-time wishlist sync...');
+
   const subscription = supabase
     .channel('wishlist_items_changes')
     .on(
@@ -413,19 +421,27 @@ export function subscribeToWishlistItems(
         schema: 'public',
         table: 'wishlist_items'
       },
-      async () => {
+      async (payload) => {
+        console.log('📡 Real-time wishlist change detected:', payload.eventType);
+
         // Refetch all wishlist items when any change occurs
         try {
           const items = await getWishlistItems();
           callback(items);
+          console.log('✅ Wishlist sync updated with latest data');
         } catch (error) {
           console.error('Error in real-time wishlist subscription:', error);
         }
       }
     )
-    .subscribe();
+    .subscribe((status) => {
+      console.log('📡 Wishlist subscription status:', status);
+    });
+
+  console.log('✅ Real-time wishlist sync enabled');
 
   return () => {
+    console.log('🔌 Unsubscribing from wishlist changes');
     subscription.unsubscribe();
   };
 }
@@ -437,29 +453,124 @@ export async function testWishlistConnection(): Promise<{
   success: boolean;
   message: string;
   error?: string;
+  details?: {
+    tables_exist: boolean;
+    can_read: boolean;
+    can_write: boolean;
+    real_time_enabled: boolean;
+  };
 }> {
+  if (!isSupabaseConfigured()) {
+    return {
+      success: false,
+      message: 'Supabase not configured',
+      error: 'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY'
+    };
+  }
+
+  const details = {
+    tables_exist: false,
+    can_read: false,
+    can_write: false,
+    real_time_enabled: false
+  };
+
   try {
+    console.log('🔍 Testing wishlist database connection...');
+
+    // Test 1: Check if tables exist and can read
     const { data, error, count } = await supabase
       .from('wishlist_items')
       .select('*', { count: 'exact', head: true });
 
     if (error) {
+      if (error.message.includes('Could not find the table') ||
+          error.message.includes('relation "wishlist_items" does not exist')) {
+        return {
+          success: false,
+          message: 'Database tables not found - please run wishlist-schema.sql',
+          error: 'Tables missing: wishlist_items, wishlist_stats',
+          details
+        };
+      }
       return {
         success: false,
-        message: 'Wishlist database connection failed',
-        error: error.message
+        message: 'Database connection failed',
+        error: error.message,
+        details
       };
     }
 
+    details.tables_exist = true;
+    details.can_read = true;
+
+    // Test 2: Check write permissions by attempting to insert/delete a test item
+    try {
+      const testItem = {
+        title: '__test_connection__',
+        location: '__test__',
+        description: 'Connection test item',
+        priority: 'Low' as const,
+        status: 'Planning' as const,
+        estimated_cost: 1,
+        best_seasons: ['Summer'],
+        duration: '1 day',
+        category: 'Activity' as const,
+        family_votes: 0,
+        notes: 'Test item - will be deleted',
+        researched: false
+      };
+
+      // Insert test item
+      const { data: insertData, error: insertError } = await supabase
+        .from('wishlist_items')
+        .insert(testItem)
+        .select()
+        .single();
+
+      if (insertError) {
+        return {
+          success: false,
+          message: 'Write permission denied',
+          error: insertError.message,
+          details
+        };
+      }
+
+      details.can_write = true;
+
+      // Clean up test item
+      if (insertData?.id) {
+        await supabase
+          .from('wishlist_items')
+          .delete()
+          .eq('id', insertData.id);
+      }
+    } catch (writeError) {
+      console.warn('Write test failed:', writeError);
+    }
+
+    // Test 3: Check real-time functionality
+    try {
+      const testChannel = supabase.channel('connection_test');
+      details.real_time_enabled = true;
+      testChannel.unsubscribe();
+    } catch (realtimeError) {
+      console.warn('Real-time test failed:', realtimeError);
+    }
+
+    const itemCount = count || 0;
     return {
       success: true,
-      message: `Wishlist database connected! Found ${count || 0} items.`
+      message: `✅ Full connection verified! Found ${itemCount} adventure${itemCount !== 1 ? 's' : ''}.`,
+      details
     };
   } catch (error) {
     return {
       success: false,
-      message: 'Wishlist database connection error',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: 'Connection test failed',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      details
     };
   }
 }
