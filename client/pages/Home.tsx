@@ -1069,9 +1069,9 @@ export default function Home() {
         <div className="flex justify-center">
           <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-green-50 to-emerald-100 backdrop-blur-sm border-2 border-green-200/60 max-w-4xl">
             <CardContent className="p-8">
-              <div className="flex items-center gap-8">
+              <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
                 {/* Photo - Left Side */}
-                <div className="relative group w-48 h-48 flex-shrink-0">
+                <div className="relative group w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 flex-shrink-0">
                   <div className="w-full h-full rounded-xl overflow-hidden border-4 bg-gradient-to-r from-green-500 to-emerald-600 p-1 shadow-xl">
                     <div className="w-full h-full rounded-lg overflow-hidden bg-white">
                       <img
