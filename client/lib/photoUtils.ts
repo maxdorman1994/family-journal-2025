@@ -351,7 +351,7 @@ export function validatePhotoFile(file: File): { valid: boolean; error?: string;
   if (file.type === 'image/heic' || fileExtension === '.heic') {
     return {
       valid: true,
-      warning: 'HEIC file detected. If conversion fails, consider converting to JPEG first.'
+      warning: 'HEIC file detected. Browser support may be limited - consider converting to JPEG for best results.'
     };
   }
 
