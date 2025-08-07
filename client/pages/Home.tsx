@@ -140,6 +140,7 @@ export default function Home() {
     loadFamilyMembersData();
     loadRealStats();
     loadRecentAdventures();
+    loadMilestones();
 
     // Initialize milestone tracking
     initializeMilestoneTracking('demo-user').catch(error => {
@@ -686,7 +687,7 @@ export default function Home() {
               {error.includes("Database Setup Required") && (
                 <div className="bg-white/50 rounded-lg p-2 mb-2 text-xs">
                   <div className="font-semibold mb-1">
-                    📋 Setup Instructions:
+                    �� Setup Instructions:
                   </div>
                   <ol className="list-decimal list-inside space-y-1 text-amber-700 text-xs">
                     <li>Go to Supabase Dashboard → SQL Editor</li>
