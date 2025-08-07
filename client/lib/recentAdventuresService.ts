@@ -1,4 +1,4 @@
-import { supabase, isSupabaseConfigured } from './supabase';
+import { supabase, isSupabaseConfigured } from "./supabase";
 
 /**
  * Recent Adventures Service
@@ -30,22 +30,26 @@ export interface AdventureStats {
  */
 export async function getRecentAdventures(): Promise<RecentAdventure[]> {
   if (!isSupabaseConfigured()) {
-    throw new Error('Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+    throw new Error(
+      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
+    );
   }
 
   try {
-    console.log('🔄 Fetching recent adventures from database...');
+    console.log("🔄 Fetching recent adventures from database...");
 
     const { data: adventures, error } = await supabase
-      .from('recent_adventures')
-      .select('*');
+      .from("recent_adventures")
+      .select("*");
 
     if (error) {
-      console.error('Error fetching recent adventures:', error);
+      console.error("Error fetching recent adventures:", error);
       // Check if it's a table/view not found error
-      if (error.message.includes('Could not find the table') ||
-          error.message.includes('relation "recent_adventures" does not exist')) {
-        throw new Error('SCHEMA_MISSING: Database views not found');
+      if (
+        error.message.includes("Could not find the table") ||
+        error.message.includes('relation "recent_adventures" does not exist')
+      ) {
+        throw new Error("SCHEMA_MISSING: Database views not found");
       }
       throw new Error(`Failed to fetch recent adventures: ${error.message}`);
     }
@@ -53,7 +57,7 @@ export async function getRecentAdventures(): Promise<RecentAdventure[]> {
     console.log(`✅ Loaded ${adventures?.length || 0} recent adventures`);
     return adventures || [];
   } catch (error) {
-    console.error('Error in getRecentAdventures:', error);
+    console.error("Error in getRecentAdventures:", error);
     if (error instanceof Error) {
       throw error;
     }
@@ -64,28 +68,34 @@ export async function getRecentAdventures(): Promise<RecentAdventure[]> {
 /**
  * Get all adventures with metadata
  */
-export async function getAllAdventuresWithMetadata(): Promise<RecentAdventure[]> {
+export async function getAllAdventuresWithMetadata(): Promise<
+  RecentAdventure[]
+> {
   if (!isSupabaseConfigured()) {
-    throw new Error('Supabase not configured');
+    throw new Error("Supabase not configured");
   }
 
   try {
-    console.log('🔄 Fetching all adventures with metadata...');
+    console.log("🔄 Fetching all adventures with metadata...");
 
     const { data: adventures, error } = await supabase
-      .from('adventures_with_metadata')
-      .select('id, title, location, formatted_date, featured_image, tags, adventure_type, photo_count, excerpt, time_ago')
+      .from("adventures_with_metadata")
+      .select(
+        "id, title, location, formatted_date, featured_image, tags, adventure_type, photo_count, excerpt, time_ago",
+      )
       .limit(10); // Get latest 10
 
     if (error) {
-      console.error('Error fetching adventures metadata:', error);
+      console.error("Error fetching adventures metadata:", error);
       throw new Error(`Failed to fetch adventures metadata: ${error.message}`);
     }
 
-    console.log(`✅ Loaded ${adventures?.length || 0} adventures with metadata`);
+    console.log(
+      `✅ Loaded ${adventures?.length || 0} adventures with metadata`,
+    );
     return adventures || [];
   } catch (error) {
-    console.error('Error in getAllAdventuresWithMetadata:', error);
+    console.error("Error in getAllAdventuresWithMetadata:", error);
     if (error instanceof Error) {
       throw error;
     }
@@ -98,28 +108,30 @@ export async function getAllAdventuresWithMetadata(): Promise<RecentAdventure[]>
  */
 export async function getAdventureStats(): Promise<AdventureStats> {
   if (!isSupabaseConfigured()) {
-    throw new Error('Supabase not configured');
+    throw new Error("Supabase not configured");
   }
 
   try {
-    console.log('🔄 Fetching adventure statistics...');
+    console.log("🔄 Fetching adventure statistics...");
 
-    const { data, error } = await supabase.rpc('refresh_recent_adventures');
+    const { data, error } = await supabase.rpc("refresh_recent_adventures");
 
     if (error) {
-      console.error('Error fetching adventure stats:', error);
+      console.error("Error fetching adventure stats:", error);
       throw new Error(`Failed to fetch adventure stats: ${error.message}`);
     }
 
-    console.log('✅ Adventure stats loaded:', data);
-    return data?.[0] || {
-      total_adventures: 0,
-      recent_count: 0,
-      latest_adventure: '',
-      oldest_adventure: ''
-    };
+    console.log("✅ Adventure stats loaded:", data);
+    return (
+      data?.[0] || {
+        total_adventures: 0,
+        recent_count: 0,
+        latest_adventure: "",
+        oldest_adventure: "",
+      }
+    );
   } catch (error) {
-    console.error('Error in getAdventureStats:', error);
+    console.error("Error in getAdventureStats:", error);
     if (error instanceof Error) {
       throw error;
     }
@@ -133,7 +145,7 @@ export async function getAdventureStats(): Promise<AdventureStats> {
 export function getFallbackRecentAdventures(): RecentAdventure[] {
   return [
     {
-      id: 'fallback-1',
+      id: "fallback-1",
       title: "Ben Nevis Summit",
       location: "Fort William",
       formatted_date: "3 August 2025",
@@ -141,51 +153,59 @@ export function getFallbackRecentAdventures(): RecentAdventure[] {
       tags: ["Mountain", "Challenge", "Views"],
       adventure_type: "Mountain",
       photo_count: 12,
-      excerpt: "Our most challenging adventure yet! The weather was perfect as we made our way to Scotland's highest peak..."
+      excerpt:
+        "Our most challenging adventure yet! The weather was perfect as we made our way to Scotland's highest peak...",
     },
     {
-      id: 'fallback-2',
+      id: "fallback-2",
       title: "Loch Lomond Picnic",
       location: "Balloch",
-      formatted_date: "28 July 2025", 
+      formatted_date: "28 July 2025",
       featured_image: "/placeholder.svg",
       tags: ["Lake", "Family", "Relaxing"],
       adventure_type: "Water",
       photo_count: 8,
-      excerpt: "A perfect family day by the bonnie banks of Loch Lomond. The kids loved skipping stones while we enjoyed..."
+      excerpt:
+        "A perfect family day by the bonnie banks of Loch Lomond. The kids loved skipping stones while we enjoyed...",
     },
     {
-      id: 'fallback-3',
+      id: "fallback-3",
       title: "Edinburgh Castle Visit",
       location: "Edinburgh",
       formatted_date: "15 July 2025",
-      featured_image: "/placeholder.svg", 
+      featured_image: "/placeholder.svg",
       tags: ["History", "Culture", "City"],
       adventure_type: "Historic",
       photo_count: 15,
-      excerpt: "Stepping back in time at this iconic fortress. The views over Edinburgh from the castle ramparts were..."
-    }
+      excerpt:
+        "Stepping back in time at this iconic fortress. The views over Edinburgh from the castle ramparts were...",
+    },
   ];
 }
 
 /**
  * Get recent adventures with fallback
  */
-export async function getRecentAdventuresWithFallback(): Promise<RecentAdventure[]> {
+export async function getRecentAdventuresWithFallback(): Promise<
+  RecentAdventure[]
+> {
   try {
     const adventures = await getRecentAdventures();
-    
+
     // If we have real adventures, return them
     if (adventures && adventures.length > 0) {
       return adventures;
     }
-    
+
     // If no real adventures, return fallback
-    console.log('📦 No real adventures found, using fallback data');
+    console.log("📦 No real adventures found, using fallback data");
     return getFallbackRecentAdventures();
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.warn('Failed to load real adventures, using fallback:', errorMessage);
+    console.warn(
+      "Failed to load real adventures, using fallback:",
+      errorMessage,
+    );
     return getFallbackRecentAdventures();
   }
 }
@@ -194,45 +214,51 @@ export async function getRecentAdventuresWithFallback(): Promise<RecentAdventure
  * Subscribe to real-time changes in journal entries (for recent adventures)
  */
 export function subscribeToAdventureUpdates(
-  callback: (adventures: RecentAdventure[]) => void
+  callback: (adventures: RecentAdventure[]) => void,
 ) {
   if (!isSupabaseConfigured()) {
-    console.warn('Supabase not configured, skipping real-time subscription');
+    console.warn("Supabase not configured, skipping real-time subscription");
     return () => {}; // Return empty unsubscribe function
   }
 
-  console.log('🔄 Setting up real-time recent adventures sync...');
-  
+  console.log("🔄 Setting up real-time recent adventures sync...");
+
   const subscription = supabase
-    .channel('journal_entries_for_recent_adventures')
+    .channel("journal_entries_for_recent_adventures")
     .on(
-      'postgres_changes',
+      "postgres_changes",
       {
-        event: '*',
-        schema: 'public',
-        table: 'journal_entries'
+        event: "*",
+        schema: "public",
+        table: "journal_entries",
       },
       async (payload) => {
-        console.log('📡 Real-time journal change detected for recent adventures:', payload.eventType);
-        
+        console.log(
+          "📡 Real-time journal change detected for recent adventures:",
+          payload.eventType,
+        );
+
         // Refetch recent adventures when journal entries change
         try {
           const adventures = await getRecentAdventuresWithFallback();
           callback(adventures);
-          console.log('✅ Recent adventures sync updated with latest data');
+          console.log("✅ Recent adventures sync updated with latest data");
         } catch (error) {
-          console.error('Error in real-time recent adventures subscription:', error);
+          console.error(
+            "Error in real-time recent adventures subscription:",
+            error,
+          );
         }
-      }
+      },
     )
     .subscribe((status) => {
-      console.log('📡 Recent adventures subscription status:', status);
+      console.log("📡 Recent adventures subscription status:", status);
     });
 
-  console.log('✅ Real-time recent adventures sync enabled');
+  console.log("✅ Real-time recent adventures sync enabled");
 
   return () => {
-    console.log('🔌 Unsubscribing from recent adventures changes');
+    console.log("🔌 Unsubscribing from recent adventures changes");
     subscription.unsubscribe();
   };
 }
@@ -248,32 +274,35 @@ export async function testRecentAdventuresConnection(): Promise<{
   if (!isSupabaseConfigured()) {
     return {
       success: false,
-      message: 'Supabase not configured',
-      error: 'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY'
+      message: "Supabase not configured",
+      error: "Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
     };
   }
 
   try {
-    console.log('🔍 Testing recent adventures database connection...');
+    console.log("🔍 Testing recent adventures database connection...");
 
     // Test if the view exists and works
     const { data, error } = await supabase
-      .from('recent_adventures')
-      .select('*', { count: 'exact', head: true });
+      .from("recent_adventures")
+      .select("*", { count: "exact", head: true });
 
     if (error) {
-      if (error.message.includes('Could not find the table') || 
-          error.message.includes('relation "recent_adventures" does not exist')) {
+      if (
+        error.message.includes("Could not find the table") ||
+        error.message.includes('relation "recent_adventures" does not exist')
+      ) {
         return {
           success: false,
-          message: 'Database views not found - please run recent-adventures-view.sql',
-          error: 'Views missing: recent_adventures, adventures_with_metadata'
+          message:
+            "Database views not found - please run recent-adventures-view.sql",
+          error: "Views missing: recent_adventures, adventures_with_metadata",
         };
       }
       return {
         success: false,
-        message: 'Database connection failed',
-        error: error.message
+        message: "Database connection failed",
+        error: error.message,
       };
     }
 
@@ -282,19 +311,20 @@ export async function testRecentAdventuresConnection(): Promise<{
       const stats = await getAdventureStats();
       return {
         success: true,
-        message: `✅ Recent adventures connected! Found ${stats.total_adventures} total adventure${stats.total_adventures !== 1 ? 's' : ''}, ${stats.recent_count} recent.`
+        message: `✅ Recent adventures connected! Found ${stats.total_adventures} total adventure${stats.total_adventures !== 1 ? "s" : ""}, ${stats.recent_count} recent.`,
       };
     } catch (statsError) {
       return {
         success: true,
-        message: '✅ Recent adventures view connected! (Stats function not available)'
+        message:
+          "✅ Recent adventures view connected! (Stats function not available)",
       };
     }
   } catch (error) {
     return {
       success: false,
-      message: 'Connection test failed',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: "Connection test failed",
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }

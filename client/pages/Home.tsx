@@ -32,12 +32,12 @@ import {
 import {
   getAllRealStats,
   formatStatsForDisplay,
-  RealAdventureStats
+  RealAdventureStats,
 } from "@/lib/realStatsService";
 import {
   getRecentAdventuresWithFallback,
   subscribeToAdventureUpdates,
-  RecentAdventure
+  RecentAdventure,
 } from "@/lib/recentAdventuresService";
 
 export default function Home() {
@@ -52,22 +52,24 @@ export default function Home() {
   const [isStatsExpanded, setIsStatsExpanded] = useState(false);
   const [realStats, setRealStats] = useState<any>(null);
   const [statsLoading, setStatsLoading] = useState(true);
-  const [recentAdventures, setRecentAdventures] = useState<RecentAdventure[]>([]);
+  const [recentAdventures, setRecentAdventures] = useState<RecentAdventure[]>(
+    [],
+  );
   const [adventuresLoading, setAdventuresLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadRealStats = async () => {
     try {
       setStatsLoading(true);
-      console.log('📊 Loading real adventure statistics...');
+      console.log("📊 Loading real adventure statistics...");
 
       const { primary, additional } = await getAllRealStats();
       const formattedStats = formatStatsForDisplay(primary, additional);
       setRealStats(formattedStats);
 
-      console.log('✅ Real stats loaded:', formattedStats);
+      console.log("✅ Real stats loaded:", formattedStats);
     } catch (error) {
-      console.error('Error loading real stats:', error);
+      console.error("Error loading real stats:", error);
       // Keep realStats as null to show fallback values
     } finally {
       setStatsLoading(false);
@@ -77,14 +79,18 @@ export default function Home() {
   const loadRecentAdventures = async () => {
     try {
       setAdventuresLoading(true);
-      console.log('🏔️ Loading real recent adventures...');
+      console.log("🏔️ Loading real recent adventures...");
 
       const adventures = await getRecentAdventuresWithFallback();
       setRecentAdventures(adventures);
 
-      console.log('✅ Recent adventures loaded:', adventures.length, 'adventures');
+      console.log(
+        "✅ Recent adventures loaded:",
+        adventures.length,
+        "adventures",
+      );
     } catch (error) {
-      console.error('Error loading recent adventures:', error);
+      console.error("Error loading recent adventures:", error);
       // Fallback is handled in the service
     } finally {
       setAdventuresLoading(false);
@@ -109,7 +115,11 @@ export default function Home() {
     });
 
     const unsubscribeAdventures = subscribeToAdventureUpdates((adventures) => {
-      console.log('🔄 Real-time adventures update received:', adventures.length, 'adventures');
+      console.log(
+        "🔄 Real-time adventures update received:",
+        adventures.length,
+        "adventures",
+      );
       setRecentAdventures(adventures);
     });
 
@@ -688,7 +698,8 @@ export default function Home() {
             </span>
           </h2>
           <p className="text-slate-600 max-w-2xl mx-auto">
-            Every adventure tells a story, every place holds a memory, and every moment becomes a treasured part of our Scottish family legacy.
+            Every adventure tells a story, every place holds a memory, and every
+            moment becomes a treasured part of our Scottish family legacy.
           </p>
         </div>
 
@@ -709,10 +720,17 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('journal_entries', 6)}
+                  {statsLoading ? "..." : getStatValue("journal_entries", 6)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Journal Entries</div>
-                <div className="text-sm text-slate-500">{getStatDescription('journal_entries', 'Stories captured & memories preserved')}</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Journal Entries
+                </div>
+                <div className="text-sm text-slate-500">
+                  {getStatDescription(
+                    "journal_entries",
+                    "Stories captured & memories preserved",
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -732,10 +750,17 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('places_explored', 6)}
+                  {statsLoading ? "..." : getStatValue("places_explored", 6)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Places Explored</div>
-                <div className="text-sm text-slate-500">{getStatDescription('places_explored', 'Across Scotland\'s breathtaking landscapes')}</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Places Explored
+                </div>
+                <div className="text-sm text-slate-500">
+                  {getStatDescription(
+                    "places_explored",
+                    "Across Scotland's breathtaking landscapes",
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -755,10 +780,17 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('memory_tags', 19)}
+                  {statsLoading ? "..." : getStatValue("memory_tags", 19)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Memory Tags</div>
-                <div className="text-sm text-slate-500">{getStatDescription('memory_tags', 'Special moments & magical experiences')}</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Memory Tags
+                </div>
+                <div className="text-sm text-slate-500">
+                  {getStatDescription(
+                    "memory_tags",
+                    "Special moments & magical experiences",
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -778,24 +810,43 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('photos_captured', 127)}
+                  {statsLoading ? "..." : getStatValue("photos_captured", 127)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Photos Captured</div>
-                <div className="text-sm text-slate-500">{getStatDescription('photos_captured', 'Beautiful moments frozen in time')}</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Photos Captured
+                </div>
+                <div className="text-sm text-slate-500">
+                  {getStatDescription(
+                    "photos_captured",
+                    "Beautiful moments frozen in time",
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Miles Traveled - Hidden by default */}
-          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
+          <div
+            className={`group relative transition-all duration-500 ${isStatsExpanded ? "opacity-100 scale-100" : "opacity-0 scale-95 h-0 overflow-hidden"}`}
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-blue-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-blue-500"></div>
               <CardContent className="p-8">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
-                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <svg
+                      className="h-8 w-8 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
@@ -803,24 +854,40 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('miles_traveled', 342)}
+                  {statsLoading ? "..." : getStatValue("miles_traveled", 342)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Miles Traveled</div>
-                <div className="text-sm text-slate-500">Across Scotland's stunning terrain</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Miles Traveled
+                </div>
+                <div className="text-sm text-slate-500">
+                  Across Scotland's stunning terrain
+                </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Munros Climbed - Hidden by default */}
-          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
+          <div
+            className={`group relative transition-all duration-500 ${isStatsExpanded ? "opacity-100 scale-100" : "opacity-0 scale-95 h-0 overflow-hidden"}`}
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-lime-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-lime-500"></div>
               <CardContent className="p-8">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-green-500 to-lime-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
-                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l7 7-7 7M19 3l-7 7 7 7" />
+                    <svg
+                      className="h-8 w-8 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 3l7 7-7 7M19 3l-7 7 7 7"
+                      />
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
@@ -828,24 +895,40 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-green-600 to-lime-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('munros_climbed', 3)}
+                  {statsLoading ? "..." : getStatValue("munros_climbed", 3)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Munros Climbed</div>
-                <div className="text-sm text-slate-500">Scottish peaks conquered together</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Munros Climbed
+                </div>
+                <div className="text-sm text-slate-500">
+                  Scottish peaks conquered together
+                </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Adventures This Year - Hidden by default */}
-          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
+          <div
+            className={`group relative transition-all duration-500 ${isStatsExpanded ? "opacity-100 scale-100" : "opacity-0 scale-95 h-0 overflow-hidden"}`}
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-violet-400 to-purple-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-purple-500"></div>
               <CardContent className="p-8">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
-                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="h-8 w-8 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-500 rounded-full flex items-center justify-center">
@@ -853,24 +936,42 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('adventures_this_year', 12)}
+                  {statsLoading
+                    ? "..."
+                    : getStatValue("adventures_this_year", 12)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Adventures This Year</div>
-                <div className="text-sm text-slate-500">Family expeditions & discoveries</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Adventures This Year
+                </div>
+                <div className="text-sm text-slate-500">
+                  Family expeditions & discoveries
+                </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Wildlife Spotted - Hidden by default */}
-          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
+          <div
+            className={`group relative transition-all duration-500 ${isStatsExpanded ? "opacity-100 scale-100" : "opacity-0 scale-95 h-0 overflow-hidden"}`}
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-green-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-green-500"></div>
               <CardContent className="p-8">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
-                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    <svg
+                      className="h-8 w-8 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center">
@@ -878,24 +979,40 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('wildlife_spotted', 23)}
+                  {statsLoading ? "..." : getStatValue("wildlife_spotted", 23)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Wildlife Spotted</div>
-                <div className="text-sm text-slate-500">Amazing creatures encountered</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Wildlife Spotted
+                </div>
+                <div className="text-sm text-slate-500">
+                  Amazing creatures encountered
+                </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Castles Visited - Hidden by default */}
-          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
+          <div
+            className={`group relative transition-all duration-500 ${isStatsExpanded ? "opacity-100 scale-100" : "opacity-0 scale-95 h-0 overflow-hidden"}`}
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-pink-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-pink-500"></div>
               <CardContent className="p-8">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
-                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V9a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                    <svg
+                      className="h-8 w-8 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 21v-4m0 0V9a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+                      />
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center">
@@ -903,24 +1020,40 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('castles_explored', 4)}
+                  {statsLoading ? "..." : getStatValue("castles_explored", 4)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Castles Explored</div>
-                <div className="text-sm text-slate-500">Historic fortresses & legends</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Castles Explored
+                </div>
+                <div className="text-sm text-slate-500">
+                  Historic fortresses & legends
+                </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Weather Days - Hidden by default */}
-          <div className={`group relative transition-all duration-500 ${isStatsExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95 h-0 overflow-hidden'}`}>
+          <div
+            className={`group relative transition-all duration-500 ${isStatsExpanded ? "opacity-100 scale-100" : "opacity-0 scale-95 h-0 overflow-hidden"}`}
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
             <Card className="relative text-center bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
               <CardContent className="p-8">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform duration-300">
-                    <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                    <svg
+                      className="h-8 w-8 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                      />
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
@@ -928,10 +1061,14 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-3">
-                  {statsLoading ? '...' : getStatValue('weather_adventures', 8)}
+                  {statsLoading ? "..." : getStatValue("weather_adventures", 8)}
                 </div>
-                <div className="text-lg font-semibold text-slate-800 mb-2">Weather Adventures</div>
-                <div className="text-sm text-slate-500">Sunshine, rain & Scottish mists</div>
+                <div className="text-lg font-semibold text-slate-800 mb-2">
+                  Weather Adventures
+                </div>
+                <div className="text-sm text-slate-500">
+                  Sunshine, rain & Scottish mists
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -974,7 +1111,9 @@ export default function Home() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border-2 border-emerald-200/50 shadow-lg">
             <Calendar className="h-6 w-6 text-emerald-600" />
-            <span className="text-sm font-medium text-emerald-700">Latest Family Adventures</span>
+            <span className="text-sm font-medium text-emerald-700">
+              Latest Family Adventures
+            </span>
             <MapPin className="h-6 w-6 text-emerald-600" />
           </div>
 
@@ -985,10 +1124,15 @@ export default function Home() {
           </h2>
 
           <p className="text-slate-600 max-w-2xl mx-auto mb-8">
-            Our latest Scottish explorations, from mountain peaks to castle visits. Each adventure adds to our family's growing collection of memories.
+            Our latest Scottish explorations, from mountain peaks to castle
+            visits. Each adventure adds to our family's growing collection of
+            memories.
           </p>
 
-          <Button asChild className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button
+            asChild
+            className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+          >
             <Link to="/journal">
               <Calendar className="mr-2 h-4 w-4" />
               View All Adventures
@@ -1002,39 +1146,51 @@ export default function Home() {
           {recentAdventures.map((adventure, index) => (
             <div key={index} className="group relative">
               {/* Glow Effect */}
-              <div className={`absolute inset-0 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity ${
-                index === 0 ? 'bg-gradient-to-r from-emerald-400 to-blue-500' :
-                index === 1 ? 'bg-gradient-to-r from-blue-400 to-purple-500' :
-                'bg-gradient-to-r from-purple-400 to-pink-500'
-              }`}></div>
+              <div
+                className={`absolute inset-0 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity ${
+                  index === 0
+                    ? "bg-gradient-to-r from-emerald-400 to-blue-500"
+                    : index === 1
+                      ? "bg-gradient-to-r from-blue-400 to-purple-500"
+                      : "bg-gradient-to-r from-purple-400 to-pink-500"
+                }`}
+              ></div>
 
               <Card className="relative bg-white/95 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
                 {/* Top Border */}
-                <div className={`absolute top-0 left-0 w-full h-1 ${
-                  index === 0 ? 'bg-gradient-to-r from-emerald-500 to-blue-500' :
-                  index === 1 ? 'bg-gradient-to-r from-blue-500 to-purple-500' :
-                  'bg-gradient-to-r from-purple-500 to-pink-500'
-                }`}></div>
+                <div
+                  className={`absolute top-0 left-0 w-full h-1 ${
+                    index === 0
+                      ? "bg-gradient-to-r from-emerald-500 to-blue-500"
+                      : index === 1
+                        ? "bg-gradient-to-r from-blue-500 to-purple-500"
+                        : "bg-gradient-to-r from-purple-500 to-pink-500"
+                  }`}
+                ></div>
 
                 <CardContent className="p-0">
                   {/* Image Section */}
                   <div className="relative">
                     <img
-                    src={adventure.featured_image}
-                    alt={adventure.title}
-                    className="w-full h-56 object-cover"
-                  />
+                      src={adventure.featured_image}
+                      alt={adventure.title}
+                      className="w-full h-56 object-cover"
+                    />
 
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
                     {/* Adventure Badge */}
                     <div className="absolute top-4 right-4">
-                      <div className={`px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg ${
-                        index === 0 ? 'bg-gradient-to-r from-emerald-500 to-blue-500' :
-                        index === 1 ? 'bg-gradient-to-r from-blue-500 to-purple-500' :
-                        'bg-gradient-to-r from-purple-500 to-pink-500'
-                      }`}>
+                      <div
+                        className={`px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg ${
+                          index === 0
+                            ? "bg-gradient-to-r from-emerald-500 to-blue-500"
+                            : index === 1
+                              ? "bg-gradient-to-r from-blue-500 to-purple-500"
+                              : "bg-gradient-to-r from-purple-500 to-pink-500"
+                        }`}
+                      >
                         Adventure #{recentAdventures.length - index}
                       </div>
                     </div>
@@ -1056,29 +1212,38 @@ export default function Home() {
                     {/* Date */}
                     <div className="flex items-center gap-2 mb-4">
                       <Calendar className="h-4 w-4 text-slate-500" />
-                      <span className="text-sm font-medium text-slate-600">{adventure.formatted_date}</span>
+                      <span className="text-sm font-medium text-slate-600">
+                        {adventure.formatted_date}
+                      </span>
                     </div>
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {adventure.tags && adventure.tags.map((tag, tagIndex) => (
-                        <span
-                          key={tagIndex}
-                          className={`px-3 py-1 text-xs font-medium rounded-full border-2 ${
-                            index === 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                            index === 1 ? 'bg-blue-50 text-blue-700 border-blue-200' :
-                            'bg-purple-50 text-purple-700 border-purple-200'
-                          }`}
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                      {adventure.tags &&
+                        adventure.tags.map((tag, tagIndex) => (
+                          <span
+                            key={tagIndex}
+                            className={`px-3 py-1 text-xs font-medium rounded-full border-2 ${
+                              index === 0
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                : index === 1
+                                  ? "bg-blue-50 text-blue-700 border-blue-200"
+                                  : "bg-purple-50 text-purple-700 border-purple-200"
+                            }`}
+                          >
+                            {tag}
+                          </span>
+                        ))}
                       {/* Show adventure type badge */}
-                      <span className={`px-3 py-1 text-xs font-medium rounded-full border-2 ${
-                        index === 0 ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
-                        index === 1 ? 'bg-blue-100 text-blue-800 border-blue-300' :
-                        'bg-purple-100 text-purple-800 border-purple-300'
-                      }`}>
+                      <span
+                        className={`px-3 py-1 text-xs font-medium rounded-full border-2 ${
+                          index === 0
+                            ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                            : index === 1
+                              ? "bg-blue-100 text-blue-800 border-blue-300"
+                              : "bg-purple-100 text-purple-800 border-purple-300"
+                        }`}
+                      >
                         {adventure.adventure_type}
                       </span>
                     </div>
@@ -1089,9 +1254,11 @@ export default function Home() {
                       variant="outline"
                       size="sm"
                       className={`w-full border-2 transition-all duration-300 ${
-                        index === 0 ? 'border-emerald-300 text-emerald-700 hover:bg-emerald-50' :
-                        index === 1 ? 'border-blue-300 text-blue-700 hover:bg-blue-50' :
-                        'border-purple-300 text-purple-700 hover:bg-purple-50'
+                        index === 0
+                          ? "border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                          : index === 1
+                            ? "border-blue-300 text-blue-700 hover:bg-blue-50"
+                            : "border-purple-300 text-purple-700 hover:bg-purple-50"
                       }`}
                     >
                       <Link to="/journal" className="flex items-center gap-2">
