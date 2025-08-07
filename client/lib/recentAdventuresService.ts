@@ -190,6 +190,12 @@ export async function getRecentAdventuresWithFallback(): Promise<
   RecentAdventure[]
 > {
   try {
+    // First check if we can connect to Supabase at all
+    if (!isSupabaseConfigured()) {
+      console.log("📦 Supabase not configured, using fallback data");
+      return getFallbackRecentAdventures();
+    }
+
     const adventures = await getRecentAdventures();
 
     // If we have real adventures, return them
@@ -202,10 +208,17 @@ export async function getRecentAdventuresWithFallback(): Promise<
     return getFallbackRecentAdventures();
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.warn(
-      "Failed to load real adventures, using fallback:",
-      errorMessage,
-    );
+
+    // Check if it's a schema missing error
+    if (errorMessage.includes("SCHEMA_MISSING")) {
+      console.warn("��� Database views not found, using fallback data. Please run the SQL setup.");
+    } else {
+      console.warn(
+        "📦 Failed to load real adventures, using fallback:",
+        errorMessage,
+      );
+    }
+
     return getFallbackRecentAdventures();
   }
 }
@@ -242,7 +255,7 @@ export function subscribeToAdventureUpdates(
         try {
           const adventures = await getRecentAdventuresWithFallback();
           callback(adventures);
-          console.log("✅ Recent adventures sync updated with latest data");
+          console.log("��� Recent adventures sync updated with latest data");
         } catch (error) {
           console.error(
             "Error in real-time recent adventures subscription:",
