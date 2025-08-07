@@ -954,6 +954,104 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Our Other Furry Family Member */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          <span className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+            Meet Fern
+          </span>
+        </h2>
+        <div className="flex justify-center">
+          <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-green-50 to-emerald-100 backdrop-blur-sm border-2 border-green-200/60 max-w-4xl">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-8">
+                {/* Photo - Left Side */}
+                <div className="relative group w-48 h-48 flex-shrink-0">
+                  <div className="w-full h-full rounded-xl overflow-hidden border-4 bg-gradient-to-r from-green-500 to-emerald-600 p-1 shadow-xl">
+                    <div className="w-full h-full rounded-lg overflow-hidden bg-white">
+                      <img
+                        src={
+                          familyMembers.find(m => m.name === "Fern")?.display_avatar ||
+                          familyMembers.find(m => m.name === "Fern")?.avatar_url ||
+                          "/placeholder.svg"
+                        }
+                        alt="Fern"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Edit overlay */}
+                  <div className="absolute inset-0 bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="h-10 w-10 p-0 bg-white/90 hover:bg-white"
+                        onClick={() => {
+                          const fernMember = familyMembers.find(m => m.name === "Fern");
+                          if (fernMember) handlePhotoEdit(fernMember.id);
+                        }}
+                        disabled={isUploading}
+                      >
+                        <Edit className="h-5 w-5" />
+                      </Button>
+                      {(() => {
+                        const fernMember = familyMembers.find(m => m.name === "Fern");
+                        return fernMember?.avatar_url && fernMember.avatar_url !== "/placeholder.svg" && (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="h-10 w-10 p-0 bg-white/90 hover:bg-white text-red-600 hover:text-red-700"
+                            onClick={() => handlePhotoRemove(fernMember.id)}
+                            disabled={isUploading}
+                          >
+                            <X className="h-5 w-5" />
+                          </Button>
+                        );
+                      })()}
+                    </div>
+                  </div>
+
+                  {/* Upload indicator */}
+                  {isUploading && editingMember === familyMembers.find(m => m.name === "Fern")?.id && (
+                    <div className="absolute inset-0 bg-black/70 rounded-xl flex items-center justify-center">
+                      <Upload className="h-8 w-8 text-white animate-spin" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Text Content - Right Side */}
+                <div className="flex-1">
+                  <h3 className="text-3xl font-bold text-green-800 mb-3">Fern</h3>
+                  <p className="text-lg font-medium text-green-600 mb-6">ADVENTURE DOG</p>
+                  <p className="text-base text-green-700 leading-relaxed mb-6">
+                    Our spirited second furry explorer who brings her own unique energy to every Scottish adventure!
+                    Fern is the perfect adventure buddy - curious about every new trail, fearless when exploring rocky highlands,
+                    and always ready to splash through Highland streams. With her playful nature and boundless enthusiasm,
+                    Fern adds joy and laughter to our family expeditions, reminding us that the best adventures are shared
+                    with those who love the journey as much as the destination. 🌿
+                  </p>
+
+                  {/* Leaf decorations */}
+                  <div className="flex gap-2 opacity-40">
+                    <span className="text-green-600">🌿</span>
+                    <span className="text-emerald-600">🍃</span>
+                    <span className="text-green-600">🌿</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="text-center mt-6">
+          <p className="text-sm text-green-600">
+            🌿 Our second adventure companion, doubling the fun on every Scottish journey!
+          </p>
+        </div>
+      </section>
+
       {/* Adventure Milestones */}
       <section className="mb-16">
         <div className="max-w-4xl mx-auto">
@@ -977,7 +1075,7 @@ export default function Home() {
                     <h3 className="text-xl font-bold text-emerald-800 mb-1">
                       {milestoneStats.completed_count > 0
                         ? `🏆 ${milestoneStats.completed_count} Milestones Completed • ${milestoneStats.total_xp} XP Earned!`
-                        : "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Start Your Scottish Adventure Journey!"}
+                        : "🏴󠁧󠁢󠁳󠁣󠁴��� Start Your Scottish Adventure Journey!"}
                     </h3>
                     <p className="text-sm text-emerald-600">
                       {milestoneStats.completed_count > 0
