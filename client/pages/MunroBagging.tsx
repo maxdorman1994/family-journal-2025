@@ -413,11 +413,74 @@ export default function MunroBagging() {
             )}
 
             {/* Progress Overview */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-green-200/50 shadow-xl max-w-2xl mx-auto">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-green-200/50 shadow-xl max-w-4xl mx-auto">
+              <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold text-slate-800">Your Progress</h3>
                 <div className="text-3xl font-bold text-green-600">{completedCount}/{totalMunros}</div>
               </div>
+
+              {/* Visual Munro Progress Grid */}
+              <div className="mb-6">
+                <div className="grid grid-cols-10 sm:grid-cols-15 md:grid-cols-20 lg:grid-cols-25 gap-1 mb-4">
+                  {munros.map((munro, index) => (
+                    <div
+                      key={munro.id}
+                      className={`relative group cursor-pointer transition-all duration-200 ${
+                        munro.completed
+                          ? 'bg-gradient-to-br from-green-500 to-emerald-600 shadow-md transform scale-110'
+                          : 'bg-gradient-to-br from-slate-200 to-slate-300 hover:from-green-200 hover:to-green-300'
+                      } rounded-full aspect-square flex items-center justify-center`}
+                      onClick={() => toggleMunroComplete(munro.id)}
+                      title={`${munro.name} (${munro.height}m) - ${munro.completed ? 'Completed' : 'Not completed'}`}
+                    >
+                      {munro.completed && (
+                        <CheckCircle className="h-3 w-3 text-white" />
+                      )}
+
+                      {/* Tooltip on hover */}
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 whitespace-nowrap">
+                        <div className="font-semibold">{munro.name}</div>
+                        <div className="text-slate-300">{munro.height}m • {munro.region}</div>
+                        <div className="text-slate-400">{munro.completed ? '✅ Completed' : 'Click to complete'}</div>
+                        {/* Arrow pointing down */}
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Placeholder dots for remaining official Munros if less than 282 */}
+                  {Array.from({ length: Math.max(0, 282 - munros.length) }).map((_, index) => (
+                    <div
+                      key={`placeholder-${index}`}
+                      className="bg-gradient-to-br from-slate-100 to-slate-200 rounded-full aspect-square opacity-30"
+                      title="Official Munro (not yet loaded)"
+                    >
+                    </div>
+                  ))}
+                </div>
+
+                {/* Legend */}
+                <div className="flex items-center justify-center gap-6 text-sm text-slate-600">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                      <CheckCircle className="h-2.5 w-2.5 text-white" />
+                    </div>
+                    <span>Completed ({completedCount})</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full"></div>
+                    <span>Remaining ({totalMunros - completedCount})</span>
+                  </div>
+                  {munros.some(m => m.is_custom) && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full"></div>
+                      <span>Custom ({munros.filter(m => m.is_custom).length})</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Traditional Progress Bar */}
               <Progress value={completionPercentage} className="h-4 mb-4" />
               <div className="flex justify-between text-sm text-slate-600">
                 <span>{completionPercentage.toFixed(1)}% Complete</span>
