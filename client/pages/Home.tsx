@@ -367,9 +367,9 @@ export default function Home() {
   };
 
   const handlePhotoRemove = async (memberId: string) => {
-    // Check authentication before allowing photo removal
-    if (!requestAuth()) {
-      return; // Will show password prompt
+    // Only allow photo removal if authenticated
+    if (!isAuthenticated) {
+      return;
     }
 
     try {
