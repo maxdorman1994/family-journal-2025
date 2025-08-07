@@ -257,32 +257,35 @@ export default function Milestones() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filterMilestones(inProgressMilestones, selectedCategory).map((milestone) => {
-              const Icon = milestone.icon;
-              const progressPercentage = (milestone.progress / milestone.target) * 100;
+              const Icon = getIconComponent(milestone.icon);
+              const colorScheme = milestone.color_scheme;
+              const progressPercentage = milestone.progressPercentage || 0;
+              const currentProgress = milestone.progress?.current_progress || 0;
+              const targetValue = milestone.target_value || 1;
               return (
                 <Card
                   key={milestone.id}
-                  className={`bg-gradient-to-br ${milestone.bgColor} border-2 ${milestone.borderColor} hover:shadow-lg transition-all duration-300`}
+                  className={`bg-gradient-to-br ${colorScheme.bgColor} border-2 ${colorScheme.borderColor} hover:shadow-lg transition-all duration-300`}
                 >
                   <CardContent className="p-6">
-                    <div className={`w-16 h-16 bg-gradient-to-r ${milestone.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                    <div className={`w-16 h-16 bg-gradient-to-r ${colorScheme.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
                       <Icon className="w-8 h-8 text-white" />
                     </div>
                     <h3 className="font-bold text-lg mb-2 text-center">{milestone.title}</h3>
                     <p className="text-sm text-gray-600 mb-4 text-center">{milestone.description}</p>
                     <div className="space-y-3">
                       <div className="bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div 
-                          className={`bg-gradient-to-r ${milestone.color} h-full rounded-full transition-all duration-500`}
+                        <div
+                          className={`bg-gradient-to-r ${colorScheme.color} h-full rounded-full transition-all duration-500`}
                           style={{ width: `${progressPercentage}%` }}
                         ></div>
                       </div>
                       <p className="text-center text-sm font-medium">
-                        {milestone.progress} / {milestone.target}
+                        {currentProgress} / {targetValue}
                       </p>
                       <div className="flex items-center justify-center gap-1">
                         <Zap className="w-4 h-4 text-amber-500" />
-                        <span className="text-sm font-medium text-amber-700">+{milestone.xpReward} XP</span>
+                        <span className="text-sm font-medium text-amber-700">+{milestone.xp_reward} XP</span>
                       </div>
                     </div>
                   </CardContent>
