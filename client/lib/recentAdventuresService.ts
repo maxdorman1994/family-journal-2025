@@ -22,7 +22,7 @@ export interface AdventureStats {
   total_adventures: number;
   recent_count: number;
   latest_adventure: string;
-  oldest_adventure: string;
+  oldest_adventure: string; 
 }
 
 /**
