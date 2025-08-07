@@ -924,83 +924,8 @@ export default function Home() {
           </span>
         </h2>
 
-        {/* Parents Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8 justify-items-center">
-          {familyMembers
-            .filter(
-              (member) =>
-                (member.name === "John Dorman" ||
-                  member.name === "Rachel Dorman") &&
-                member.position_index > 4 &&
-                member.name !== "Charlie" &&
-                member.name !== "Fern",
-            )
-            .map((member) => (
-              <Card
-                key={member.id}
-                className={`text-center hover:shadow-lg transition-all duration-300 hover:scale-105 ${member.colors.bg} backdrop-blur-sm border-2 ${member.colors.border}`}
-              >
-                <CardContent className="p-4">
-                  <div className="relative group w-30 h-30 mx-auto mb-3">
-                    <div
-                      className={`w-full h-full rounded-full overflow-hidden border-2 bg-gradient-to-r ${member.colors.accent} p-0.5 shadow-md`}
-                    >
-                      <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                        <img
-                          src={
-                            member.display_avatar ||
-                            member.avatar_url ||
-                            "/placeholder.svg"
-                          }
-                          alt={member.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Edit overlay */}
-                    <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="flex gap-1">
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="h-6 w-6 p-0 bg-white/90 hover:bg-white"
-                          onClick={() => handlePhotoEdit(member.id)}
-                          disabled={isUploading}
-                        >
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        {member.avatar_url &&
-                          member.avatar_url !== "/placeholder.svg" && (
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              className="h-6 w-6 p-0 bg-red-500/90 hover:bg-red-600"
-                              onClick={() => handlePhotoRemove(member.id)}
-                              disabled={isUploading}
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          )}
-                      </div>
-                    </div>
-                  </div>
-                  <h3 className="font-semibold text-base text-gray-800 mb-2">
-                    {member.name}
-                  </h3>
-                  <p className="text-xs text-muted-foreground font-medium mb-2">
-                    {member.role}
-                  </p>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {member.bio}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-        </div>
-
-        {/* Children Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        {/* All Extended Family Members on One Line */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
           {familyMembers
             .filter(
               (member) =>
