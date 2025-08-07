@@ -359,9 +359,9 @@ export default function Milestones() {
                         </div>
                         <p className="text-xs text-gray-500">
                           Completed on{" "}
-                          {milestone.dateCompleted
+                          {milestone.completed_date
                             ? new Date(
-                                milestone.dateCompleted,
+                                milestone.completed_date,
                               ).toLocaleDateString()
                             : "N/A"}
                         </p>
