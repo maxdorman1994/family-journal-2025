@@ -37,7 +37,7 @@ export default function Journal() {
       date: "Sunday 3 August 2025",
       location: "Fort William, Highland",
       weather: "☀️ Sunny",
-      mood: "🙏 Grateful",
+      mood: "��� Grateful",
       miles_traveled: 87,
       parking: "Free",
       dog_friendly: true,
@@ -101,20 +101,40 @@ export default function Journal() {
     try {
       setIsLoading(true);
       setError(null);
+
+      console.log('🔄 Loading journal entries...');
       const supabaseEntries = await getJournalEntries();
       setEntries(supabaseEntries);
       console.log('✅ Loaded journal entries from Supabase:', supabaseEntries.length);
+
+      // Clear any previous errors if successful
+      setError(null);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       console.warn('Failed to load from Supabase, using local data:', errorMessage);
 
+      // Provide specific error messages based on error type
       if (errorMessage.includes('not configured')) {
-        setError('📝 Development Mode: Using local data (Supabase not configured)');
+        setError('📝 Development Mode: Using sample data (Supabase not configured)');
+      } else if (errorMessage.includes('Network error')) {
+        setError('🌐 Connection Issue: Using offline data (check internet connection)');
+      } else if (errorMessage.includes('CORS error')) {
+        setError('🔧 Configuration Issue: Using sample data (invalid Supabase settings)');
+      } else if (errorMessage.includes('Failed to fetch')) {
+        setError('📡 Service Unavailable: Using offline data (Supabase may be down)');
       } else {
-        setError(`⚠️ Database Error: ${errorMessage}. Using local data.`);
+        setError(`⚠️ Database Error: Using sample data (${errorMessage.substring(0, 100)}${errorMessage.length > 100 ? '...' : ''})`);
       }
 
+      // Always fall back to local data
       setEntries(journalEntriesData);
+
+      // Log error details for debugging
+      console.error('Supabase error details:', {
+        error,
+        message: errorMessage,
+        fallbackData: journalEntriesData.length + ' sample entries loaded'
+      });
     } finally {
       setIsLoading(false);
     }
