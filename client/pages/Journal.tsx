@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/select";
 import NewEntryForm from "@/components/NewEntryForm";
 import EntryDetailModal from "@/components/EntryDetailModal";
+import JournalEntryStats from "@/components/JournalEntryStats";
 import {
   getJournalEntries,
   getJournalStats,
