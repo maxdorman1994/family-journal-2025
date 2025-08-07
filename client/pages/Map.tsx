@@ -779,14 +779,6 @@ export default function MapPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Password Prompt */}
-      <PasswordPrompt
-        isOpen={showPasswordPrompt}
-        onAuthenticate={authenticate}
-        onCancel={cancelAuth}
-        title="Family Access Required"
-        description="Please enter the family password to edit map pins and add new adventures."
-      />
     </div>
   );
 }
