@@ -264,6 +264,7 @@ export default function Milestones() {
           const categoryMilestones = filterMilestones(milestones, category.id);
           if (categoryMilestones.length === 0) return null;
           const Icon = getIconComponent(category.icon);
+          const Icon = getIconComponent(category.icon);
           return (
             <Button
               key={category.id}
@@ -276,7 +277,7 @@ export default function Milestones() {
               }`}
             >
               <Icon className="w-4 h-4" />
-              {category.name}
+              {category.name} ({categoryMilestones.length})
             </Button>
           );
         })}
