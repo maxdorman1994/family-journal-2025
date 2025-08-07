@@ -210,6 +210,15 @@ export async function updateJournalEntry(
     throw new Error(`Failed to update journal entry: ${error.message}`);
   }
 
+  // Update milestones based on the updated journal entry
+  try {
+    await updateMilestonesFromJournalEntry(entry, 'demo-user', false);
+    console.log("✅ Milestones updated from journal entry update");
+  } catch (milestoneError) {
+    console.error("Error updating milestones:", milestoneError);
+    // Don't fail the journal update if milestone update fails
+  }
+
   return entry;
 }
 
