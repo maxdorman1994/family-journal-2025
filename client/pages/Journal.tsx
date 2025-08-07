@@ -428,7 +428,7 @@ export default function Journal() {
       count: new Set(entries.map((e) => e.location)).size,
       label: "Places Discovered",
       gradient: "from-amber-500 via-orange-500 to-red-500",
-      bgPattern: "🧭",
+      bgPattern: "���",
       description: "Unique locations",
     },
     {
@@ -465,7 +465,7 @@ export default function Journal() {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 relative">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 relative px-4 sm:px-0">
               <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
                 Our Wee Adventures
               </span>
