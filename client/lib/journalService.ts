@@ -310,28 +310,65 @@ export async function testSupabaseConnection(): Promise<{
   message: string;
   error?: string;
 }> {
+  console.log('🧪 Testing Supabase connection...');
+
+  // First check configuration
+  const envInfo = getEnvironmentInfo();
+  const validation = validateSupabaseConfig();
+
+  console.log('📋 Environment check:', { envInfo, validation });
+
+  if (!isSupabaseConfigured()) {
+    return {
+      success: false,
+      message: 'Configuration missing',
+      error: 'VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY not set'
+    };
+  }
+
+  if (!validation.urlValid) {
+    return {
+      success: false,
+      message: 'Invalid Supabase URL',
+      error: 'URL must start with https:// and contain supabase'
+    };
+  }
+
+  if (!validation.keyValid) {
+    return {
+      success: false,
+      message: 'Invalid Supabase key',
+      error: 'Anon key appears to be too short or invalid'
+    };
+  }
+
   try {
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from('journal_entries')
-      .select('count', { count: 'exact', head: true });
+      .select('*', { count: 'exact', head: true });
 
     if (error) {
+      console.error('❌ Supabase query error:', error);
       return {
         success: false,
-        message: 'Supabase connection failed',
-        error: error.message
+        message: 'Database query failed',
+        error: `${error.code || 'UNKNOWN'}: ${error.message}`
       };
     }
 
+    console.log('✅ Supabase connection successful');
     return {
       success: true,
-      message: `Supabase connected successfully. ${data?.length || 0} journal entries found.`
+      message: `Connected successfully! Found ${count || 0} entries.`
     };
   } catch (error) {
+    console.error('❌ Connection test failed:', error);
+    debugNetworkError(error);
+
     return {
       success: false,
-      message: 'Supabase connection error',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: 'Connection test failed',
+      error: error instanceof Error ? error.message : 'Unknown network error'
     };
   }
 }
