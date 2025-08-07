@@ -38,8 +38,8 @@ const categoryLabels = {
   wishlist: "Wishlist",
 };
 
-// Mapbox public token - you can use this demo token or replace with your own
-const MAPBOX_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+// Your personal Mapbox token
+const MAPBOX_TOKEN = 'pk.eyJ1IjoibWF4ZG9ybWFuMTciLCJhIjoiY21keHpjOHJhMWNmbjJrcXczem9hNzBvdCJ9.BKW3-ffrkz1oPVI6lYEKtA';
 
 export default function MapPage() {
   const [pins, setPins] = useState<MapPin[]>([
