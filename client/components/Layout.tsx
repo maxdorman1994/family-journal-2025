@@ -24,6 +24,24 @@ export default function Layout({ children }: LayoutProps) {
   const logoFileInputRef = useRef<HTMLInputElement>(null);
   const { isAuthenticated } = useAuth();
 
+  // Load stored logo URL from localStorage on component mount
+  useEffect(() => {
+    const storedLogoUrl = localStorage.getItem('family_logo_url');
+    if (storedLogoUrl && storedLogoUrl !== '/placeholder.svg') {
+      console.log('📸 Loading stored logo URL:', storedLogoUrl);
+      setLogoUrl(storedLogoUrl);
+    }
+  }, []);
+
+  // Save logo URL to localStorage whenever it changes
+  const updateLogoUrl = (newUrl: string) => {
+    setLogoUrl(newUrl);
+    if (newUrl !== '/placeholder.svg') {
+      localStorage.setItem('family_logo_url', newUrl);
+      console.log('💾 Logo URL saved to localStorage:', newUrl);
+    }
+  };
+
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle("dark");
