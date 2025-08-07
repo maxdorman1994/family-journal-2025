@@ -30,6 +30,8 @@ export default function Journal() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [connectionTest, setConnectionTest] = useState<string | null>(null);
+  const [deleteEntry, setDeleteEntry] = useState<JournalEntry | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Fallback data for development when Supabase is not configured
   const journalEntriesData: JournalEntry[] = [
