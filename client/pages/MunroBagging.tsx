@@ -481,10 +481,10 @@ export default function MunroBagging() {
                       <Clock className="h-3 w-3" />
                       {munro.estimatedTime}
                     </div>
-                    {munro.photoCount > 0 && (
+                    {munro.completion?.photo_count && munro.completion.photo_count > 0 && (
                       <div className="flex items-center gap-1">
                         <Camera className="h-3 w-3" />
-                        {munro.photoCount} photos
+                        {munro.completion.photo_count} photos
                       </div>
                     )}
                   </div>
