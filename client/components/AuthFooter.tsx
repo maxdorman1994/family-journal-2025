@@ -66,8 +66,8 @@ export default function AuthFooter() {
         {/* Main Footer Bar */}
         <div className="flex items-center justify-between py-2 sm:py-3">
           {/* Left Side - Status */}
-          <div className="flex items-center gap-3">
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm ${
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm ${
               isAuthenticated
                 ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
                 : 'bg-orange-50 border border-orange-200 text-orange-700'
