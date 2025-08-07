@@ -52,6 +52,16 @@ export default function MunroBagging() {
   const [filter, setFilter] = useState<"all" | "completed" | "remaining">(
     "all",
   );
+
+  const {
+    isAuthenticated,
+    showPasswordPrompt,
+    sessionTimeRemaining,
+    requestAuth,
+    authenticate,
+    logout,
+    cancelAuth
+  } = useAuth();
   const [regionFilter, setRegionFilter] = useState<string>("all");
   const [difficultyFilter, setDifficultyFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
