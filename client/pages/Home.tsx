@@ -468,29 +468,7 @@ export default function Home() {
     },
   ];
 
-  const recentAdventures = [
-    {
-      title: "Ben Nevis Summit",
-      date: "3 August 2025",
-      location: "Fort William",
-      image: "/placeholder.svg",
-      tags: ["Mountain", "Challenge", "Views"],
-    },
-    {
-      title: "Loch Lomond Picnic",
-      date: "28 July 2025",
-      location: "Balloch",
-      image: "/placeholder.svg",
-      tags: ["Lake", "Family", "Relaxing"],
-    },
-    {
-      title: "Edinburgh Castle Visit",
-      date: "15 July 2025",
-      location: "Edinburgh",
-      image: "/placeholder.svg",
-      tags: ["History", "Culture", "City"],
-    },
-  ];
+  // Real recent adventures are loaded via useEffect and stored in state
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
