@@ -798,6 +798,59 @@ export default function Journal() {
         isOpen={isDetailModalOpen}
         onClose={handleCloseModal}
       />
+
+      {/* Delete Confirmation Dialog */}
+      {deleteEntry && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-red-400 to-pink-500 flex items-center justify-center">
+                <AlertCircle className="h-8 w-8 text-white" />
+              </div>
+
+              <h3 className="text-xl font-bold text-slate-800 mb-2">
+                Delete Adventure?
+              </h3>
+
+              <p className="text-slate-600 mb-2">
+                Are you sure you want to delete <strong>"{deleteEntry.title}"</strong>?
+              </p>
+
+              <p className="text-sm text-slate-500 mb-6">
+                This action cannot be undone. All photos and memories will be permanently removed.
+              </p>
+
+              <div className="flex gap-3 justify-center">
+                <Button
+                  variant="outline"
+                  onClick={handleDeleteCancel}
+                  disabled={isDeleting}
+                  className="px-6"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleDeleteConfirm}
+                  disabled={isDeleting}
+                  className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-6"
+                >
+                  {isDeleting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete Adventure
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
