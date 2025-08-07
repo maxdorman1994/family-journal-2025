@@ -16,31 +16,56 @@ export default function Home() {
       name: "Max Dorman",
       role: "DAD",
       avatar: "/placeholder.svg",
-      bio: "Adventure enthusiast and family trip organizer. Loves planning routes, discovering hidden gems, and capturing the perfect Highland sunset photos."
+      bio: "Adventure enthusiast and family trip organizer. Loves planning routes, discovering hidden gems, and capturing the perfect Highland sunset photos.",
+      colors: {
+        bg: "bg-gradient-to-br from-blue-50 to-indigo-100",
+        border: "border-blue-200/60",
+        accent: "from-blue-500 to-indigo-500"
+      }
     },
     {
       name: "Charlotte Foster",
       role: "MUM",
       avatar: "/placeholder.svg",
-      bio: "Nature lover and family historian. Documents our adventures and ensures everyone stays safe while exploring Scotland's wild landscapes."
+      bio: "Nature lover and family historian. Documents our adventures and ensures everyone stays safe while exploring Scotland's wild landscapes.",
+      colors: {
+        bg: "bg-gradient-to-br from-rose-50 to-pink-100",
+        border: "border-rose-200/60",
+        accent: "from-rose-500 to-pink-500"
+      }
     },
     {
       name: "Oscar",
       role: "SON",
       avatar: "/placeholder.svg",
-      bio: "Young explorer with boundless energy. Always the first to spot wildlife and loves climbing rocks and splashing in Highland streams."
+      bio: "Young explorer with boundless energy. Always the first to spot wildlife and loves climbing rocks and splashing in Highland streams.",
+      colors: {
+        bg: "bg-gradient-to-br from-green-50 to-emerald-100",
+        border: "border-green-200/60",
+        accent: "from-green-500 to-emerald-500"
+      }
     },
     {
       name: "Rose",
       role: "DAUGHTER",
       avatar: "/placeholder.svg",
-      bio: "Curious adventurer who collects interesting stones and leaves. Has an amazing memory for the stories behind each place we visit."
+      bio: "Curious adventurer who collects interesting stones and leaves. Has an amazing memory for the stories behind each place we visit.",
+      colors: {
+        bg: "bg-gradient-to-br from-purple-50 to-violet-100",
+        border: "border-purple-200/60",
+        accent: "from-purple-500 to-violet-500"
+      }
     },
     {
       name: "Lola",
       role: "DAUGHTER",
       avatar: "/placeholder.svg",
-      bio: "Our youngest adventurer with the biggest smile. Brings joy to every journey and reminds us to appreciate the simple moments."
+      bio: "Our youngest adventurer with the biggest smile. Brings joy to every journey and reminds us to appreciate the simple moments.",
+      colors: {
+        bg: "bg-gradient-to-br from-amber-50 to-yellow-100",
+        border: "border-amber-200/60",
+        accent: "from-amber-500 to-yellow-500"
+      }
     },
   ];
 
