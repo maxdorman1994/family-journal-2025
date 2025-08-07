@@ -367,7 +367,7 @@ export default function NewEntryForm({
                   </label>
                 </div>
 
-                {formData.paidActivity && (
+                {formData.paid_activity && (
                   <div className="ml-6 grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-white/50 rounded-lg border border-scotland-thistle/20">
                     <div>
                       <label className="block text-sm font-medium mb-2">
