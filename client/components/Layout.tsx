@@ -136,8 +136,8 @@ export default function Layout({ children }: LayoutProps) {
       // Upload to Cloudflare
       const cloudflareUrl = await uploadPhotoToCloudflare(processedPhoto);
 
-      // Update logo URL with persistence
-      updateLogoUrl(cloudflareUrl);
+      // Update logo URL with cross-device sync
+      await updateLogoUrlLocal(cloudflareUrl);
       console.log("✅ Logo updated successfully:", cloudflareUrl);
     } catch (error) {
       console.error("❌ Error uploading logo:", error);
