@@ -1059,7 +1059,7 @@ export default function Home() {
 
         <div className="text-center mt-6">
           <p className="text-sm text-green-600">
-            🌿 Our second adventure companion, doubling the fun on every Scottish journey!
+            �� Our second adventure companion, doubling the fun on every Scottish journey!
           </p>
         </div>
       </section>
@@ -1830,11 +1830,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Us Section */}
+      {/* Contact & YouTube Section */}
       <section className="mt-20 mb-12">
-        <div className="text-center">
-          <div className="bg-gradient-to-r from-slate-50 via-blue-50 to-emerald-50 rounded-2xl p-8 border-2 border-slate-200/60 shadow-lg">
-            <div className="max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+          {/* Contact Us - Left Side */}
+          <div className="text-center">
+            <div className="bg-gradient-to-r from-slate-50 via-blue-50 to-emerald-50 rounded-2xl p-8 border-2 border-slate-200/60 shadow-lg h-full">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <Heart className="w-8 h-8 text-white" />
               </div>
@@ -1883,6 +1885,66 @@ export default function Home() {
               </p>
             </div>
           </div>
+
+          {/* YouTube Section - Right Side */}
+          <div className="text-center">
+            <div className="bg-gradient-to-r from-red-50 via-pink-50 to-orange-50 rounded-2xl p-8 border-2 border-red-200/60 shadow-lg h-full">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </div>
+
+              <h2 className="text-3xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-red-600 via-pink-600 to-orange-600 bg-clip-text text-transparent">
+                  Watch Our Adventures
+                </span>
+              </h2>
+
+              <p className="text-lg text-slate-600 mb-6 leading-relaxed">
+                Join us on YouTube as we explore Scotland's breathtaking landscapes, share travel tips,
+                and capture unforgettable family moments!
+              </p>
+
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-md">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-medium text-slate-500 mb-1">Follow us on</p>
+                  <a
+                    href="https://youtube.com/@aweeadventure"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xl font-bold text-red-600 hover:text-pink-600 transition-colors duration-300"
+                  >
+                    A Wee Adventure
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex justify-center gap-2 opacity-60">
+                <span className="text-red-600">📺</span>
+                <span className="text-pink-600">🎥</span>
+                <span className="text-red-600">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+              </div>
+
+              <p className="text-sm text-slate-500 mt-4">
+                Subscribe for weekly Scottish adventure vlogs! 🎬
+              </p>
+            </div>
+          </div>
+
         </div>
       </section>
     </div>
