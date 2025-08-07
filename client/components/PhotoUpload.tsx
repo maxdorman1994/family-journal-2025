@@ -252,10 +252,8 @@ export default function PhotoUpload({
                 </div>
                 {photo.error && (
                   <div className="text-xs mt-1 leading-tight">
-                    <div className={photo.error.includes('Cloudflare Images') || photo.error.includes('HEIC') ? 'text-green-600' : 'text-red-500'}>
-                      {photo.error.includes('HEIC file will be processed')
-                        ? '✅ HEIC → Cloudflare Images (native support)'
-                        : photo.error}
+                    <div className="text-red-500">
+                      {photo.error}
                     </div>
                   </div>
                 )}
@@ -292,7 +290,7 @@ export default function PhotoUpload({
                     Add Photo
                   </span>
                   <span className="text-xs text-muted-foreground text-center mt-1">
-                    Including HEIC
+                    JPEG, PNG, WebP
                   </span>
                 </>
               )}
@@ -305,9 +303,9 @@ export default function PhotoUpload({
       {photos.length > 0 && (
         <div className="flex gap-2 justify-between items-center">
           <div className="text-xs text-muted-foreground">
-            {photos.length}/{maxPhotos} photos • 
-            {photos.filter(p => p.cloudflareUrl).length} uploaded • 
-            Supports HEIC, JPEG, PNG, WebP
+            {photos.length}/{maxPhotos} photos •
+            {photos.filter(p => p.cloudflareUrl).length} uploaded •
+            Supports JPEG, PNG, WebP, GIF
           </div>
           
           {hasPhotosToUpload && (
@@ -329,7 +327,7 @@ export default function PhotoUpload({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*,.heic"
+        accept="image/*"
         multiple
         onChange={handleFileInput}
         className="hidden"
@@ -337,8 +335,8 @@ export default function PhotoUpload({
 
       {/* Help text */}
       <p className="text-xs text-muted-foreground mt-2">
-        📱 iPhone HEIC photos will be automatically converted and compressed. 
-        Max {maxPhotos} photos, up to 50MB each. Drag & drop or click to upload.
+        📷 Photos will be automatically compressed for optimal upload speed.
+        Max {maxPhotos} photos, up to 10MB each. Drag & drop or click to upload.
       </p>
     </div>
   );
