@@ -315,8 +315,58 @@ export default function Wishlist() {
       setLastSyncTime(new Date());
     } catch (dbError) {
       console.error("Database error, falling back to local state:", dbError);
-      setSyncStatus("local");
-      setError("📱 Using local tracking (database unavailable)");
+
+      const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
+
+      // Check if it's a network error and provide user-friendly feedback
+      if (errorMessage.includes("Network connection failed") ||
+          errorMessage.includes("Failed to fetch") ||
+          errorMessage.includes("ERR_NETWORK")) {
+
+        // Network error - save locally as fallback
+        const localItem: WishlistItem = {
+          id: Date.now().toString(),
+          title: newItem.title!,
+          location: newItem.location!,
+          description: newItem.description || "",
+          priority: newItem.priority || "Medium",
+          status: newItem.status || "Planning",
+          estimated_cost: newItem.estimated_cost || 500,
+          best_seasons: newItem.best_seasons || ["Summer"],
+          duration: newItem.duration || "3-4 days",
+          category: newItem.category || "Mountain",
+          family_votes: 0,
+          notes: newItem.notes || "",
+          researched: false,
+          created_at: new Date().toISOString(),
+        };
+
+        setWishlistItems((prev) => [...prev, localItem]);
+        updateLocalStats([...wishlistItems, localItem]);
+        setSyncStatus("disconnected");
+        setError("🌐 Connection lost - adventure saved locally, will sync when connection restored");
+
+        // Clear form on successful local save
+        setNewItem({
+          title: "",
+          location: "",
+          description: "",
+          priority: "Medium",
+          status: "Planning",
+          estimated_cost: 500,
+          best_seasons: ["Summer"],
+          duration: "3-4 days",
+          category: "Mountain",
+          notes: "",
+        });
+        setShowAddForm(false);
+
+        console.log("📱 Adventure saved locally due to network error");
+      } else {
+        // Other database errors
+        setSyncStatus("local");
+        setError("📱 Using local tracking (database unavailable)");
+      }
     } finally {
       setIsLoading(false);
     }
