@@ -36,16 +36,34 @@ export default function Layout({ children }: LayoutProps) {
 
   // Load stored logo URL from localStorage on component mount
   useEffect(() => {
-    const storedLogoUrl = localStorage.getItem("family_logo_url");
-    if (storedLogoUrl && storedLogoUrl !== "/placeholder.svg") {
-      console.log("📸 Loading stored logo URL:", storedLogoUrl);
-      setLogoUrl(storedLogoUrl);
-    }
+    // Load app settings including logo from database
+    const loadSettings = async () => {
+      try {
+        const settings = await loadAppSettings();
+        console.log("🔄 Loading app settings:", settings);
+        setLogoUrl(settings.logo_url);
+      } catch (error) {
+        console.error("Failed to load app settings:", error);
+        // Fallback to localStorage
+        const storedLogoUrl = getCurrentLogoUrl();
+        setLogoUrl(storedLogoUrl);
+      }
+    };
+
+    loadSettings();
 
     // Initialize cross-device sync
     initializeSync().catch((error) => {
       console.error("Failed to initialize sync:", error);
     });
+
+    // Subscribe to real-time app settings changes
+    const unsubscribeSettings = subscribeToAppSettings((settings) => {
+      console.log("🔄 App settings synced from another device:", settings);
+      setLogoUrl(settings.logo_url);
+    });
+
+    return unsubscribeSettings;
   }, [initializeSync]);
 
   // Save logo URL to localStorage whenever it changes
