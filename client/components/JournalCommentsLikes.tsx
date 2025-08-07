@@ -402,15 +402,33 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
         {/* Likes List */}
         {likes.length > 0 && (
           <div className="pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-600 flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-3">
               <Heart className="h-4 w-4 text-red-500 fill-current" />
-              Liked by: {likes.map((like, index) => (
-                <span key={like.id}>
-                  {like.visitor_name}
-                  {index < likes.length - 1 ? ", " : ""}
-                </span>
+              <span className="text-sm font-medium text-gray-700">Liked by:</span>
+            </div>
+            <div className="space-y-2">
+              {likes.map((like) => (
+                <div key={like.id} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-700 font-medium">{like.visitor_name}</span>
+                    <span className="text-xs text-gray-500">
+                      {formatDate(like.created_at)}
+                    </span>
+                  </div>
+                  {isAuthenticated && (
+                    <Button
+                      onClick={() => handleDeleteLike(like.id, like.visitor_name)}
+                      variant="ghost"
+                      size="sm"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-100 h-8 w-8 p-0"
+                      title="Admin: Remove like"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  )}
+                </div>
               ))}
-            </p>
+            </div>
           </div>
         )}
       </CardContent>
