@@ -232,6 +232,48 @@ export default function MunroBagging() {
     }
   };
 
+  const handleAddCustomMunro = async () => {
+    if (!addMunroForm.name.trim() || !addMunroForm.region.trim()) {
+      setError('Please fill in at least the name and region fields');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      console.log('🆕 Adding custom Munro:', addMunroForm.name);
+
+      const newMunro = await addCustomMunro(addMunroForm);
+      console.log('✅ Custom Munro added successfully:', newMunro);
+
+      // Reset form and hide modal
+      setAddMunroForm({
+        name: '',
+        height: 914,
+        region: '',
+        difficulty: 'Moderate',
+        latitude: 56.0,
+        longitude: -4.0,
+        description: '',
+        estimated_time: '4-6 hours',
+        best_seasons: ['May', 'June', 'July', 'August', 'September'],
+        os_grid_ref: ''
+      });
+      setShowAddMunro(false);
+
+      // Reload data to show the new Munro
+      await loadMunrosData();
+      await loadRegions();
+
+      setError('✅ Custom Munro added successfully! Progress updated.');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('Failed to add custom Munro:', errorMessage);
+      setError(`❌ Failed to add custom Munro: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const testConnection = async () => {
     try {
       const result = await testMunroConnection();
