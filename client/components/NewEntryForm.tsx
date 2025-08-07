@@ -262,6 +262,9 @@ export default function NewEntryForm({
       } finally {
         setIsSubmitting(false);
       }
+    } else {
+      alert("Validation failed! Check required fields.");
+      console.log("❌ Validation failed. Errors:", errors);
     }
   };
 
