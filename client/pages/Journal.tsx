@@ -350,8 +350,23 @@ export default function Journal() {
                 <span className="font-semibold">System Status</span>
               </div>
               <p className="text-sm text-center leading-relaxed">{error}</p>
-              <div className="mt-4 text-xs text-center text-amber-600">
-                📱 Your data is safe - all changes will sync when connection is restored
+              <div className="mt-4 flex flex-col items-center gap-3">
+                <div className="text-xs text-center text-amber-600">
+                  📱 Your data is safe - all changes will sync when connection is restored
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={testConnection}
+                  className="border-amber-300 text-amber-700 hover:bg-amber-100"
+                >
+                  Test Database Connection
+                </Button>
+                {connectionTest && (
+                  <div className="text-xs text-center text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
+                    {connectionTest}
+                  </div>
+                )}
               </div>
             </div>
           </div>
