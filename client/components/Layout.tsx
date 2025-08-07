@@ -17,7 +17,11 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [logoUrl, setLogoUrl] = useState("/placeholder.svg");
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const location = useLocation();
+  const logoFileInputRef = useRef<HTMLInputElement>(null);
+  const { isAuthenticated } = useAuth();
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
