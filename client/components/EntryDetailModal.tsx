@@ -106,7 +106,7 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {entry.photos.map((photo, photoIndex) => (
-                  <div key={photoIndex} className="aspect-square rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer group">
+                  <div key={photoIndex} className="relative aspect-square rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer group">
                     <img
                       src={photo}
                       alt={`Photo ${photoIndex + 1} from ${entry.title}`}
