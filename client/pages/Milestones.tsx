@@ -98,16 +98,38 @@ export default function Milestones() {
     return unsubscribeMilestones;
   }, []);
 
-  // Split milestones by status
-  const completedMilestones = milestones.filter(
-    (m) => m.progress?.status === "completed",
-  );
-  const inProgressMilestones = milestones.filter(
-    (m) => m.progress?.status === "in_progress",
-  );
-  const lockedMilestones = milestones.filter(
-    (m) => !m.progress || m.progress.status === "locked",
-  );
+  // Subscribe to cross-device sync
+  useEffect(() => {
+    const unsubscribeSync = subscribe('journal_entries', (event) => {
+      console.log('🔄 Journal entry synced, recalculating milestones...');
+
+      // Recalculate milestones when journal entries change
+      calculateRealMilestones().then(setMilestones);
+      getRealMilestoneStats().then(setStats);
+    });
+
+    return unsubscribeSync;
+  }, [subscribe]);
+
+  // Force refresh milestones
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const refreshedMilestones = await calculateRealMilestones();
+      const refreshedStats = await getRealMilestoneStats();
+      setMilestones(refreshedMilestones);
+      setStats(refreshedStats);
+    } catch (error) {
+      console.error("Failed to refresh milestones:", error);
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 1000);
+    }
+  };
+
+  // Split milestones by status using real data
+  const completedMilestones = milestones.filter((m) => m.completed);
+  const inProgressMilestones = milestones.filter((m) => !m.completed && m.current_value > 0);
+  const availableMilestones = milestones.filter((m) => !m.completed);
 
   // Helper function to get the correct icon component
   const getIconComponent = (iconName: string) => {
