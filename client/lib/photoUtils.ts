@@ -155,13 +155,10 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
         console.log(`HEIC conversion successful for: ${file.name}`);
       } catch (heicError) {
         console.warn(`HEIC conversion failed for ${file.name}:`, heicError);
-        warnings.push('HEIC conversion failed - uploading original file');
+        warnings.push('Browser doesn\'t support HEIC conversion - Cloudflare Images will handle it directly');
 
-        // Keep the original file but change the name for clarity
-        processedFile = new File([file], file.name.replace(/\.heic$/i, '.heic'), {
-          type: file.type,
-          lastModified: file.lastModified
-        });
+        // Keep the original HEIC file unchanged
+        processedFile = file;
       }
     }
 
