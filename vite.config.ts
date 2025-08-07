@@ -24,8 +24,12 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
-    sourcemap: false, // Disable sourcemaps in production
-    minify: 'esbuild', // Ensure proper minification
+    sourcemap: false,
+    minify: 'esbuild',
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true,
+    },
   },
   plugins: [react(), expressPlugin()],
   resolve: {
