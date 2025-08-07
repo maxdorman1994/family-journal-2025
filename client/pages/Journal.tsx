@@ -29,6 +29,7 @@ export default function Journal() {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [connectionTest, setConnectionTest] = useState<string | null>(null);
 
   // Fallback data for development when Supabase is not configured
   const journalEntriesData: JournalEntry[] = [
