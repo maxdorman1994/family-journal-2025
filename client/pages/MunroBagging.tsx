@@ -782,7 +782,11 @@ export default function MunroBagging() {
         {/* Add Custom Munro Button */}
         <div className="mb-6 text-center">
           <Button
-            onClick={() => setShowAddMunro(true)}
+            onClick={() => {
+              if (requestAuth()) {
+                setShowAddMunro(true);
+              }
+            }}
             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg"
             disabled={isLoading}
           >
