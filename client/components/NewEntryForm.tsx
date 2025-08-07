@@ -53,7 +53,7 @@ const weatherOptions = [
 ];
 
 const moodOptions = [
-  { value: "🙏 Grateful", label: "🙏 Grateful" },
+  { value: "�� Grateful", label: "🙏 Grateful" },
   { value: "😌 Peaceful", label: "😌 Peaceful" },
   { value: "🤩 Amazed", label: "🤩 Amazed" },
   { value: "😄 Happy", label: "😄 Happy" },
@@ -374,9 +374,9 @@ export default function NewEntryForm({
                         Adult Tickets
                       </label>
                       <Input
-                        value={formData.adultTickets}
+                        value={formData.adult_tickets}
                         onChange={(e) =>
-                          handleInputChange("adultTickets", e.target.value)
+                          handleInputChange("adult_tickets", e.target.value)
                         }
                         placeholder="e.g., £12 each or 2 × £12"
                       />
