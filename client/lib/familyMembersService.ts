@@ -47,10 +47,34 @@ export async function getFamilyMembers(): Promise<FamilyMember[]> {
   try {
     console.log('🔄 Fetching family members...');
 
-    const { data: members, error } = await supabase
+    // First try the view, then fallback to base table
+    let { data: members, error } = await supabase
       .from('family_members_with_stats')
       .select('*')
       .order('position_index', { ascending: true });
+
+    // If view doesn't exist, try base table
+    if (error && (error.message.includes('Could not find the table') ||
+                  error.message.includes('relation "family_members_with_stats" does not exist'))) {
+      console.log('📋 View not found, trying base table...');
+
+      const baseQuery = await supabase
+        .from('family_members')
+        .select('*')
+        .order('position_index', { ascending: true });
+
+      members = baseQuery.data;
+      error = baseQuery.error;
+
+      // Add computed fields that would be in the view
+      if (members && !error) {
+        members = members.map(member => ({
+          ...member,
+          has_custom_avatar: member.avatar_url ? true : false,
+          display_avatar: member.avatar_url || '/placeholder.svg'
+        }));
+      }
+    }
 
     if (error) {
       console.error('Error fetching family members:', {
