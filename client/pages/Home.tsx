@@ -59,6 +59,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   const { isAuthenticated } = useAuth();
+  const { subscribe } = useSync();
   const [error, setError] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState<
     "connected" | "connecting" | "disconnected" | "local"
