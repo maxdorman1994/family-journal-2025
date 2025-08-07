@@ -1,0 +1,452 @@
+import { supabase, isSupabaseConfigured } from './supabase';
+
+/**
+ * Supabase Wishlist Service
+ * Handles all database operations for adventure wishlist items
+ */
+
+export interface WishlistItem {
+  id: string;
+  title: string;
+  location: string;
+  description: string;
+  priority: 'High' | 'Medium' | 'Low';
+  status: 'Planning' | 'Researching' | 'Ready' | 'Booked';
+  estimated_cost: number;
+  best_seasons: string[];
+  duration: string;
+  category: 'Mountain' | 'Coast' | 'City' | 'Island' | 'Castle' | 'Nature' | 'Activity';
+  family_votes: number;
+  notes: string;
+  target_date?: string;
+  researched: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CreateWishlistItemData {
+  title: string;
+  location: string;
+  description?: string;
+  priority: 'High' | 'Medium' | 'Low';
+  status?: 'Planning' | 'Researching' | 'Ready' | 'Booked';
+  estimated_cost?: number;
+  best_seasons?: string[];
+  duration?: string;
+  category: 'Mountain' | 'Coast' | 'City' | 'Island' | 'Castle' | 'Nature' | 'Activity';
+  notes?: string;
+  target_date?: string;
+}
+
+/**
+ * Get all wishlist items
+ */
+export async function getWishlistItems(): Promise<WishlistItem[]> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+  }
+
+  try {
+    console.log('🔄 Fetching wishlist items...');
+
+    const { data: items, error } = await supabase
+      .from('wishlist_items')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching wishlist items:', error);
+      throw new Error(`Failed to fetch wishlist items: ${error.message}`);
+    }
+
+    console.log(`✅ Loaded ${items?.length || 0} wishlist items`);
+    return items || [];
+  } catch (error) {
+    console.error('Error in getWishlistItems:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to fetch wishlist items: ${String(error)}`);
+  }
+}
+
+/**
+ * Create a new wishlist item
+ */
+export async function createWishlistItem(data: CreateWishlistItemData): Promise<WishlistItem> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  try {
+    console.log(`🎯 Creating wishlist item: ${data.title}...`);
+
+    const itemData = {
+      title: data.title,
+      location: data.location,
+      description: data.description || '',
+      priority: data.priority,
+      status: data.status || 'Planning',
+      estimated_cost: data.estimated_cost || 500,
+      best_seasons: data.best_seasons || ['Summer'],
+      duration: data.duration || '3-4 days',
+      category: data.category,
+      family_votes: 0,
+      notes: data.notes || '',
+      target_date: data.target_date || null,
+      researched: false
+    };
+
+    const { data: item, error } = await supabase
+      .from('wishlist_items')
+      .insert(itemData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating wishlist item:', error);
+      throw new Error(`Failed to create wishlist item: ${error.message}`);
+    }
+
+    console.log(`✅ Wishlist item created successfully: ${data.title}`);
+    return item;
+  } catch (error) {
+    console.error('Error in createWishlistItem:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to create wishlist item: ${String(error)}`);
+  }
+}
+
+/**
+ * Update a wishlist item
+ */
+export async function updateWishlistItem(id: string, updates: Partial<WishlistItem>): Promise<WishlistItem> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  try {
+    console.log(`🔄 Updating wishlist item: ${id}...`);
+
+    const { data: item, error } = await supabase
+      .from('wishlist_items')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating wishlist item:', error);
+      throw new Error(`Failed to update wishlist item: ${error.message}`);
+    }
+
+    console.log(`✅ Wishlist item updated successfully: ${id}`);
+    return item;
+  } catch (error) {
+    console.error('Error in updateWishlistItem:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to update wishlist item: ${String(error)}`);
+  }
+}
+
+/**
+ * Delete a wishlist item
+ */
+export async function deleteWishlistItem(id: string): Promise<void> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  try {
+    console.log(`🗑️ Deleting wishlist item: ${id}...`);
+
+    const { error } = await supabase
+      .from('wishlist_items')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting wishlist item:', error);
+      throw new Error(`Failed to delete wishlist item: ${error.message}`);
+    }
+
+    console.log(`✅ Wishlist item deleted successfully: ${id}`);
+  } catch (error) {
+    console.error('Error in deleteWishlistItem:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to delete wishlist item: ${String(error)}`);
+  }
+}
+
+/**
+ * Add a family vote to a wishlist item
+ */
+export async function addVoteToItem(id: string): Promise<WishlistItem> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  try {
+    console.log(`👍 Adding vote to wishlist item: ${id}...`);
+
+    // First get current votes
+    const { data: currentItem, error: fetchError } = await supabase
+      .from('wishlist_items')
+      .select('family_votes')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) {
+      throw new Error(`Failed to fetch current votes: ${fetchError.message}`);
+    }
+
+    const newVotes = (currentItem.family_votes || 0) + 1;
+
+    const { data: item, error } = await supabase
+      .from('wishlist_items')
+      .update({ family_votes: newVotes })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding vote:', error);
+      throw new Error(`Failed to add vote: ${error.message}`);
+    }
+
+    console.log(`✅ Vote added successfully: ${id}`);
+    return item;
+  } catch (error) {
+    console.error('Error in addVoteToItem:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to add vote: ${String(error)}`);
+  }
+}
+
+/**
+ * Remove a family vote from a wishlist item
+ */
+export async function removeVoteFromItem(id: string): Promise<WishlistItem> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  try {
+    console.log(`👎 Removing vote from wishlist item: ${id}...`);
+
+    // First get current votes
+    const { data: currentItem, error: fetchError } = await supabase
+      .from('wishlist_items')
+      .select('family_votes')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) {
+      throw new Error(`Failed to fetch current votes: ${fetchError.message}`);
+    }
+
+    const newVotes = Math.max(0, (currentItem.family_votes || 0) - 1);
+
+    const { data: item, error } = await supabase
+      .from('wishlist_items')
+      .update({ family_votes: newVotes })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error removing vote:', error);
+      throw new Error(`Failed to remove vote: ${error.message}`);
+    }
+
+    console.log(`✅ Vote removed successfully: ${id}`);
+    return item;
+  } catch (error) {
+    console.error('Error in removeVoteFromItem:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to remove vote: ${String(error)}`);
+  }
+}
+
+/**
+ * Toggle research status of a wishlist item
+ */
+export async function toggleResearchStatus(id: string): Promise<WishlistItem> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  try {
+    console.log(`🔍 Toggling research status: ${id}...`);
+
+    // First get current status
+    const { data: currentItem, error: fetchError } = await supabase
+      .from('wishlist_items')
+      .select('researched')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) {
+      throw new Error(`Failed to fetch current research status: ${fetchError.message}`);
+    }
+
+    const newStatus = !currentItem.researched;
+
+    const { data: item, error } = await supabase
+      .from('wishlist_items')
+      .update({ researched: newStatus })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error toggling research status:', error);
+      throw new Error(`Failed to toggle research status: ${error.message}`);
+    }
+
+    console.log(`✅ Research status toggled successfully: ${id}`);
+    return item;
+  } catch (error) {
+    console.error('Error in toggleResearchStatus:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to toggle research status: ${String(error)}`);
+  }
+}
+
+/**
+ * Get wishlist statistics
+ */
+export async function getWishlistStats(): Promise<{
+  total_items: number;
+  high_priority: number;
+  medium_priority: number;
+  low_priority: number;
+  planning_items: number;
+  researching_items: number;
+  ready_items: number;
+  booked_items: number;
+  total_categories: number;
+  total_budget: number;
+  average_votes: number;
+  highest_votes: number;
+}> {
+  const defaultStats = {
+    total_items: 0,
+    high_priority: 0,
+    medium_priority: 0,
+    low_priority: 0,
+    planning_items: 0,
+    researching_items: 0,
+    ready_items: 0,
+    booked_items: 0,
+    total_categories: 0,
+    total_budget: 0,
+    average_votes: 0,
+    highest_votes: 0
+  };
+
+  if (!isSupabaseConfigured()) {
+    console.warn('Supabase not configured, returning default wishlist stats');
+    return defaultStats;
+  }
+
+  try {
+    console.log('📊 Fetching wishlist statistics...');
+
+    const { data, error } = await supabase
+      .from('wishlist_stats')
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Error fetching wishlist stats:', error);
+      console.warn('Stats view not available, returning default stats');
+      return defaultStats;
+    }
+
+    console.log('✅ Wishlist stats loaded successfully');
+    return data || defaultStats;
+  } catch (error) {
+    console.error('Error in getWishlistStats:', error);
+    console.warn('Falling back to default stats due to error');
+    return defaultStats;
+  }
+}
+
+/**
+ * Subscribe to real-time changes in wishlist items
+ */
+export function subscribeToWishlistItems(
+  callback: (items: WishlistItem[]) => void
+) {
+  const subscription = supabase
+    .channel('wishlist_items_changes')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'wishlist_items'
+      },
+      async () => {
+        // Refetch all wishlist items when any change occurs
+        try {
+          const items = await getWishlistItems();
+          callback(items);
+        } catch (error) {
+          console.error('Error in real-time wishlist subscription:', error);
+        }
+      }
+    )
+    .subscribe();
+
+  return () => {
+    subscription.unsubscribe();
+  };
+}
+
+/**
+ * Test Supabase connection for wishlist data
+ */
+export async function testWishlistConnection(): Promise<{
+  success: boolean;
+  message: string;
+  error?: string;
+}> {
+  try {
+    const { data, error, count } = await supabase
+      .from('wishlist_items')
+      .select('*', { count: 'exact', head: true });
+
+    if (error) {
+      return {
+        success: false,
+        message: 'Wishlist database connection failed',
+        error: error.message
+      };
+    }
+
+    return {
+      success: true,
+      message: `Wishlist database connected! Found ${count || 0} items.`
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Wishlist database connection error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
