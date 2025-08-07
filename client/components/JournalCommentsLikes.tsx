@@ -369,12 +369,17 @@ export default function JournalCommentsLikes({ entryId, entryTitle }: JournalCom
                     </div>
                     <p className="text-gray-700 leading-relaxed">{comment.comment_text}</p>
                   </div>
-                  {visitorName.trim() === comment.visitor_name && (
+                  {(visitorName.trim() === comment.visitor_name || isAuthenticated) && (
                     <Button
                       onClick={() => handleDeleteComment(comment.id)}
                       variant="ghost"
                       size="sm"
-                      className="text-gray-400 hover:text-red-600 ml-2"
+                      className={`ml-2 ${
+                        isAuthenticated
+                          ? "text-red-500 hover:text-red-700 hover:bg-red-50"
+                          : "text-gray-400 hover:text-red-600"
+                      }`}
+                      title={isAuthenticated ? "Admin: Delete comment" : "Delete your comment"}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
