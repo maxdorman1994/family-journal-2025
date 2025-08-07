@@ -147,6 +147,14 @@ export default function EntryDetailModal({ entry, isOpen, onClose }: EntryDetail
               </p>
             </div>
           </div>
+
+          {/* Comments and Likes */}
+          <div className="border-t border-scotland-thistle/20 pt-6">
+            <JournalCommentsLikes
+              entryId={entry.id}
+              entryTitle={entry.title}
+            />
+          </div>
         </div>
       </DialogContent>
     </Dialog>
