@@ -23,42 +23,65 @@ export default function MunroBagging() {
   const [difficultyFilter, setDifficultyFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [regions, setRegions] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState({
+    completed_count: 0,
+    total_munros: 282,
+    completion_percentage: 0,
+    highest_completed: 0
+  });
 
-  // Initialize Munros data with completion status from localStorage
+  // Load Munros data from Supabase
   useEffect(() => {
-    const initializeMunros = () => {
-      try {
-        // Get completed Munros from localStorage
-        const savedCompletions = localStorage.getItem('munro-completions');
-        const completedIds = savedCompletions ? JSON.parse(savedCompletions) : [];
-
-        // Mark Ben Nevis as completed by default for demo
-        if (completedIds.length === 0) {
-          completedIds.push('1');
-          localStorage.setItem('munro-completions', JSON.stringify(completedIds));
-        }
-
-        // Create Munros with completion status
-        const munrosWithCompletion: MunroWithCompletion[] = COMPLETE_MUNROS_LIST.map(munro => ({
-          ...munro,
-          completed: completedIds.includes(munro.id),
-          completedDate: completedIds.includes(munro.id) ? '2025-08-03' : undefined,
-          photoCount: completedIds.includes(munro.id) ? Math.floor(Math.random() * 5) + 1 : 0
-        }));
-
-        setMunros(munrosWithCompletion);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error initializing Munros:', error);
-        setIsLoading(false);
-      }
-    };
-
-    initializeMunros();
+    loadMunrosData();
+    loadRegions();
   }, []);
 
-  const completedCount = munros.filter(m => m.completed).length;
-  const completionPercentage = Math.round((completedCount / TOTAL_MUNROS) * 100);
+  const loadMunrosData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      console.log('🔄 Loading Munros from Supabase...');
+      const munrosData = await getAllMunrosWithCompletion();
+      setMunros(munrosData);
+
+      // Load statistics
+      const statsData = await getMunroCompletionStats();
+      setStats(statsData);
+
+      console.log(`✅ Loaded ${munrosData.length} Munros successfully`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn('Failed to load from Supabase:', errorMessage);
+
+      if (errorMessage.includes('not configured')) {
+        setError('📝 Development Mode: Supabase not configured');
+      } else if (errorMessage.includes('relation "munros" does not exist')) {
+        setError('🏔️ Please run the Munro Bagging SQL schema first');
+      } else {
+        setError(`⚠️ Database Error: ${errorMessage}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadRegions = async () => {
+    try {
+      const regionsData = await getMunroRegions();
+      setRegions(regionsData);
+    } catch (error) {
+      console.warn('Failed to load regions:', error);
+      // Fallback regions
+      setRegions(['Cairngorms', 'Lochaber', 'Western Highlands', 'Southern Highlands', 'Glen Coe', 'Skye', 'Torridon', 'Sutherland']);
+    }
+  };
+
+  const completedCount = stats.completed_count;
+  const totalMunros = stats.total_munros;
+  const completionPercentage = stats.completion_percentage;
 
   const filteredMunros = munros.filter(munro => {
     const matchesFilter = filter === 'all' || 
