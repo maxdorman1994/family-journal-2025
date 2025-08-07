@@ -365,7 +365,9 @@ export default function Journal() {
   };
 
   const handleEditClick = (entry: JournalEntry) => {
+    alert("Edit button clicked for: " + entry.title);
     if (!isAuthenticated) {
+      alert("Not authenticated!");
       return;
     }
     setEditingEntry(entry);
