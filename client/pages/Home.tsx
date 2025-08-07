@@ -792,7 +792,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-3">
-                  342
+                  {statsLoading ? '...' : getStatValue('miles_traveled', 342)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Miles Traveled</div>
                 <div className="text-sm text-slate-500">Across Scotland's stunning terrain</div>
@@ -817,7 +817,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-green-600 to-lime-600 bg-clip-text text-transparent mb-3">
-                  3
+                  {statsLoading ? '...' : getStatValue('munros_climbed', 3)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Munros Climbed</div>
                 <div className="text-sm text-slate-500">Scottish peaks conquered together</div>
@@ -842,7 +842,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                  12
+                  {statsLoading ? '...' : getStatValue('adventures_this_year', 12)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Adventures This Year</div>
                 <div className="text-sm text-slate-500">Family expeditions & discoveries</div>
@@ -867,7 +867,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent mb-3">
-                  23
+                  {statsLoading ? '...' : getStatValue('wildlife_spotted', 23)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Wildlife Spotted</div>
                 <div className="text-sm text-slate-500">Amazing creatures encountered</div>
@@ -892,7 +892,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent mb-3">
-                  4
+                  {statsLoading ? '...' : getStatValue('castles_explored', 4)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Castles Explored</div>
                 <div className="text-sm text-slate-500">Historic fortresses & legends</div>
@@ -917,7 +917,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-3">
-                  8
+                  {statsLoading ? '...' : getStatValue('weather_adventures', 8)}
                 </div>
                 <div className="text-lg font-semibold text-slate-800 mb-2">Weather Adventures</div>
                 <div className="text-sm text-slate-500">Sunshine, rain & Scottish mists</div>
