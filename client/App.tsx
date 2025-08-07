@@ -32,6 +32,7 @@ function App() {
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/milestones" element={<Milestones />} />
             <Route path="/map" element={<Map />} />
+            <Route path="/debug" element={<Debug />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
