@@ -56,6 +56,16 @@ export default function Home() {
   const [editingMember, setEditingMember] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const {
+    isAuthenticated,
+    showPasswordPrompt,
+    sessionTimeRemaining,
+    requestAuth,
+    authenticate,
+    logout,
+    cancelAuth
+  } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState<
     "connected" | "connecting" | "disconnected" | "local"
