@@ -126,7 +126,7 @@ export default function Journal() {
       title: "Edinburgh Castle - Step Back in Time",
       date: "Saturday 15 July 2025",
       location: "Edinburgh, Midlothian",
-      weather: "🌧️ Light Rain",
+      weather: "���️ Light Rain",
       mood: "🤩 Amazed",
       miles_traveled: 123,
       parking: "£12",
@@ -484,6 +484,17 @@ export default function Journal() {
       description: "Unique locations",
     },
     {
+      icon: Route,
+      count: entries.reduce(
+        (acc, entry) => acc + (entry.miles_traveled || 0),
+        0,
+      ),
+      label: "Miles Traveled",
+      gradient: "from-green-500 via-emerald-500 to-teal-500",
+      bgPattern: "🛣️",
+      description: "Total distance",
+    },
+    {
       icon: Camera,
       count: entries.reduce(
         (acc, entry) => acc + (entry.photos?.length || 0),
@@ -638,7 +649,7 @@ export default function Journal() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
               <div className="md:col-span-2">
                 <label className="block text-sm font-semibold text-slate-700 mb-3">
-                  🔍 Search Adventures
+                  ��� Search Adventures
                 </label>
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
