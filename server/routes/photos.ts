@@ -64,10 +64,17 @@ export const uploadPhoto: RequestHandler = async (req, res) => {
     }
 
     // Check if Cloudflare Images is configured
+    console.log('🔧 Cloudflare configuration check:', {
+      hasAccountId: !!CLOUDFLARE_ACCOUNT_ID,
+      hasToken: !!CLOUDFLARE_IMAGES_TOKEN,
+      accountId: CLOUDFLARE_ACCOUNT_ID ? 'set' : 'not set'
+    });
+
     if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_IMAGES_TOKEN) {
-      console.warn("Cloudflare Images not configured, using local storage simulation");
+      console.warn("⚠️ Cloudflare Images not configured, using local storage simulation");
       // For development, return a placeholder URL
       const localUrl = `/api/photos/placeholder/${photoId}`;
+      console.log(`📁 Returning local placeholder URL: ${localUrl}`);
       return res.json({
         url: localUrl,
         message: "Photo uploaded to local storage (Cloudflare Images not configured)"
