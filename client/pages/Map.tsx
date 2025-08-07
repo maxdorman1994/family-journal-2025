@@ -242,9 +242,9 @@ export default function MapPage() {
   };
 
   const handleDeletePin = async (pinId: string) => {
-    // Check authentication before allowing delete
-    if (!requestAuth()) {
-      return; // Will show password prompt
+    // Only allow delete if authenticated
+    if (!isAuthenticated) {
+      return;
     }
 
     try {
