@@ -98,12 +98,29 @@ export default function Layout({ children }: LayoutProps) {
           <div className="flex justify-between items-center py-4">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-vibrant-blue to-scotland-loch overflow-hidden border-2 border-white shadow-lg">
+              <div
+                className={`w-10 h-10 rounded-full bg-gradient-to-br from-vibrant-blue to-scotland-loch overflow-hidden border-2 border-white shadow-lg relative group ${isAuthenticated ? 'cursor-pointer' : ''}`}
+                onClick={isAuthenticated ? (e) => {
+                  e.preventDefault();
+                  handleLogoEdit();
+                } : undefined}
+              >
                 <img
-                  src="/placeholder.svg"
-                  alt="Family"
+                  src={logoUrl}
+                  alt="Family Adventure Logo"
                   className="w-full h-full object-cover"
                 />
+
+                {/* Edit overlay for authenticated users */}
+                {isAuthenticated && (
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    {isUploadingLogo ? (
+                      <Upload className="h-4 w-4 text-white animate-spin" />
+                    ) : (
+                      <Edit className="h-4 w-4 text-white" />
+                    )}
+                  </div>
+                )}
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-vibrant-blue via-scotland-loch to-vibrant-teal bg-clip-text text-transparent">
                 A Wee Adventure
