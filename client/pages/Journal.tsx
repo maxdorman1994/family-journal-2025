@@ -67,6 +67,16 @@ export default function Journal() {
   const [deleteEntry, setDeleteEntry] = useState<JournalEntry | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const {
+    isAuthenticated,
+    showPasswordPrompt,
+    sessionTimeRemaining,
+    requestAuth,
+    authenticate,
+    logout,
+    cancelAuth
+  } = useAuth();
+
   // Fallback data for development when Supabase is not configured
   const journalEntriesData: JournalEntry[] = [
     {
