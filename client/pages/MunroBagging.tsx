@@ -100,10 +100,17 @@ export default function MunroBagging() {
     try {
       const regionsData = await getMunroRegions();
       setRegions(regionsData);
+      console.log(`✅ Loaded ${regionsData.length} regions from database`);
     } catch (error) {
-      console.warn('Failed to load regions:', error);
-      // Fallback regions
-      setRegions(['Cairngorms', 'Lochaber', 'Western Highlands', 'Southern Highlands', 'Glen Coe', 'Skye', 'Torridon', 'Sutherland']);
+      console.warn('Failed to load regions from database, using fallback:', error);
+      // Fallback regions based on the sample data
+      const fallbackRegions = [
+        'Cairngorms', 'Lochaber', 'Western Highlands', 'Southern Highlands',
+        'Glen Coe', 'Skye', 'Torridon', 'Sutherland', 'Arran', 'Mull',
+        'Mamores', 'Glen Affric', 'Glen Shiel', 'Knoydart', 'Loch Lomond', 'Loch Earn'
+      ];
+      setRegions(fallbackRegions);
+      console.log(`📦 Using ${fallbackRegions.length} fallback regions`);
     }
   };
 
@@ -205,7 +212,7 @@ export default function MunroBagging() {
         <div className="absolute top-20 left-10 text-6xl opacity-5 animate-bounce">⛰️</div>
         <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">🏔️</div>
         <div className="absolute bottom-20 left-20 text-5xl opacity-5 animate-bounce" style={{animationDelay: '1s'}}>🗻</div>
-        <div className="absolute top-60 left-1/3 text-3xl opacity-10 animate-pulse" style={{animationDelay: '2s'}}>��️</div>
+        <div className="absolute top-60 left-1/3 text-3xl opacity-10 animate-pulse" style={{animationDelay: '2s'}}>⛷️</div>
         <div className="absolute bottom-40 right-10 text-4xl opacity-5 animate-bounce" style={{animationDelay: '1.5s'}}>🧗</div>
       </div>
 
