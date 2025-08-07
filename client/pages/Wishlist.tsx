@@ -315,8 +315,62 @@ export default function Wishlist() {
       setLastSyncTime(new Date());
     } catch (dbError) {
       console.error("Database error, falling back to local state:", dbError);
-      setSyncStatus("local");
-      setError("📱 Using local tracking (database unavailable)");
+
+      const errorMessage =
+        dbError instanceof Error ? dbError.message : String(dbError);
+
+      // Check if it's a network error and provide user-friendly feedback
+      if (
+        errorMessage.includes("Network connection failed") ||
+        errorMessage.includes("Failed to fetch") ||
+        errorMessage.includes("ERR_NETWORK")
+      ) {
+        // Network error - save locally as fallback
+        const localItem: WishlistItem = {
+          id: Date.now().toString(),
+          title: newItem.title!,
+          location: newItem.location!,
+          description: newItem.description || "",
+          priority: newItem.priority || "Medium",
+          status: newItem.status || "Planning",
+          estimated_cost: newItem.estimated_cost || 500,
+          best_seasons: newItem.best_seasons || ["Summer"],
+          duration: newItem.duration || "3-4 days",
+          category: newItem.category || "Mountain",
+          family_votes: 0,
+          notes: newItem.notes || "",
+          researched: false,
+          created_at: new Date().toISOString(),
+        };
+
+        setWishlistItems((prev) => [...prev, localItem]);
+        updateLocalStats([...wishlistItems, localItem]);
+        setSyncStatus("disconnected");
+        setError(
+          "🌐 Connection lost - adventure saved locally, will sync when connection restored",
+        );
+
+        // Clear form on successful local save
+        setNewItem({
+          title: "",
+          location: "",
+          description: "",
+          priority: "Medium",
+          status: "Planning",
+          estimated_cost: 500,
+          best_seasons: ["Summer"],
+          duration: "3-4 days",
+          category: "Mountain",
+          notes: "",
+        });
+        setShowAddForm(false);
+
+        console.log("📱 Adventure saved locally due to network error");
+      } else {
+        // Other database errors
+        setSyncStatus("local");
+        setError("📱 Using local tracking (database unavailable)");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -333,6 +387,22 @@ export default function Wishlist() {
       }
     } catch (dbError) {
       console.error("Database error, using local state:", dbError);
+
+      const errorMessage =
+        dbError instanceof Error ? dbError.message : String(dbError);
+
+      if (
+        errorMessage.includes("Network connection failed") ||
+        errorMessage.includes("Failed to fetch")
+      ) {
+        console.log("🌐 Network error during delete, removing locally");
+        setSyncStatus("disconnected");
+        setError(
+          "🌐 Connection lost - item removed locally, will sync when connection restored",
+        );
+      }
+
+      // Always remove from local state as fallback
       setWishlistItems((prev) => prev.filter((item) => item.id !== id));
     }
   };
@@ -372,9 +442,26 @@ export default function Wishlist() {
         );
       } else {
         await addVoteToItem(id);
+        await loadWishlistData(); // Reload to get updated data
       }
     } catch (dbError) {
       console.error("Database error, using local state:", dbError);
+
+      const errorMessage =
+        dbError instanceof Error ? dbError.message : String(dbError);
+
+      if (
+        errorMessage.includes("Network connection failed") ||
+        errorMessage.includes("Failed to fetch")
+      ) {
+        console.log("🌐 Network error during vote, updating locally");
+        setSyncStatus("disconnected");
+        setError(
+          "🌐 Connection lost - vote saved locally, will sync when connection restored",
+        );
+      }
+
+      // Always update local state as fallback
       setWishlistItems((prev) =>
         prev.map((item) =>
           item.id === id
@@ -398,9 +485,26 @@ export default function Wishlist() {
         );
       } else {
         await removeVoteFromItem(id);
+        await loadWishlistData(); // Reload to get updated data
       }
     } catch (dbError) {
       console.error("Database error, using local state:", dbError);
+
+      const errorMessage =
+        dbError instanceof Error ? dbError.message : String(dbError);
+
+      if (
+        errorMessage.includes("Network connection failed") ||
+        errorMessage.includes("Failed to fetch")
+      ) {
+        console.log("🌐 Network error during vote removal, updating locally");
+        setSyncStatus("disconnected");
+        setError(
+          "🌐 Connection lost - vote removed locally, will sync when connection restored",
+        );
+      }
+
+      // Always update local state as fallback
       setWishlistItems((prev) =>
         prev.map((item) =>
           item.id === id
@@ -1170,19 +1274,34 @@ export default function Wishlist() {
                           </span>
                         </div>
                       </div>
+
+                      {/* Quick Vote Buttons */}
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => addVote(item.id)}
+                          className="h-7 w-7 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          title="Add a family vote"
+                        >
+                          <Heart className="h-3 w-3 fill-current" />
+                        </Button>
+                        {item.family_votes > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeVote(item.id)}
+                            className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            title="Remove a family vote"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Action Buttons */}
                     <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => addVote(item.id)}
-                        className="flex-1 text-xs"
-                      >
-                        <Heart className="h-3 w-3 mr-1" />
-                        Vote
-                      </Button>
                       <Button
                         variant="outline"
                         size="sm"

@@ -86,6 +86,17 @@ export async function getWishlistItems(): Promise<WishlistItem[]> {
     return items || [];
   } catch (error) {
     console.error("Error in getWishlistItems:", error);
+
+    // Check if it's a network error
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
+    }
+
     if (error instanceof Error) {
       throw error;
     }
@@ -137,6 +148,17 @@ export async function createWishlistItem(
     return item;
   } catch (error) {
     console.error("Error in createWishlistItem:", error);
+
+    // Check if it's a network error
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
+    }
+
     if (error instanceof Error) {
       throw error;
     }
@@ -174,6 +196,17 @@ export async function updateWishlistItem(
     return item;
   } catch (error) {
     console.error("Error in updateWishlistItem:", error);
+
+    // Check if it's a network error
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
+    }
+
     if (error instanceof Error) {
       throw error;
     }
@@ -205,6 +238,17 @@ export async function deleteWishlistItem(id: string): Promise<void> {
     console.log(`✅ Wishlist item deleted successfully: ${id}`);
   } catch (error) {
     console.error("Error in deleteWishlistItem:", error);
+
+    // Check if it's a network error
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
+    }
+
     if (error instanceof Error) {
       throw error;
     }
@@ -252,6 +296,17 @@ export async function addVoteToItem(id: string): Promise<WishlistItem> {
     return item;
   } catch (error) {
     console.error("Error in addVoteToItem:", error);
+
+    // Check if it's a network error
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
+    }
+
     if (error instanceof Error) {
       throw error;
     }
@@ -299,6 +354,17 @@ export async function removeVoteFromItem(id: string): Promise<WishlistItem> {
     return item;
   } catch (error) {
     console.error("Error in removeVoteFromItem:", error);
+
+    // Check if it's a network error
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Failed to fetch")
+    ) {
+      throw new Error(
+        "Network connection failed. Please check your internet connection and try again.",
+      );
+    }
+
     if (error instanceof Error) {
       throw error;
     }
