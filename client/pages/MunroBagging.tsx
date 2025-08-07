@@ -171,7 +171,7 @@ export default function MunroBagging() {
               <Progress value={completionPercentage} className="h-4 mb-4" />
               <div className="flex justify-between text-sm text-slate-600">
                 <span>{completionPercentage}% Complete</span>
-                <span>{totalMunros - completedCount} remaining</span>
+                <span>{TOTAL_MUNROS - completedCount} remaining</span>
               </div>
             </div>
           </div>
