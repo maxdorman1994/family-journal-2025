@@ -30,9 +30,66 @@ import {
 
 export default function Milestones() {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [categories, setCategories] = useState<MilestoneCategory[]>([]);
+  const [milestones, setMilestones] = useState<MilestoneWithProgress[]>([]);
+  const [stats, setStats] = useState<MilestoneStats>({
+    completed_count: 0,
+    in_progress_count: 0,
+    locked_count: 0,
+    total_xp: 0,
+    completion_percentage: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Completed Milestones (8 total)
-  const completedMilestones = [
+  // Load milestone data
+  useEffect(() => {
+    const loadMilestoneData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        console.log("🔄 Loading milestone data...");
+
+        // Load all data in parallel
+        const [categoriesData, milestonesData, statsData] = await Promise.all([
+          getMilestoneCategories(),
+          getMilestonesWithProgress('demo-user'),
+          getMilestoneStats('demo-user'),
+        ]);
+
+        setCategories([{ id: "all", name: "All", icon: "Star" }, ...categoriesData]);
+        setMilestones(milestonesData);
+        setStats(statsData);
+
+        console.log(`✅ Loaded milestone data: ${milestonesData.length} milestones, ${statsData.total_xp} XP`);
+      } catch (error) {
+        console.error("Error loading milestone data:", error);
+        setError(error instanceof Error ? error.message : "Failed to load milestone data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadMilestoneData();
+
+    // Set up real-time subscription
+    const unsubscribe = subscribeToMilestoneUpdates('demo-user', (updatedMilestones) => {
+      setMilestones(updatedMilestones);
+      // Recalculate stats
+      getMilestoneStats('demo-user').then(setStats);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  // Split milestones by status
+  const completedMilestones = milestones.filter(m => m.progress?.status === 'completed');
+  const inProgressMilestones = milestones.filter(m => m.progress?.status === 'in_progress');
+  const lockedMilestones = milestones.filter(m => !m.progress || m.progress.status === 'locked');
+
+  // Legacy hardcoded data for fallback (keeping original structure)
+  const fallbackCompletedMilestones = [
     {
       id: "first-adventure",
       title: "First Adventure",
