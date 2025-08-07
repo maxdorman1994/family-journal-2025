@@ -489,6 +489,15 @@ export default function Home() {
       }
     } catch (dbError) {
       console.error("Database error, using local state:", dbError);
+
+      // Check if it's a network error and show user-friendly message
+      if (dbError instanceof Error && dbError.message.includes('Network connection failed')) {
+        alert('Network connection failed. The photo will be removed locally, but you may need to try again when online.');
+      } else {
+        console.log("Using local state fallback due to database error");
+      }
+
+      // Always update local state as fallback
       setFamilyMembers((prev) =>
         prev.map((member) =>
           member.id === memberId
