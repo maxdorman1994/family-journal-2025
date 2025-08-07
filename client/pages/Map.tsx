@@ -186,9 +186,9 @@ export default function MapPage() {
   };
 
   const handleEditPin = (pin: MapPinType) => {
-    // Check authentication before allowing edit
-    if (!requestAuth()) {
-      return; // Will show password prompt
+    // Only allow edit if authenticated
+    if (!isAuthenticated) {
+      return;
     }
 
     setEditingPin(pin);
