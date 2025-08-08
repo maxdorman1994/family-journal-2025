@@ -765,32 +765,31 @@ export async function visitHiddenGem(
   }
 }
 
-export async function unvisitHiddenGem(hiddenGemId: string) {
+export async function unvisitHiddenGem(hiddenGemId: string): Promise<void> {
   if (!isSupabaseConfigured()) {
     throw new Error("Supabase not configured");
   }
 
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) throw new Error("User not authenticated");
+    console.log(`🔄 Removing visit for hidden gem ${hiddenGemId}...`);
 
     const { error } = await supabase
       .from("hidden_gem_visits")
       .delete()
-      .eq("user_id", user.id)
       .eq("hidden_gem_id", hiddenGemId);
 
     if (error) {
-      console.error("❌ Error unvisiting hidden gem:", error);
-      throw error;
+      console.error("Error unvisiting hidden gem:", error);
+      throw new Error(`Failed to unvisit hidden gem: ${error.message}`);
     }
 
-    console.log(`✅ Hidden gem ${hiddenGemId} unvisited successfully`);
+    console.log(`✅ Hidden gem visit removed: ${hiddenGemId}`);
   } catch (error) {
-    console.error("❌ Error in unvisitHiddenGem:", error);
-    throw error;
+    console.error("Error in unvisitHiddenGem:", error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Failed to unvisit hidden gem: ${String(error)}`);
   }
 }
 
