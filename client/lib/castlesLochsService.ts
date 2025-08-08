@@ -651,9 +651,7 @@ export async function getAllHiddenGemsWithVisits(): Promise<
   }
 
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    console.log(`🔍 Debug: Loading hidden gems (using custom auth system)...`);
 
     // Get all hidden gems
     const { data: gemsData, error: gemsError } = await supabase
@@ -671,22 +669,13 @@ export async function getAllHiddenGemsWithVisits(): Promise<
       return [];
     }
 
-    if (!user) {
-      // Not authenticated - return gems without visit data
-      return (gemsData || []).map((gem: HiddenGemData) => ({
-        ...gem,
-        visited: false,
-      }));
-    }
-
-    // Get user's visits
-    console.log(`🔍 Debug: Loading visits for user ${user.id}...`);
+    // Get ALL visits (since we're using custom auth, we'll get all visits and filter client-side if needed)
+    console.log(`🔍 Debug: Loading all hidden gem visits...`);
     const { data: visitsData, error: visitsError } = await supabase
       .from("hidden_gem_visits")
-      .select("*")
-      .eq("user_id", user.id);
+      .select("*");
 
-    console.log(`🔍 Debug: Found ${visitsData?.length || 0} visits for user`);
+    console.log(`🔍 Debug: Found ${visitsData?.length || 0} total visits`);
     console.log(`🔍 Debug: Visits data:`, visitsData);
 
     if (visitsError) {
