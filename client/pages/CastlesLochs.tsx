@@ -903,8 +903,10 @@ export default function CastlesLochs() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-700 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   {activeTab === "castles" ? (
                     <Castle className="h-8 w-8 text-white" />
-                  ) : (
+                  ) : activeTab === "lochs" ? (
                     <Waves className="h-8 w-8 text-white" />
+                  ) : (
+                    <Gem className="h-8 w-8 text-white" />
                   )}
                 </div>
 
