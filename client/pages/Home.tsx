@@ -275,7 +275,22 @@ export default function Home() {
       }
     });
 
-    return unsubscribeFamilySync;
+    // Subscribe to journal entries changes to refresh recent adventures
+    const unsubscribeJournalSync = subscribe("journal_entries", (event) => {
+      console.log(
+        "🔄 Journal sync on home page:",
+        event.eventType,
+        event.new?.title || event.old?.title,
+      );
+
+      // Refresh recent adventures whenever journal entries change
+      loadRecentAdventures();
+    });
+
+    return () => {
+      unsubscribeFamilySync();
+      unsubscribeJournalSync();
+    };
   }, [subscribe]);
 
   // Subscribe to comprehensive home page sync
