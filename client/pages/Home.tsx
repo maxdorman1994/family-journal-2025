@@ -105,12 +105,12 @@ export default function Home() {
     emoji: string;
   }>({
     isOpen: false,
-    type: '',
-    title: '',
-    suggestion: '',
-    description: '',
+    type: "",
+    title: "",
+    suggestion: "",
+    description: "",
     tips: [],
-    emoji: ''
+    emoji: "",
   });
 
   const loadRealStats = async () => {
@@ -354,40 +354,76 @@ export default function Home() {
     const adventures = [
       {
         title: "Explore Dunnottar Castle",
-        description: "Perched dramatically on clifftops near Stonehaven, this medieval fortress offers breathtaking coastal views and rich Scottish history. Walk the ancient halls where Mary Queen of Scots once sheltered.",
-        tips: ["Visit during golden hour for stunning photos", "Wear sturdy shoes for the clifftop walk", "Check tide times for the best experience", "Allow 2-3 hours for full exploration"],
-        emoji: "🏰"
+        description:
+          "Perched dramatically on clifftops near Stonehaven, this medieval fortress offers breathtaking coastal views and rich Scottish history. Walk the ancient halls where Mary Queen of Scots once sheltered.",
+        tips: [
+          "Visit during golden hour for stunning photos",
+          "Wear sturdy shoes for the clifftop walk",
+          "Check tide times for the best experience",
+          "Allow 2-3 hours for full exploration",
+        ],
+        emoji: "🏰",
       },
       {
         title: "Discover Glen Coe's Hidden Waterfall",
-        description: "Venture beyond the main valley to find Steall Falls, Scotland's second-highest waterfall. A magical hike through the 'Valley of Weeping' leads to this spectacular 120-meter cascade.",
-        tips: ["Start early to avoid crowds", "Bring waterproof clothing", "The wire bridge is optional but thrilling", "Perfect for family photos"],
-        emoji: "💧"
+        description:
+          "Venture beyond the main valley to find Steall Falls, Scotland's second-highest waterfall. A magical hike through the 'Valley of Weeping' leads to this spectacular 120-meter cascade.",
+        tips: [
+          "Start early to avoid crowds",
+          "Bring waterproof clothing",
+          "The wire bridge is optional but thrilling",
+          "Perfect for family photos",
+        ],
+        emoji: "💧",
       },
       {
         title: "Visit Eilean Donan Castle",
-        description: "Scotland's most photographed castle sits on a small tidal island where three sea lochs meet. This iconic fortress has appeared in countless films and offers magical Highland views.",
-        tips: ["Best photos at sunrise or sunset", "Check opening times seasonally", "Explore the gift shop for clan history", "Great starting point for Isle of Skye"],
-        emoji: "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
+        description:
+          "Scotland's most photographed castle sits on a small tidal island where three sea lochs meet. This iconic fortress has appeared in countless films and offers magical Highland views.",
+        tips: [
+          "Best photos at sunrise or sunset",
+          "Check opening times seasonally",
+          "Explore the gift shop for clan history",
+          "Great starting point for Isle of Skye",
+        ],
+        emoji: "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
       },
       {
         title: "Explore the Trossachs National Park",
-        description: "Known as 'Scotland in Miniature', this stunning area offers lochs, mountains, and forests perfect for family adventures. Rob Roy country with endless hiking possibilities.",
-        tips: ["Visit Loch Katrine by steamship", "Try the family-friendly forest trails", "Great for wildlife spotting", "Perfect for scenic drives"],
-        emoji: "🌲"
+        description:
+          "Known as 'Scotland in Miniature', this stunning area offers lochs, mountains, and forests perfect for family adventures. Rob Roy country with endless hiking possibilities.",
+        tips: [
+          "Visit Loch Katrine by steamship",
+          "Try the family-friendly forest trails",
+          "Great for wildlife spotting",
+          "Perfect for scenic drives",
+        ],
+        emoji: "🌲",
       },
       {
         title: "Discover Skye's Fairy Pools",
-        description: "Crystal-clear blue pools and waterfalls create a magical landscape at the foot of the Black Cuillin mountains. A relatively easy walk with extraordinary rewards.",
-        tips: ["Early morning visits are less crowded", "Bring swimming gear for brave souls", "Wear good hiking boots", "Weather can change quickly"],
-        emoji: "🧚‍♀️"
+        description:
+          "Crystal-clear blue pools and waterfalls create a magical landscape at the foot of the Black Cuillin mountains. A relatively easy walk with extraordinary rewards.",
+        tips: [
+          "Early morning visits are less crowded",
+          "Bring swimming gear for brave souls",
+          "Wear good hiking boots",
+          "Weather can change quickly",
+        ],
+        emoji: "🧚‍♀️",
       },
       {
         title: "Explore Ancient Callanish Stones",
-        description: "On the Isle of Lewis, these mysterious stone circles predate Stonehenge. Standing for over 4,000 years, they offer a mystical connection to Scotland's ancient past.",
-        tips: ["Visit during different light conditions", "Learn about ancient astronomy", "Combine with other Lewis attractions", "Respect the ancient site"],
-        emoji: "🗿"
-      }
+        description:
+          "On the Isle of Lewis, these mysterious stone circles predate Stonehenge. Standing for over 4,000 years, they offer a mystical connection to Scotland's ancient past.",
+        tips: [
+          "Visit during different light conditions",
+          "Learn about ancient astronomy",
+          "Combine with other Lewis attractions",
+          "Respect the ancient site",
+        ],
+        emoji: "🗿",
+      },
     ];
     return adventures[Math.floor(Math.random() * adventures.length)];
   };
@@ -396,46 +432,107 @@ export default function Home() {
     const types = [
       {
         type: "Castle Adventure",
-        description: "Scotland has over 1,500 castles, each with unique stories and stunning architecture. From royal residences to romantic ruins, castles offer glimpses into Scotland's turbulent and fascinating history.",
-        suggestions: ["Edinburgh Castle", "Stirling Castle", "Urquhart Castle", "Caerlaverock Castle"],
-        tips: ["Many offer family-friendly activities", "Audio guides bring history to life", "Check for special events and reenactments", "Photography is usually allowed"],
-        emoji: "🏰"
+        description:
+          "Scotland has over 1,500 castles, each with unique stories and stunning architecture. From royal residences to romantic ruins, castles offer glimpses into Scotland's turbulent and fascinating history.",
+        suggestions: [
+          "Edinburgh Castle",
+          "Stirling Castle",
+          "Urquhart Castle",
+          "Caerlaverock Castle",
+        ],
+        tips: [
+          "Many offer family-friendly activities",
+          "Audio guides bring history to life",
+          "Check for special events and reenactments",
+          "Photography is usually allowed",
+        ],
+        emoji: "🏰",
       },
       {
         type: "Mountain Hiking",
-        description: "With 282 Munros (mountains over 3,000ft) and countless smaller peaks, Scotland is a hiker's paradise. From gentle family walks to challenging climbs, there's something for every fitness level.",
-        suggestions: ["Ben Nevis", "Ben Lomond", "Arthur's Seat", "The Cobbler"],
-        tips: ["Check weather conditions before setting out", "Tell someone your route", "Pack layers and waterproofs", "Start with easier peaks"],
-        emoji: "🏔️"
+        description:
+          "With 282 Munros (mountains over 3,000ft) and countless smaller peaks, Scotland is a hiker's paradise. From gentle family walks to challenging climbs, there's something for every fitness level.",
+        suggestions: [
+          "Ben Nevis",
+          "Ben Lomond",
+          "Arthur's Seat",
+          "The Cobbler",
+        ],
+        tips: [
+          "Check weather conditions before setting out",
+          "Tell someone your route",
+          "Pack layers and waterproofs",
+          "Start with easier peaks",
+        ],
+        emoji: "🏔️",
       },
       {
         type: "Coastal Exploration",
-        description: "Scotland's coastline stretches for over 6,000 miles, featuring dramatic cliffs, pristine beaches, hidden coves, and charming fishing villages. Perfect for rock pooling, wildlife watching, and seaside adventures.",
+        description:
+          "Scotland's coastline stretches for over 6,000 miles, featuring dramatic cliffs, pristine beaches, hidden coves, and charming fishing villages. Perfect for rock pooling, wildlife watching, and seaside adventures.",
         suggestions: ["Isle of Skye", "St. Andrews", "Oban", "John o' Groats"],
-        tips: ["Check tide times for rock pooling", "Bring binoculars for wildlife", "Respect marine environments", "Beach safety is important"],
-        emoji: "🌊"
+        tips: [
+          "Check tide times for rock pooling",
+          "Bring binoculars for wildlife",
+          "Respect marine environments",
+          "Beach safety is important",
+        ],
+        emoji: "🌊",
       },
       {
         type: "Scenic Drive",
-        description: "Scotland's scenic routes offer breathtaking landscapes from the comfort of your car. Perfect for families who want to see multiple locations in one trip while enjoying spectacular Highland scenery.",
-        suggestions: ["North Coast 500", "Trossachs Loop", "Borders Historic Route", "Argyll Coastal Route"],
-        tips: ["Plan regular stops for photos", "Book accommodation in advance", "Keep fuel tank topped up", "Check road conditions in winter"],
-        emoji: "🚗"
+        description:
+          "Scotland's scenic routes offer breathtaking landscapes from the comfort of your car. Perfect for families who want to see multiple locations in one trip while enjoying spectacular Highland scenery.",
+        suggestions: [
+          "North Coast 500",
+          "Trossachs Loop",
+          "Borders Historic Route",
+          "Argyll Coastal Route",
+        ],
+        tips: [
+          "Plan regular stops for photos",
+          "Book accommodation in advance",
+          "Keep fuel tank topped up",
+          "Check road conditions in winter",
+        ],
+        emoji: "🚗",
       },
       {
         type: "Wildlife Spotting",
-        description: "Scotland's diverse landscapes support incredible wildlife. From red deer in the Highlands to puffins on coastal islands, seals, dolphins, and golden eagles await patient observers.",
-        suggestions: ["Isle of Mull", "Cairngorms National Park", "Loch Ness", "Shetland Islands"],
-        tips: ["Early morning and evening are best", "Bring binoculars and camera", "Move quietly and be patient", "Respect wildlife habitats"],
-        emoji: "🦌"
+        description:
+          "Scotland's diverse landscapes support incredible wildlife. From red deer in the Highlands to puffins on coastal islands, seals, dolphins, and golden eagles await patient observers.",
+        suggestions: [
+          "Isle of Mull",
+          "Cairngorms National Park",
+          "Loch Ness",
+          "Shetland Islands",
+        ],
+        tips: [
+          "Early morning and evening are best",
+          "Bring binoculars and camera",
+          "Move quietly and be patient",
+          "Respect wildlife habitats",
+        ],
+        emoji: "🦌",
       },
       {
         type: "Historical Site",
-        description: "From ancient stone circles to battlefields, Scotland's history spans thousands of years. These sites offer fascinating insights into Celtic culture, Roman occupation, medieval times, and clan warfare.",
-        suggestions: ["Culloden Battlefield", "Skara Brae", "Iona Abbey", "Melrose Abbey"],
-        tips: ["Visitor centers provide great context", "Many sites have family activities", "Guided tours offer deeper insights", "Combine multiple sites in one area"],
-        emoji: "🏛️"
-      }
+        description:
+          "From ancient stone circles to battlefields, Scotland's history spans thousands of years. These sites offer fascinating insights into Celtic culture, Roman occupation, medieval times, and clan warfare.",
+        suggestions: [
+          "Culloden Battlefield",
+          "Skara Brae",
+          "Iona Abbey",
+          "Melrose Abbey",
+        ],
+        tips: [
+          "Visitor centers provide great context",
+          "Many sites have family activities",
+          "Guided tours offer deeper insights",
+          "Combine multiple sites in one area",
+        ],
+        emoji: "🏛️",
+      },
     ];
     return types[Math.floor(Math.random() * types.length)];
   };
@@ -444,40 +541,76 @@ export default function Home() {
     const gems = [
       {
         title: "The Hermitage Forest Walk",
-        description: "Near Dunkeld, this enchanting woodland walk leads to the dramatic Black Linn Falls. Victorian follies and towering Douglas firs create a fairy-tale atmosphere that inspired Beatrix Potter.",
-        tips: ["Free to visit year-round", "Wheelchair accessible paths available", "Beautiful in all seasons", "Combine with Dunkeld Cathedral visit"],
-        emoji: "💎"
+        description:
+          "Near Dunkeld, this enchanting woodland walk leads to the dramatic Black Linn Falls. Victorian follies and towering Douglas firs create a fairy-tale atmosphere that inspired Beatrix Potter.",
+        tips: [
+          "Free to visit year-round",
+          "Wheelchair accessible paths available",
+          "Beautiful in all seasons",
+          "Combine with Dunkeld Cathedral visit",
+        ],
+        emoji: "💎",
       },
       {
         title: "Fingal's Cave, Staffa",
-        description: "This natural sea cave formed by volcanic activity inspired Mendelssohn's Hebrides Overture. The hexagonal basalt columns create a natural cathedral with incredible acoustics.",
-        tips: ["Boat trips from Mull or Iona", "Weather dependent access", "Bring seasickness remedies", "Absolutely magical experience"],
-        emoji: "🕳️"
+        description:
+          "This natural sea cave formed by volcanic activity inspired Mendelssohn's Hebrides Overture. The hexagonal basalt columns create a natural cathedral with incredible acoustics.",
+        tips: [
+          "Boat trips from Mull or Iona",
+          "Weather dependent access",
+          "Bring seasickness remedies",
+          "Absolutely magical experience",
+        ],
+        emoji: "🕳️",
       },
       {
         title: "The Kelpies",
-        description: "These massive 30-meter horse head sculptures near Falkirk honor Scotland's industrial heritage and mythical water spirits. Illuminated at night, they're truly spectacular.",
-        tips: ["Free to view externally", "Interior tours available", "Great for night photography", "Easy parking and facilities"],
-        emoji: "🐴"
+        description:
+          "These massive 30-meter horse head sculptures near Falkirk honor Scotland's industrial heritage and mythical water spirits. Illuminated at night, they're truly spectacular.",
+        tips: [
+          "Free to view externally",
+          "Interior tours available",
+          "Great for night photography",
+          "Easy parking and facilities",
+        ],
+        emoji: "🐴",
       },
       {
         title: "Glenfinnan Viaduct",
-        description: "Famous from Harry Potter films, this curved railway bridge offers stunning views over Loch Shiel. Watch the Jacobite Steam Train cross this engineering marvel.",
-        tips: ["Train times vary seasonally", "Hiking trail to best viewpoint", "Visit the monument nearby", "Magical Highland scenery"],
-        emoji: "🚂"
+        description:
+          "Famous from Harry Potter films, this curved railway bridge offers stunning views over Loch Shiel. Watch the Jacobite Steam Train cross this engineering marvel.",
+        tips: [
+          "Train times vary seasonally",
+          "Hiking trail to best viewpoint",
+          "Visit the monument nearby",
+          "Magical Highland scenery",
+        ],
+        emoji: "🚂",
       },
       {
         title: "Duncansby Stacks",
-        description: "Just beyond John o' Groats, these dramatic sea stacks and cliffs offer some of Scotland's most spectacular coastal scenery without the crowds of more famous spots.",
-        tips: ["Short walk from car park", "Stay away from cliff edges", "Incredible bird watching", "Often overlooked by tourists"],
-        emoji: "⛰️"
+        description:
+          "Just beyond John o' Groats, these dramatic sea stacks and cliffs offer some of Scotland's most spectacular coastal scenery without the crowds of more famous spots.",
+        tips: [
+          "Short walk from car park",
+          "Stay away from cliff edges",
+          "Incredible bird watching",
+          "Often overlooked by tourists",
+        ],
+        emoji: "⛰️",
       },
       {
         title: "The Falkirk Wheel",
-        description: "The world's only rotating boat lift connects two canals in an incredible feat of engineering. Watch boats being lifted 24 meters in this modern Scottish marvel.",
-        tips: ["Boat trips available", "Visitor center with exhibits", "Great for engineering enthusiasts", "Family-friendly attraction"],
-        emoji: "⚙️"
-      }
+        description:
+          "The world's only rotating boat lift connects two canals in an incredible feat of engineering. Watch boats being lifted 24 meters in this modern Scottish marvel.",
+        tips: [
+          "Boat trips available",
+          "Visitor center with exhibits",
+          "Great for engineering enthusiasts",
+          "Family-friendly attraction",
+        ],
+        emoji: "⚙️",
+      },
     ];
     return gems[Math.floor(Math.random() * gems.length)];
   };
@@ -486,46 +619,88 @@ export default function Home() {
     const votes = [
       {
         title: "Castle Showdown",
-        option1: { name: "Edinburgh Castle", description: "Scotland's most famous fortress, perched high above the capital city" },
-        option2: { name: "Stirling Castle", description: "Renaissance palace with stunning views and rich royal history" },
+        option1: {
+          name: "Edinburgh Castle",
+          description:
+            "Scotland's most famous fortress, perched high above the capital city",
+        },
+        option2: {
+          name: "Stirling Castle",
+          description:
+            "Renaissance palace with stunning views and rich royal history",
+        },
         question: "Which royal residence calls to your family?",
-        emoji: "🏰"
+        emoji: "🏰",
       },
       {
         title: "Mountain Challenge",
-        option1: { name: "Ben Nevis", description: "Scotland's highest peak - the ultimate hiking challenge" },
-        option2: { name: "Ben Lomond", description: "More accessible Munro with spectacular loch views" },
+        option1: {
+          name: "Ben Nevis",
+          description:
+            "Scotland's highest peak - the ultimate hiking challenge",
+        },
+        option2: {
+          name: "Ben Lomond",
+          description: "More accessible Munro with spectacular loch views",
+        },
         question: "Which peak will you conquer together?",
-        emoji: "⛰️"
+        emoji: "⛰️",
       },
       {
         title: "Island Adventure",
-        option1: { name: "Isle of Skye", description: "Dramatic landscapes, fairy pools, and ancient castles" },
-        option2: { name: "Isle of Arran", description: "Scotland in miniature with whisky, wildlife, and beaches" },
+        option1: {
+          name: "Isle of Skye",
+          description: "Dramatic landscapes, fairy pools, and ancient castles",
+        },
+        option2: {
+          name: "Isle of Arran",
+          description:
+            "Scotland in miniature with whisky, wildlife, and beaches",
+        },
         question: "Which island paradise beckons?",
-        emoji: "🏝️"
+        emoji: "🏝️",
       },
       {
         title: "Loch Legends",
-        option1: { name: "Loch Ness", description: "Hunt for Nessie in Scotland's most mysterious waters" },
-        option2: { name: "Loch Katrine", description: "Pristine beauty in the heart of the Trossachs" },
+        option1: {
+          name: "Loch Ness",
+          description: "Hunt for Nessie in Scotland's most mysterious waters",
+        },
+        option2: {
+          name: "Loch Katrine",
+          description: "Pristine beauty in the heart of the Trossachs",
+        },
         question: "Which legendary loch wins your hearts?",
-        emoji: "🌊"
+        emoji: "🌊",
       },
       {
         title: "Highland Valleys",
-        option1: { name: "Glen Coe", description: "The Valley of Weeping with dramatic mountain scenery" },
-        option2: { name: "Cairngorms", description: "Ancient mountains with abundant wildlife and forests" },
+        option1: {
+          name: "Glen Coe",
+          description: "The Valley of Weeping with dramatic mountain scenery",
+        },
+        option2: {
+          name: "Cairngorms",
+          description: "Ancient mountains with abundant wildlife and forests",
+        },
         question: "Which Highland valley calls for exploration?",
-        emoji: "🏔️"
+        emoji: "🏔️",
       },
       {
         title: "Coastal Cities",
-        option1: { name: "Aberdeen", description: "The Granite City with beautiful beaches and maritime heritage" },
-        option2: { name: "Dundee", description: "City of Discovery with the new V&A museum and RRS Discovery ship" },
+        option1: {
+          name: "Aberdeen",
+          description:
+            "The Granite City with beautiful beaches and maritime heritage",
+        },
+        option2: {
+          name: "Dundee",
+          description:
+            "City of Discovery with the new V&A museum and RRS Discovery ship",
+        },
         question: "Which coastal city captures your imagination?",
-        emoji: "🏙️"
-      }
+        emoji: "🏙️",
+      },
     ];
     return votes[Math.floor(Math.random() * votes.length)];
   };
@@ -533,53 +708,58 @@ export default function Home() {
   const showDiscoveryModal = (type: string) => {
     let modalData;
 
-    switch(type) {
-      case 'random':
+    switch (type) {
+      case "random":
         const adventure = getRandomAdventure();
         modalData = {
           isOpen: true,
-          type: 'Random Adventure',
+          type: "Random Adventure",
           title: adventure.title,
           suggestion: adventure.title,
           description: adventure.description,
           tips: adventure.tips,
-          emoji: adventure.emoji
+          emoji: adventure.emoji,
         };
         break;
-      case 'roulette':
+      case "roulette":
         const adventureType = getAdventureType();
         modalData = {
           isOpen: true,
-          type: 'Adventure Type',
+          type: "Adventure Type",
           title: adventureType.type,
-          suggestion: `Explore ${adventureType.type} options: ${adventureType.suggestions.join(', ')}`,
+          suggestion: `Explore ${adventureType.type} options: ${adventureType.suggestions.join(", ")}`,
           description: adventureType.description,
           tips: adventureType.tips,
-          emoji: adventureType.emoji
+          emoji: adventureType.emoji,
         };
         break;
-      case 'gems':
+      case "gems":
         const gem = getHiddenGem();
         modalData = {
           isOpen: true,
-          type: 'Hidden Gem',
+          type: "Hidden Gem",
           title: gem.title,
           suggestion: gem.title,
           description: gem.description,
           tips: gem.tips,
-          emoji: gem.emoji
+          emoji: gem.emoji,
         };
         break;
-      case 'vote':
+      case "vote":
         const vote = getFamilyVote();
         modalData = {
           isOpen: true,
-          type: 'Family Vote',
+          type: "Family Vote",
           title: vote.title,
           suggestion: `${vote.option1.name} vs ${vote.option2.name}`,
           description: `Option 1: ${vote.option1.name} - ${vote.option1.description}\n\nOption 2: ${vote.option2.name} - ${vote.option2.description}\n\n${vote.question}`,
-          tips: ["Discuss as a family", "Consider everyone's interests", "Maybe visit both eventually!", "Make it a fun family decision"],
-          emoji: vote.emoji
+          tips: [
+            "Discuss as a family",
+            "Consider everyone's interests",
+            "Maybe visit both eventually!",
+            "Make it a fun family decision",
+          ],
+          emoji: vote.emoji,
         };
         break;
       default:
@@ -2217,7 +2397,7 @@ export default function Home() {
                 <Button
                   size="sm"
                   className="bg-purple-500 hover:bg-purple-600 text-white"
-                  onClick={() => showDiscoveryModal('random')}
+                  onClick={() => showDiscoveryModal("random")}
                 >
                   Roll the Dice!
                 </Button>
@@ -2239,7 +2419,7 @@ export default function Home() {
                 <Button
                   size="sm"
                   className="bg-pink-500 hover:bg-pink-600 text-white"
-                  onClick={() => showDiscoveryModal('roulette')}
+                  onClick={() => showDiscoveryModal("roulette")}
                 >
                   Spin the Wheel
                 </Button>
@@ -2261,7 +2441,7 @@ export default function Home() {
                 <Button
                   size="sm"
                   className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                  onClick={() => showDiscoveryModal('gems')}
+                  onClick={() => showDiscoveryModal("gems")}
                 >
                   Find Gems
                 </Button>
@@ -2283,7 +2463,7 @@ export default function Home() {
                 <Button
                   size="sm"
                   className="bg-orange-500 hover:bg-orange-600 text-white"
-                  onClick={() => showDiscoveryModal('vote')}
+                  onClick={() => showDiscoveryModal("vote")}
                 >
                   Start Vote
                 </Button>
@@ -2622,7 +2802,12 @@ export default function Home() {
       </section>
 
       {/* Adventure Discovery Modal */}
-      <Dialog open={discoveryModal.isOpen} onOpenChange={(open) => setDiscoveryModal(prev => ({ ...prev, isOpen: open }))}>
+      <Dialog
+        open={discoveryModal.isOpen}
+        onOpenChange={(open) =>
+          setDiscoveryModal((prev) => ({ ...prev, isOpen: open }))
+        }
+      >
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-center mb-4">
@@ -2666,8 +2851,13 @@ export default function Home() {
                 </h4>
                 <ul className="space-y-2">
                   {discoveryModal.tips.map((tip, index) => (
-                    <li key={index} className="flex items-start gap-3 text-emerald-700">
-                      <span className="text-emerald-500 font-bold mt-0.5">•</span>
+                    <li
+                      key={index}
+                      className="flex items-start gap-3 text-emerald-700"
+                    >
+                      <span className="text-emerald-500 font-bold mt-0.5">
+                        •
+                      </span>
                       <span className="text-sm leading-relaxed">{tip}</span>
                     </li>
                   ))}
@@ -2679,16 +2869,18 @@ export default function Home() {
             <div className="flex gap-3 pt-4">
               <Button
                 variant="outline"
-                onClick={() => setDiscoveryModal(prev => ({ ...prev, isOpen: false }))}
+                onClick={() =>
+                  setDiscoveryModal((prev) => ({ ...prev, isOpen: false }))
+                }
                 className="flex-1"
               >
                 Maybe Later
               </Button>
               <Button
                 onClick={() => {
-                  setDiscoveryModal(prev => ({ ...prev, isOpen: false }));
+                  setDiscoveryModal((prev) => ({ ...prev, isOpen: false }));
                   // You could add navigation to journal here in the future
-                  window.location.href = '/journal';
+                  window.location.href = "/journal";
                 }}
                 className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
               >
