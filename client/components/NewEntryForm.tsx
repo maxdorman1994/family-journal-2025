@@ -164,6 +164,8 @@ export default function NewEntryForm({
         content: "",
         tags: [],
         photos: [],
+        is_scenic_drive: false,
+        scenic_stops: [],
       });
     }
   }, [editingEntry]);
