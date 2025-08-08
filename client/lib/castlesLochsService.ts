@@ -700,6 +700,22 @@ export async function getAllHiddenGemsWithVisits(): Promise<
       }
     }
 
+    // TEMPORARY: Also get visits with null user_id (from before user_id was working)
+    let nullVisitsData = [];
+    try {
+      const { data: nullVisits } = await supabase
+        .from("hidden_gem_visits")
+        .select("*")
+        .is("user_id", null);
+      nullVisitsData = nullVisits || [];
+      console.log(`🔍 Debug: Found ${nullVisitsData.length} visits with null user_id`);
+    } catch (error) {
+      console.log(`🔍 Debug: Could not fetch null user_id visits:`, error);
+    }
+
+    // Combine visits (prioritize user visits over null visits)
+    const allVisitsData = [...(visitsData || []), ...nullVisitsData];
+
     // Combine gems with visit data
     const visitsMap = new Map(
       (visitsData || []).map((visit: HiddenGemVisit) => [
