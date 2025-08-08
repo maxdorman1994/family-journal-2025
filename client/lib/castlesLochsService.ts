@@ -680,10 +680,14 @@ export async function getAllHiddenGemsWithVisits(): Promise<
     }
 
     // Get user's visits
+    console.log(`🔍 Debug: Loading visits for user ${user.id}...`);
     const { data: visitsData, error: visitsError } = await supabase
       .from("hidden_gem_visits")
       .select("*")
       .eq("user_id", user.id);
+
+    console.log(`🔍 Debug: Found ${visitsData?.length || 0} visits for user`);
+    console.log(`🔍 Debug: Visits data:`, visitsData);
 
     if (visitsError) {
       console.error("❌ Error fetching hidden gem visits:", visitsError);
