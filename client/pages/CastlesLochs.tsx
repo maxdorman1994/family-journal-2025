@@ -257,16 +257,17 @@ export default function CastlesLochs() {
     }
   };
 
-  const currentStats = activeTab === "castles" ? castleStats : lochStats;
-  const totalItems = activeTab === "castles" ? 100 : 20;
+  const currentStats = activeTab === "castles" ? castleStats : activeTab === "lochs" ? lochStats : gemStats;
+  const totalItems = activeTab === "castles" ? 100 : activeTab === "lochs" ? 20 : 30;
   const visitedCount =
     activeTab === "castles"
       ? castleStats.visited_count
-      : lochStats.visited_count;
+      : activeTab === "lochs" ? lochStats.visited_count
+      : gemStats.visited_count;
   const completionPercentage =
     Math.round((visitedCount / totalItems) * 100 * 10) / 10;
 
-  const filteredItems = (activeTab === "castles" ? castles : lochs).filter(
+  const filteredItems = (activeTab === "castles" ? castles : activeTab === "lochs" ? lochs : hiddenGems).filter(
     (item) => {
       const matchesFilter =
         filter === "all" ||
