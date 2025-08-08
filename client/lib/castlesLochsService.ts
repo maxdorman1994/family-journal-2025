@@ -640,7 +640,12 @@ export async function testCastleLochConnection(): Promise<{
  * CREATE CUSTOM ENTRIES FUNCTIONS
  */
 
-export async function createCustomCastle(castleData: Omit<CastleData, 'id' | 'is_custom' | 'created_at' | 'updated_at'>): Promise<CastleData> {
+export async function createCustomCastle(
+  castleData: Omit<
+    CastleData,
+    "id" | "is_custom" | "created_at" | "updated_at"
+  >,
+): Promise<CastleData> {
   if (!isSupabaseConfigured()) {
     throw new Error("Supabase not configured");
   }
@@ -673,7 +678,9 @@ export async function createCustomCastle(castleData: Omit<CastleData, 'id' | 'is
   }
 }
 
-export async function createCustomLoch(lochData: Omit<LochData, 'id' | 'is_custom' | 'created_at' | 'updated_at'>): Promise<LochData> {
+export async function createCustomLoch(
+  lochData: Omit<LochData, "id" | "is_custom" | "created_at" | "updated_at">,
+): Promise<LochData> {
   if (!isSupabaseConfigured()) {
     throw new Error("Supabase not configured");
   }
@@ -706,7 +713,12 @@ export async function createCustomLoch(lochData: Omit<LochData, 'id' | 'is_custo
   }
 }
 
-export async function createCustomHiddenGem(gemData: Omit<HiddenGemData, 'id' | 'is_custom' | 'created_at' | 'updated_at'>): Promise<HiddenGemData> {
+export async function createCustomHiddenGem(
+  gemData: Omit<
+    HiddenGemData,
+    "id" | "is_custom" | "created_at" | "updated_at"
+  >,
+): Promise<HiddenGemData> {
   if (!isSupabaseConfigured()) {
     throw new Error("Supabase not configured");
   }

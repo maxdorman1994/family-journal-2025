@@ -918,14 +918,26 @@ export default function CastlesLochs() {
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-semibold text-green-800 mb-2">
-                    Add Your Own {activeTab === "castles" ? "Castle" : activeTab === "lochs" ? "Loch" : "Hidden Gem"}
+                    Add Your Own{" "}
+                    {activeTab === "castles"
+                      ? "Castle"
+                      : activeTab === "lochs"
+                        ? "Loch"
+                        : "Hidden Gem"}
                   </h3>
                   <p className="text-sm text-green-600">
-                    Know a special place that's not in our collection? Add it to share with others!
+                    Know a special place that's not in our collection? Add it to
+                    share with others!
                   </p>
                 </div>
                 <AddItemModal
-                  type={activeTab === "castles" ? "castle" : activeTab === "lochs" ? "loch" : "gem"}
+                  type={
+                    activeTab === "castles"
+                      ? "castle"
+                      : activeTab === "lochs"
+                        ? "loch"
+                        : "gem"
+                  }
                   onItemCreated={loadData}
                 />
               </div>
