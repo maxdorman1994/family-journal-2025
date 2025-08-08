@@ -475,7 +475,7 @@ export async function getLochVisitStats(): Promise<{
 }> {
   const defaultStats = {
     visited_count: 0,
-    total_lochs: 10,
+    total_lochs: 20,
     completion_percentage: 0,
     lochs_with_photos: 0,
     total_photos: 0,
