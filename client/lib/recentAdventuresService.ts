@@ -22,7 +22,7 @@ export interface AdventureStats {
   total_adventures: number;
   recent_count: number;
   latest_adventure: string;
-  oldest_adventure: string; 
+  oldest_adventure: string;
 }
 
 /**
@@ -36,7 +36,9 @@ export async function getRecentAdventures(): Promise<RecentAdventure[]> {
   }
 
   try {
-    console.log("🔄 Fetching latest 3 journal entries for recent adventures...");
+    console.log(
+      "🔄 Fetching latest 3 journal entries for recent adventures...",
+    );
 
     // Directly query journal_entries for the latest 3 entries
     const { data: journalEntries, error } = await supabase
@@ -56,20 +58,30 @@ export async function getRecentAdventures(): Promise<RecentAdventure[]> {
     }
 
     // Transform journal entries into RecentAdventure format
-    const recentAdventures: RecentAdventure[] = journalEntries.map((entry, index) => ({
-      id: entry.id,
-      title: entry.title,
-      location: entry.location,
-      formatted_date: entry.date,
-      featured_image: entry.photos && entry.photos.length > 0 ? entry.photos[0] : "/placeholder.svg",
-      tags: entry.tags || [],
-      adventure_type: entry.tags && entry.tags.length > 0 ? entry.tags[0] : "Adventure",
-      photo_count: entry.photos ? entry.photos.length : 0,
-      excerpt: entry.content ? entry.content.substring(0, 150) + "..." : "A wonderful Scottish adventure!",
-      time_ago: formatTimeAgo(entry.date)
-    }));
+    const recentAdventures: RecentAdventure[] = journalEntries.map(
+      (entry, index) => ({
+        id: entry.id,
+        title: entry.title,
+        location: entry.location,
+        formatted_date: entry.date,
+        featured_image:
+          entry.photos && entry.photos.length > 0
+            ? entry.photos[0]
+            : "/placeholder.svg",
+        tags: entry.tags || [],
+        adventure_type:
+          entry.tags && entry.tags.length > 0 ? entry.tags[0] : "Adventure",
+        photo_count: entry.photos ? entry.photos.length : 0,
+        excerpt: entry.content
+          ? entry.content.substring(0, 150) + "..."
+          : "A wonderful Scottish adventure!",
+        time_ago: formatTimeAgo(entry.date),
+      }),
+    );
 
-    console.log(`✅ Loaded ${recentAdventures.length} recent adventures from journal entries`);
+    console.log(
+      `✅ Loaded ${recentAdventures.length} recent adventures from journal entries`,
+    );
     return recentAdventures;
   } catch (error) {
     console.error("Error in getRecentAdventures:", error);
@@ -98,10 +110,10 @@ function formatTimeAgo(dateString: string): string {
       return `${diffInDays} days ago`;
     } else if (diffInDays < 30) {
       const weeks = Math.floor(diffInDays / 7);
-      return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+      return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
     } else {
       const months = Math.floor(diffInDays / 30);
-      return `${months} month${months > 1 ? 's' : ''} ago`;
+      return `${months} month${months > 1 ? "s" : ""} ago`;
     }
   } catch (error) {
     return dateString; // Fallback to original date string
@@ -243,7 +255,9 @@ export async function getRecentAdventuresWithFallback(): Promise<
 
     // If we have real adventures, return them (should be latest 3 from journal)
     if (adventures && adventures.length > 0) {
-      console.log(`✅ Using ${adventures.length} real journal entries for recent adventures`);
+      console.log(
+        `✅ Using ${adventures.length} real journal entries for recent adventures`,
+      );
       return adventures;
     }
 
@@ -255,7 +269,9 @@ export async function getRecentAdventuresWithFallback(): Promise<
 
     // Check if it's a schema missing error
     if (errorMessage.includes("SCHEMA_MISSING")) {
-      console.warn("��� Database views not found, using fallback data. Please run the SQL setup.");
+      console.warn(
+        "��� Database views not found, using fallback data. Please run the SQL setup.",
+      );
     } else {
       console.warn(
         "📦 Failed to load real adventures, using fallback:",
@@ -294,7 +310,7 @@ export function subscribeToAdventureUpdates(
           "📡 Real-time journal change detected for recent adventures:",
           payload.eventType,
           "Entry ID:",
-          payload.new?.id || payload.old?.id
+          payload.new?.id || payload.old?.id,
         );
 
         // Refetch recent adventures when journal entries change
