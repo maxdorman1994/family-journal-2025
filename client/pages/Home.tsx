@@ -1929,8 +1929,9 @@ export default function Home() {
             </h2>
 
             <p className="text-slate-600 max-w-2xl mx-auto mb-8">
-              Let us inspire your next Scottish family adventure! Discover hidden gems,
-              try new experiences, and create more magical memories across Scotland.
+              Let us inspire your next Scottish family adventure! Discover
+              hidden gems, try new experiences, and create more magical memories
+              across Scotland.
             </p>
           </div>
 
@@ -1958,9 +1959,10 @@ export default function Home() {
                       "Discover a charming Scottish village",
                       "Hike a mystery munro trail",
                       "Find a scenic picnic spot",
-                      "Explore ancient Scottish ruins"
+                      "Explore ancient Scottish ruins",
                     ];
-                    const random = adventures[Math.floor(Math.random() * adventures.length)];
+                    const random =
+                      adventures[Math.floor(Math.random() * adventures.length)];
                     alert(`🎯 Adventure Suggestion: ${random}!`);
                   }}
                 >
@@ -1986,10 +1988,15 @@ export default function Home() {
                   className="bg-pink-500 hover:bg-pink-600 text-white"
                   onClick={() => {
                     const types = [
-                      "🏰 Castle Adventure", "🏔️ Mountain Hiking", "🌊 Coastal Exploration",
-                      "🚗 Scenic Drive", "🦌 Wildlife Spotting", "🏛️ Historical Site"
+                      "🏰 Castle Adventure",
+                      "🏔️ Mountain Hiking",
+                      "🌊 Coastal Exploration",
+                      "🚗 Scenic Drive",
+                      "🦌 Wildlife Spotting",
+                      "🏛️ Historical Site",
                     ];
-                    const random = types[Math.floor(Math.random() * types.length)];
+                    const random =
+                      types[Math.floor(Math.random() * types.length)];
                     alert(`🎰 Adventure Type: ${random}!`);
                   }}
                 >
@@ -2020,9 +2027,10 @@ export default function Home() {
                       "Glen Coe's hidden waterfall",
                       "Skye's fairy pools at sunrise",
                       "Eilean Donan's photography spots",
-                      "Loch Lomond's quiet islands"
+                      "Loch Lomond's quiet islands",
                     ];
-                    const random = gems[Math.floor(Math.random() * gems.length)];
+                    const random =
+                      gems[Math.floor(Math.random() * gems.length)];
                     alert(`💎 Hidden Gem: ${random}!`);
                   }}
                 >
@@ -2053,10 +2061,13 @@ export default function Home() {
                       "Isle of Skye vs Isle of Arran",
                       "Loch Ness vs Loch Katrine",
                       "Glencoe vs Cairngorms",
-                      "Aberdeen vs Dundee"
+                      "Aberdeen vs Dundee",
                     ];
-                    const random = options[Math.floor(Math.random() * options.length)];
-                    alert(`🗳️ Family Vote: ${random} - Which would you choose?`);
+                    const random =
+                      options[Math.floor(Math.random() * options.length)];
+                    alert(
+                      `🗳️ Family Vote: ${random} - Which would you choose?`,
+                    );
                   }}
                 >
                   Start Vote
@@ -2075,7 +2086,9 @@ export default function Home() {
                 <div className="bg-white/60 rounded-xl p-4">
                   <span className="text-2xl mb-2 block">🎯</span>
                   <div className="font-bold text-purple-700">152</div>
-                  <div className="text-purple-600">Scottish castles to explore</div>
+                  <div className="text-purple-600">
+                    Scottish castles to explore
+                  </div>
                 </div>
                 <div className="bg-white/60 rounded-xl p-4">
                   <span className="text-2xl mb-2 block">⛰️</span>
