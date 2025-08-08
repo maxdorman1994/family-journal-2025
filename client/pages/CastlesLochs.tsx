@@ -571,7 +571,7 @@ export default function CastlesLochs() {
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-blue-200/50 shadow-xl max-w-2xl mx-auto mb-8">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-2xl font-bold text-slate-800">
-                      Your {activeTab === "castles" ? "Castle" : "Loch"}{" "}
+                      Your {activeTab === "castles" ? "Castle" : activeTab === "lochs" ? "Loch" : "Hidden Gem"}{" "}
                       Progress
                     </h3>
                     <div className="text-3xl font-bold text-blue-600">
