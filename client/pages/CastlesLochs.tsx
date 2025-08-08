@@ -397,7 +397,7 @@ export default function CastlesLochs() {
                       <ol className="list-decimal list-inside space-y-1 text-amber-700">
                         <li>Go to your Supabase Dashboard → SQL Editor</li>
                         <li>Create a new query and copy the Castles & Lochs SQL schema</li>
-                        <li>Run the schema to create tables with 20 castles and 10 lochs</li>
+                        <li>Run the schema to create tables with 100 castles and 20 lochs</li>
                         <li>Refresh this page to enable cross-device sync</li>
                       </ol>
                     </div>
@@ -502,7 +502,7 @@ export default function CastlesLochs() {
           <Card className="group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-gradient-to-br from-teal-50 to-blue-50">
             <CardContent className="p-6 relative">
               <div className="absolute inset-0 opacity-5 text-6xl flex items-center justify-center font-bold">
-                📸
+                ��
               </div>
               <div className="relative z-10">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-teal-500 to-blue-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
