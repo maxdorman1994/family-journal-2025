@@ -64,7 +64,9 @@ export default function CastlesLochs() {
   const [castles, setCastles] = useState<CastleWithVisit[]>([]);
   const [lochs, setLochs] = useState<LochWithVisit[]>([]);
   const [hiddenGems, setHiddenGems] = useState<HiddenGemWithVisit[]>([]);
-  const [activeTab, setActiveTab] = useState<"castles" | "lochs" | "gems">("castles");
+  const [activeTab, setActiveTab] = useState<"castles" | "lochs" | "gems">(
+    "castles",
+  );
   const [filter, setFilter] = useState<"all" | "visited" | "remaining">("all");
 
   const { isAuthenticated } = useAuth();
@@ -116,7 +118,9 @@ export default function CastlesLochs() {
       setIsLoading(true);
       setError(null);
 
-      console.log("🔄 Loading castles, lochs, and hidden gems from Supabase...");
+      console.log(
+        "🔄 Loading castles, lochs, and hidden gems from Supabase...",
+      );
       const [castlesData, lochsData, gemsData] = await Promise.all([
         getAllCastlesWithVisits(),
         getAllLochsWithVisits(),
@@ -129,11 +133,12 @@ export default function CastlesLochs() {
 
       // Load statistics
       try {
-        const [castleStatsData, lochStatsData, gemStatsData] = await Promise.all([
-          getCastleVisitStats(),
-          getLochVisitStats(),
-          getHiddenGemVisitStats(),
-        ]);
+        const [castleStatsData, lochStatsData, gemStatsData] =
+          await Promise.all([
+            getCastleVisitStats(),
+            getLochVisitStats(),
+            getHiddenGemVisitStats(),
+          ]);
         setCastleStats(castleStatsData);
         setLochStats(lochStatsData);
         setGemStats(gemStatsData);
@@ -183,8 +188,7 @@ export default function CastlesLochs() {
         setGemStats({
           visited_count: visitedGems,
           total_gems: 30,
-          completion_percentage:
-            Math.round((visitedGems / 30) * 100 * 10) / 10,
+          completion_percentage: Math.round((visitedGems / 30) * 100 * 10) / 10,
           gems_with_photos: gemsData.filter(
             (g) => g.visit?.photo_count && g.visit.photo_count > 0,
           ).length,
@@ -257,33 +261,44 @@ export default function CastlesLochs() {
     }
   };
 
-  const currentStats = activeTab === "castles" ? castleStats : activeTab === "lochs" ? lochStats : gemStats;
-  const totalItems = activeTab === "castles" ? 100 : activeTab === "lochs" ? 20 : 30;
+  const currentStats =
+    activeTab === "castles"
+      ? castleStats
+      : activeTab === "lochs"
+        ? lochStats
+        : gemStats;
+  const totalItems =
+    activeTab === "castles" ? 100 : activeTab === "lochs" ? 20 : 30;
   const visitedCount =
     activeTab === "castles"
       ? castleStats.visited_count
-      : activeTab === "lochs" ? lochStats.visited_count
-      : gemStats.visited_count;
+      : activeTab === "lochs"
+        ? lochStats.visited_count
+        : gemStats.visited_count;
   const completionPercentage =
     Math.round((visitedCount / totalItems) * 100 * 10) / 10;
 
-  const filteredItems = (activeTab === "castles" ? castles : activeTab === "lochs" ? lochs : hiddenGems).filter(
-    (item) => {
-      const matchesFilter =
-        filter === "all" ||
-        (filter === "visited" && item.visited) ||
-        (filter === "remaining" && !item.visited);
-      const matchesRegion =
-        regionFilter === "all" || item.region === regionFilter;
-      const matchesType = typeFilter === "all" || item.type === typeFilter;
-      const matchesSearch =
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredItems = (
+    activeTab === "castles"
+      ? castles
+      : activeTab === "lochs"
+        ? lochs
+        : hiddenGems
+  ).filter((item) => {
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "visited" && item.visited) ||
+      (filter === "remaining" && !item.visited);
+    const matchesRegion =
+      regionFilter === "all" || item.region === regionFilter;
+    const matchesType = typeFilter === "all" || item.type === typeFilter;
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return matchesFilter && matchesRegion && matchesType && matchesSearch;
-    },
-  );
+    return matchesFilter && matchesRegion && matchesType && matchesSearch;
+  });
 
   const toggleVisit = async (itemId: string, isVisited: boolean) => {
     if (!isAuthenticated) return;
@@ -411,14 +426,18 @@ export default function CastlesLochs() {
     {
       name: "Special Explorer",
       description:
-        activeTab === "castles" ? "Visit Edinburgh Castle" :
-        activeTab === "lochs" ? "Visit Loch Ness" : "Visit the Fairy Pools",
+        activeTab === "castles"
+          ? "Visit Edinburgh Castle"
+          : activeTab === "lochs"
+            ? "Visit Loch Ness"
+            : "Visit the Fairy Pools",
       unlocked:
         activeTab === "castles"
           ? castles.find((c) => c.name === "Edinburgh Castle")?.visited || false
           : activeTab === "lochs"
-          ? lochs.find((l) => l.name === "Loch Ness")?.visited || false
-          : hiddenGems.find((g) => g.name === "Fairy Pools")?.visited || false,
+            ? lochs.find((l) => l.name === "Loch Ness")?.visited || false
+            : hiddenGems.find((g) => g.name === "Fairy Pools")?.visited ||
+              false,
       icon: Crown,
     },
     {
@@ -482,7 +501,8 @@ export default function CastlesLochs() {
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Discover 100 magnificent Scottish castles, 20 breathtaking lochs, and 30 incredible hidden gems
+              Discover 100 magnificent Scottish castles, 20 breathtaking lochs,
+              and 30 incredible hidden gems
             </p>
 
             {/* Error Display */}
@@ -570,7 +590,12 @@ export default function CastlesLochs() {
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-blue-200/50 shadow-xl max-w-2xl mx-auto mb-8">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-2xl font-bold text-slate-800">
-                      Your {activeTab === "castles" ? "Castle" : activeTab === "lochs" ? "Loch" : "Hidden Gem"}{" "}
+                      Your{" "}
+                      {activeTab === "castles"
+                        ? "Castle"
+                        : activeTab === "lochs"
+                          ? "Loch"
+                          : "Hidden Gem"}{" "}
                       Progress
                     </h3>
                     <div className="text-3xl font-bold text-blue-600">
@@ -769,7 +794,12 @@ export default function CastlesLochs() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">
-                      All {activeTab === "castles" ? "Castles" : activeTab === "lochs" ? "Lochs" : "Hidden Gems"}
+                      All{" "}
+                      {activeTab === "castles"
+                        ? "Castles"
+                        : activeTab === "lochs"
+                          ? "Lochs"
+                          : "Hidden Gems"}
                     </SelectItem>
                     <SelectItem value="visited">Visited</SelectItem>
                     <SelectItem value="remaining">Remaining</SelectItem>
@@ -828,16 +858,34 @@ export default function CastlesLochs() {
                       </>
                     ) : (
                       <>
-                        <SelectItem value="Secret Beach">Secret Beach</SelectItem>
-                        <SelectItem value="Hidden Waterfall">Hidden Waterfall</SelectItem>
-                        <SelectItem value="Ancient Site">Ancient Site</SelectItem>
-                        <SelectItem value="Natural Wonder">Natural Wonder</SelectItem>
-                        <SelectItem value="Historic Village">Historic Village</SelectItem>
-                        <SelectItem value="Remote Island">Remote Island</SelectItem>
-                        <SelectItem value="Mountain Peak">Mountain Peak</SelectItem>
-                        <SelectItem value="Forest Grove">Forest Grove</SelectItem>
+                        <SelectItem value="Secret Beach">
+                          Secret Beach
+                        </SelectItem>
+                        <SelectItem value="Hidden Waterfall">
+                          Hidden Waterfall
+                        </SelectItem>
+                        <SelectItem value="Ancient Site">
+                          Ancient Site
+                        </SelectItem>
+                        <SelectItem value="Natural Wonder">
+                          Natural Wonder
+                        </SelectItem>
+                        <SelectItem value="Historic Village">
+                          Historic Village
+                        </SelectItem>
+                        <SelectItem value="Remote Island">
+                          Remote Island
+                        </SelectItem>
+                        <SelectItem value="Mountain Peak">
+                          Mountain Peak
+                        </SelectItem>
+                        <SelectItem value="Forest Grove">
+                          Forest Grove
+                        </SelectItem>
                         <SelectItem value="Cave System">Cave System</SelectItem>
-                        <SelectItem value="Coastal Feature">Coastal Feature</SelectItem>
+                        <SelectItem value="Coastal Feature">
+                          Coastal Feature
+                        </SelectItem>
                       </>
                     )}
                   </SelectContent>
@@ -947,12 +995,19 @@ export default function CastlesLochs() {
                   {activeTab === "gems" && (
                     <div className="text-xs text-slate-500 mb-2">
                       <div className="flex items-center justify-center gap-2 mb-1">
-                        <span>Difficulty: {(item as HiddenGemWithVisit).difficulty_level}</span>
+                        <span>
+                          Difficulty:{" "}
+                          {(item as HiddenGemWithVisit).difficulty_level}
+                        </span>
                         {(item as HiddenGemWithVisit).requires_hiking && (
-                          <span className="text-orange-600">🥾 Hiking Required</span>
+                          <span className="text-orange-600">
+                            🥾 Hiking Required
+                          </span>
                         )}
                       </div>
-                      <div>Near: {(item as HiddenGemWithVisit).nearest_town}</div>
+                      <div>
+                        Near: {(item as HiddenGemWithVisit).nearest_town}
+                      </div>
                     </div>
                   )}
 

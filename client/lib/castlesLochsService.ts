@@ -93,7 +93,17 @@ export interface HiddenGemData {
   id: string;
   name: string;
   region: string;
-  type: "Secret Beach" | "Hidden Waterfall" | "Ancient Site" | "Natural Wonder" | "Historic Village" | "Remote Island" | "Mountain Peak" | "Forest Grove" | "Cave System" | "Coastal Feature";
+  type:
+    | "Secret Beach"
+    | "Hidden Waterfall"
+    | "Ancient Site"
+    | "Natural Wonder"
+    | "Historic Village"
+    | "Remote Island"
+    | "Mountain Peak"
+    | "Forest Grove"
+    | "Cave System"
+    | "Coastal Feature";
   latitude: number;
   longitude: number;
   description: string;
@@ -630,9 +640,13 @@ export async function testCastleLochConnection(): Promise<{
  * HIDDEN GEMS FUNCTIONS
  */
 
-export async function getAllHiddenGemsWithVisits(): Promise<HiddenGemWithVisit[]> {
+export async function getAllHiddenGemsWithVisits(): Promise<
+  HiddenGemWithVisit[]
+> {
   if (!isSupabaseConfigured()) {
-    console.log("📝 Supabase not configured, returning empty hidden gems array");
+    console.log(
+      "📝 Supabase not configured, returning empty hidden gems array",
+    );
     return [];
   }
 
@@ -674,7 +688,9 @@ export async function getAllHiddenGemsWithVisits(): Promise<HiddenGemWithVisit[]
     if (visitsError) {
       console.error("❌ Error fetching hidden gem visits:", visitsError);
       if (
-        !visitsError.message.includes('relation "hidden_gem_visits" does not exist')
+        !visitsError.message.includes(
+          'relation "hidden_gem_visits" does not exist',
+        )
       ) {
         throw visitsError;
       }
@@ -682,7 +698,10 @@ export async function getAllHiddenGemsWithVisits(): Promise<HiddenGemWithVisit[]
 
     // Combine gems with visit data
     const visitsMap = new Map(
-      (visitsData || []).map((visit: HiddenGemVisit) => [visit.hidden_gem_id, visit])
+      (visitsData || []).map((visit: HiddenGemVisit) => [
+        visit.hidden_gem_id,
+        visit,
+      ]),
     );
 
     return (gemsData || []).map((gem: HiddenGemData) => {
@@ -701,7 +720,7 @@ export async function getAllHiddenGemsWithVisits(): Promise<HiddenGemWithVisit[]
 
 export async function visitHiddenGem(
   hiddenGemId: string,
-  visitData: Partial<HiddenGemVisit> = {}
+  visitData: Partial<HiddenGemVisit> = {},
 ) {
   if (!isSupabaseConfigured()) {
     throw new Error("Supabase not configured");
@@ -722,7 +741,7 @@ export async function visitHiddenGem(
           visited_date: new Date().toISOString().split("T")[0],
           ...visitData,
         },
-        { onConflict: "user_id,hidden_gem_id" }
+        { onConflict: "user_id,hidden_gem_id" },
       )
       .select()
       .single();
@@ -805,7 +824,9 @@ export async function getHiddenGemVisitStats(): Promise<{
 
     if (error) {
       console.error("Error fetching hidden gem stats:", error);
-      console.warn("Hidden gem stats view not available, returning default stats");
+      console.warn(
+        "Hidden gem stats view not available, returning default stats",
+      );
       return defaultStats;
     }
 
