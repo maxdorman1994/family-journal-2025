@@ -95,6 +95,9 @@ export default function Home() {
   const [milestonesLoading, setMilestonesLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Spinning Wheel state
+  const [isSpinningWheelOpen, setIsSpinningWheelOpen] = useState(false);
+
   // Adventure Discovery Modal state
   const [discoveryModal, setDiscoveryModal] = useState<{
     isOpen: boolean;
@@ -2791,7 +2794,7 @@ export default function Home() {
               <div className="flex justify-center gap-2 opacity-60">
                 <span className="text-red-600">📺</span>
                 <span className="text-pink-600">🎥</span>
-                <span className="text-red-600">🏴󠁧󠁢���󠁣����󠁿</span>
+                <span className="text-red-600">🏴󠁧󠁢����󠁣����󠁿</span>
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
