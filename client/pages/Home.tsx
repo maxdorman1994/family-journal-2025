@@ -2894,6 +2894,24 @@ export default function Home() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Spinning Wheel Modal */}
+      <SpinningWheel
+        isOpen={isSpinningWheelOpen}
+        onClose={() => setIsSpinningWheelOpen(false)}
+        onResult={(adventure) => {
+          // Show discovery modal with the wheel result
+          setDiscoveryModal({
+            isOpen: true,
+            type: "Adventure Type",
+            title: adventure.type,
+            suggestion: `Explore ${adventure.type} options: ${adventure.suggestions.join(", ")}`,
+            description: adventure.description,
+            tips: adventure.tips,
+            emoji: adventure.emoji,
+          });
+        }}
+      />
     </div>
   );
 }
