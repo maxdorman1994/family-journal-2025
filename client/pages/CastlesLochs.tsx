@@ -63,7 +63,8 @@ import {
 export default function CastlesLochs() {
   const [castles, setCastles] = useState<CastleWithVisit[]>([]);
   const [lochs, setLochs] = useState<LochWithVisit[]>([]);
-  const [activeTab, setActiveTab] = useState<"castles" | "lochs">("castles");
+  const [hiddenGems, setHiddenGems] = useState<HiddenGemWithVisit[]>([]);
+  const [activeTab, setActiveTab] = useState<"castles" | "lochs" | "gems">("castles");
   const [filter, setFilter] = useState<"all" | "visited" | "remaining">("all");
 
   const { isAuthenticated } = useAuth();
@@ -175,7 +176,7 @@ export default function CastlesLochs() {
 
       if (errorMessage.includes("not configured")) {
         setError(
-          "📝 Development Mode: Supabase not configured - using local data",
+          "���� Development Mode: Supabase not configured - using local data",
         );
       } else if (
         errorMessage.includes("SCHEMA_MISSING") ||
