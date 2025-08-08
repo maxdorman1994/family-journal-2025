@@ -708,7 +708,9 @@ export async function getAllHiddenGemsWithVisits(): Promise<
         .select("*")
         .is("user_id", null);
       nullVisitsData = nullVisits || [];
-      console.log(`🔍 Debug: Found ${nullVisitsData.length} visits with null user_id`);
+      console.log(
+        `🔍 Debug: Found ${nullVisitsData.length} visits with null user_id`,
+      );
     } catch (error) {
       console.log(`🔍 Debug: Could not fetch null user_id visits:`, error);
     }
