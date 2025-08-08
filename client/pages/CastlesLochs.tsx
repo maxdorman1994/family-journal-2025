@@ -715,12 +715,14 @@ export default function CastlesLochs() {
           {filteredItems.map((item) => (
             <Card
               key={item.id}
-              className={`group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer ${
+              className={`group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 ${
+                isAuthenticated ? "cursor-pointer" : "cursor-not-allowed opacity-75"
+              } ${
                 item.visited
                   ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200"
                   : "bg-white/95 backdrop-blur-sm"
               }`}
-              onClick={() => toggleVisit(item.id, item.visited)}
+              onClick={() => isAuthenticated && toggleVisit(item.id, item.visited)}
             >
               <CardContent className="p-6">
                 {/* Status Icon */}
