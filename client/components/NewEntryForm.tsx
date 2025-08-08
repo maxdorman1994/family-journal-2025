@@ -86,6 +86,7 @@ const commonTags = [
   "Hiking",
   "Photography",
   "Wildlife",
+  "Scenic Drive",
 ];
 
 export default function NewEntryForm({
