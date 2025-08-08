@@ -129,12 +129,14 @@ export default function CastlesLochs() {
 
       // Load statistics
       try {
-        const [castleStatsData, lochStatsData] = await Promise.all([
+        const [castleStatsData, lochStatsData, gemStatsData] = await Promise.all([
           getCastleVisitStats(),
           getLochVisitStats(),
+          getHiddenGemVisitStats(),
         ]);
         setCastleStats(castleStatsData);
         setLochStats(lochStatsData);
+        setGemStats(gemStatsData);
       } catch (statsError) {
         console.warn("Could not load stats, using defaults:", statsError);
         // Use fallback stats
