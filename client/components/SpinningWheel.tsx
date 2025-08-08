@@ -199,47 +199,62 @@ export default function SpinningWheel({
                     : "none",
                 }}
               >
+                {/* Create SVG sectors for better control */}
+                <svg className="w-full h-full" viewBox="0 0 200 200">
+                  {adventureTypes.map((adventure, index) => {
+                    const startAngle = (index * sectorAngle - 90) * (Math.PI / 180); // -90 to start from top
+                    const endAngle = ((index + 1) * sectorAngle - 90) * (Math.PI / 180);
+                    const largeArcFlag = sectorAngle > 180 ? 1 : 0;
+
+                    const x1 = 100 + 90 * Math.cos(startAngle);
+                    const y1 = 100 + 90 * Math.sin(startAngle);
+                    const x2 = 100 + 90 * Math.cos(endAngle);
+                    const y2 = 100 + 90 * Math.sin(endAngle);
+
+                    const pathData = [
+                      `M 100 100`,
+                      `L ${x1} ${y1}`,
+                      `A 90 90 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                      `Z`
+                    ].join(' ');
+
+                    return (
+                      <path
+                        key={adventure.type}
+                        d={pathData}
+                        fill={adventure.color}
+                        opacity="0.9"
+                      />
+                    );
+                  })}
+                </svg>
+
+                {/* Text labels positioned over the sectors */}
                 {adventureTypes.map((adventure, index) => {
-                  const startAngle = index * sectorAngle;
-                  const endAngle = (index + 1) * sectorAngle;
+                  const angle = (index * sectorAngle + sectorAngle / 2 - 90) * (Math.PI / 180);
+                  const radius = 65; // Distance from center
+                  const x = 50 + (radius / 100) * 50 * Math.cos(angle);
+                  const y = 50 + (radius / 100) * 50 * Math.sin(angle);
 
                   return (
                     <div
-                      key={adventure.type}
-                      className="absolute w-full h-full"
+                      key={`text-${adventure.type}`}
+                      className="absolute text-white font-bold text-center flex flex-col items-center justify-center pointer-events-none"
                       style={{
-                        clipPath: `polygon(50% 50%, ${
-                          50 + 40 * Math.cos((startAngle * Math.PI) / 180)
-                        }% ${
-                          50 + 40 * Math.sin((startAngle * Math.PI) / 180)
-                        }%, ${
-                          50 + 40 * Math.cos((endAngle * Math.PI) / 180)
-                        }% ${50 + 40 * Math.sin((endAngle * Math.PI) / 180)}%)`,
-                        backgroundColor: adventure.color,
-                        opacity: 0.9,
+                        left: `${x}%`,
+                        top: `${y}%`,
+                        transform: `translate(-50%, -50%)`,
+                        width: "50px",
+                        height: "50px",
                       }}
                     >
-                      <div
-                        className="absolute text-white font-bold text-center flex flex-col items-center justify-center"
-                        style={{
-                          top: "30%",
-                          left: "50%",
-                          transform: `translate(-50%, -50%) rotate(${startAngle + sectorAngle / 2}deg)`,
-                          transformOrigin: "center",
-                          width: "60px",
-                          height: "60px",
-                        }}
-                      >
-                        <div className="text-2xl mb-1">{adventure.emoji}</div>
-                        <div className="text-xs font-bold leading-none text-center drop-shadow-lg">
-                          {adventure.type.includes(" ")
-                            ? adventure.type.split(" ").map((word, i) => (
-                                <div key={i} className="leading-tight">
-                                  {word}
-                                </div>
-                              ))
-                            : adventure.type}
-                        </div>
+                      <div className="text-xl mb-1 drop-shadow-lg">{adventure.emoji}</div>
+                      <div className="text-xs font-bold leading-tight text-center drop-shadow-lg">
+                        {adventure.type.split(" ").map((word, i) => (
+                          <div key={i} className="leading-none">
+                            {word}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   );
