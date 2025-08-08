@@ -38,6 +38,11 @@ export default function AuthFooter() {
         setPassword("");
         setError("");
         setIsExpanded(false);
+
+        // Force page refresh to update authentication state across all components
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
       } else {
         setError("Incorrect password. Please try again.");
         setPassword("");
