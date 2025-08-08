@@ -911,6 +911,28 @@ export default function CastlesLochs() {
           </CardContent>
         </Card>
 
+        {/* Add Custom Items - Only for authenticated users */}
+        {isAuthenticated && (
+          <Card className="mb-8 border-0 shadow-xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
+            <CardContent className="p-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-green-800 mb-2">
+                    Add Your Own {activeTab === "castles" ? "Castle" : activeTab === "lochs" ? "Loch" : "Hidden Gem"}
+                  </h3>
+                  <p className="text-sm text-green-600">
+                    Know a special place that's not in our collection? Add it to share with others!
+                  </p>
+                </div>
+                <AddItemModal
+                  type={activeTab === "castles" ? "castle" : activeTab === "lochs" ? "loch" : "gem"}
+                  onItemCreated={loadData}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Items Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
