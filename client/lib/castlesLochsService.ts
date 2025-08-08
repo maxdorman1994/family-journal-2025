@@ -625,3 +625,195 @@ export async function testCastleLochConnection(): Promise<{
     };
   }
 }
+
+/**
+ * HIDDEN GEMS FUNCTIONS
+ */
+
+export async function getAllHiddenGemsWithVisits(): Promise<HiddenGemWithVisit[]> {
+  if (!isSupabaseConfigured()) {
+    console.log("📝 Supabase not configured, returning empty hidden gems array");
+    return [];
+  }
+
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    // Get all hidden gems
+    const { data: gemsData, error: gemsError } = await supabase
+      .from("hidden_gems")
+      .select("*")
+      .order("rank", { ascending: true });
+
+    if (gemsError) {
+      console.error("❌ Error fetching hidden gems:", gemsError);
+      if (
+        !gemsError.message.includes('relation "hidden_gems" does not exist')
+      ) {
+        throw gemsError;
+      }
+      return [];
+    }
+
+    if (!user) {
+      // Not authenticated - return gems without visit data
+      return (gemsData || []).map((gem: HiddenGemData) => ({
+        ...gem,
+        visited: false,
+      }));
+    }
+
+    // Get user's visits
+    const { data: visitsData, error: visitsError } = await supabase
+      .from("hidden_gem_visits")
+      .select("*")
+      .eq("user_id", user.id);
+
+    if (visitsError) {
+      console.error("❌ Error fetching hidden gem visits:", visitsError);
+      if (
+        !visitsError.message.includes('relation "hidden_gem_visits" does not exist')
+      ) {
+        throw visitsError;
+      }
+    }
+
+    // Combine gems with visit data
+    const visitsMap = new Map(
+      (visitsData || []).map((visit: HiddenGemVisit) => [visit.hidden_gem_id, visit])
+    );
+
+    return (gemsData || []).map((gem: HiddenGemData) => {
+      const visit = visitsMap.get(gem.id);
+      return {
+        ...gem,
+        visited: !!visit,
+        visit: visit || undefined,
+      };
+    });
+  } catch (error) {
+    console.error("❌ Error in getAllHiddenGemsWithVisits:", error);
+    throw error;
+  }
+}
+
+export async function visitHiddenGem(
+  hiddenGemId: string,
+  visitData: Partial<HiddenGemVisit> = {}
+) {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase not configured");
+  }
+
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("User not authenticated");
+
+    const { data, error } = await supabase
+      .from("hidden_gem_visits")
+      .upsert(
+        {
+          user_id: user.id,
+          hidden_gem_id: hiddenGemId,
+          visited_date: new Date().toISOString().split("T")[0],
+          ...visitData,
+        },
+        { onConflict: "user_id,hidden_gem_id" }
+      )
+      .select()
+      .single();
+
+    if (error) {
+      console.error("❌ Error visiting hidden gem:", error);
+      throw error;
+    }
+
+    console.log(`✅ Hidden gem ${hiddenGemId} visited successfully`);
+    return data;
+  } catch (error) {
+    console.error("❌ Error in visitHiddenGem:", error);
+    throw error;
+  }
+}
+
+export async function unvisitHiddenGem(hiddenGemId: string) {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase not configured");
+  }
+
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("User not authenticated");
+
+    const { error } = await supabase
+      .from("hidden_gem_visits")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("hidden_gem_id", hiddenGemId);
+
+    if (error) {
+      console.error("❌ Error unvisiting hidden gem:", error);
+      throw error;
+    }
+
+    console.log(`✅ Hidden gem ${hiddenGemId} unvisited successfully`);
+  } catch (error) {
+    console.error("❌ Error in unvisitHiddenGem:", error);
+    throw error;
+  }
+}
+
+export async function getHiddenGemVisitStats(): Promise<{
+  visited_count: number;
+  total_gems: number;
+  completion_percentage: number;
+  gems_with_photos: number;
+  total_photos: number;
+  first_visit: string | null;
+  latest_visit: string | null;
+  recommended_count: number;
+}> {
+  const defaultStats = {
+    visited_count: 0,
+    total_gems: 30,
+    completion_percentage: 0,
+    gems_with_photos: 0,
+    total_photos: 0,
+    first_visit: null,
+    latest_visit: null,
+    recommended_count: 0,
+  };
+
+  if (!isSupabaseConfigured()) {
+    console.warn("Supabase not configured, returning default hidden gem stats");
+    return defaultStats;
+  }
+
+  try {
+    console.log("📊 Fetching hidden gem visit statistics...");
+
+    const { data, error } = await supabase
+      .from("hidden_gem_visit_stats")
+      .select("*")
+      .single();
+
+    if (error) {
+      console.error("Error fetching hidden gem stats:", error);
+      console.warn("Hidden gem stats view not available, returning default stats");
+      return defaultStats;
+    }
+
+    console.log("✅ Hidden gem stats loaded successfully");
+    return data || defaultStats;
+  } catch (error) {
+    console.error("Error in getHiddenGemVisitStats:", error);
+    console.warn("Falling back to default hidden gem stats due to error");
+    return defaultStats;
+  }
+}
