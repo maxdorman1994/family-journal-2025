@@ -964,51 +964,57 @@ export default function Journal() {
                         </div>
 
                         {/* Scenic Drive Stops Preview */}
-                        {(entry as any).is_scenic_drive && (entry as any).scenic_stops && (entry as any).scenic_stops.length > 0 && (
-                          <div className="mb-6">
-                            <div className="flex items-center gap-2 mb-3">
-                              <Route className="h-4 w-4 text-emerald-500" />
-                              <span className="font-semibold text-slate-700">
-                                Scenic Drive Stops
-                              </span>
-                            </div>
-                            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-5 border-2 border-emerald-100">
-                              <div className="space-y-3">
-                                {(entry as any).scenic_stops.slice(0, 3).map((stop: any, stopIndex: number) => (
-                                  <div
-                                    key={stopIndex}
-                                    className="flex items-start gap-3 bg-white rounded-lg p-3 border border-emerald-200"
-                                  >
-                                    <span className="bg-emerald-100 text-emerald-700 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
-                                      {stopIndex + 1}
-                                    </span>
-                                    <div className="flex-1 min-w-0">
-                                      <h4 className="font-medium text-emerald-800 text-sm mb-1 truncate">
-                                        {stop.name}
-                                      </h4>
-                                      <p className="text-slate-600 text-xs leading-relaxed line-clamp-2">
-                                        {stop.description.length > 80
-                                          ? `${stop.description.substring(0, 80)}...`
-                                          : stop.description}
-                                      </p>
+                        {(entry as any).is_scenic_drive &&
+                          (entry as any).scenic_stops &&
+                          (entry as any).scenic_stops.length > 0 && (
+                            <div className="mb-6">
+                              <div className="flex items-center gap-2 mb-3">
+                                <Route className="h-4 w-4 text-emerald-500" />
+                                <span className="font-semibold text-slate-700">
+                                  Scenic Drive Stops
+                                </span>
+                              </div>
+                              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-5 border-2 border-emerald-100">
+                                <div className="space-y-3">
+                                  {(entry as any).scenic_stops
+                                    .slice(0, 3)
+                                    .map((stop: any, stopIndex: number) => (
+                                      <div
+                                        key={stopIndex}
+                                        className="flex items-start gap-3 bg-white rounded-lg p-3 border border-emerald-200"
+                                      >
+                                        <span className="bg-emerald-100 text-emerald-700 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                                          {stopIndex + 1}
+                                        </span>
+                                        <div className="flex-1 min-w-0">
+                                          <h4 className="font-medium text-emerald-800 text-sm mb-1 truncate">
+                                            {stop.name}
+                                          </h4>
+                                          <p className="text-slate-600 text-xs leading-relaxed line-clamp-2">
+                                            {stop.description.length > 80
+                                              ? `${stop.description.substring(0, 80)}...`
+                                              : stop.description}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  {(entry as any).scenic_stops.length > 3 && (
+                                    <div className="text-center pt-2">
+                                      <Button
+                                        variant="link"
+                                        className="p-0 h-auto text-emerald-600 hover:text-emerald-800 text-sm"
+                                        onClick={() => handleEntryClick(entry)}
+                                      >
+                                        View all{" "}
+                                        {(entry as any).scenic_stops.length}{" "}
+                                        stops →
+                                      </Button>
                                     </div>
-                                  </div>
-                                ))}
-                                {(entry as any).scenic_stops.length > 3 && (
-                                  <div className="text-center pt-2">
-                                    <Button
-                                      variant="link"
-                                      className="p-0 h-auto text-emerald-600 hover:text-emerald-800 text-sm"
-                                      onClick={() => handleEntryClick(entry)}
-                                    >
-                                      View all {(entry as any).scenic_stops.length} stops →
-                                    </Button>
-                                  </div>
-                                )}
+                                  )}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        )}
+                          )}
 
                         {/* Content Preview */}
                         <div className="mb-6">
