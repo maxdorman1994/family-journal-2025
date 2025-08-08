@@ -1597,7 +1597,7 @@ export default function Home() {
                   {/* Leaf decorations */}
                   <div className="flex gap-2 opacity-40">
                     <span className="text-green-600">🌿</span>
-                    <span className="text-emerald-600">����</span>
+                    <span className="text-emerald-600">🍃</span>
                     <span className="text-green-600">🌿</span>
                   </div>
                 </div>
@@ -2239,19 +2239,7 @@ export default function Home() {
                 <Button
                   size="sm"
                   className="bg-pink-500 hover:bg-pink-600 text-white"
-                  onClick={() => {
-                    const types = [
-                      "🏰 Castle Adventure",
-                      "🏔️ Mountain Hiking",
-                      "🌊 Coastal Exploration",
-                      "🚗 Scenic Drive",
-                      "🦌 Wildlife Spotting",
-                      "🏛️ Historical Site",
-                    ];
-                    const random =
-                      types[Math.floor(Math.random() * types.length)];
-                    alert(`🎰 Adventure Type: ${random}!`);
-                  }}
+                  onClick={() => showDiscoveryModal('roulette')}
                 >
                   Spin the Wheel
                 </Button>
