@@ -735,7 +735,7 @@ export async function visitHiddenGem(
       data: { user },
     } = await supabase.auth.getUser();
 
-    console.log(`🔍 Debug: User found:`, user?.id ? 'YES' : 'NO', user?.id);
+    console.log(`🔍 Debug: User found:`, user?.id ? "YES" : "NO", user?.id);
 
     const visitRecord = {
       user_id: user?.id || null, // Set user_id properly for persistent visits
