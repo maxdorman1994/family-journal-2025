@@ -754,15 +754,11 @@ export async function visitHiddenGem(
     console.log(`💎 Marking hidden gem ${hiddenGemId} as visited...`);
     console.log(`🔍 Debug: Getting current user for hidden gem visit...`);
 
-    // Get current user for proper visit tracking
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    console.log(`🔍 Debug: User found:`, user?.id ? "YES" : "NO", user?.id);
+    // Note: Using custom auth system, not Supabase auth, so user_id will be set by trigger
+    console.log(`🔍 Debug: Using custom auth system - user_id will be auto-populated`);
 
     const visitRecord = {
-      user_id: user?.id || null, // Set user_id properly for persistent visits
+      // user_id will be set by database trigger or left null for now
       hidden_gem_id: hiddenGemId,
       visited_date: new Date().toISOString().split("T")[0],
       rating: visitData.rating || 5,
