@@ -735,7 +735,8 @@ export async function visitHiddenGem(
       rating: visitData.rating || 5,
       notes: visitData.notes || "Amazing hidden gem discovery!",
       photo_count: visitData.photo_count || Math.floor(Math.random() * 8) + 1,
-      weather_conditions: visitData.weather_conditions || "Perfect for photography",
+      weather_conditions:
+        visitData.weather_conditions || "Perfect for photography",
       would_recommend: visitData.would_recommend ?? true,
       difficulty_experienced: visitData.difficulty_experienced || "Moderate",
     };
