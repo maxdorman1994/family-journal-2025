@@ -68,7 +68,7 @@ export default function CastlesLochs() {
   const [error, setError] = useState<string | null>(null);
   const [castleStats, setCastleStats] = useState({
     visited_count: 0,
-    total_castles: 20,
+    total_castles: 100,
     completion_percentage: 0,
     castles_with_photos: 0,
     total_photos: 0,
@@ -78,7 +78,7 @@ export default function CastlesLochs() {
   });
   const [lochStats, setLochStats] = useState({
     visited_count: 0,
-    total_lochs: 10,
+    total_lochs: 20,
     completion_percentage: 0,
     lochs_with_photos: 0,
     total_photos: 0,
@@ -392,7 +392,7 @@ export default function CastlesLochs() {
                   {error.includes("Database Setup Required") && (
                     <div className="bg-white/50 rounded-xl p-4 mb-4 text-xs">
                       <div className="font-semibold mb-2">
-                        📋 Setup Instructions:
+                        ���� Setup Instructions:
                       </div>
                       <ol className="list-decimal list-inside space-y-1 text-amber-700">
                         <li>Go to your Supabase Dashboard → SQL Editor</li>
