@@ -162,6 +162,36 @@ export default function EntryDetailModal({
             </div>
           )}
 
+          {/* Scenic Drive Stops */}
+          {(entry as any).is_scenic_drive && (entry as any).scenic_stops && (entry as any).scenic_stops.length > 0 && (
+            <Card className="bg-emerald-50/50 border-emerald-200">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <Route className="mr-2 h-5 w-5 text-emerald-600" />
+                  Scenic Drive Stops
+                </h3>
+                <div className="space-y-4">
+                  {(entry as any).scenic_stops.map((stop: any, stopIndex: number) => (
+                    <div
+                      key={stopIndex}
+                      className="bg-white rounded-lg p-4 border-l-4 border-emerald-400 shadow-sm"
+                    >
+                      <h4 className="font-medium text-emerald-800 mb-2 flex items-center">
+                        <span className="bg-emerald-100 text-emerald-700 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold mr-2">
+                          {stopIndex + 1}
+                        </span>
+                        {stop.name}
+                      </h4>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        {stop.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Tags */}
           <div>
             <h3 className="font-semibold text-gray-800 mb-3">Tags</h3>
