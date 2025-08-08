@@ -63,6 +63,7 @@ import {
   MilestoneWithProgress,
   MilestoneStats,
 } from "@/lib/milestonesService";
+import SpinningWheel from "@/components/SpinningWheel";
 
 export default function Home() {
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
