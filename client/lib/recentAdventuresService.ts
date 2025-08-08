@@ -241,13 +241,14 @@ export async function getRecentAdventuresWithFallback(): Promise<
 
     const adventures = await getRecentAdventures();
 
-    // If we have real adventures, return them
+    // If we have real adventures, return them (should be latest 3 from journal)
     if (adventures && adventures.length > 0) {
+      console.log(`✅ Using ${adventures.length} real journal entries for recent adventures`);
       return adventures;
     }
 
     // If no real adventures, return fallback
-    console.log("📦 No real adventures found, using fallback data");
+    console.log("📦 No journal entries found, using fallback data");
     return getFallbackRecentAdventures();
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
