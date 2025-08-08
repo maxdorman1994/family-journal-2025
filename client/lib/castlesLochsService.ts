@@ -744,7 +744,7 @@ export async function visitHiddenGem(
     const { data: visit, error } = await supabase
       .from("hidden_gem_visits")
       .upsert(visitRecord, {
-        onConflict: "hidden_gem_id",
+        onConflict: "user_id,hidden_gem_id",
         ignoreDuplicates: false,
       })
       .select()
