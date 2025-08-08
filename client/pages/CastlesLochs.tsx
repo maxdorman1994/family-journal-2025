@@ -770,7 +770,7 @@ export default function CastlesLochs() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">
-                      All {activeTab === "castles" ? "Castles" : "Lochs"}
+                      All {activeTab === "castles" ? "Castles" : activeTab === "lochs" ? "Lochs" : "Hidden Gems"}
                     </SelectItem>
                     <SelectItem value="visited">Visited</SelectItem>
                     <SelectItem value="remaining">Remaining</SelectItem>
