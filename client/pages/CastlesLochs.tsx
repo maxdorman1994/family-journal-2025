@@ -999,12 +999,26 @@ export default function CastlesLochs() {
               }
             >
               <CardContent className="p-6">
-                {/* Custom Item Badge */}
+                {/* Custom Item Badge and Delete Button */}
                 {(item as any).is_custom && (
-                  <div className="absolute top-4 left-4">
+                  <div className="absolute top-4 left-4 flex items-center gap-2">
                     <Badge className="bg-purple-100 text-purple-800 border-purple-200 text-xs">
                       Custom
                     </Badge>
+                    {isAuthenticated && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-6 w-6 p-0 border-red-200 hover:border-red-400 hover:bg-red-50"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteItem(item.id, item.name);
+                        }}
+                        title={`Delete ${item.name}`}
+                      >
+                        <Trash2 className="h-3 w-3 text-red-500" />
+                      </Button>
+                    )}
                   </div>
                 )}
 
