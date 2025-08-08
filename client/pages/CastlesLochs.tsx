@@ -59,6 +59,7 @@ import {
   LochWithVisit,
   HiddenGemWithVisit,
 } from "@/lib/castlesLochsService";
+import AddItemModal from "@/components/AddItemModal";
 
 export default function CastlesLochs() {
   const [castles, setCastles] = useState<CastleWithVisit[]>([]);
