@@ -49,7 +49,7 @@ const weatherOptions = [
   { value: "⛅ Partly Cloudy", label: "⛅ Partly Cloudy" },
   { value: "��️ Cloudy", label: "☁️ Cloudy" },
   { value: "🌧️ Light Rain", label: "🌧️ Light Rain" },
-  { value: "🌦️ Showers", label: "🌦��� Showers" },
+  { value: "🌦️ Showers", label: "🌦️ Showers" },
   { value: "❄️ Snow", label: "❄️ Snow" },
   { value: "🌫️ Foggy", label: "🌫️ Foggy" },
   { value: "💨 Windy", label: "💨 Windy" },
@@ -206,8 +206,20 @@ export default function NewEntryForm({
 
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.location.trim()) newErrors.location = "Location is required";
-    if (!formData.content.trim())
-      newErrors.content = "Adventure story is required";
+
+    // For scenic drives, either content or stops with descriptions are required
+    if (formData.is_scenic_drive) {
+      const hasValidStops = formData.scenic_stops.length > 0 &&
+        formData.scenic_stops.some(stop => stop.name.trim() && stop.description.trim());
+      if (!formData.content.trim() && !hasValidStops) {
+        newErrors.content = "Either adventure story or scenic stops with descriptions are required";
+      }
+    } else {
+      if (!formData.content.trim()) {
+        newErrors.content = "Adventure story is required";
+      }
+    }
+
     if (!formData.weather) newErrors.weather = "Weather is required";
     if (!formData.mood) newErrors.mood = "Mood is required";
 
