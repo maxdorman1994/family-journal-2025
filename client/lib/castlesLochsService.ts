@@ -762,6 +762,7 @@ export async function visitHiddenGem(
     }
 
     console.log(`✅ Hidden gem visited successfully: ${hiddenGemId}`);
+    console.log(`🔍 Debug: Visit record created:`, visit);
     return visit;
   } catch (error) {
     console.error("Error in visitHiddenGem:", error);
