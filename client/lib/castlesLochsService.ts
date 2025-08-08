@@ -729,17 +729,7 @@ export async function visitHiddenGem(
   try {
     console.log(`💎 Marking hidden gem ${hiddenGemId} as visited...`);
 
-    // Get the current user (like castles and lochs do)
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-
     const visitRecord = {
-      user_id: user.id, // Explicitly set user_id
       hidden_gem_id: hiddenGemId,
       visited_date: new Date().toISOString().split("T")[0],
       rating: visitData.rating || 5,
@@ -753,10 +743,7 @@ export async function visitHiddenGem(
 
     const { data: visit, error } = await supabase
       .from("hidden_gem_visits")
-      .upsert(visitRecord, {
-        onConflict: "user_id,hidden_gem_id",
-        ignoreDuplicates: false,
-      })
+      .insert(visitRecord)
       .select()
       .single();
 
