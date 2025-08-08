@@ -637,6 +637,109 @@ export async function testCastleLochConnection(): Promise<{
 }
 
 /**
+ * CREATE CUSTOM ENTRIES FUNCTIONS
+ */
+
+export async function createCustomCastle(castleData: Omit<CastleData, 'id' | 'is_custom' | 'created_at' | 'updated_at'>): Promise<CastleData> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase not configured");
+  }
+
+  try {
+    console.log(`🏰 Creating custom castle: ${castleData.name}...`);
+
+    const newCastle = {
+      ...castleData,
+      id: `custom-castle-${Date.now()}`,
+      is_custom: true,
+    };
+
+    const { data, error } = await supabase
+      .from("castles")
+      .insert(newCastle)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("❌ Error creating custom castle:", error);
+      throw new Error(`Failed to create castle: ${error.message}`);
+    }
+
+    console.log(`✅ Custom castle created successfully: ${castleData.name}`);
+    return data;
+  } catch (error) {
+    console.error("❌ Error in createCustomCastle:", error);
+    throw error;
+  }
+}
+
+export async function createCustomLoch(lochData: Omit<LochData, 'id' | 'is_custom' | 'created_at' | 'updated_at'>): Promise<LochData> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase not configured");
+  }
+
+  try {
+    console.log(`🌊 Creating custom loch: ${lochData.name}...`);
+
+    const newLoch = {
+      ...lochData,
+      id: `custom-loch-${Date.now()}`,
+      is_custom: true,
+    };
+
+    const { data, error } = await supabase
+      .from("lochs")
+      .insert(newLoch)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("❌ Error creating custom loch:", error);
+      throw new Error(`Failed to create loch: ${error.message}`);
+    }
+
+    console.log(`✅ Custom loch created successfully: ${lochData.name}`);
+    return data;
+  } catch (error) {
+    console.error("❌ Error in createCustomLoch:", error);
+    throw error;
+  }
+}
+
+export async function createCustomHiddenGem(gemData: Omit<HiddenGemData, 'id' | 'is_custom' | 'created_at' | 'updated_at'>): Promise<HiddenGemData> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase not configured");
+  }
+
+  try {
+    console.log(`💎 Creating custom hidden gem: ${gemData.name}...`);
+
+    const newGem = {
+      ...gemData,
+      id: `custom-gem-${Date.now()}`,
+      is_custom: true,
+    };
+
+    const { data, error } = await supabase
+      .from("hidden_gems")
+      .insert(newGem)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("❌ Error creating custom hidden gem:", error);
+      throw new Error(`Failed to create hidden gem: ${error.message}`);
+    }
+
+    console.log(`✅ Custom hidden gem created successfully: ${gemData.name}`);
+    return data;
+  } catch (error) {
+    console.error("❌ Error in createCustomHiddenGem:", error);
+    throw error;
+  }
+}
+
+/**
  * HIDDEN GEMS FUNCTIONS
  */
 
