@@ -1909,6 +1909,190 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Adventure Discovery */}
+      <section className="mb-20">
+        <div className="max-w-6xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border-2 border-purple-200/50 shadow-lg">
+              <span className="text-2xl">🎲</span>
+              <span className="text-sm font-medium text-purple-700">
+                Adventure Discovery
+              </span>
+              <span className="text-2xl">🗺️</span>
+            </div>
+
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent">
+                Discover Your Next Adventure
+              </span>
+            </h2>
+
+            <p className="text-slate-600 max-w-2xl mx-auto mb-8">
+              Let us inspire your next Scottish family adventure! Discover hidden gems,
+              try new experiences, and create more magical memories across Scotland.
+            </p>
+          </div>
+
+          {/* Discovery Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Random Adventure Generator */}
+            <Card className="group hover:shadow-xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-purple-50 to-indigo-100 border-2 border-purple-200/60 cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-300">
+                  <span className="text-3xl">🎲</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2 text-purple-800">
+                  Surprise Me!
+                </h3>
+                <p className="text-sm text-purple-600 mb-4">
+                  Get a random Scottish adventure suggestion near you
+                </p>
+                <Button
+                  size="sm"
+                  className="bg-purple-500 hover:bg-purple-600 text-white"
+                  onClick={() => {
+                    const adventures = [
+                      "Visit a random Scottish castle",
+                      "Explore a hidden Highland loch",
+                      "Discover a charming Scottish village",
+                      "Hike a mystery munro trail",
+                      "Find a scenic picnic spot",
+                      "Explore ancient Scottish ruins"
+                    ];
+                    const random = adventures[Math.floor(Math.random() * adventures.length)];
+                    alert(`🎯 Adventure Suggestion: ${random}!`);
+                  }}
+                >
+                  Roll the Dice!
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Adventure Roulette */}
+            <Card className="group hover:shadow-xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-pink-50 to-rose-100 border-2 border-pink-200/60 cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-300">
+                  <span className="text-3xl">🎪</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2 text-pink-800">
+                  Adventure Roulette
+                </h3>
+                <p className="text-sm text-pink-600 mb-4">
+                  Spin the wheel for your next adventure type
+                </p>
+                <Button
+                  size="sm"
+                  className="bg-pink-500 hover:bg-pink-600 text-white"
+                  onClick={() => {
+                    const types = [
+                      "🏰 Castle Adventure", "🏔️ Mountain Hiking", "🌊 Coastal Exploration",
+                      "🚗 Scenic Drive", "🦌 Wildlife Spotting", "🏛️ Historical Site"
+                    ];
+                    const random = types[Math.floor(Math.random() * types.length)];
+                    alert(`🎰 Adventure Type: ${random}!`);
+                  }}
+                >
+                  Spin the Wheel
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Hidden Gems Finder */}
+            <Card className="group hover:shadow-xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-emerald-50 to-teal-100 border-2 border-emerald-200/60 cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-300">
+                  <span className="text-3xl">💎</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2 text-emerald-800">
+                  Hidden Gems
+                </h3>
+                <p className="text-sm text-emerald-600 mb-4">
+                  Find lesser-known Scottish treasures off the beaten path
+                </p>
+                <Button
+                  size="sm"
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                  onClick={() => {
+                    const gems = [
+                      "Dunnottar Castle's secret beach path",
+                      "The Hermitage's enchanted forest walk",
+                      "Glen Coe's hidden waterfall",
+                      "Skye's fairy pools at sunrise",
+                      "Eilean Donan's photography spots",
+                      "Loch Lomond's quiet islands"
+                    ];
+                    const random = gems[Math.floor(Math.random() * gems.length)];
+                    alert(`💎 Hidden Gem: ${random}!`);
+                  }}
+                >
+                  Find Gems
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Family Vote */}
+            <Card className="group hover:shadow-xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-orange-50 to-amber-100 border-2 border-orange-200/60 cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-300">
+                  <span className="text-3xl">🗳️</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2 text-orange-800">
+                  Family Vote
+                </h3>
+                <p className="text-sm text-orange-600 mb-4">
+                  Let the family choose between adventure options
+                </p>
+                <Button
+                  size="sm"
+                  className="bg-orange-500 hover:bg-orange-600 text-white"
+                  onClick={() => {
+                    const options = [
+                      "Edinburgh Castle vs Stirling Castle",
+                      "Ben Nevis vs Ben Lomond",
+                      "Isle of Skye vs Isle of Arran",
+                      "Loch Ness vs Loch Katrine",
+                      "Glencoe vs Cairngorms",
+                      "Aberdeen vs Dundee"
+                    ];
+                    const random = options[Math.floor(Math.random() * options.length)];
+                    alert(`🗳️ Family Vote: ${random} - Which would you choose?`);
+                  }}
+                >
+                  Start Vote
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Fun Discovery Stats */}
+          <div className="mt-12 text-center">
+            <div className="bg-gradient-to-r from-purple-50/50 via-pink-50/50 to-indigo-50/50 rounded-2xl p-6 border border-purple-200/30">
+              <h4 className="font-semibold text-purple-800 mb-3">
+                🧭 Adventure Discovery Stats
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div className="bg-white/60 rounded-xl p-4">
+                  <span className="text-2xl mb-2 block">🎯</span>
+                  <div className="font-bold text-purple-700">152</div>
+                  <div className="text-purple-600">Scottish castles to explore</div>
+                </div>
+                <div className="bg-white/60 rounded-xl p-4">
+                  <span className="text-2xl mb-2 block">⛰️</span>
+                  <div className="font-bold text-purple-700">282</div>
+                  <div className="text-purple-600">Munros waiting for you</div>
+                </div>
+                <div className="bg-white/60 rounded-xl p-4">
+                  <span className="text-2xl mb-2 block">🌊</span>
+                  <div className="font-bold text-purple-700">31,000+</div>
+                  <div className="text-purple-600">Lochs across Scotland</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Recent Adventures */}
       <section className="mb-20">
         {/* Section Header */}
