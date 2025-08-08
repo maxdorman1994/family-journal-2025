@@ -718,11 +718,13 @@ export async function getAllHiddenGemsWithVisits(): Promise<
 
     // Combine gems with visit data
     const visitsMap = new Map(
-      (visitsData || []).map((visit: HiddenGemVisit) => [
+      allVisitsData.map((visit: HiddenGemVisit) => [
         visit.hidden_gem_id,
         visit,
       ]),
     );
+
+    console.log(`🔍 Debug: Created visits map with ${visitsMap.size} entries`);
 
     return (gemsData || []).map((gem: HiddenGemData) => {
       const visit = visitsMap.get(gem.id);
