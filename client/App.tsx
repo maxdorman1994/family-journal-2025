@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Journal from "./pages/Journal";
 import Gallery from "./pages/Gallery";
 import MunroBagging from "./pages/MunroBagging";
+import CastlesLochs from "./pages/CastlesLochs";
 import HintsTips from "./pages/HintsTips";
 import Wishlist from "./pages/Wishlist";
 import Milestones from "./pages/Milestones";
