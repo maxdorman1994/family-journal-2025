@@ -156,7 +156,7 @@ export default function CastlesLochs() {
         errorMessage.includes("Could not find the table") ||
         errorMessage.includes('relation "castles" does not exist')
       ) {
-        setError("🏰 Database Setup Required: Please run the Castles & Lochs SQL schema");
+        setError("🏰 Database Setup Required: Please run the Castles & Lochs SQL schema with 100 castles and 20 lochs");
       } else {
         setError(`⚠️ Database Error: ${errorMessage.substring(0, 50)}...`);
       }
