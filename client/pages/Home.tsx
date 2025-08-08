@@ -865,7 +865,7 @@ export default function Home() {
                             )}
                           </Button>
                         )}
-                        {member.has_custom_avatar && (
+                        {member.has_custom_avatar && isAuthenticated && (
                           <Button
                             size="sm"
                             variant="destructive"
