@@ -2261,19 +2261,7 @@ export default function Home() {
                 <Button
                   size="sm"
                   className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                  onClick={() => {
-                    const gems = [
-                      "Dunnottar Castle's secret beach path",
-                      "The Hermitage's enchanted forest walk",
-                      "Glen Coe's hidden waterfall",
-                      "Skye's fairy pools at sunrise",
-                      "Eilean Donan's photography spots",
-                      "Loch Lomond's quiet islands",
-                    ];
-                    const random =
-                      gems[Math.floor(Math.random() * gems.length)];
-                    alert(`💎 Hidden Gem: ${random}!`);
-                  }}
+                  onClick={() => showDiscoveryModal('gems')}
                 >
                   Find Gems
                 </Button>
