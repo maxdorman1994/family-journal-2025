@@ -374,7 +374,7 @@ export default function CastlesLochs() {
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Discover Scotland's magnificent castles and breathtaking lochs
+              Discover 100 magnificent Scottish castles and 20 breathtaking lochs
             </p>
 
             {/* Error Display */}
@@ -502,7 +502,7 @@ export default function CastlesLochs() {
           <Card className="group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-gradient-to-br from-teal-50 to-blue-50">
             <CardContent className="p-6 relative">
               <div className="absolute inset-0 opacity-5 text-6xl flex items-center justify-center font-bold">
-                ��
+                📸
               </div>
               <div className="relative z-10">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-teal-500 to-blue-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
