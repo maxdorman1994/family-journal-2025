@@ -326,6 +326,8 @@ export default function Journal() {
         pet_notes: entryData.pet_notes,
         tags: entryData.tags,
         photos: uploadedPhotoUrls,
+        is_scenic_drive: entryData.is_scenic_drive || false,
+        scenic_stops: entryData.scenic_stops || [],
       };
 
       console.log(
