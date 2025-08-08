@@ -179,10 +179,28 @@ export default function CastlesLochs() {
           recommended_count: lochsData.filter((l) => l.visit?.would_recommend)
             .length,
         });
+
+        setGemStats({
+          visited_count: visitedGems,
+          total_gems: 30,
+          completion_percentage:
+            Math.round((visitedGems / 30) * 100 * 10) / 10,
+          gems_with_photos: gemsData.filter(
+            (g) => g.visit?.photo_count && g.visit.photo_count > 0,
+          ).length,
+          total_photos: gemsData.reduce(
+            (sum, g) => sum + (g.visit?.photo_count || 0),
+            0,
+          ),
+          first_visit: null,
+          latest_visit: null,
+          recommended_count: gemsData.filter((g) => g.visit?.would_recommend)
+            .length,
+        });
       }
 
       console.log(
-        `✅ Loaded ${castlesData.length} castles and ${lochsData.length} lochs successfully`,
+        `✅ Loaded ${castlesData.length} castles, ${lochsData.length} lochs, and ${gemsData.length} hidden gems successfully`,
       );
     } catch (error) {
       const errorMessage =
