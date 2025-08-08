@@ -647,7 +647,7 @@ export default function Home() {
       } else {
         setSyncStatus("disconnected");
         setError(
-          `��️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`,
+          `⚠️ Database Error: Using local data (${errorMessage.substring(0, 50)}...)`,
         );
       }
 
@@ -1597,7 +1597,7 @@ export default function Home() {
                   {/* Leaf decorations */}
                   <div className="flex gap-2 opacity-40">
                     <span className="text-green-600">🌿</span>
-                    <span className="text-emerald-600">🍃</span>
+                    <span className="text-emerald-600">����</span>
                     <span className="text-green-600">🌿</span>
                   </div>
                 </div>
@@ -2217,19 +2217,7 @@ export default function Home() {
                 <Button
                   size="sm"
                   className="bg-purple-500 hover:bg-purple-600 text-white"
-                  onClick={() => {
-                    const adventures = [
-                      "Visit a random Scottish castle",
-                      "Explore a hidden Highland loch",
-                      "Discover a charming Scottish village",
-                      "Hike a mystery munro trail",
-                      "Find a scenic picnic spot",
-                      "Explore ancient Scottish ruins",
-                    ];
-                    const random =
-                      adventures[Math.floor(Math.random() * adventures.length)];
-                    alert(`🎯 Adventure Suggestion: ${random}!`);
-                  }}
+                  onClick={() => showDiscoveryModal('random')}
                 >
                   Roll the Dice!
                 </Button>
