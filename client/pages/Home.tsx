@@ -88,6 +88,25 @@ export default function Home() {
   const [milestonesLoading, setMilestonesLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Adventure Discovery Modal state
+  const [discoveryModal, setDiscoveryModal] = useState<{
+    isOpen: boolean;
+    type: string;
+    title: string;
+    suggestion: string;
+    description: string;
+    tips: string[];
+    emoji: string;
+  }>({
+    isOpen: false,
+    type: '',
+    title: '',
+    suggestion: '',
+    description: '',
+    tips: [],
+    emoji: ''
+  });
+
   const loadRealStats = async () => {
     try {
       setStatsLoading(true);
@@ -306,7 +325,7 @@ export default function Home() {
       }
 
       if (data.family_members) {
-        console.log("👨‍👩‍👧‍👦 Family members updated from sync");
+        console.log("👨‍���‍👧‍👦 Family members updated from sync");
         setFamilyMembers(data.family_members);
       }
 
