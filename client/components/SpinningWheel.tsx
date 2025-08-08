@@ -220,18 +220,24 @@ export default function SpinningWheel({
                       }}
                     >
                       <div
-                        className="absolute text-white font-bold text-xs text-center"
+                        className="absolute text-white font-bold text-center flex flex-col items-center justify-center"
                         style={{
-                          top: "25%",
-                          left: "45%",
-                          transform: `rotate(${startAngle + sectorAngle / 2}deg)`,
-                          transformOrigin: "50% 100%",
-                          width: "80px",
+                          top: "30%",
+                          left: "50%",
+                          transform: `translate(-50%, -50%) rotate(${startAngle + sectorAngle / 2}deg)`,
+                          transformOrigin: "center",
+                          width: "60px",
+                          height: "60px",
                         }}
                       >
-                        <div className="text-lg mb-1">{adventure.emoji}</div>
-                        <div className="text-xs leading-tight whitespace-nowrap">
-                          {adventure.type.split(" ")[0]}
+                        <div className="text-2xl mb-1">{adventure.emoji}</div>
+                        <div className="text-xs font-bold leading-none text-center drop-shadow-lg">
+                          {adventure.type.includes(" ")
+                            ? adventure.type.split(" ").map((word, i) => (
+                                <div key={i} className="leading-tight">{word}</div>
+                              ))
+                            : adventure.type
+                          }
                         </div>
                       </div>
                     </div>
