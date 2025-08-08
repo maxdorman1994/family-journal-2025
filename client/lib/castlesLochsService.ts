@@ -727,7 +727,7 @@ export async function visitHiddenGem(
   }
 
   try {
-    console.log(`💎 Marking hidden gem ${hiddenGemId} as visited...`);
+    console.log(`💎 Marking hidden gem ${hiddenGemId} as visited...`); // Force rebuild
 
     const visitRecord = {
       hidden_gem_id: hiddenGemId,
