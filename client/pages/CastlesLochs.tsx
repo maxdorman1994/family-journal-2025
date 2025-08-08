@@ -544,7 +544,7 @@ export default function CastlesLochs() {
             <Tabs
               value={activeTab}
               onValueChange={(value) =>
-                setActiveTab(value as "castles" | "lochs")
+                setActiveTab(value as "castles" | "lochs" | "gems")
               }
               className="w-full"
             >
