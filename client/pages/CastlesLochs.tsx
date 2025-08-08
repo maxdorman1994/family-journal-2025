@@ -116,14 +116,16 @@ export default function CastlesLochs() {
       setIsLoading(true);
       setError(null);
 
-      console.log("🔄 Loading castles and lochs from Supabase...");
-      const [castlesData, lochsData] = await Promise.all([
+      console.log("🔄 Loading castles, lochs, and hidden gems from Supabase...");
+      const [castlesData, lochsData, gemsData] = await Promise.all([
         getAllCastlesWithVisits(),
         getAllLochsWithVisits(),
+        getAllHiddenGemsWithVisits(),
       ]);
 
       setCastles(castlesData);
       setLochs(lochsData);
+      setHiddenGems(gemsData);
 
       // Load statistics
       try {
