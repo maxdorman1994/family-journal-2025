@@ -727,12 +727,16 @@ export default function NewEntryForm({
           {/* Adventure Story */}
           <div>
             <label className="block text-sm font-medium mb-2">
-              Adventure Story *
+              {formData.is_scenic_drive ? "Overall Journey Story (Optional)" : "Adventure Story *"}
             </label>
             <Textarea
               value={formData.content}
               onChange={(e) => handleInputChange("content", e.target.value)}
-              placeholder="Tell us about your adventure! What made it special? What did you see and experience? Share the memories that made this day unforgettable..."
+              placeholder={
+                formData.is_scenic_drive
+                  ? "Share the overall experience of your scenic drive - the highlights, the journey, the memories made along the way..."
+                  : "Tell us about your adventure! What made it special? What did you see and experience? Share the memories that made this day unforgettable..."
+              }
               rows={6}
               className={errors.content ? "border-red-500" : ""}
             />
@@ -740,8 +744,9 @@ export default function NewEntryForm({
               <p className="text-red-500 text-sm mt-1">{errors.content}</p>
             )}
             <p className="text-xs text-muted-foreground mt-1">
-              Share the full story of your adventure. This will be the heart of
-              your journal entry.
+              {formData.is_scenic_drive
+                ? "For scenic drives, you can provide an overall summary here, or let the individual stop descriptions tell the story."
+                : "Share the full story of your adventure. This will be the heart of your journal entry."}
             </p>
           </div>
 
