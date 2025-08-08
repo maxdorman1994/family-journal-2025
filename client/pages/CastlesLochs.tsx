@@ -482,8 +482,7 @@ export default function CastlesLochs() {
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Discover 100 magnificent Scottish castles and 20 breathtaking
-              lochs
+              Discover 100 magnificent Scottish castles, 20 breathtaking lochs, and 30 incredible hidden gems
             </p>
 
             {/* Error Display */}
