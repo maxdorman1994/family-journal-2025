@@ -89,6 +89,47 @@ export interface LochWithVisit extends LochData {
   visit?: LochVisit;
 }
 
+export interface HiddenGemData {
+  id: string;
+  name: string;
+  region: string;
+  type: "Secret Beach" | "Hidden Waterfall" | "Ancient Site" | "Natural Wonder" | "Historic Village" | "Remote Island" | "Mountain Peak" | "Forest Grove" | "Cave System" | "Coastal Feature";
+  latitude: number;
+  longitude: number;
+  description: string;
+  how_to_find: string;
+  best_seasons: string[];
+  difficulty_level: "Easy" | "Moderate" | "Challenging" | "Expert";
+  requires_hiking: boolean;
+  nearest_town: string;
+  special_features: string;
+  photography_tips: string;
+  rank: number;
+  is_custom: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface HiddenGemVisit {
+  id: string;
+  user_id: string;
+  hidden_gem_id: string;
+  visited_date: string;
+  rating?: number;
+  notes?: string;
+  photo_count?: number;
+  weather_conditions?: string;
+  would_recommend?: boolean;
+  difficulty_experienced?: "Easy" | "Moderate" | "Challenging" | "Expert";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface HiddenGemWithVisit extends HiddenGemData {
+  visited: boolean;
+  visit?: HiddenGemVisit;
+}
+
 export interface CreateCastleVisitData {
   castle_id: string;
   visited_date?: string;
