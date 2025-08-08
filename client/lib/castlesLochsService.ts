@@ -423,7 +423,7 @@ export async function getCastleVisitStats(): Promise<{
 }> {
   const defaultStats = {
     visited_count: 0,
-    total_castles: 20,
+    total_castles: 100,
     completion_percentage: 0,
     castles_with_photos: 0,
     total_photos: 0,
