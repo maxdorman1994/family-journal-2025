@@ -324,6 +324,24 @@ export default function Home() {
     return unsubscribeHomeSync;
   }, []);
 
+  // Listen for authentication changes and refresh data
+  useEffect(() => {
+    const handleAuthChange = (event: CustomEvent) => {
+      console.log('🔐 Authentication state changed on Home page:', event.detail);
+      // Reload all data when authentication changes
+      loadFamilyMembersData();
+      loadRealStats();
+      loadRecentAdventures();
+      loadMilestones();
+    };
+
+    window.addEventListener('authStateChanged', handleAuthChange as EventListener);
+
+    return () => {
+      window.removeEventListener('authStateChanged', handleAuthChange as EventListener);
+    };
+  }, []);
+
   const loadFamilyMembersData = async () => {
     try {
       setIsLoading(true);
@@ -2196,7 +2214,7 @@ export default function Home() {
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
-                Subscribe for weekly Scottish adventure vlogs! ����
+                Subscribe for weekly Scottish adventure vlogs! �����
               </p>
             </div>
           </div>
