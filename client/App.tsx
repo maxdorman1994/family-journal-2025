@@ -29,6 +29,7 @@ function App() {
             <Route path="/journal" element={<Journal />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/munro-bagging" element={<MunroBagging />} />
+            <Route path="/castles-lochs" element={<CastlesLochs />} />
             <Route path="/hints-tips" element={<HintsTips />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/milestones" element={<Milestones />} />
