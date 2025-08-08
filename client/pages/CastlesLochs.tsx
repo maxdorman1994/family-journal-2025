@@ -945,6 +945,18 @@ export default function CastlesLochs() {
                     </div>
                   )}
 
+                  {activeTab === "gems" && (
+                    <div className="text-xs text-slate-500 mb-2">
+                      <div className="flex items-center justify-center gap-2 mb-1">
+                        <span>Difficulty: {(item as HiddenGemWithVisit).difficulty_level}</span>
+                        {(item as HiddenGemWithVisit).requires_hiking && (
+                          <span className="text-orange-600">🥾 Hiking Required</span>
+                        )}
+                      </div>
+                      <div>Near: {(item as HiddenGemWithVisit).nearest_town}</div>
+                    </div>
+                  )}
+
                   {item.visited && item.visit?.visited_date && (
                     <div className="text-xs text-green-600 font-medium">
                       ✅ Visited{" "}
