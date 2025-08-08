@@ -728,6 +728,7 @@ export async function visitHiddenGem(
 
   try {
     console.log(`💎 Marking hidden gem ${hiddenGemId} as visited...`);
+    console.log(`🔍 Debug: Getting current user for hidden gem visit...`);
 
     // Get current user for proper visit tracking
     const {
