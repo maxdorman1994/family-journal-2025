@@ -784,9 +784,19 @@ export async function unvisitHiddenGem(hiddenGemId: string): Promise<void> {
   try {
     console.log(`🔄 Removing visit for hidden gem ${hiddenGemId}...`);
 
+    // Get the current user to ensure we only delete their visit
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
     const { error } = await supabase
       .from("hidden_gem_visits")
       .delete()
+      .eq("user_id", user.id)
       .eq("hidden_gem_id", hiddenGemId);
 
     if (error) {
