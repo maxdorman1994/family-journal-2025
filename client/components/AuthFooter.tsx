@@ -59,6 +59,11 @@ export default function AuthFooter() {
     setPassword("");
     setError("");
     setIsExpanded(false);
+
+    // Dispatch custom event to notify other components of authentication change
+    window.dispatchEvent(new CustomEvent('authStateChanged', {
+      detail: { isAuthenticated: false }
+    }));
   };
 
   return (
