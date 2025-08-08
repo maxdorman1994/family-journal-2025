@@ -111,6 +111,8 @@ export default function NewEntryForm({
     content: "",
     tags: [] as string[],
     photos: [] as ProcessedPhoto[],
+    is_scenic_drive: false,
+    scenic_stops: [] as Array<{ name: string; description: string }>,
   });
 
   const [customTag, setCustomTag] = useState("");
