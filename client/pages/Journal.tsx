@@ -151,6 +151,21 @@ export default function Journal() {
     loadJournalEntries();
   }, []);
 
+  // Listen for authentication changes and refresh data
+  useEffect(() => {
+    const handleAuthChange = (event: CustomEvent) => {
+      console.log('🔐 Authentication state changed:', event.detail);
+      // Reload journal entries when authentication changes
+      loadJournalEntries();
+    };
+
+    window.addEventListener('authStateChanged', handleAuthChange as EventListener);
+
+    return () => {
+      window.removeEventListener('authStateChanged', handleAuthChange as EventListener);
+    };
+  }, []);
+
   // Subscribe to real-time journal entry changes
   useEffect(() => {
     const unsubscribe = subscribe("journal_entries", (event) => {
