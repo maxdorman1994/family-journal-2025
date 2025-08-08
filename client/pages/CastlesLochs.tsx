@@ -793,6 +793,13 @@ export default function CastlesLochs() {
                       {new Date(item.visit.visited_date).toLocaleDateString()}
                     </div>
                   )}
+
+                  {!isAuthenticated && (
+                    <div className="text-xs text-red-500 font-medium mt-2 flex items-center justify-center gap-1">
+                      <Lock className="h-3 w-3" />
+                      Login to track visits
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
