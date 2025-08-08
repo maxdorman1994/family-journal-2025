@@ -23,6 +23,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import {
   processPhoto,
@@ -945,7 +951,7 @@ export default function Home() {
               {syncStatus === "connected"
                 ? "🌐 Profile photos sync across devices"
                 : syncStatus === "connecting"
-                  ? "��� Connecting..."
+                  ? "���� Connecting..."
                   : syncStatus === "local"
                     ? "📱 Local mode only"
                     : "❌ Sync disconnected"}
