@@ -952,6 +952,15 @@ export default function CastlesLochs() {
               }
             >
               <CardContent className="p-6">
+                {/* Custom Item Badge */}
+                {(item as any).is_custom && (
+                  <div className="absolute top-4 left-4">
+                    <Badge className="bg-purple-100 text-purple-800 border-purple-200 text-xs">
+                      Custom
+                    </Badge>
+                  </div>
+                )}
+
                 {/* Status Icon */}
                 <div className="absolute top-4 right-4">
                   {item.visited ? (
