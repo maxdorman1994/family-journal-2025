@@ -404,35 +404,38 @@ export default function CastlesLochs() {
   const achievements = [
     {
       name: "First Visit",
-      description: `Visit your first ${activeTab === "castles" ? "castle" : "loch"}`,
+      description: `Visit your first ${activeTab === "castles" ? "castle" : activeTab === "lochs" ? "loch" : "hidden gem"}`,
       unlocked: visitedCount >= 1,
       icon: Target,
     },
     {
-      name: "Royal Explorer",
+      name: "Special Explorer",
       description:
-        activeTab === "castles" ? "Visit Edinburgh Castle" : "Visit Loch Ness",
+        activeTab === "castles" ? "Visit Edinburgh Castle" :
+        activeTab === "lochs" ? "Visit Loch Ness" : "Visit the Fairy Pools",
       unlocked:
         activeTab === "castles"
           ? castles.find((c) => c.name === "Edinburgh Castle")?.visited || false
-          : lochs.find((l) => l.name === "Loch Ness")?.visited || false,
+          : activeTab === "lochs"
+          ? lochs.find((l) => l.name === "Loch Ness")?.visited || false
+          : hiddenGems.find((g) => g.name === "Fairy Pools")?.visited || false,
       icon: Crown,
     },
     {
       name: "Quarter Complete",
-      description: `Visit 25% of all ${activeTab}`,
+      description: `Visit 25% of all ${activeTab === "castles" ? "castles" : activeTab === "lochs" ? "lochs" : "hidden gems"}`,
       unlocked: completionPercentage >= 25,
       icon: Award,
     },
     {
       name: "Half Explorer",
-      description: `Visit 50% of all ${activeTab}`,
+      description: `Visit 50% of all ${activeTab === "castles" ? "castles" : activeTab === "lochs" ? "lochs" : "hidden gems"}`,
       unlocked: completionPercentage >= 50,
       icon: Star,
     },
     {
       name: "Completionist",
-      description: `Visit all ${totalItems} ${activeTab}`,
+      description: `Visit all ${totalItems} ${activeTab === "castles" ? "castles" : activeTab === "lochs" ? "lochs" : "hidden gems"}`,
       unlocked: visitedCount >= totalItems,
       icon: Zap,
     },
