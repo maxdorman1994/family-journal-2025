@@ -210,10 +210,14 @@ export default function NewEntryForm({
 
     // For scenic drives, either content or stops with descriptions are required
     if (formData.is_scenic_drive) {
-      const hasValidStops = formData.scenic_stops.length > 0 &&
-        formData.scenic_stops.some(stop => stop.name.trim() && stop.description.trim());
+      const hasValidStops =
+        formData.scenic_stops.length > 0 &&
+        formData.scenic_stops.some(
+          (stop) => stop.name.trim() && stop.description.trim(),
+        );
       if (!formData.content.trim() && !hasValidStops) {
-        newErrors.content = "Either adventure story or scenic stops with descriptions are required";
+        newErrors.content =
+          "Either adventure story or scenic stops with descriptions are required";
       }
     } else {
       if (!formData.content.trim()) {
@@ -404,15 +408,22 @@ export default function NewEntryForm({
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {formData.scenic_stops.map((stop, index) => (
-                    <div key={index} className="p-4 bg-white rounded-lg border border-emerald-200 space-y-3">
+                    <div
+                      key={index}
+                      className="p-4 bg-white rounded-lg border border-emerald-200 space-y-3"
+                    >
                       <div className="flex items-center justify-between">
-                        <h4 className="font-medium text-emerald-800">Stop {index + 1}</h4>
+                        <h4 className="font-medium text-emerald-800">
+                          Stop {index + 1}
+                        </h4>
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
                           onClick={() => {
-                            const newStops = formData.scenic_stops.filter((_, i) => i !== index);
+                            const newStops = formData.scenic_stops.filter(
+                              (_, i) => i !== index,
+                            );
                             handleInputChange("scenic_stops", newStops);
                           }}
                         >
@@ -420,7 +431,9 @@ export default function NewEntryForm({
                         </Button>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1">Stop Name</label>
+                        <label className="block text-sm font-medium mb-1">
+                          Stop Name
+                        </label>
                         <Input
                           value={stop.name}
                           onChange={(e) => {
@@ -432,7 +445,9 @@ export default function NewEntryForm({
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1">Description</label>
+                        <label className="block text-sm font-medium mb-1">
+                          Description
+                        </label>
                         <Textarea
                           value={stop.description}
                           onChange={(e) => {
@@ -451,7 +466,10 @@ export default function NewEntryForm({
                     type="button"
                     variant="outline"
                     onClick={() => {
-                      const newStops = [...formData.scenic_stops, { name: "", description: "" }];
+                      const newStops = [
+                        ...formData.scenic_stops,
+                        { name: "", description: "" },
+                      ];
                       handleInputChange("scenic_stops", newStops);
                     }}
                     className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50"
@@ -728,7 +746,9 @@ export default function NewEntryForm({
           {/* Adventure Story */}
           <div>
             <label className="block text-sm font-medium mb-2">
-              {formData.is_scenic_drive ? "Overall Journey Story (Optional)" : "Adventure Story *"}
+              {formData.is_scenic_drive
+                ? "Overall Journey Story (Optional)"
+                : "Adventure Story *"}
             </label>
             <Textarea
               value={formData.content}
