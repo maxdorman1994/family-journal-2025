@@ -304,7 +304,7 @@ export default function CastlesLochs() {
             would_recommend: true,
           });
         }
-      } else {
+      } else if (activeTab === "lochs") {
         if (isVisited) {
           await unvisitLoch(itemId);
         } else {
@@ -318,6 +318,19 @@ export default function CastlesLochs() {
             water_temperature: "Refreshing",
             wildlife_spotted: ["Red deer", "Highland cattle"],
             would_recommend: true,
+          });
+        }
+      } else {
+        if (isVisited) {
+          await unvisitHiddenGem(itemId);
+        } else {
+          await visitHiddenGem(itemId, {
+            rating: Math.floor(Math.random() * 2) + 4, // 4-5 stars
+            notes: "Amazing hidden gem discovery!",
+            photo_count: Math.floor(Math.random() * 8) + 1,
+            weather_conditions: "Perfect for photography",
+            would_recommend: true,
+            difficulty_experienced: "Moderate" as const,
           });
         }
       }
