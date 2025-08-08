@@ -731,9 +731,13 @@ export default function CastlesLochs() {
                     <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
                       <CheckCircle className="h-5 w-5 text-white" />
                     </div>
-                  ) : (
+                  ) : isAuthenticated ? (
                     <div className="w-8 h-8 rounded-full border-2 border-slate-300 flex items-center justify-center group-hover:border-green-400 transition-colors">
                       <Circle className="h-5 w-5 text-slate-400 group-hover:text-green-400" />
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 rounded-full border-2 border-red-200 flex items-center justify-center">
+                      <Lock className="h-4 w-4 text-red-400" />
                     </div>
                   )}
                 </div>
