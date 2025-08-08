@@ -142,6 +142,7 @@ export default function CastlesLochs() {
         // Use fallback stats
         const visitedCastles = castlesData.filter((c) => c.visited).length;
         const visitedLochs = lochsData.filter((l) => l.visited).length;
+        const visitedGems = gemsData.filter((g) => g.visited).length;
 
         setCastleStats({
           visited_count: visitedCastles,
