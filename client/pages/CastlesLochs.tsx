@@ -548,7 +548,7 @@ export default function CastlesLochs() {
               }
               className="w-full"
             >
-              <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
+              <TabsList className="grid w-full max-w-lg mx-auto grid-cols-3 mb-8">
                 <TabsTrigger
                   value="castles"
                   className="flex items-center gap-2"
@@ -559,6 +559,10 @@ export default function CastlesLochs() {
                 <TabsTrigger value="lochs" className="flex items-center gap-2">
                   <Waves className="h-4 w-4" />
                   Lochs
+                </TabsTrigger>
+                <TabsTrigger value="gems" className="flex items-center gap-2">
+                  <Gem className="h-4 w-4" />
+                  Hidden Gems
                 </TabsTrigger>
               </TabsList>
 
