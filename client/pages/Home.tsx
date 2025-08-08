@@ -588,6 +588,12 @@ export default function Home() {
   };
 
   const removePhoto = async (memberId: string) => {
+    // Only allow photo removal if authenticated
+    if (!isAuthenticated) {
+      console.log("❌ Photo removal denied - user not authenticated");
+      return;
+    }
+
     try {
       if (error && error.includes("Database Setup Required")) {
         // Local only
