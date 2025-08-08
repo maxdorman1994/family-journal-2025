@@ -39,10 +39,10 @@ export default function AuthFooter() {
         setError("");
         setIsExpanded(false);
 
-        // Force page refresh to update authentication state across all components
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
+        // Dispatch custom event to notify other components of authentication change
+        window.dispatchEvent(new CustomEvent('authStateChanged', {
+          detail: { isAuthenticated: true }
+        }));
       } else {
         setError("Incorrect password. Please try again.");
         setPassword("");
