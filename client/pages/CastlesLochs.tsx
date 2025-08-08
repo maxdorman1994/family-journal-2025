@@ -382,7 +382,7 @@ export default function CastlesLochs() {
     if (!isAuthenticated) return;
 
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${itemName}"?\n\nThis action cannot be undone.`
+      `Are you sure you want to delete "${itemName}"?\n\nThis action cannot be undone.`,
     );
 
     if (!confirmed) return;
@@ -404,7 +404,7 @@ export default function CastlesLochs() {
     } catch (error) {
       console.error("Error deleting item:", error);
       setError(
-        `❌ Failed to delete "${itemName}": ${error instanceof Error ? error.message : String(error)}`
+        `❌ Failed to delete "${itemName}": ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   };
