@@ -378,6 +378,37 @@ export default function CastlesLochs() {
     }
   };
 
+  const handleDeleteItem = async (itemId: string, itemName: string) => {
+    if (!isAuthenticated) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${itemName}"?\n\nThis action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      if (activeTab === "castles") {
+        await deleteCustomCastle(itemId);
+      } else if (activeTab === "lochs") {
+        await deleteCustomLoch(itemId);
+      } else {
+        await deleteCustomHiddenGem(itemId);
+      }
+
+      // Reload data to reflect the deletion
+      await loadData();
+
+      // Show success message
+      setError(`✅ "${itemName}" deleted successfully`);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      setError(
+        `❌ Failed to delete "${itemName}": ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+  };
+
   const getTypeColor = (type: string) => {
     switch (type) {
       case "Royal Castle":
