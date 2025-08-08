@@ -2620,6 +2620,84 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Adventure Discovery Modal */}
+      <Dialog open={discoveryModal.isOpen} onOpenChange={(open) => setDiscoveryModal(prev => ({ ...prev, isOpen: open }))}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center mb-4">
+              <span className="text-4xl mr-3">{discoveryModal.emoji}</span>
+              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent">
+                {discoveryModal.title}
+              </span>
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {/* Main Suggestion */}
+            <div className="text-center">
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-200/50">
+                <h3 className="text-lg font-semibold text-purple-800 mb-2">
+                  {discoveryModal.type} Suggestion
+                </h3>
+                <p className="text-purple-700 font-medium">
+                  {discoveryModal.suggestion}
+                </p>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <h4 className="font-semibold text-slate-800 mb-3 flex items-center">
+                <span className="text-xl mr-2">📖</span>
+                About This Adventure
+              </h4>
+              <p className="text-slate-700 leading-relaxed whitespace-pre-line">
+                {discoveryModal.description}
+              </p>
+            </div>
+
+            {/* Tips */}
+            {discoveryModal.tips.length > 0 && (
+              <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6 border border-emerald-200">
+                <h4 className="font-semibold text-emerald-800 mb-4 flex items-center">
+                  <span className="text-xl mr-2">💡</span>
+                  Helpful Tips for Your Adventure
+                </h4>
+                <ul className="space-y-2">
+                  {discoveryModal.tips.map((tip, index) => (
+                    <li key={index} className="flex items-start gap-3 text-emerald-700">
+                      <span className="text-emerald-500 font-bold mt-0.5">•</span>
+                      <span className="text-sm leading-relaxed">{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setDiscoveryModal(prev => ({ ...prev, isOpen: false }))}
+                className="flex-1"
+              >
+                Maybe Later
+              </Button>
+              <Button
+                onClick={() => {
+                  setDiscoveryModal(prev => ({ ...prev, isOpen: false }));
+                  // You could add navigation to journal here in the future
+                  window.location.href = '/journal';
+                }}
+                className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+              >
+                Plan This Adventure
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
