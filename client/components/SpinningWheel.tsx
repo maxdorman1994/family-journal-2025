@@ -202,8 +202,10 @@ export default function SpinningWheel({
                 {/* Create SVG sectors for better control */}
                 <svg className="w-full h-full" viewBox="0 0 200 200">
                   {adventureTypes.map((adventure, index) => {
-                    const startAngle = (index * sectorAngle - 90) * (Math.PI / 180); // -90 to start from top
-                    const endAngle = ((index + 1) * sectorAngle - 90) * (Math.PI / 180);
+                    const startAngle =
+                      (index * sectorAngle - 90) * (Math.PI / 180); // -90 to start from top
+                    const endAngle =
+                      ((index + 1) * sectorAngle - 90) * (Math.PI / 180);
                     const largeArcFlag = sectorAngle > 180 ? 1 : 0;
 
                     const x1 = 100 + 90 * Math.cos(startAngle);
@@ -215,8 +217,8 @@ export default function SpinningWheel({
                       `M 100 100`,
                       `L ${x1} ${y1}`,
                       `A 90 90 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-                      `Z`
-                    ].join(' ');
+                      `Z`,
+                    ].join(" ");
 
                     return (
                       <path
@@ -231,7 +233,9 @@ export default function SpinningWheel({
 
                 {/* Text labels positioned over the sectors */}
                 {adventureTypes.map((adventure, index) => {
-                  const angle = (index * sectorAngle + sectorAngle / 2 - 90) * (Math.PI / 180);
+                  const angle =
+                    (index * sectorAngle + sectorAngle / 2 - 90) *
+                    (Math.PI / 180);
                   const radius = 65; // Distance from center
                   const x = 50 + (radius / 100) * 50 * Math.cos(angle);
                   const y = 50 + (radius / 100) * 50 * Math.sin(angle);
@@ -248,7 +252,9 @@ export default function SpinningWheel({
                         height: "50px",
                       }}
                     >
-                      <div className="text-xl mb-1 drop-shadow-lg">{adventure.emoji}</div>
+                      <div className="text-xl mb-1 drop-shadow-lg">
+                        {adventure.emoji}
+                      </div>
                       <div className="text-xs font-bold leading-tight text-center drop-shadow-lg">
                         {adventure.type.split(" ").map((word, i) => (
                           <div key={i} className="leading-none">
