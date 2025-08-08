@@ -142,6 +142,8 @@ export default function NewEntryForm({
         content: editingEntry.content || "",
         tags: editingEntry.tags || [],
         photos: [], // Photos will need special handling for existing entries
+        is_scenic_drive: (editingEntry as any).is_scenic_drive || false,
+        scenic_stops: (editingEntry as any).scenic_stops || [],
       });
     } else {
       // Reset form for new entry
