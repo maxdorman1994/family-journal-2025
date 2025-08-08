@@ -49,7 +49,7 @@ const weatherOptions = [
   { value: "⛅ Partly Cloudy", label: "⛅ Partly Cloudy" },
   { value: "��️ Cloudy", label: "☁️ Cloudy" },
   { value: "🌧️ Light Rain", label: "🌧️ Light Rain" },
-  { value: "🌦️ Showers", label: "🌦️ Showers" },
+  { value: "🌦️ Showers", label: "🌦��� Showers" },
   { value: "❄️ Snow", label: "❄️ Snow" },
   { value: "🌫️ Foggy", label: "🌫️ Foggy" },
   { value: "💨 Windy", label: "💨 Windy" },
@@ -359,6 +359,95 @@ export default function NewEntryForm({
             </div>
             {errors.location && (
               <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+            )}
+          </div>
+
+          {/* Scenic Drive Option */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="is_scenic_drive"
+                checked={formData.is_scenic_drive}
+                onCheckedChange={(checked) =>
+                  handleInputChange("is_scenic_drive", checked)
+                }
+              />
+              <label
+                htmlFor="is_scenic_drive"
+                className="text-sm font-medium flex items-center"
+              >
+                <Route className="mr-1 h-4 w-4 text-emerald-500" />
+                Scenic Drive with Multiple Stops
+              </label>
+            </div>
+
+            {formData.is_scenic_drive && (
+              <Card className="bg-emerald-50/50 border-emerald-200">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    <Route className="mr-2 h-5 w-5 text-emerald-600" />
+                    Scenic Drive Stops
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {formData.scenic_stops.map((stop, index) => (
+                    <div key={index} className="p-4 bg-white rounded-lg border border-emerald-200 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium text-emerald-800">Stop {index + 1}</h4>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newStops = formData.scenic_stops.filter((_, i) => i !== index);
+                            handleInputChange("scenic_stops", newStops);
+                          }}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Stop Name</label>
+                        <Input
+                          value={stop.name}
+                          onChange={(e) => {
+                            const newStops = [...formData.scenic_stops];
+                            newStops[index].name = e.target.value;
+                            handleInputChange("scenic_stops", newStops);
+                          }}
+                          placeholder="e.g., Loch Katrine Viewpoint"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Description</label>
+                        <Textarea
+                          value={stop.description}
+                          onChange={(e) => {
+                            const newStops = [...formData.scenic_stops];
+                            newStops[index].description = e.target.value;
+                            handleInputChange("scenic_stops", newStops);
+                          }}
+                          placeholder="Brief description of what made this stop special..."
+                          rows={2}
+                        />
+                      </div>
+                    </div>
+                  ))}
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      const newStops = [...formData.scenic_stops, { name: "", description: "" }];
+                      handleInputChange("scenic_stops", newStops);
+                    }}
+                    className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Stop
+                  </Button>
+                </CardContent>
+              </Card>
             )}
           </div>
 
