@@ -752,6 +752,136 @@ export async function createCustomHiddenGem(
 }
 
 /**
+ * DELETE CUSTOM ITEMS FUNCTIONS
+ */
+
+export async function deleteCustomCastle(castleId: string): Promise<void> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase not configured");
+  }
+
+  try {
+    console.log(`🗑️ Deleting custom castle: ${castleId}...`);
+
+    // First check if it's a custom castle
+    const { data: castle, error: fetchError } = await supabase
+      .from("castles")
+      .select("is_custom, name")
+      .eq("id", castleId)
+      .single();
+
+    if (fetchError) {
+      throw new Error(`Failed to fetch castle: ${fetchError.message}`);
+    }
+
+    if (!castle?.is_custom) {
+      throw new Error("Cannot delete official castles, only custom ones");
+    }
+
+    // Delete the castle (cascade will handle visits)
+    const { error } = await supabase
+      .from("castles")
+      .delete()
+      .eq("id", castleId)
+      .eq("is_custom", true);
+
+    if (error) {
+      console.error("❌ Error deleting custom castle:", error);
+      throw new Error(`Failed to delete castle: ${error.message}`);
+    }
+
+    console.log(`✅ Custom castle deleted successfully: ${castle.name}`);
+  } catch (error) {
+    console.error("❌ Error in deleteCustomCastle:", error);
+    throw error;
+  }
+}
+
+export async function deleteCustomLoch(lochId: string): Promise<void> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase not configured");
+  }
+
+  try {
+    console.log(`🗑️ Deleting custom loch: ${lochId}...`);
+
+    // First check if it's a custom loch
+    const { data: loch, error: fetchError } = await supabase
+      .from("lochs")
+      .select("is_custom, name")
+      .eq("id", lochId)
+      .single();
+
+    if (fetchError) {
+      throw new Error(`Failed to fetch loch: ${fetchError.message}`);
+    }
+
+    if (!loch?.is_custom) {
+      throw new Error("Cannot delete official lochs, only custom ones");
+    }
+
+    // Delete the loch (cascade will handle visits)
+    const { error } = await supabase
+      .from("lochs")
+      .delete()
+      .eq("id", lochId)
+      .eq("is_custom", true);
+
+    if (error) {
+      console.error("❌ Error deleting custom loch:", error);
+      throw new Error(`Failed to delete loch: ${error.message}`);
+    }
+
+    console.log(`✅ Custom loch deleted successfully: ${loch.name}`);
+  } catch (error) {
+    console.error("❌ Error in deleteCustomLoch:", error);
+    throw error;
+  }
+}
+
+export async function deleteCustomHiddenGem(gemId: string): Promise<void> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase not configured");
+  }
+
+  try {
+    console.log(`🗑️ Deleting custom hidden gem: ${gemId}...`);
+
+    // First check if it's a custom hidden gem
+    const { data: gem, error: fetchError } = await supabase
+      .from("hidden_gems")
+      .select("is_custom, name")
+      .eq("id", gemId)
+      .single();
+
+    if (fetchError) {
+      throw new Error(`Failed to fetch hidden gem: ${fetchError.message}`);
+    }
+
+    if (!gem?.is_custom) {
+      throw new Error("Cannot delete official hidden gems, only custom ones");
+    }
+
+    // Delete the hidden gem (cascade will handle visits)
+    const { error } = await supabase
+      .from("hidden_gems")
+      .delete()
+      .eq("id", gemId)
+      .eq("is_custom", true);
+
+    if (error) {
+      console.error("❌ Error deleting custom hidden gem:", error);
+      throw new Error(`Failed to delete hidden gem: ${error.message}`);
+    }
+
+    console.log(`✅ Custom hidden gem deleted successfully: ${gem.name}`);
+  } catch (error) {
+    console.error("❌ Error in deleteCustomHiddenGem:", error);
+    throw error;
+  }
+}
+
+/**
  * HIDDEN GEMS FUNCTIONS
  */
 
