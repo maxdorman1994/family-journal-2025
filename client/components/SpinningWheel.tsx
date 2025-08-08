@@ -234,10 +234,11 @@ export default function SpinningWheel({
                         <div className="text-xs font-bold leading-none text-center drop-shadow-lg">
                           {adventure.type.includes(" ")
                             ? adventure.type.split(" ").map((word, i) => (
-                                <div key={i} className="leading-tight">{word}</div>
+                                <div key={i} className="leading-tight">
+                                  {word}
+                                </div>
                               ))
-                            : adventure.type
-                          }
+                            : adventure.type}
                         </div>
                       </div>
                     </div>
