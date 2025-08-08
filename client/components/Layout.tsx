@@ -94,7 +94,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: "Home", href: "/" },
     { name: "Journal", href: "/journal" },
     { name: "Munro Bagging", href: "/munro-bagging" },
-    { name: "Castles & Lochs", href: "/castles-lochs" },
+    { name: "Adventures", href: "/castles-lochs" },
     { name: "Gallery", href: "/gallery" },
     { name: "Map", href: "/map" },
     { name: "Milestones", href: "/milestones" },
