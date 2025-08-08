@@ -727,9 +727,15 @@ export async function visitHiddenGem(
   }
 
   try {
-    console.log(`💎 Marking hidden gem ${hiddenGemId} as visited...`); // Force rebuild
+    console.log(`💎 Marking hidden gem ${hiddenGemId} as visited...`);
+
+    // Get current user for proper visit tracking
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     const visitRecord = {
+      user_id: user?.id || null, // Set user_id properly for persistent visits
       hidden_gem_id: hiddenGemId,
       visited_date: new Date().toISOString().split("T")[0],
       rating: visitData.rating || 5,
