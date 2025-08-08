@@ -94,6 +94,16 @@ export default function CastlesLochs() {
     latest_visit: null,
     recommended_count: 0,
   });
+  const [gemStats, setGemStats] = useState({
+    visited_count: 0,
+    total_gems: 30,
+    completion_percentage: 0,
+    gems_with_photos: 0,
+    total_photos: 0,
+    first_visit: null,
+    latest_visit: null,
+    recommended_count: 0,
+  });
 
   // Load data on component mount
   useEffect(() => {
