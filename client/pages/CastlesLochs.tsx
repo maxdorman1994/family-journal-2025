@@ -819,13 +819,26 @@ export default function CastlesLochs() {
                         <SelectItem value="Ruin">Ruin</SelectItem>
                         <SelectItem value="Palace">Palace</SelectItem>
                       </>
-                    ) : (
+                    ) : activeTab === "lochs" ? (
                       <>
                         <SelectItem value="Freshwater Loch">
                           Freshwater Loch
                         </SelectItem>
                         <SelectItem value="Sea Loch">Sea Loch</SelectItem>
                         <SelectItem value="Tidal Loch">Tidal Loch</SelectItem>
+                      </>
+                    ) : (
+                      <>
+                        <SelectItem value="Secret Beach">Secret Beach</SelectItem>
+                        <SelectItem value="Hidden Waterfall">Hidden Waterfall</SelectItem>
+                        <SelectItem value="Ancient Site">Ancient Site</SelectItem>
+                        <SelectItem value="Natural Wonder">Natural Wonder</SelectItem>
+                        <SelectItem value="Historic Village">Historic Village</SelectItem>
+                        <SelectItem value="Remote Island">Remote Island</SelectItem>
+                        <SelectItem value="Mountain Peak">Mountain Peak</SelectItem>
+                        <SelectItem value="Forest Grove">Forest Grove</SelectItem>
+                        <SelectItem value="Cave System">Cave System</SelectItem>
+                        <SelectItem value="Coastal Feature">Coastal Feature</SelectItem>
                       </>
                     )}
                   </SelectContent>
