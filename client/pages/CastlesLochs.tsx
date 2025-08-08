@@ -196,7 +196,7 @@ export default function CastlesLochs() {
   };
 
   const currentStats = activeTab === "castles" ? castleStats : lochStats;
-  const totalItems = activeTab === "castles" ? 20 : 10;
+  const totalItems = activeTab === "castles" ? 100 : 20;
   const visitedCount = activeTab === "castles" ? castleStats.visited_count : lochStats.visited_count;
   const completionPercentage = Math.round((visitedCount / totalItems) * 100 * 10) / 10;
 
