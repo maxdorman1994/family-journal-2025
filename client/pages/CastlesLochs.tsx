@@ -123,8 +123,8 @@ export default function CastlesLochs() {
 
         setCastleStats({
           visited_count: visitedCastles,
-          total_castles: 20,
-          completion_percentage: Math.round((visitedCastles / 20) * 100 * 10) / 10,
+          total_castles: 100,
+          completion_percentage: Math.round((visitedCastles / 100) * 100 * 10) / 10,
           castles_with_photos: castlesData.filter((c) => c.visit?.photo_count && c.visit.photo_count > 0).length,
           total_photos: castlesData.reduce((sum, c) => sum + (c.visit?.photo_count || 0), 0),
           first_visit: null,
@@ -134,8 +134,8 @@ export default function CastlesLochs() {
 
         setLochStats({
           visited_count: visitedLochs,
-          total_lochs: 10,
-          completion_percentage: Math.round((visitedLochs / 10) * 100 * 10) / 10,
+          total_lochs: 20,
+          completion_percentage: Math.round((visitedLochs / 20) * 100 * 10) / 10,
           lochs_with_photos: lochsData.filter((l) => l.visit?.photo_count && l.visit.photo_count > 0).length,
           total_photos: lochsData.reduce((sum, l) => sum + (l.visit?.photo_count || 0), 0),
           first_visit: null,
@@ -392,7 +392,7 @@ export default function CastlesLochs() {
                   {error.includes("Database Setup Required") && (
                     <div className="bg-white/50 rounded-xl p-4 mb-4 text-xs">
                       <div className="font-semibold mb-2">
-                        ���� Setup Instructions:
+                        📋 Setup Instructions:
                       </div>
                       <ol className="list-decimal list-inside space-y-1 text-amber-700">
                         <li>Go to your Supabase Dashboard → SQL Editor</li>
