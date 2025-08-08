@@ -42,16 +42,21 @@ import {
 import {
   getAllCastlesWithVisits,
   getAllLochsWithVisits,
+  getAllHiddenGemsWithVisits,
   visitCastle,
   unvisitCastle,
   visitLoch,
   unvisitLoch,
+  visitHiddenGem,
+  unvisitHiddenGem,
   getCastleVisitStats,
   getLochVisitStats,
+  getHiddenGemVisitStats,
   getCastleLochRegions,
   testCastleLochConnection,
   CastleWithVisit,
   LochWithVisit,
+  HiddenGemWithVisit,
 } from "@/lib/castlesLochsService";
 
 export default function CastlesLochs() {
