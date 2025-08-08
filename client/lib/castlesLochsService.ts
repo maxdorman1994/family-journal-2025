@@ -9,7 +9,12 @@ export interface CastleData {
   id: string;
   name: string;
   region: string;
-  type: "Royal Castle" | "Historic Fortress" | "Clan Castle" | "Ruin" | "Palace";
+  type:
+    | "Royal Castle"
+    | "Historic Fortress"
+    | "Clan Castle"
+    | "Ruin"
+    | "Palace";
   built_century: string;
   latitude: number;
   longitude: number;
@@ -144,9 +149,7 @@ export async function getAllCastlesWithVisits(): Promise<CastleWithVisit[]> {
       console.error("Error fetching castle visits:", visitsError);
       if (
         !visitsError.message.includes("Could not find the table") &&
-        !visitsError.message.includes(
-          'relation "castle_visits" does not exist',
-        )
+        !visitsError.message.includes('relation "castle_visits" does not exist')
       ) {
         throw new Error(
           `Failed to fetch castle visits: ${visitsError.message}`,

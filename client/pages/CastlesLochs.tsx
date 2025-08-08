@@ -125,39 +125,60 @@ export default function CastlesLochs() {
         setCastleStats({
           visited_count: visitedCastles,
           total_castles: 100,
-          completion_percentage: Math.round((visitedCastles / 100) * 100 * 10) / 10,
-          castles_with_photos: castlesData.filter((c) => c.visit?.photo_count && c.visit.photo_count > 0).length,
-          total_photos: castlesData.reduce((sum, c) => sum + (c.visit?.photo_count || 0), 0),
+          completion_percentage:
+            Math.round((visitedCastles / 100) * 100 * 10) / 10,
+          castles_with_photos: castlesData.filter(
+            (c) => c.visit?.photo_count && c.visit.photo_count > 0,
+          ).length,
+          total_photos: castlesData.reduce(
+            (sum, c) => sum + (c.visit?.photo_count || 0),
+            0,
+          ),
           first_visit: null,
           latest_visit: null,
-          recommended_count: castlesData.filter((c) => c.visit?.would_recommend).length,
+          recommended_count: castlesData.filter((c) => c.visit?.would_recommend)
+            .length,
         });
 
         setLochStats({
           visited_count: visitedLochs,
           total_lochs: 20,
-          completion_percentage: Math.round((visitedLochs / 20) * 100 * 10) / 10,
-          lochs_with_photos: lochsData.filter((l) => l.visit?.photo_count && l.visit.photo_count > 0).length,
-          total_photos: lochsData.reduce((sum, l) => sum + (l.visit?.photo_count || 0), 0),
+          completion_percentage:
+            Math.round((visitedLochs / 20) * 100 * 10) / 10,
+          lochs_with_photos: lochsData.filter(
+            (l) => l.visit?.photo_count && l.visit.photo_count > 0,
+          ).length,
+          total_photos: lochsData.reduce(
+            (sum, l) => sum + (l.visit?.photo_count || 0),
+            0,
+          ),
           first_visit: null,
           latest_visit: null,
-          recommended_count: lochsData.filter((l) => l.visit?.would_recommend).length,
+          recommended_count: lochsData.filter((l) => l.visit?.would_recommend)
+            .length,
         });
       }
 
-      console.log(`✅ Loaded ${castlesData.length} castles and ${lochsData.length} lochs successfully`);
+      console.log(
+        `✅ Loaded ${castlesData.length} castles and ${lochsData.length} lochs successfully`,
+      );
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       console.warn("Failed to load from Supabase:", errorMessage);
 
       if (errorMessage.includes("not configured")) {
-        setError("📝 Development Mode: Supabase not configured - using local data");
+        setError(
+          "📝 Development Mode: Supabase not configured - using local data",
+        );
       } else if (
         errorMessage.includes("SCHEMA_MISSING") ||
         errorMessage.includes("Could not find the table") ||
         errorMessage.includes('relation "castles" does not exist')
       ) {
-        setError("🏰 Database Setup Required: Please run the Castles & Lochs SQL schema with 100 castles and 20 lochs");
+        setError(
+          "🏰 Database Setup Required: Please run the Castles & Lochs SQL schema with 100 castles and 20 lochs",
+        );
       } else {
         setError(`⚠️ Database Error: ${errorMessage.substring(0, 50)}...`);
       }
@@ -198,23 +219,30 @@ export default function CastlesLochs() {
 
   const currentStats = activeTab === "castles" ? castleStats : lochStats;
   const totalItems = activeTab === "castles" ? 100 : 20;
-  const visitedCount = activeTab === "castles" ? castleStats.visited_count : lochStats.visited_count;
-  const completionPercentage = Math.round((visitedCount / totalItems) * 100 * 10) / 10;
+  const visitedCount =
+    activeTab === "castles"
+      ? castleStats.visited_count
+      : lochStats.visited_count;
+  const completionPercentage =
+    Math.round((visitedCount / totalItems) * 100 * 10) / 10;
 
-  const filteredItems = (activeTab === "castles" ? castles : lochs).filter((item) => {
-    const matchesFilter =
-      filter === "all" ||
-      (filter === "visited" && item.visited) ||
-      (filter === "remaining" && !item.visited);
-    const matchesRegion = regionFilter === "all" || item.region === regionFilter;
-    const matchesType = typeFilter === "all" || item.type === typeFilter;
-    const matchesSearch =
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredItems = (activeTab === "castles" ? castles : lochs).filter(
+    (item) => {
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "visited" && item.visited) ||
+        (filter === "remaining" && !item.visited);
+      const matchesRegion =
+        regionFilter === "all" || item.region === regionFilter;
+      const matchesType = typeFilter === "all" || item.type === typeFilter;
+      const matchesSearch =
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return matchesFilter && matchesRegion && matchesType && matchesSearch;
-  });
+      return matchesFilter && matchesRegion && matchesType && matchesSearch;
+    },
+  );
 
   const toggleVisit = async (itemId: string, isVisited: boolean) => {
     if (!isAuthenticated) return;
@@ -308,10 +336,12 @@ export default function CastlesLochs() {
     },
     {
       name: "Royal Explorer",
-      description: activeTab === "castles" ? "Visit Edinburgh Castle" : "Visit Loch Ness",
-      unlocked: activeTab === "castles" 
-        ? castles.find((c) => c.name === "Edinburgh Castle")?.visited || false
-        : lochs.find((l) => l.name === "Loch Ness")?.visited || false,
+      description:
+        activeTab === "castles" ? "Visit Edinburgh Castle" : "Visit Loch Ness",
+      unlocked:
+        activeTab === "castles"
+          ? castles.find((c) => c.name === "Edinburgh Castle")?.visited || false
+          : lochs.find((l) => l.name === "Loch Ness")?.visited || false,
       icon: Crown,
     },
     {
@@ -375,7 +405,8 @@ export default function CastlesLochs() {
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Discover 100 magnificent Scottish castles and 20 breathtaking lochs
+              Discover 100 magnificent Scottish castles and 20 breathtaking
+              lochs
             </p>
 
             {/* Error Display */}
@@ -397,8 +428,14 @@ export default function CastlesLochs() {
                       </div>
                       <ol className="list-decimal list-inside space-y-1 text-amber-700">
                         <li>Go to your Supabase Dashboard → SQL Editor</li>
-                        <li>Create a new query and copy the Castles & Lochs SQL schema</li>
-                        <li>Run the schema to create tables with 100 castles and 20 lochs</li>
+                        <li>
+                          Create a new query and copy the Castles & Lochs SQL
+                          schema
+                        </li>
+                        <li>
+                          Run the schema to create tables with 100 castles and
+                          20 lochs
+                        </li>
                         <li>Refresh this page to enable cross-device sync</li>
                       </ol>
                     </div>
@@ -427,9 +464,18 @@ export default function CastlesLochs() {
             )}
 
             {/* Tabs for Castles and Lochs */}
-            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "castles" | "lochs")} className="w-full">
+            <Tabs
+              value={activeTab}
+              onValueChange={(value) =>
+                setActiveTab(value as "castles" | "lochs")
+              }
+              className="w-full"
+            >
               <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
-                <TabsTrigger value="castles" className="flex items-center gap-2">
+                <TabsTrigger
+                  value="castles"
+                  className="flex items-center gap-2"
+                >
                   <Castle className="h-4 w-4" />
                   Castles
                 </TabsTrigger>
@@ -444,7 +490,8 @@ export default function CastlesLochs() {
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-blue-200/50 shadow-xl max-w-2xl mx-auto mb-8">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-2xl font-bold text-slate-800">
-                      Your {activeTab === "castles" ? "Castle" : "Loch"} Progress
+                      Your {activeTab === "castles" ? "Castle" : "Loch"}{" "}
+                      Progress
                     </h3>
                     <div className="text-3xl font-bold text-blue-600">
                       {visitedCount}/{totalItems}
@@ -465,7 +512,9 @@ export default function CastlesLochs() {
                       <span className="text-xs text-slate-500">25%</span>
                       <span className="text-xs text-slate-500">50%</span>
                       <span className="text-xs text-slate-500">75%</span>
-                      <span className="text-xs text-slate-500">{totalItems}</span>
+                      <span className="text-xs text-slate-500">
+                        {totalItems}
+                      </span>
                     </div>
                   </div>
 
@@ -565,7 +614,8 @@ export default function CastlesLochs() {
               <Trophy className="h-6 w-6 text-amber-500" />
               Achievements
               <Badge variant="secondary">
-                {achievements.filter((a) => a.unlocked).length}/{achievements.length}
+                {achievements.filter((a) => a.unlocked).length}/
+                {achievements.length}
               </Badge>
             </CardTitle>
           </CardHeader>
@@ -638,7 +688,9 @@ export default function CastlesLochs() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All {activeTab === "castles" ? "Castles" : "Lochs"}</SelectItem>
+                    <SelectItem value="all">
+                      All {activeTab === "castles" ? "Castles" : "Lochs"}
+                    </SelectItem>
                     <SelectItem value="visited">Visited</SelectItem>
                     <SelectItem value="remaining">Remaining</SelectItem>
                   </SelectContent>
@@ -676,15 +728,21 @@ export default function CastlesLochs() {
                     <SelectItem value="all">All Types</SelectItem>
                     {activeTab === "castles" ? (
                       <>
-                        <SelectItem value="Royal Castle">Royal Castle</SelectItem>
-                        <SelectItem value="Historic Fortress">Historic Fortress</SelectItem>
+                        <SelectItem value="Royal Castle">
+                          Royal Castle
+                        </SelectItem>
+                        <SelectItem value="Historic Fortress">
+                          Historic Fortress
+                        </SelectItem>
                         <SelectItem value="Clan Castle">Clan Castle</SelectItem>
                         <SelectItem value="Ruin">Ruin</SelectItem>
                         <SelectItem value="Palace">Palace</SelectItem>
                       </>
                     ) : (
                       <>
-                        <SelectItem value="Freshwater Loch">Freshwater Loch</SelectItem>
+                        <SelectItem value="Freshwater Loch">
+                          Freshwater Loch
+                        </SelectItem>
                         <SelectItem value="Sea Loch">Sea Loch</SelectItem>
                         <SelectItem value="Tidal Loch">Tidal Loch</SelectItem>
                       </>
@@ -717,13 +775,17 @@ export default function CastlesLochs() {
             <Card
               key={item.id}
               className={`group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 ${
-                isAuthenticated ? "cursor-pointer" : "cursor-not-allowed opacity-75"
+                isAuthenticated
+                  ? "cursor-pointer"
+                  : "cursor-not-allowed opacity-75"
               } ${
                 item.visited
                   ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200"
                   : "bg-white/95 backdrop-blur-sm"
               }`}
-              onClick={() => isAuthenticated && toggleVisit(item.id, item.visited)}
+              onClick={() =>
+                isAuthenticated && toggleVisit(item.id, item.visited)
+              }
             >
               <CardContent className="p-6">
                 {/* Status Icon */}
@@ -782,8 +844,8 @@ export default function CastlesLochs() {
 
                   {activeTab === "lochs" && (
                     <div className="text-xs text-slate-500 mb-2">
-                      Length: {(item as LochWithVisit).length_km}km | 
-                      Max Depth: {(item as LochWithVisit).max_depth_m}m
+                      Length: {(item as LochWithVisit).length_km}km | Max Depth:{" "}
+                      {(item as LochWithVisit).max_depth_m}m
                     </div>
                   )}
 
