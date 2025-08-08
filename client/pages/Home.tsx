@@ -2283,21 +2283,7 @@ export default function Home() {
                 <Button
                   size="sm"
                   className="bg-orange-500 hover:bg-orange-600 text-white"
-                  onClick={() => {
-                    const options = [
-                      "Edinburgh Castle vs Stirling Castle",
-                      "Ben Nevis vs Ben Lomond",
-                      "Isle of Skye vs Isle of Arran",
-                      "Loch Ness vs Loch Katrine",
-                      "Glencoe vs Cairngorms",
-                      "Aberdeen vs Dundee",
-                    ];
-                    const random =
-                      options[Math.floor(Math.random() * options.length)];
-                    alert(
-                      `🗳️ Family Vote: ${random} - Which would you choose?`,
-                    );
-                  }}
+                  onClick={() => showDiscoveryModal('vote')}
                 >
                   Start Vote
                 </Button>
