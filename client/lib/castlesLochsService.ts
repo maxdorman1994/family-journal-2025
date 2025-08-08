@@ -726,7 +726,9 @@ export async function visitHiddenGem(
     console.log(`🔍 Debug: Getting current user for hidden gem visit...`);
 
     // Note: Using custom auth system, not Supabase auth, so user_id will be set by trigger
-    console.log(`🔍 Debug: Using custom auth system - user_id will be auto-populated`);
+    console.log(
+      `🔍 Debug: Using custom auth system - user_id will be auto-populated`,
+    );
 
     const visitRecord = {
       // user_id will be set by database trigger or left null for now
