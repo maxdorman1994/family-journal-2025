@@ -987,7 +987,7 @@ export default function Home() {
           editingMember,
           processedPhoto,
           (progress) => {
-            console.log(`📈 Upload progress: ${progress}%`);
+            console.log(`��� Upload progress: ${progress}%`);
           },
         );
         console.log(`✅ Upload completed, updated member:`, {
@@ -2423,7 +2423,7 @@ export default function Home() {
                 <Button
                   size="sm"
                   className="bg-pink-500 hover:bg-pink-600 text-white"
-                  onClick={() => showDiscoveryModal("roulette")}
+                  onClick={() => setIsSpinningWheelOpen(true)}
                 >
                   Spin the Wheel
                 </Button>
@@ -2794,7 +2794,7 @@ export default function Home() {
               <div className="flex justify-center gap-2 opacity-60">
                 <span className="text-red-600">📺</span>
                 <span className="text-pink-600">🎥</span>
-                <span className="text-red-600">🏴󠁧󠁢����󠁣����󠁿</span>
+                <span className="text-red-600">🏴󠁧󠁢���󠁣����󠁿</span>
               </div>
 
               <p className="text-sm text-slate-500 mt-4">
