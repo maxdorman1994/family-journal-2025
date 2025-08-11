@@ -1,9 +1,5 @@
-// Minio storage service to replace Cloudflare R2
+// Client-side storage service that communicates with server via API
 import { v4 as uuidv4 } from 'uuid';
-
-// Note: These will be set via API calls since client can't import server modules directly
-let minio: any = null;
-let MINIO_BUCKET = process.env.MINIO_BUCKET || 'wee-adventure-photos';
 
 export interface UploadResult {
   success: boolean;
@@ -12,61 +8,38 @@ export interface UploadResult {
 }
 
 export class StorageService {
-  private bucketName: string;
-
-  constructor(bucketName: string = MINIO_BUCKET) {
-    this.bucketName = bucketName;
-  }
-
-  // Upload a file to Minio
+  // Upload a file via API
   async uploadFile(
-    file: File | Buffer, 
+    file: File, 
     fileName: string, 
     contentType?: string,
     folder: string = 'journal'
   ): Promise<UploadResult> {
     try {
-      // Generate unique filename
-      const fileExtension = fileName.split('.').pop() || 'jpg';
-      const uniqueFileName = `${folder}/${new Date().toISOString().split('T')[0]}/${uuidv4()}_${fileName.replace(/[^a-zA-Z0-9.-]/g, '_')}.${fileExtension}`;
+      const formData = new FormData();
+      formData.append('photo', file);
+      formData.append('originalName', fileName);
+      formData.append('photoId', uuidv4());
+      formData.append('folder', folder);
 
-      let buffer: Buffer;
-      let size: number;
-      let mimeType: string;
+      const response = await fetch('/api/photos/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-      if (file instanceof File) {
-        // Browser File object
-        buffer = Buffer.from(await file.arrayBuffer());
-        size = file.size;
-        mimeType = file.type || contentType || 'application/octet-stream';
-      } else {
-        // Node.js Buffer
-        buffer = file;
-        size = buffer.length;
-        mimeType = contentType || 'application/octet-stream';
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
       }
 
-      // Upload to Minio
-      const result = await minio.putObject(
-        this.bucketName,
-        uniqueFileName,
-        buffer,
-        size,
-        {
-          'Content-Type': mimeType,
-          'Content-Length': size.toString()
-        }
-      );
-
-      // Generate URL for the uploaded file
-      const url = await this.getFileUrl(uniqueFileName);
-
+      const data = await response.json();
+      
       return {
         success: true,
-        url: url
+        url: data.url
       };
     } catch (error) {
-      console.error('Minio upload error:', error);
+      console.error('Storage upload error:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Upload failed'
@@ -74,72 +47,57 @@ export class StorageService {
     }
   }
 
-  // Get a presigned URL for a file
+  // Get file URL via API
   async getFileUrl(fileName: string, expiry: number = 7 * 24 * 60 * 60): Promise<string> {
     try {
-      return await minio.presignedGetObject(this.bucketName, fileName, expiry);
+      const response = await fetch(`/api/storage/url/${encodeURIComponent(fileName)}?expiry=${expiry}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to get file URL');
+      }
+
+      const data = await response.json();
+      return data.url;
     } catch (error) {
       console.error('Error generating file URL:', error);
       throw error;
     }
   }
 
-  // Delete a file from Minio
+  // Delete a file via API
   async deleteFile(fileName: string): Promise<boolean> {
     try {
-      await minio.removeObject(this.bucketName, fileName);
-      return true;
+      const response = await fetch(`/api/storage/files/${encodeURIComponent(fileName)}`, {
+        method: 'DELETE',
+      });
+
+      return response.ok;
     } catch (error) {
       console.error('Error deleting file:', error);
       return false;
     }
   }
 
-  // List files in a folder
+  // List files via API
   async listFiles(prefix: string = ''): Promise<string[]> {
     try {
-      const files: string[] = [];
-      const stream = minio.listObjects(this.bucketName, prefix, true);
+      const response = await fetch(`/api/storage/files?prefix=${encodeURIComponent(prefix)}`);
       
-      return new Promise((resolve, reject) => {
-        stream.on('data', (obj) => {
-          if (obj.name) {
-            files.push(obj.name);
-          }
-        });
-        
-        stream.on('end', () => {
-          resolve(files);
-        });
-        
-        stream.on('error', (error) => {
-          reject(error);
-        });
-      });
+      if (!response.ok) {
+        throw new Error('Failed to list files');
+      }
+
+      const data = await response.json();
+      return data.files || [];
     } catch (error) {
       console.error('Error listing files:', error);
       return [];
     }
   }
 
-  // Check if bucket exists and create if not
-  async ensureBucket(): Promise<boolean> {
-    try {
-      const exists = await minio.bucketExists(this.bucketName);
-      if (!exists) {
-        await minio.makeBucket(this.bucketName, 'us-east-1');
-        console.log(`✅ Created Minio bucket: ${this.bucketName}`);
-      }
-      return true;
-    } catch (error) {
-      console.error('Error ensuring bucket exists:', error);
-      return false;
-    }
-  }
-
   // Upload multiple files
   async uploadFiles(
-    files: (File | Buffer)[], 
+    files: File[], 
     fileNames: string[], 
     contentTypes?: string[],
     folder: string = 'journal'
@@ -157,22 +115,12 @@ export class StorageService {
     
     return results;
   }
-
-  // Get file stats
-  async getFileStats(fileName: string) {
-    try {
-      return await minio.statObject(this.bucketName, fileName);
-    } catch (error) {
-      console.error('Error getting file stats:', error);
-      return null;
-    }
-  }
 }
 
 // Create default storage instance
 export const storage = new StorageService();
 
-// Utility functions for photo processing (replacing Cloudflare R2 logic)
+// Utility functions for photo processing
 export async function uploadPhotos(photos: File[]): Promise<string[]> {
   const uploadedUrls: string[] = [];
   
@@ -192,30 +140,29 @@ export async function uploadPhotos(photos: File[]): Promise<string[]> {
   return uploadedUrls;
 }
 
-// Configuration check
+// Configuration check (client-side)
 export function isStorageConfigured(): boolean {
-  return Boolean(
-    process.env.MINIO_ENDPOINT && 
-    process.env.MINIO_ACCESS_KEY && 
-    process.env.MINIO_SECRET_KEY
-  );
+  // This will be checked server-side via API
+  return true; // Assume configured for client
 }
 
-export function getStorageStatus(): {
+export async function getStorageStatus(): Promise<{
   configured: boolean;
   message: string;
   endpoint?: string;
-} {
-  if (!isStorageConfigured()) {
+}> {
+  try {
+    const response = await fetch('/api/storage/status');
+    
+    if (!response.ok) {
+      throw new Error('Failed to get storage status');
+    }
+
+    return await response.json();
+  } catch (error) {
     return {
       configured: false,
-      message: "Minio storage not configured. Please set MINIO_ENDPOINT, MINIO_ACCESS_KEY, and MINIO_SECRET_KEY environment variables.",
+      message: "Failed to check storage configuration",
     };
   }
-
-  return {
-    configured: true,
-    message: "Minio storage configured successfully",
-    endpoint: process.env.MINIO_ENDPOINT,
-  };
 }
