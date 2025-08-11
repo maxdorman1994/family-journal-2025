@@ -1,4 +1,5 @@
-import { Pool } from 'pg';
+import pkg from 'pg';
+const { Pool } = pkg;
 import { Client as MinioClient } from 'minio';
 
 // PostgreSQL configuration
