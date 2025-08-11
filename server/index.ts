@@ -14,6 +14,8 @@ import {
   uploadMultiplePhotos,
   uploadMultiplePhotosMiddleware,
 } from "./routes/photos";
+import { executeQuery, executeRPC } from "./routes/database.js";
+import { getStorageStatus, uploadFile, listFiles, deleteFile, getFileUrl } from "./routes/storage.js";
 import { initializeDatabase, testDatabaseConnection } from "./db/init.js";
 import { storage } from "./lib/storage.js";
 
