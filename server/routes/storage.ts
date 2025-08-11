@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { storage } from "../../client/lib/storage.js";
+import { storage } from "../lib/storage.js";
 
 /**
  * Get storage status
