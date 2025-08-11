@@ -14,9 +14,8 @@ import {
   uploadMultiplePhotos,
   uploadMultiplePhotosMiddleware,
 } from "./routes/photos";
-import { initializeDatabase, testDatabaseConnection, testMinioConnection } from "./db/init.js";
-import { getDatabaseStatus } from "../client/lib/database.js";
-import { getStorageStatus } from "../client/lib/storage.js";
+import { initializeDatabase, testDatabaseConnection } from "./db/init.js";
+import { storage } from "./lib/storage.js";
 
 // Fix for serverless environments where import.meta.url might be undefined
 let __dirname: string;
