@@ -11,6 +11,8 @@ import {
   getPlaceholderPhoto,
   listPhotos,
   deletePhoto,
+  uploadMultiplePhotos,
+  uploadMultiplePhotosMiddleware,
 } from "./routes/photos";
 import { initializeDatabase, testDatabaseConnection, testMinioConnection } from "./db/init.js";
 import { getDatabaseStatus } from "../client/lib/database.js";
