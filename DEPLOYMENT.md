@@ -1,60 +1,82 @@
-# Deployment Instructions
+# Deployment Guide - Minio + Cloudflare Only
 
-## The Problem
+Simple deployment guide for Family Journal with only Minio storage (no database).
 
-Your deployment was running `npm run dev` (Vite development server) instead of `npm run start` (production server), causing React useState errors.
+## 🚀 Quick Deployment to FastHost
 
-## Quick Fix Applied
-
-1. ✅ **Removed TooltipProvider** temporarily to stop immediate errors
-2. ✅ **Added production start script** with environment checks
-3. ✅ **Created deployment configs** (Dockerfile, fly.toml)
-
-## Deploy Commands
-
-### For Fly.io Deployment:
+### 1. Environment Variables
+Set these in your FastHost deployment:
 
 ```bash
-# Build the application
-npm run build
+# Minio Storage (your current setup)
+MINIO_ENDPOINT=192.168.1.214
+MINIO_PORT=9000
+MINIO_USE_SSL=false
+MINIO_ACCESS_KEY=maxdorman
+MINIO_SECRET_KEY=Summer07max
+MINIO_BUCKET=family-journal
 
-# Deploy to Fly.io (this will use the new configs)
-fly deploy
-
-# Or if using Dockerfile:
-fly deploy --dockerfile Dockerfile
+# App Settings
+NODE_ENV=production
+PING_MESSAGE=pong
 ```
 
-### For Other Platforms:
-
+### 2. Build Commands
 ```bash
-# 1. Build the application
+# Install
+npm install
+
+# Build
 npm run build
 
-# 2. Set environment variable
-export NODE_ENV=production
-
-# 3. Start production server
-npm run start
+# Start
+npm start
 ```
 
-## Verification
+### 3. File Structure
+```
+dist/spa/          # Frontend build
+server.js          # Production server
+package.json       # Dependencies
+```
 
-After deployment, check:
+### 4. Cloudflare Integration
+For Cloudflare deployment:
+- Use `dist/spa` folder for static files
+- Set up Functions for API routes
+- Configure R2 if you want Cloudflare storage instead
 
-1. ✅ **No more `.vite/deps/` URLs** in browser network tab
-2. ✅ **Assets load from `/assets/`** instead
-3. ✅ **App loads without React errors**
+### 5. Local Testing
+```bash
+# Install dependencies
+npm install
 
-## Files Created:
+# Set environment variables
+cp .env.example .env
+# Edit .env with your Minio settings
 
-- `Dockerfile` - Production container setup
-- `fly.toml` - Fly.io deployment config
-- `start-production.js` - Production start script with checks
-- `DEPLOYMENT.md` - This file
+# Start development
+npm run dev
 
-## Next Steps:
+# Build for production
+npm run build
+npm start
+```
 
-1. **Deploy using the above commands**
-2. **Verify the fix works**
-3. **Re-add TooltipProvider** later if needed (once deployment is fixed)
+### 6. Production Checklist
+- ✅ Minio endpoint accessible from production server
+- ✅ Bucket `family-journal` exists
+- ✅ Environment variables set
+- ✅ Build process completes
+- ✅ Static files served correctly
+
+## 📁 Files Needed for Deployment
+- `package.json` - Dependencies and scripts
+- `server.js` - Production server
+- `dist/spa/` - Built frontend files
+- `.env` - Environment variables (not committed)
+
+## 🔧 Troubleshooting
+- **Minio connection failed**: Check endpoint and credentials
+- **Photos not uploading**: Verify bucket exists and permissions
+- **Static files not served**: Check `dist/spa` folder exists after build
