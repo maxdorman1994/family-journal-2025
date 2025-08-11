@@ -126,15 +126,19 @@ export default function Debug() {
         </div>
 
         <div className="border rounded-lg p-4">
-          <h2 className="text-xl font-semibold mb-3">Environment Variables</h2>
+          <h2 className="text-xl font-semibold mb-3">Backend Configuration</h2>
           <div className="space-y-1 text-sm">
             <div>
-              <strong>Supabase URL:</strong>{" "}
-              {import.meta.env.VITE_SUPABASE_URL ? "✅ Set" : "❌ Missing"}
+              <strong>Database:</strong>{" "}
+              {status?.database ? "✅ Connected" : "❌ Not Available"}
             </div>
             <div>
-              <strong>Supabase Key:</strong>{" "}
-              {import.meta.env.VITE_SUPABASE_ANON_KEY ? "✅ Set" : "❌ Missing"}
+              <strong>Storage:</strong>{" "}
+              {status?.storage ? "✅ Connected" : "❌ Not Available"}
+            </div>
+            <div>
+              <strong>API:</strong>{" "}
+              {status?.api ? "✅ Working" : "❌ Failed"}
             </div>
           </div>
         </div>
