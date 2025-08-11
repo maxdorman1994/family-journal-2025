@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { db, testDatabaseConnection, minio, initializeMinio, testMinioConnection } from './config.js';
+import { db, testDatabaseConnection } from './config.js';
+import { storage } from '../lib/storage.js';
 
 export async function initializeDatabase() {
   console.log('🔄 Initializing database...');
