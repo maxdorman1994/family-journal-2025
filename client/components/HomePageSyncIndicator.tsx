@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { RefreshCw, Wifi, WifiOff, CheckCircle } from "lucide-react";
 import { subscribeToHomePageSync } from "@/lib/homePageSyncService";
 
