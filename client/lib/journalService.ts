@@ -31,14 +31,14 @@ export interface CreateJournalEntryData {
 }
 
 /**
- * Create a new journal entry in Supabase
+ * Create a new journal entry in the database
  */
 export async function createJournalEntry(
   data: CreateJournalEntryData,
 ): Promise<JournalEntry> {
   if (!isSupabaseConfigured()) {
     throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
+      "Database not configured - please set DATABASE_HOST, DATABASE_NAME, DATABASE_USER, and DATABASE_PASSWORD",
     );
   }
 
