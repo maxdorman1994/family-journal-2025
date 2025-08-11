@@ -187,6 +187,18 @@ class DatabaseQuery {
     return this;
   }
 
+  // Single result method
+  async single(): Promise<{ data: any, error: any }> {
+    const result = await this.execute();
+    if (result.error) {
+      return result;
+    }
+    return {
+      data: result.data?.[0] || null,
+      error: result.error
+    };
+  }
+
   // Execute the query
   async execute(): Promise<{ data: any, error: any, count?: number }> {
     try {
