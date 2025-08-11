@@ -27,7 +27,7 @@ export interface CreateJournalEntryData {
   other_tickets: string;
   pet_notes: string;
   tags: string[];
-  photos: string[]; // Cloudflare R2 URLs
+  photos: string[]; // Minio URLs
 }
 
 /**
