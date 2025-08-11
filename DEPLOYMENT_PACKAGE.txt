@@ -1,0 +1,69 @@
+# Family Journal 2025 - Complete File List for GitHub Upload
+
+## ESSENTIAL FILES TO UPLOAD TO GITHUB:
+
+### Core Configuration
+- package.json (main dependencies)
+- package-simple.json (simplified version)
+- tsconfig.json
+- vite.config.ts
+- tailwind.config.ts
+- postcss.config.js
+- .env.example
+
+### Frontend (client/ folder)
+- client/App.tsx
+- client/global.css
+- client/vite-env.d.ts
+- client/pages/ (all .tsx files)
+- client/components/ (all .tsx files)
+- client/lib/ (all .ts files)
+- client/hooks/ (all .tsx/.ts files)
+- client/data/ (all .ts files)
+
+### Backend (server/ folder)
+- server/simple.ts (NEW - simplified server)
+- server/index.ts
+- server/routes/ (all .ts files)
+- server/lib/ (all .ts files)
+- server/config/ (all .ts files)
+- server/db/ (all .ts/.sql files)
+- server/utils/ (all .ts files)
+
+### Shared
+- shared/api.ts
+
+### Documentation
+- README.md
+- DEPLOYMENT.md
+- MIGRATION_GUIDE.md
+- DEPLOYMENT_PACKAGE.md
+
+### Build/Config
+- components.json
+- index.html
+- server.js
+- production-server.js
+
+### Scripts
+- scripts/ (all .js files)
+
+## ENVIRONMENT VARIABLES FOR PRODUCTION:
+MINIO_ENDPOINT=192.168.1.214
+MINIO_PORT=9000
+MINIO_USE_SSL=false
+MINIO_ACCESS_KEY=maxdorman
+MINIO_SECRET_KEY=Summer07max
+MINIO_BUCKET=family-journal
+NODE_ENV=production
+
+## DEPLOYMENT COMMANDS:
+npm install
+npm run build
+npm start
+
+## IMPORTANT NOTES:
+- Use server/simple.ts for production (no database required)
+- All photos will be stored in your Minio server
+- App is ready for FastHost deployment
+- No PostgreSQL needed - just Minio storage
