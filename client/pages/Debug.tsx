@@ -20,14 +20,19 @@ export default function Debug() {
       const apiResponse = await fetch("/api/ping");
       const apiData = await apiResponse.json();
 
-      // Check photo status
-      const photoResponse = await fetch("/api/photos/status");
-      const photoData = await photoResponse.json();
+      // Check database and storage status
+      const [dbResponse, storageResponse] = await Promise.all([
+        fetch("/api/database/status"),
+        fetch("/api/storage/status")
+      ]);
+
+      const dbData = await dbResponse.json();
+      const storageData = await storageResponse.json();
 
       setStatus({
         api: apiResponse.ok,
-        cloudflare: photoData.configured || false,
-        supabase: !!import.meta.env.VITE_SUPABASE_URL,
+        storage: storageData.configured || false,
+        database: dbData.configured || false,
         environment: apiData.environment || "unknown",
       });
     } catch (error) {
