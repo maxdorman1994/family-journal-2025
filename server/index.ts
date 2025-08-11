@@ -53,6 +53,7 @@ export async function createServer() {
 
   // Photo upload routes
   app.post("/api/photos/upload", uploadPhotoMiddleware, uploadPhoto);
+  app.post("/api/photos/upload-multiple", uploadMultiplePhotosMiddleware, uploadMultiplePhotos);
   app.get("/api/photos/placeholder/:photoId", getPlaceholderPhoto);
   app.get("/api/photos", listPhotos);
   app.delete("/api/photos/:imageId", deletePhoto);
