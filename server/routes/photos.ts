@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
-import { storage } from "../../client/lib/storage.js";
+import { storage } from "../lib/storage.js";
 
 // Configure multer for handling file uploads
 const upload = multer({
