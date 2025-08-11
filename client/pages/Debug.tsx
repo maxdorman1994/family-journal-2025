@@ -78,30 +78,30 @@ export default function Debug() {
               </div>
 
               <div className="flex items-center justify-between">
-                <span>Cloudflare Images</span>
+                <span>Storage (Minio)</span>
                 <span
                   className={`px-2 py-1 rounded text-sm ${
-                    status.cloudflare
+                    status.storage
                       ? "bg-green-100 text-green-800"
                       : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
-                  {status.cloudflare
-                    ? "✅ Configured"
-                    : "⚠️ Using Placeholders"}
+                  {status.storage
+                    ? "✅ Connected"
+                    : "⚠️ Not Available"}
                 </span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span>Supabase Database</span>
+                <span>Database (PostgreSQL)</span>
                 <span
                   className={`px-2 py-1 rounded text-sm ${
-                    status.supabase
+                    status.database
                       ? "bg-green-100 text-green-800"
                       : "bg-red-100 text-red-800"
                   }`}
                 >
-                  {status.supabase ? "✅ Configured" : "❌ Not Configured"}
+                  {status.database ? "✅ Connected" : "❌ Not Available"}
                 </span>
               </div>
 
