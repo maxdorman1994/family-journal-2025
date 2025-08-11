@@ -1,6 +1,9 @@
 // Minio storage service to replace Cloudflare R2
-import { minio, MINIO_BUCKET } from '../../server/db/config.js';
 import { v4 as uuidv4 } from 'uuid';
+
+// Note: These will be set via API calls since client can't import server modules directly
+let minio: any = null;
+let MINIO_BUCKET = process.env.MINIO_BUCKET || 'wee-adventure-photos';
 
 export interface UploadResult {
   success: boolean;
