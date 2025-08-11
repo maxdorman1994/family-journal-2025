@@ -20,7 +20,7 @@ const minio = new MinioClient({
   signatureVersion: 'v4', // Use signature version v4
 });
 
-const MINIO_BUCKET = process.env.MINIO_BUCKET || 'wee-adventure-photos';
+const MINIO_BUCKET = process.env.MINIO_BUCKET || 'family-journal';
 
 export class StorageService {
   private bucketName: string;
