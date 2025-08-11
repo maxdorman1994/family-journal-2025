@@ -1,15 +1,14 @@
 import { supabase, JournalEntry, isSupabaseConfigured } from "./supabase";
 import {
   getEnvironmentInfo,
-  validateSupabaseConfig,
   debugNetworkError,
 } from "./debug";
 import { updateMilestonesFromJournalEntry } from "./milestoneTracker";
 
 /**
- * Supabase Journal Service
+ * Journal Service
  * Handles all database operations for journal entries
- * Photos are stored in Cloudflare R2, URLs stored in Supabase
+ * Photos are stored in Minio, URLs stored in PostgreSQL
  */
 
 export interface CreateJournalEntryData {
