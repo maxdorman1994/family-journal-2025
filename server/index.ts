@@ -59,6 +59,15 @@ export async function createServer() {
   app.get("/api/photos", listPhotos);
   app.delete("/api/photos/:imageId", deletePhoto);
 
+  // Database API routes
+  app.post("/api/database/query", executeQuery);
+  app.post("/api/database/rpc", executeRPC);
+
+  // Storage API routes
+  app.get("/api/storage/files", listFiles);
+  app.delete("/api/storage/files/:fileName", deleteFile);
+  app.get("/api/storage/url/:fileName", getFileUrl);
+
   // Database and storage status endpoints
   app.get("/api/database/status", async (_req, res) => {
     const dbConnected = await testDatabaseConnection();
