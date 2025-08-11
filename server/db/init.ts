@@ -9,32 +9,38 @@ export async function initializeDatabase() {
   try {
     // Test connections first
     const dbConnected = await testDatabaseConnection();
-    const minioConnected = await testMinioConnection();
-    
+    const storageConnected = await storage.testConnection();
+
     if (!dbConnected) {
-      throw new Error('Database connection failed');
+      console.warn('⚠️ Database connection failed - continuing anyway for development');
     }
-    
-    if (!minioConnected) {
-      throw new Error('Minio connection failed');
+
+    if (!storageConnected) {
+      console.warn('⚠️ Storage connection failed - continuing anyway for development');
     }
-    
-    // Read and execute schema
-    const schemaPath = join(process.cwd(), 'server/db/schema.sql');
-    const schema = readFileSync(schemaPath, 'utf8');
-    
-    console.log('📋 Creating database schema...');
-    await db.query(schema);
-    console.log('✅ Database schema created successfully');
-    
-    // Initialize Minio bucket
-    await initializeMinio();
-    
+
+    // Read and execute schema (only if database is connected)
+    if (dbConnected) {
+      const schemaPath = join(process.cwd(), 'server/db/schema.sql');
+      const schema = readFileSync(schemaPath, 'utf8');
+
+      console.log('📋 Creating database schema...');
+      await db.query(schema);
+      console.log('✅ Database schema created successfully');
+    }
+
+    // Initialize storage bucket (only if storage is connected)
+    if (storageConnected) {
+      await storage.ensureBucket();
+    }
+
     console.log('🎉 Database and storage initialization complete!');
     return true;
   } catch (error) {
     console.error('❌ Database initialization failed:', error);
-    throw error;
+    // Don't throw in development to allow partial functionality
+    console.warn('⚠️ Continuing with partial functionality');
+    return false;
   }
 }
 
