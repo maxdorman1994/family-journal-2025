@@ -15,6 +15,9 @@ const minio = new MinioClient({
   useSSL: process.env.MINIO_USE_SSL === 'true',
   accessKey: process.env.MINIO_ACCESS_KEY || 'minioadmin',
   secretKey: process.env.MINIO_SECRET_KEY || 'minioadmin',
+  pathStyle: true, // Important for MinIO
+  s3ForcePathStyle: true, // Additional path style enforcement
+  signatureVersion: 'v4', // Use signature version v4
 });
 
 const MINIO_BUCKET = process.env.MINIO_BUCKET || 'wee-adventure-photos';
