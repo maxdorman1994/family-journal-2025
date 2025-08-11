@@ -58,23 +58,30 @@ export async function createServer() {
   app.delete("/api/photos/:imageId", deletePhoto);
 
   // Database and storage status endpoints
-  app.get("/api/database/status", (_req, res) => {
-    const status = getDatabaseStatus();
-    res.json(status);
+  app.get("/api/database/status", async (_req, res) => {
+    const dbConnected = await testDatabaseConnection();
+    res.json({
+      configured: dbConnected,
+      message: dbConnected ? "Database configured successfully" : "Database connection failed",
+    });
   });
 
-  app.get("/api/storage/status", (_req, res) => {
-    const status = getStorageStatus();
-    res.json(status);
+  app.get("/api/storage/status", async (_req, res) => {
+    const storageConnected = await storage.testConnection();
+    res.json({
+      configured: storageConnected,
+      message: storageConnected ? "Storage configured successfully" : "Storage connection failed",
+      endpoint: process.env.MINIO_ENDPOINT,
+    });
   });
 
   // Health check endpoint
   app.get("/api/health", async (_req, res) => {
     const dbConnected = await testDatabaseConnection();
-    const storageConnected = await testMinioConnection();
+    const storageConnected = await storage.testConnection();
 
     res.json({
-      status: dbConnected && storageConnected ? 'healthy' : 'unhealthy',
+      status: dbConnected && storageConnected ? 'healthy' : 'partial',
       database: dbConnected,
       storage: storageConnected,
       timestamp: new Date().toISOString()
