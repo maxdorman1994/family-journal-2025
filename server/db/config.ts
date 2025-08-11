@@ -18,17 +18,19 @@ const dbConfig = {
 // Create PostgreSQL pool
 export const db = new Pool(dbConfig);
 
-// Minio configuration
-export const minio = new MinioClient({
-  endPoint: process.env.MINIO_ENDPOINT || 'localhost',
-  port: parseInt(process.env.MINIO_PORT || '9000'),
-  useSSL: process.env.MINIO_USE_SSL === 'true',
-  accessKey: process.env.MINIO_ACCESS_KEY || 'minioadmin',
-  secretKey: process.env.MINIO_SECRET_KEY || 'minioadmin',
-});
-
-// Minio bucket configuration
-export const MINIO_BUCKET = process.env.MINIO_BUCKET || 'wee-adventure-photos';
+// Test database connection
+export async function testDatabaseConnection() {
+  try {
+    const client = await db.connect();
+    await client.query('SELECT NOW()');
+    client.release();
+    console.log('✅ Database connected successfully');
+    return true;
+  } catch (error) {
+    console.error('❌ Database connection failed:', error);
+    return false;
+  }
+}
 
 // Initialize Minio bucket
 export async function initializeMinio() {
