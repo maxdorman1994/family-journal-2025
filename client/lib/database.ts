@@ -1,5 +1,5 @@
-// Database service to replace Supabase
-import { db } from '../../server/db/config.js';
+// Client-side database service that communicates with server via API
+// This provides a Supabase-compatible interface for existing code
 
 // Types from the old Supabase setup
 export interface JournalEntry {
@@ -35,7 +35,7 @@ export interface ProcessedPhoto {
   error?: string;
 }
 
-// Database query helper with similar interface to Supabase
+// API-based database client with Supabase-compatible interface
 export class DatabaseClient {
   constructor(private tableName: string) {}
 
@@ -62,14 +62,24 @@ export class DatabaseClient {
   // RPC operations (stored procedures)
   static async rpc(functionName: string, params: Record<string, any>) {
     try {
-      const paramNames = Object.keys(params);
-      const paramValues = Object.values(params);
-      const paramPlaceholders = paramNames.map((_, index) => `$${index + 1}`).join(', ');
-      
-      const query = `SELECT * FROM ${functionName}(${paramPlaceholders})`;
-      const result = await db.query(query, paramValues);
-      
-      return { data: result.rows, error: null };
+      const response = await fetch('/api/database/rpc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          functionName,
+          params,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'RPC call failed');
+      }
+
+      const data = await response.json();
+      return { data: data.result, error: null };
     } catch (error) {
       console.error(`RPC ${functionName} error:`, error);
       return { data: null, error };
@@ -78,10 +88,11 @@ export class DatabaseClient {
 }
 
 class DatabaseQuery {
-  private whereConditions: string[] = [];
+  private whereConditions: Record<string, any> = {};
   private orderByClause: string = '';
-  private limitClause: string = '';
-  private offsetClause: string = '';
+  private limitValue: number | null = null;
+  private rangeFrom: number | null = null;
+  private rangeTo: number | null = null;
   private selectColumns: string = '*';
   private insertData: any = null;
   private updateData: any = null;
@@ -101,77 +112,72 @@ class DatabaseQuery {
 
   // Add WHERE conditions
   eq(column: string, value: any) {
-    this.whereConditions.push(`${column} = '${value}'`);
+    this.whereConditions[column + '_eq'] = value;
     return this;
   }
 
   neq(column: string, value: any) {
-    this.whereConditions.push(`${column} != '${value}'`);
+    this.whereConditions[column + '_neq'] = value;
     return this;
   }
 
   gt(column: string, value: any) {
-    this.whereConditions.push(`${column} > '${value}'`);
+    this.whereConditions[column + '_gt'] = value;
     return this;
   }
 
   gte(column: string, value: any) {
-    this.whereConditions.push(`${column} >= '${value}'`);
+    this.whereConditions[column + '_gte'] = value;
     return this;
   }
 
   lt(column: string, value: any) {
-    this.whereConditions.push(`${column} < '${value}'`);
+    this.whereConditions[column + '_lt'] = value;
     return this;
   }
 
   lte(column: string, value: any) {
-    this.whereConditions.push(`${column} <= '${value}'`);
+    this.whereConditions[column + '_lte'] = value;
     return this;
   }
 
   like(column: string, pattern: string) {
-    this.whereConditions.push(`${column} LIKE '${pattern}'`);
+    this.whereConditions[column + '_like'] = pattern;
     return this;
   }
 
   ilike(column: string, pattern: string) {
-    this.whereConditions.push(`${column} ILIKE '${pattern}'`);
+    this.whereConditions[column + '_ilike'] = pattern;
     return this;
   }
 
   in(column: string, values: any[]) {
-    const valueList = values.map(v => `'${v}'`).join(', ');
-    this.whereConditions.push(`${column} IN (${valueList})`);
+    this.whereConditions[column + '_in'] = values;
     return this;
   }
 
   is(column: string, value: any) {
-    if (value === null) {
-      this.whereConditions.push(`${column} IS NULL`);
-    } else {
-      this.whereConditions.push(`${column} IS '${value}'`);
-    }
+    this.whereConditions[column + '_is'] = value;
     return this;
   }
 
   // Add ORDER BY
   order(column: string, options: { ascending?: boolean } = { ascending: true }) {
-    const direction = options.ascending !== false ? 'ASC' : 'DESC';
-    this.orderByClause = `ORDER BY ${column} ${direction}`;
+    const direction = options.ascending !== false ? 'asc' : 'desc';
+    this.orderByClause = `${column}_${direction}`;
     return this;
   }
 
   // Add LIMIT
   limit(count: number) {
-    this.limitClause = `LIMIT ${count}`;
+    this.limitValue = count;
     return this;
   }
 
-  // Add OFFSET  
+  // Add RANGE
   range(from: number, to: number) {
-    this.offsetClause = `OFFSET ${from}`;
-    this.limitClause = `LIMIT ${to - from + 1}`;
+    this.rangeFrom = from;
+    this.rangeTo = to;
     return this;
   }
 
@@ -194,105 +200,49 @@ class DatabaseQuery {
       return result;
     }
     return {
-      data: result.data?.[0] || null,
+      data: Array.isArray(result.data) ? result.data[0] || null : result.data,
       error: result.error
     };
   }
 
-  // Execute the query
+  // Execute the query via API
   async execute(): Promise<{ data: any, error: any, count?: number }> {
     try {
-      let query = '';
-      let values: any[] = [];
+      const queryParams = {
+        table: this.tableName,
+        operation: this.operation,
+        columns: this.selectColumns,
+        where: this.whereConditions,
+        order: this.orderByClause,
+        limit: this.limitValue,
+        rangeFrom: this.rangeFrom,
+        rangeTo: this.rangeTo,
+        data: this.insertData || this.updateData,
+        count: this.countOption,
+        head: this.headOnly,
+      };
 
-      switch (this.operation) {
-        case 'SELECT':
-          if (this.countOption) {
-            query = `SELECT COUNT(*) as count FROM ${this.tableName}`;
-          } else if (this.headOnly) {
-            query = `SELECT COUNT(*) as count FROM ${this.tableName}`;
-          } else {
-            query = `SELECT ${this.selectColumns} FROM ${this.tableName}`;
-          }
-          break;
+      const response = await fetch('/api/database/query', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(queryParams),
+      });
 
-        case 'INSERT':
-          if (Array.isArray(this.insertData)) {
-            // Multiple inserts
-            const firstItem = this.insertData[0];
-            const columns = Object.keys(firstItem);
-            const columnsList = columns.join(', ');
-            
-            const valuesArray = this.insertData.map((item, itemIndex) => {
-              const itemValues = columns.map((col, colIndex) => {
-                const paramIndex = itemIndex * columns.length + colIndex + 1;
-                values.push(item[col]);
-                return `$${paramIndex}`;
-              });
-              return `(${itemValues.join(', ')})`;
-            });
-            
-            query = `INSERT INTO ${this.tableName} (${columnsList}) VALUES ${valuesArray.join(', ')} RETURNING *`;
-          } else {
-            // Single insert
-            const columns = Object.keys(this.insertData);
-            const columnsList = columns.join(', ');
-            const placeholders = columns.map((_, index) => `$${index + 1}`).join(', ');
-            values = Object.values(this.insertData);
-            query = `INSERT INTO ${this.tableName} (${columnsList}) VALUES (${placeholders}) RETURNING *`;
-          }
-          break;
-
-        case 'UPDATE':
-          const updateColumns = Object.keys(this.updateData);
-          const updateSetClause = updateColumns.map((col, index) => `${col} = $${index + 1}`).join(', ');
-          values = Object.values(this.updateData);
-          query = `UPDATE ${this.tableName} SET ${updateSetClause}`;
-          break;
-
-        case 'DELETE':
-          query = `DELETE FROM ${this.tableName}`;
-          break;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Database query failed');
       }
 
-      // Add WHERE conditions
-      if (this.whereConditions.length > 0) {
-        query += ` WHERE ${this.whereConditions.join(' AND ')}`;
-      }
-
-      // Add ORDER BY
-      if (this.orderByClause && this.operation === 'SELECT') {
-        query += ` ${this.orderByClause}`;
-      }
-
-      // Add LIMIT and OFFSET
-      if (this.limitClause && this.operation === 'SELECT') {
-        query += ` ${this.limitClause}`;
-      }
-      if (this.offsetClause && this.operation === 'SELECT') {
-        query += ` ${this.offsetClause}`;
-      }
-
-      // Add RETURNING for UPDATE/DELETE
-      if (this.operation === 'UPDATE' || this.operation === 'DELETE') {
-        query += ' RETURNING *';
-      }
-
-      console.log('Executing query:', query, 'with values:', values);
-      const result = await db.query(query, values);
-      
-      if (this.countOption || this.headOnly) {
-        return { 
-          data: this.headOnly ? null : result.rows, 
-          error: null, 
-          count: parseInt(result.rows[0]?.count || '0') 
-        };
-      }
-
-      return { data: result.rows, error: null };
+      const result = await response.json();
+      return result;
     } catch (error) {
       console.error('Database query error:', error);
-      return { data: null, error };
+      return { 
+        data: null, 
+        error: error instanceof Error ? error : new Error('Database query failed')
+      };
     }
   }
 }
@@ -305,28 +255,27 @@ export const database = {
 
 // Configuration check functions
 export function isDatabaseConfigured(): boolean {
-  return Boolean(
-    process.env.DATABASE_HOST && 
-    process.env.DATABASE_NAME && 
-    process.env.DATABASE_USER
-  );
+  // This will be checked server-side via API
+  return true; // Assume configured for client
 }
 
-export function getDatabaseStatus(): {
+export async function getDatabaseStatus(): Promise<{
   configured: boolean;
   message: string;
   host?: string;
-} {
-  if (!isDatabaseConfigured()) {
+}> {
+  try {
+    const response = await fetch('/api/database/status');
+    
+    if (!response.ok) {
+      throw new Error('Failed to get database status');
+    }
+
+    return await response.json();
+  } catch (error) {
     return {
       configured: false,
-      message: "Database not configured. Please set DATABASE_HOST, DATABASE_NAME, DATABASE_USER, and DATABASE_PASSWORD environment variables.",
+      message: "Failed to check database configuration",
     };
   }
-
-  return {
-    configured: true,
-    message: "Database configured successfully",
-    host: process.env.DATABASE_HOST,
-  };
 }
