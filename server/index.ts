@@ -12,7 +12,9 @@ import {
   listPhotos,
   deletePhoto,
 } from "./routes/photos";
-import { logR2Status, getR2Status } from "./utils/r2Config";
+import { initializeDatabase, testDatabaseConnection, testMinioConnection } from "./db/init.js";
+import { getDatabaseStatus } from "../client/lib/database.js";
+import { getStorageStatus } from "../client/lib/storage.js";
 
 // Fix for serverless environments where import.meta.url might be undefined
 let __dirname: string;
@@ -22,11 +24,17 @@ try {
   __dirname = process.cwd();
 }
 
-export function createServer() {
+export async function createServer() {
   const app = express();
 
-  // Log R2 configuration status
-  logR2Status();
+  // Initialize database and storage
+  try {
+    await initializeDatabase();
+    console.log('✅ Database and storage initialized successfully');
+  } catch (error) {
+    console.error('❌ Failed to initialize database and storage:', error);
+    // Continue anyway for development
+  }
 
   // Middleware
   app.use(cors());
@@ -47,10 +55,28 @@ export function createServer() {
   app.get("/api/photos", listPhotos);
   app.delete("/api/photos/:imageId", deletePhoto);
 
-  // R2 configuration status
-  app.get("/api/photos/status", (_req, res) => {
-    const status = getR2Status();
+  // Database and storage status endpoints
+  app.get("/api/database/status", (_req, res) => {
+    const status = getDatabaseStatus();
     res.json(status);
+  });
+
+  app.get("/api/storage/status", (_req, res) => {
+    const status = getStorageStatus();
+    res.json(status);
+  });
+
+  // Health check endpoint
+  app.get("/api/health", async (_req, res) => {
+    const dbConnected = await testDatabaseConnection();
+    const storageConnected = await testMinioConnection();
+
+    res.json({
+      status: dbConnected && storageConnected ? 'healthy' : 'unhealthy',
+      database: dbConnected,
+      storage: storageConnected,
+      timestamp: new Date().toISOString()
+    });
   });
 
   // Log environment info
