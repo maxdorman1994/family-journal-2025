@@ -2,12 +2,13 @@ import { RequestHandler } from "express";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
+import { storage } from "../../client/lib/storage.js";
 
 // Configure multer for handling file uploads
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit for Cloudflare Images
+    fileSize: 50 * 1024 * 1024, // 50MB limit for Minio
   },
   fileFilter: (req, file, cb) => {
     const allowedTypes = [
@@ -16,6 +17,10 @@ const upload = multer({
       "image/webp",
       "image/gif",
       "image/svg+xml",
+      "image/bmp",
+      "image/tiff",
+      "image/heic",
+      "image/heif",
     ];
     const allowedExtensions = [
       ".jpg",
@@ -24,6 +29,10 @@ const upload = multer({
       ".webp",
       ".gif",
       ".svg",
+      ".bmp",
+      ".tiff",
+      ".heic",
+      ".heif",
     ];
     const fileExtension = path.extname(file.originalname).toLowerCase();
 
@@ -35,33 +44,31 @@ const upload = multer({
     } else {
       cb(
         new Error(
-          "Invalid file type. Only JPEG, PNG, WebP, GIF, and SVG files are allowed.",
+          "Invalid file type. Only image files are allowed (JPEG, PNG, WebP, GIF, SVG, BMP, TIFF, HEIC, HEIF).",
         ),
       );
     }
   },
 });
 
-// Cloudflare Images configuration
-const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || "";
-const CLOUDFLARE_IMAGES_TOKEN = process.env.CLOUDFLARE_IMAGES_TOKEN || "";
-const CLOUDFLARE_IMAGES_URL = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/images/v1`;
-
 /**
- * Generate a unique ID for the uploaded photo
+ * Generate a unique filename for the uploaded photo
  */
-function generatePhotoId(originalName: string, photoId: string): string {
+function generatePhotoFileName(originalName: string, photoId: string): string {
   const timestamp = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
   const safeName = originalName
     .replace(/[^a-zA-Z0-9.-]/g, "_")
     .replace(/_+/g, "_")
     .toLowerCase();
 
-  return `wee-adventure-${timestamp}-${photoId}-${safeName}`;
+  const fileExtension = path.extname(safeName) || '.jpg';
+  const nameWithoutExt = path.basename(safeName, fileExtension);
+
+  return `${timestamp}/${photoId}_${nameWithoutExt}${fileExtension}`;
 }
 
 /**
- * Upload a single photo to Cloudflare Images
+ * Upload a single photo to Minio storage
  */
 export const uploadPhoto: RequestHandler = async (req, res) => {
   try {
@@ -85,85 +92,38 @@ export const uploadPhoto: RequestHandler = async (req, res) => {
         .json({ error: "Missing required fields: originalName, photoId" });
     }
 
-    // Check if Cloudflare Images is configured
-    console.log("🔧 Cloudflare configuration check:", {
-      hasAccountId: !!CLOUDFLARE_ACCOUNT_ID,
-      hasToken: !!CLOUDFLARE_IMAGES_TOKEN,
-      accountId: CLOUDFLARE_ACCOUNT_ID ? "set" : "not set",
-    });
+    // Check if Minio storage is available
+    await storage.ensureBucket();
 
-    if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_IMAGES_TOKEN) {
-      console.warn(
-        "⚠️ Cloudflare Images not configured, using local storage simulation",
-      );
-      // For development, return a placeholder URL
-      const localUrl = `/api/photos/placeholder/${photoId}`;
-      console.log(`📁 Returning local placeholder URL: ${localUrl}`);
-      return res.json({
-        url: localUrl,
-        message:
-          "Photo uploaded to local storage (Cloudflare Images not configured)",
-      });
-    }
+    const fileName = generatePhotoFileName(originalName, photoId);
 
-    const customId = generatePhotoId(originalName, photoId);
+    // Convert buffer to a format Minio can handle
+    const buffer = Buffer.from(req.file.buffer);
 
-    // Create FormData for Cloudflare Images API
-    const formData = new FormData();
-    formData.append(
-      "file",
-      new Blob([req.file.buffer], { type: req.file.mimetype }),
-      originalName,
-    );
-    formData.append("id", customId);
-    formData.append(
-      "metadata",
-      JSON.stringify({
-        originalName: originalName,
-        photoId: photoId,
-        uploadDate: new Date().toISOString(),
-        journalApp: "wee-adventure",
-      }),
+    // Upload to Minio
+    const result = await storage.uploadFile(
+      buffer,
+      fileName,
+      req.file.mimetype,
+      'journal'
     );
 
-    // Upload to Cloudflare Images
-    const response = await fetch(CLOUDFLARE_IMAGES_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${CLOUDFLARE_IMAGES_TOKEN}`,
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.errors?.[0]?.message ||
-          `Cloudflare Images API error: ${response.statusText}`,
-      );
+    if (!result.success) {
+      throw new Error(result.error || 'Upload failed');
     }
-
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.errors?.[0]?.message || "Upload failed");
-    }
-
-    // Get the delivery URL - Cloudflare Images provides multiple variants
-    const deliveryUrl = data.result.variants[0]; // Use first variant (original)
 
     console.log(
-      `Photo uploaded successfully to Cloudflare Images: ${customId} -> ${deliveryUrl}`,
+      `✅ Photo uploaded successfully to Minio: ${fileName} -> ${result.url}`,
     );
 
     res.json({
-      url: deliveryUrl,
-      id: customId,
-      variants: data.result.variants,
-      message: "Photo uploaded successfully to Cloudflare Images",
+      url: result.url,
+      id: photoId,
+      fileName: fileName,
+      message: "Photo uploaded successfully to Minio storage",
     });
   } catch (error) {
-    console.error("Photo upload error:", error);
+    console.error("❌ Photo upload error:", error);
     res.status(500).json({
       error: error instanceof Error ? error.message : "Failed to upload photo",
     });
@@ -171,7 +131,7 @@ export const uploadPhoto: RequestHandler = async (req, res) => {
 };
 
 /**
- * Get photo by ID (for development when R2 is not configured)
+ * Get photo by ID (placeholder for development)
  */
 export const getPlaceholderPhoto: RequestHandler = (req, res) => {
   const { photoId } = req.params;
@@ -183,7 +143,7 @@ export const getPlaceholderPhoto: RequestHandler = (req, res) => {
       <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" 
             font-family="Arial" font-size="14" fill="#6b7280">
         Photo: ${photoId}
-        (R2 Storage Not Configured)
+        (Development Placeholder)
       </text>
     </svg>
   `;
@@ -198,51 +158,43 @@ export const getPlaceholderPhoto: RequestHandler = (req, res) => {
 export const uploadPhotoMiddleware = upload.single("photo");
 
 /**
- * List photos from Cloudflare Images (for sync functionality)
+ * List photos from Minio storage (for sync functionality)
  */
 export const listPhotos: RequestHandler = async (req, res) => {
   try {
-    if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_IMAGES_TOKEN) {
-      return res.json({
-        photos: [],
-        message: "Cloudflare Images not configured",
+    const prefix = req.query.prefix as string || 'journal/';
+    const files = await storage.listFiles(prefix);
+
+    // Get file URLs for recent photos
+    const recentPhotos = files
+      .slice(-100) // Get last 100 files
+      .map(async (fileName) => {
+        try {
+          const url = await storage.getFileUrl(fileName);
+          const stats = await storage.getFileStats(fileName);
+          
+          return {
+            id: path.basename(fileName, path.extname(fileName)),
+            fileName: fileName,
+            url: url,
+            size: stats?.size || 0,
+            lastModified: stats?.lastModified || new Date(),
+          };
+        } catch (error) {
+          console.error(`Error getting photo info for ${fileName}:`, error);
+          return null;
+        }
       });
-    }
 
-    const response = await fetch(`${CLOUDFLARE_IMAGES_URL}?per_page=100`, {
-      headers: {
-        Authorization: `Bearer ${CLOUDFLARE_IMAGES_TOKEN}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to list photos: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.errors?.[0]?.message || "Failed to list photos");
-    }
-
-    // Filter for journal photos and format response
-    const journalPhotos = data.result.images
-      .filter((img: any) => img.id.startsWith("wee-adventure-"))
-      .map((img: any) => ({
-        id: img.id,
-        url: img.variants[0],
-        variants: img.variants,
-        metadata: img.meta,
-        uploaded: img.uploaded,
-      }));
+    const photos = (await Promise.all(recentPhotos)).filter(Boolean);
 
     res.json({
-      photos: journalPhotos,
-      total: journalPhotos.length,
-      message: "Photos retrieved successfully",
+      photos: photos,
+      total: photos.length,
+      message: "Photos retrieved successfully from Minio storage",
     });
   } catch (error) {
-    console.error("List photos error:", error);
+    console.error("❌ List photos error:", error);
     res.status(500).json({
       error: error instanceof Error ? error.message : "Failed to list photos",
     });
@@ -250,7 +202,7 @@ export const listPhotos: RequestHandler = async (req, res) => {
 };
 
 /**
- * Delete a photo from Cloudflare Images
+ * Delete a photo from Minio storage
  */
 export const deletePhoto: RequestHandler = async (req, res) => {
   try {
@@ -260,39 +212,103 @@ export const deletePhoto: RequestHandler = async (req, res) => {
       return res.status(400).json({ error: "Image ID is required" });
     }
 
-    if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_IMAGES_TOKEN) {
-      return res
-        .status(400)
-        .json({ error: "Cloudflare Images not configured" });
+    // Find the file by searching for files containing the imageId
+    const allFiles = await storage.listFiles('journal/');
+    const targetFile = allFiles.find(file => file.includes(imageId));
+
+    if (!targetFile) {
+      return res.status(404).json({ error: "Photo not found" });
     }
 
-    const response = await fetch(`${CLOUDFLARE_IMAGES_URL}/${imageId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${CLOUDFLARE_IMAGES_TOKEN}`,
-      },
-    });
+    const deleted = await storage.deleteFile(targetFile);
 
-    if (!response.ok) {
-      throw new Error(`Failed to delete photo: ${response.statusText}`);
+    if (!deleted) {
+      throw new Error("Failed to delete photo from storage");
     }
 
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.errors?.[0]?.message || "Failed to delete photo");
-    }
-
-    console.log(`Photo deleted successfully: ${imageId}`);
+    console.log(`✅ Photo deleted successfully: ${targetFile}`);
 
     res.json({
       message: "Photo deleted successfully",
       imageId,
+      fileName: targetFile,
     });
   } catch (error) {
-    console.error("Delete photo error:", error);
+    console.error("❌ Delete photo error:", error);
     res.status(500).json({
       error: error instanceof Error ? error.message : "Failed to delete photo",
     });
   }
 };
+
+/**
+ * Upload multiple photos at once
+ */
+export const uploadMultiplePhotos: RequestHandler = async (req, res) => {
+  try {
+    if (!req.files || !Array.isArray(req.files)) {
+      return res.status(400).json({ error: "No photo files provided" });
+    }
+
+    const files = req.files as Express.Multer.File[];
+    const { photoIds } = req.body;
+
+    if (!photoIds || !Array.isArray(photoIds) || photoIds.length !== files.length) {
+      return res.status(400).json({ 
+        error: "photoIds array must match the number of uploaded files" 
+      });
+    }
+
+    await storage.ensureBucket();
+
+    const uploadResults = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const photoId = photoIds[i];
+      
+      try {
+        const fileName = generatePhotoFileName(file.originalname, photoId);
+        const buffer = Buffer.from(file.buffer);
+
+        const result = await storage.uploadFile(
+          buffer,
+          fileName,
+          file.mimetype,
+          'journal'
+        );
+
+        uploadResults.push({
+          photoId,
+          success: result.success,
+          url: result.url,
+          fileName: fileName,
+          error: result.error,
+        });
+      } catch (error) {
+        uploadResults.push({
+          photoId,
+          success: false,
+          error: error instanceof Error ? error.message : 'Upload failed',
+        });
+      }
+    }
+
+    const successCount = uploadResults.filter(r => r.success).length;
+
+    res.json({
+      results: uploadResults,
+      successCount,
+      totalCount: files.length,
+      message: `${successCount}/${files.length} photos uploaded successfully`,
+    });
+  } catch (error) {
+    console.error("❌ Multiple photo upload error:", error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Failed to upload photos",
+    });
+  }
+};
+
+// Configure multer for multiple file uploads
+export const uploadMultiplePhotosMiddleware = upload.array("photos", 20); // Max 20 photos
