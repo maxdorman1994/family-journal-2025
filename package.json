@@ -23,13 +23,15 @@
     "setup:r2": "node scripts/setup-r2.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.53.0",
     "@types/mapbox-gl": "^3.4.1",
+    "@types/pg": "^8.15.5",
     "browser-image-compression": "^2.0.2",
     "dotenv": "^17.2.0",
     "express": "^4.18.2",
     "mapbox-gl": "^3.14.0",
+    "minio": "^8.0.5",
     "multer": "^2.0.2",
+    "pg": "^8.16.3",
     "react-map-gl": "^7.1.0",
     "uuid": "^11.1.0",
     "zod": "^3.23.8"
