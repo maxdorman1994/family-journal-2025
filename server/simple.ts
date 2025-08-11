@@ -63,7 +63,7 @@ export function createSimpleServer() {
   });
 
   // Health check endpoint
-  app.get("/api/health", async (_req, res) => {
+  app.get("/health", async (_req, res) => {
     res.json({
       status: "healthy",
       storage: true,
