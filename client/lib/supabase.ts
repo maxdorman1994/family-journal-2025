@@ -1,42 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
+// Database client - migrated from Supabase to PostgreSQL + Minio
+import { database, isDatabaseConfigured, getDatabaseStatus } from "./database.js";
+import { storage, isStorageConfigured, getStorageStatus } from "./storage.js";
 
-// Supabase configuration
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
-
-console.log("🔧 Supabase Configuration Check:", {
-  hasUrl: !!supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  urlFormat: supabaseUrl
-    ? supabaseUrl.startsWith("https://")
-      ? "Valid HTTPS URL"
-      : "Invalid URL format"
-    : "Missing",
-  keyFormat: supabaseAnonKey
-    ? supabaseAnonKey.length > 100
-      ? "Valid length"
-      : "Too short"
-    : "Missing",
-});
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn(
-    "⚠️  Supabase configuration missing. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
-  );
-  console.warn("Environment variables:", {
-    VITE_SUPABASE_URL: supabaseUrl ? "Set" : "Missing",
-    VITE_SUPABASE_ANON_KEY: supabaseAnonKey ? "Set" : "Missing",
-  });
-}
-
-// Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: false,
-  },
-});
-
-// Database types for Supabase tables
+// Re-export types for compatibility
 export interface JournalEntry {
   id: string;
   title: string;
@@ -54,7 +20,7 @@ export interface JournalEntry {
   other_tickets: string;
   pet_notes: string;
   tags: string[];
-  photos: string[]; // Array of Cloudflare R2 URLs
+  photos: string[]; // Minio URLs
   created_at?: string;
   updated_at?: string;
 }
@@ -66,39 +32,58 @@ export interface ProcessedPhoto {
   preview: string;
   isProcessing: boolean;
   uploadProgress: number;
-  cloudflareUrl?: string; // R2 URL, not Supabase
+  cloudflareUrl?: string; // Now Minio URL
   error?: string;
 }
 
-// Note: Photos are stored in Cloudflare R2, not Supabase Storage
-// Supabase only stores the R2 URLs in the database
+// Main database client - compatible with Supabase interface
+export const supabase = database;
 
-/**
- * Check if Supabase is properly configured
- */
-export function isSupabaseConfigured(): boolean {
-  return Boolean(supabaseUrl && supabaseAnonKey);
+console.log("🔧 Database Configuration Check:", {
+  database: isDatabaseConfigured(),
+  storage: isStorageConfigured(),
+});
+
+if (!isDatabaseConfigured()) {
+  console.warn(
+    "⚠️ Database configuration missing. Please set DATABASE_HOST, DATABASE_NAME, DATABASE_USER, and DATABASE_PASSWORD",
+  );
+}
+
+if (!isStorageConfigured()) {
+  console.warn(
+    "⚠️ Storage configuration missing. Please set MINIO_ENDPOINT, MINIO_ACCESS_KEY, and MINIO_SECRET_KEY",
+  );
 }
 
 /**
- * Get Supabase configuration status
+ * Check if database is properly configured
+ */
+export function isSupabaseConfigured(): boolean {
+  return isDatabaseConfigured();
+}
+
+/**
+ * Get database configuration status
  */
 export function getSupabaseStatus(): {
   configured: boolean;
   message: string;
-  url?: string;
+  host?: string;
 } {
-  if (!supabaseUrl || !supabaseAnonKey) {
+  const dbStatus = getDatabaseStatus();
+  const storageStatus = getStorageStatus();
+  
+  if (!dbStatus.configured || !storageStatus.configured) {
     return {
       configured: false,
-      message:
-        "Supabase not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.",
+      message: `Configuration missing: ${!dbStatus.configured ? 'Database' : ''} ${!storageStatus.configured ? 'Storage' : ''}`,
     };
   }
 
   return {
     configured: true,
-    message: "Supabase configured successfully",
-    url: supabaseUrl,
+    message: "Database and storage configured successfully",
+    host: dbStatus.host,
   };
 }
