@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import SyncStatus from "@/components/SyncStatus";
 
 interface EnvironmentStatus {
-  supabase: boolean;
-  cloudflare: boolean;
+  database: boolean;
+  storage: boolean;
   api: boolean;
   environment: string;
 }
