@@ -39,8 +39,8 @@ export default function Debug() {
       console.error("Environment check failed:", error);
       setStatus({
         api: false,
-        cloudflare: false,
-        supabase: !!import.meta.env.VITE_SUPABASE_URL,
+        storage: false,
+        database: false,
         environment: "error",
       });
     } finally {
