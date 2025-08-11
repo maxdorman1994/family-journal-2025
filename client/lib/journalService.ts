@@ -43,10 +43,10 @@ export async function createJournalEntry(
   }
 
   try {
-    const { data: entries, error } = await supabase
+    const { data: entry, error } = await supabase
       .from("journal_entries")
       .insert(data)
-      .execute();
+      .single();
 
     if (error) {
       console.error("Database error creating journal entry:", error);
@@ -54,8 +54,6 @@ export async function createJournalEntry(
         `Database error: ${error.message || "Unknown database error"}`,
       );
     }
-
-    const entry = entries[0] as JournalEntry;
 
     // Update milestones based on the new journal entry
     try {
@@ -375,7 +373,7 @@ export async function testSupabaseConnection(): Promise<{
   const envInfo = getEnvironmentInfo();
   const validation = validateSupabaseConfig();
 
-  console.log("��� Environment check:", { envInfo, validation });
+  console.log("📋 Environment check:", { envInfo, validation });
 
   if (!isSupabaseConfigured()) {
     return {
