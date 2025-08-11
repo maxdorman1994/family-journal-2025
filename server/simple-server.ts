@@ -28,9 +28,9 @@ export async function createServer() {
   // Initialize Minio storage
   try {
     await initializeMinio();
-    console.log('✅ Minio storage initialized successfully');
+    console.log("✅ Minio storage initialized successfully");
   } catch (error) {
-    console.error('❌ Failed to initialize Minio storage:', error);
+    console.error("❌ Failed to initialize Minio storage:", error);
   }
 
   // Middleware
@@ -57,7 +57,9 @@ export async function createServer() {
     const storageConnected = await testMinioConnection();
     res.json({
       configured: storageConnected,
-      message: storageConnected ? "Minio storage connected successfully" : "Minio storage connection failed",
+      message: storageConnected
+        ? "Minio storage connected successfully"
+        : "Minio storage connection failed",
       endpoint: process.env.MINIO_ENDPOINT,
     });
   });
@@ -65,11 +67,11 @@ export async function createServer() {
   // Health check endpoint
   app.get("/api/health", async (_req, res) => {
     const storageConnected = await testMinioConnection();
-    
+
     res.json({
-      status: storageConnected ? 'healthy' : 'partial',
+      status: storageConnected ? "healthy" : "partial",
       storage: storageConnected,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 

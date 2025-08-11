@@ -23,7 +23,7 @@ export default function Debug() {
       // Check database and storage status
       const [dbResponse, storageResponse] = await Promise.all([
         fetch("/api/database/status"),
-        fetch("/api/storage/status")
+        fetch("/api/storage/status"),
       ]);
 
       const dbData = await dbResponse.json();
@@ -86,9 +86,7 @@ export default function Debug() {
                       : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
-                  {status.storage
-                    ? "✅ Connected"
-                    : "⚠️ Not Available"}
+                  {status.storage ? "✅ Connected" : "⚠️ Not Available"}
                 </span>
               </div>
 
@@ -137,8 +135,7 @@ export default function Debug() {
               {status?.storage ? "✅ Connected" : "❌ Not Available"}
             </div>
             <div>
-              <strong>API:</strong>{" "}
-              {status?.api ? "✅ Working" : "❌ Failed"}
+              <strong>API:</strong> {status?.api ? "✅ Working" : "❌ Failed"}
             </div>
           </div>
         </div>

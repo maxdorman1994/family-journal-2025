@@ -61,7 +61,7 @@ function generatePhotoFileName(originalName: string, photoId: string): string {
     .replace(/_+/g, "_")
     .toLowerCase();
 
-  const fileExtension = path.extname(safeName) || '.jpg';
+  const fileExtension = path.extname(safeName) || ".jpg";
   const nameWithoutExt = path.basename(safeName, fileExtension);
 
   return `${timestamp}/${photoId}_${nameWithoutExt}${fileExtension}`;
@@ -105,11 +105,11 @@ export const uploadPhoto: RequestHandler = async (req, res) => {
       buffer,
       fileName,
       req.file.mimetype,
-      'journal'
+      "journal",
     );
 
     if (!result.success) {
-      throw new Error(result.error || 'Upload failed');
+      throw new Error(result.error || "Upload failed");
     }
 
     console.log(
@@ -162,7 +162,7 @@ export const uploadPhotoMiddleware = upload.single("photo");
  */
 export const listPhotos: RequestHandler = async (req, res) => {
   try {
-    const prefix = req.query.prefix as string || 'journal/';
+    const prefix = (req.query.prefix as string) || "journal/";
     const files = await storage.listFiles(prefix);
 
     // Get file URLs for recent photos
@@ -172,7 +172,7 @@ export const listPhotos: RequestHandler = async (req, res) => {
         try {
           const url = await storage.getFileUrl(fileName);
           const stats = await storage.getFileStats(fileName);
-          
+
           return {
             id: path.basename(fileName, path.extname(fileName)),
             fileName: fileName,
@@ -213,8 +213,8 @@ export const deletePhoto: RequestHandler = async (req, res) => {
     }
 
     // Find the file by searching for files containing the imageId
-    const allFiles = await storage.listFiles('journal/');
-    const targetFile = allFiles.find(file => file.includes(imageId));
+    const allFiles = await storage.listFiles("journal/");
+    const targetFile = allFiles.find((file) => file.includes(imageId));
 
     if (!targetFile) {
       return res.status(404).json({ error: "Photo not found" });
@@ -253,9 +253,13 @@ export const uploadMultiplePhotos: RequestHandler = async (req, res) => {
     const files = req.files as Express.Multer.File[];
     const { photoIds } = req.body;
 
-    if (!photoIds || !Array.isArray(photoIds) || photoIds.length !== files.length) {
-      return res.status(400).json({ 
-        error: "photoIds array must match the number of uploaded files" 
+    if (
+      !photoIds ||
+      !Array.isArray(photoIds) ||
+      photoIds.length !== files.length
+    ) {
+      return res.status(400).json({
+        error: "photoIds array must match the number of uploaded files",
       });
     }
 
@@ -266,7 +270,7 @@ export const uploadMultiplePhotos: RequestHandler = async (req, res) => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const photoId = photoIds[i];
-      
+
       try {
         const fileName = generatePhotoFileName(file.originalname, photoId);
         const buffer = Buffer.from(file.buffer);
@@ -275,7 +279,7 @@ export const uploadMultiplePhotos: RequestHandler = async (req, res) => {
           buffer,
           fileName,
           file.mimetype,
-          'journal'
+          "journal",
         );
 
         uploadResults.push({
@@ -289,12 +293,12 @@ export const uploadMultiplePhotos: RequestHandler = async (req, res) => {
         uploadResults.push({
           photoId,
           success: false,
-          error: error instanceof Error ? error.message : 'Upload failed',
+          error: error instanceof Error ? error.message : "Upload failed",
         });
       }
     }
 
-    const successCount = uploadResults.filter(r => r.success).length;
+    const successCount = uploadResults.filter((r) => r.success).length;
 
     res.json({
       results: uploadResults,

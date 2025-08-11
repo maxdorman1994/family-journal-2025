@@ -3,6 +3,7 @@
 ## 📦 Files to Upload to GitHub
 
 ### Core Application Files
+
 ```
 package.json                    # Dependencies and scripts
 server.js                      # Production server (from build)
@@ -29,6 +30,7 @@ tsconfig.json                  # TypeScript config
 ```
 
 ### Environment Variables for FastHost
+
 ```bash
 MINIO_ENDPOINT=192.168.1.214
 MINIO_PORT=9000
@@ -40,6 +42,7 @@ NODE_ENV=production
 ```
 
 ### FastHost Deploy Commands
+
 ```bash
 # Install dependencies
 npm install
@@ -52,6 +55,7 @@ npm start
 ```
 
 ## 🎯 What This Setup Gives You
+
 - ✅ Photo uploads to your Minio server
 - ✅ Simple file-based storage (no database)
 - ✅ Fast deployment to FastHost
@@ -59,6 +63,7 @@ npm start
 - ✅ All your custom Minio configuration
 
 ## 📱 Features Available
+
 - Photo uploads to Minio
 - Journal entries (stored locally)
 - Adventure tracking

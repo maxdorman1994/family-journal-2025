@@ -40,32 +40,32 @@ export class DatabaseClient {
   constructor(private tableName: string) {}
 
   // SELECT operations
-  select(columns: string = '*') {
-    return new DatabaseQuery(this.tableName, 'SELECT', columns);
+  select(columns: string = "*") {
+    return new DatabaseQuery(this.tableName, "SELECT", columns);
   }
 
   // INSERT operations
   insert(data: any) {
-    return new DatabaseQuery(this.tableName, 'INSERT', '', data);
+    return new DatabaseQuery(this.tableName, "INSERT", "", data);
   }
 
   // UPDATE operations
   update(data: any) {
-    return new DatabaseQuery(this.tableName, 'UPDATE', '', data);
+    return new DatabaseQuery(this.tableName, "UPDATE", "", data);
   }
 
   // DELETE operations
   delete() {
-    return new DatabaseQuery(this.tableName, 'DELETE');
+    return new DatabaseQuery(this.tableName, "DELETE");
   }
 
   // RPC operations (stored procedures)
   static async rpc(functionName: string, params: Record<string, any>) {
     try {
-      const response = await fetch('/api/database/rpc', {
-        method: 'POST',
+      const response = await fetch("/api/database/rpc", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           functionName,
@@ -75,7 +75,7 @@ export class DatabaseClient {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'RPC call failed');
+        throw new Error(errorData.error || "RPC call failed");
       }
 
       const data = await response.json();
@@ -89,21 +89,21 @@ export class DatabaseClient {
 
 class DatabaseQuery {
   private whereConditions: Record<string, any> = {};
-  private orderByClause: string = '';
+  private orderByClause: string = "";
   private limitValue: number | null = null;
   private rangeFrom: number | null = null;
   private rangeTo: number | null = null;
-  private selectColumns: string = '*';
+  private selectColumns: string = "*";
   private insertData: any = null;
   private updateData: any = null;
   private headOnly: boolean = false;
   private countOption: string | null = null;
 
   constructor(
-    private tableName: string, 
-    private operation: 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE',
-    columns: string = '*',
-    data: any = null
+    private tableName: string,
+    private operation: "SELECT" | "INSERT" | "UPDATE" | "DELETE",
+    columns: string = "*",
+    data: any = null,
   ) {
     this.selectColumns = columns;
     this.insertData = data;
@@ -112,58 +112,61 @@ class DatabaseQuery {
 
   // Add WHERE conditions
   eq(column: string, value: any) {
-    this.whereConditions[column + '_eq'] = value;
+    this.whereConditions[column + "_eq"] = value;
     return this;
   }
 
   neq(column: string, value: any) {
-    this.whereConditions[column + '_neq'] = value;
+    this.whereConditions[column + "_neq"] = value;
     return this;
   }
 
   gt(column: string, value: any) {
-    this.whereConditions[column + '_gt'] = value;
+    this.whereConditions[column + "_gt"] = value;
     return this;
   }
 
   gte(column: string, value: any) {
-    this.whereConditions[column + '_gte'] = value;
+    this.whereConditions[column + "_gte"] = value;
     return this;
   }
 
   lt(column: string, value: any) {
-    this.whereConditions[column + '_lt'] = value;
+    this.whereConditions[column + "_lt"] = value;
     return this;
   }
 
   lte(column: string, value: any) {
-    this.whereConditions[column + '_lte'] = value;
+    this.whereConditions[column + "_lte"] = value;
     return this;
   }
 
   like(column: string, pattern: string) {
-    this.whereConditions[column + '_like'] = pattern;
+    this.whereConditions[column + "_like"] = pattern;
     return this;
   }
 
   ilike(column: string, pattern: string) {
-    this.whereConditions[column + '_ilike'] = pattern;
+    this.whereConditions[column + "_ilike"] = pattern;
     return this;
   }
 
   in(column: string, values: any[]) {
-    this.whereConditions[column + '_in'] = values;
+    this.whereConditions[column + "_in"] = values;
     return this;
   }
 
   is(column: string, value: any) {
-    this.whereConditions[column + '_is'] = value;
+    this.whereConditions[column + "_is"] = value;
     return this;
   }
 
   // Add ORDER BY
-  order(column: string, options: { ascending?: boolean } = { ascending: true }) {
-    const direction = options.ascending !== false ? 'asc' : 'desc';
+  order(
+    column: string,
+    options: { ascending?: boolean } = { ascending: true },
+  ) {
+    const direction = options.ascending !== false ? "asc" : "desc";
     this.orderByClause = `${column}_${direction}`;
     return this;
   }
@@ -182,7 +185,10 @@ class DatabaseQuery {
   }
 
   // Count option
-  select(columns: string, options?: { count?: 'exact' | 'estimated', head?: boolean }) {
+  select(
+    columns: string,
+    options?: { count?: "exact" | "estimated"; head?: boolean },
+  ) {
     this.selectColumns = columns;
     if (options?.count) {
       this.countOption = options.count;
@@ -194,19 +200,19 @@ class DatabaseQuery {
   }
 
   // Single result method
-  async single(): Promise<{ data: any, error: any }> {
+  async single(): Promise<{ data: any; error: any }> {
     const result = await this.execute();
     if (result.error) {
       return result;
     }
     return {
       data: Array.isArray(result.data) ? result.data[0] || null : result.data,
-      error: result.error
+      error: result.error,
     };
   }
 
   // Execute the query via API
-  async execute(): Promise<{ data: any, error: any, count?: number }> {
+  async execute(): Promise<{ data: any; error: any; count?: number }> {
     try {
       const queryParams = {
         table: this.tableName,
@@ -222,26 +228,27 @@ class DatabaseQuery {
         head: this.headOnly,
       };
 
-      const response = await fetch('/api/database/query', {
-        method: 'POST',
+      const response = await fetch("/api/database/query", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(queryParams),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Database query failed');
+        throw new Error(errorData.error || "Database query failed");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error('Database query error:', error);
-      return { 
-        data: null, 
-        error: error instanceof Error ? error : new Error('Database query failed')
+      console.error("Database query error:", error);
+      return {
+        data: null,
+        error:
+          error instanceof Error ? error : new Error("Database query failed"),
       };
     }
   }
@@ -250,7 +257,7 @@ class DatabaseQuery {
 // Create table clients similar to Supabase interface
 export const database = {
   from: (tableName: string) => new DatabaseClient(tableName),
-  rpc: DatabaseClient.rpc
+  rpc: DatabaseClient.rpc,
 };
 
 // Configuration check functions
@@ -265,10 +272,10 @@ export async function getDatabaseStatus(): Promise<{
   host?: string;
 }> {
   try {
-    const response = await fetch('/api/database/status');
-    
+    const response = await fetch("/api/database/status");
+
     if (!response.ok) {
-      throw new Error('Failed to get database status');
+      throw new Error("Failed to get database status");
     }
 
     return await response.json();

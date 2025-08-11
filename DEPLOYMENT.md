@@ -5,6 +5,7 @@ Simple deployment guide for Family Journal with only Minio storage (no database)
 ## 🚀 Quick Deployment to FastHost
 
 ### 1. Environment Variables
+
 Set these in your FastHost deployment:
 
 ```bash
@@ -22,6 +23,7 @@ PING_MESSAGE=pong
 ```
 
 ### 2. Build Commands
+
 ```bash
 # Install
 npm install
@@ -34,6 +36,7 @@ npm start
 ```
 
 ### 3. File Structure
+
 ```
 dist/spa/          # Frontend build
 server.js          # Production server
@@ -41,12 +44,15 @@ package.json       # Dependencies
 ```
 
 ### 4. Cloudflare Integration
+
 For Cloudflare deployment:
+
 - Use `dist/spa` folder for static files
 - Set up Functions for API routes
 - Configure R2 if you want Cloudflare storage instead
 
 ### 5. Local Testing
+
 ```bash
 # Install dependencies
 npm install
@@ -64,6 +70,7 @@ npm start
 ```
 
 ### 6. Production Checklist
+
 - ✅ Minio endpoint accessible from production server
 - ✅ Bucket `family-journal` exists
 - ✅ Environment variables set
@@ -71,12 +78,14 @@ npm start
 - ✅ Static files served correctly
 
 ## 📁 Files Needed for Deployment
+
 - `package.json` - Dependencies and scripts
 - `server.js` - Production server
 - `dist/spa/` - Built frontend files
 - `.env` - Environment variables (not committed)
 
 ## 🔧 Troubleshooting
+
 - **Minio connection failed**: Check endpoint and credentials
 - **Photos not uploading**: Verify bucket exists and permissions
 - **Static files not served**: Check `dist/spa` folder exists after build

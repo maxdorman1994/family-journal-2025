@@ -24,7 +24,7 @@ try {
 export function createSimpleServer() {
   const app = express();
 
-  console.log('🚀 Creating simple server (Minio only)...');
+  console.log("🚀 Creating simple server (Minio only)...");
 
   // Middleware
   app.use(cors());
@@ -48,14 +48,16 @@ export function createSimpleServer() {
   // Storage status endpoint
   app.get("/api/storage/status", async (_req, res) => {
     const configured = Boolean(
-      process.env.MINIO_ENDPOINT && 
-      process.env.MINIO_ACCESS_KEY && 
-      process.env.MINIO_SECRET_KEY
+      process.env.MINIO_ENDPOINT &&
+        process.env.MINIO_ACCESS_KEY &&
+        process.env.MINIO_SECRET_KEY,
     );
 
     res.json({
       configured,
-      message: configured ? "Minio storage configured" : "Minio storage not configured",
+      message: configured
+        ? "Minio storage configured"
+        : "Minio storage not configured",
       endpoint: process.env.MINIO_ENDPOINT,
     });
   });
@@ -63,12 +65,12 @@ export function createSimpleServer() {
   // Health check endpoint
   app.get("/api/health", async (_req, res) => {
     res.json({
-      status: 'healthy',
+      status: "healthy",
       storage: true,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 
-  console.log('✅ Simple server created successfully');
+  console.log("✅ Simple server created successfully");
   return app;
 }

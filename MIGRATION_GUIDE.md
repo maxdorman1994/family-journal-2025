@@ -41,18 +41,21 @@ MINIO_BUCKET=wee-adventure-photos
 ## 🔄 What Changed
 
 ### Database Migration
+
 - **Before**: Supabase (hosted PostgreSQL)
 - **After**: Self-hosted PostgreSQL
 - **Schema**: Equivalent tables and functions migrated
 - **API**: Compatible interface maintained
 
 ### Storage Migration
+
 - **Before**: Cloudflare R2
 - **After**: Minio (S3-compatible)
 - **Files**: Photos and assets
 - **URLs**: Now served via Minio presigned URLs
 
 ### Service Layer
+
 - **Before**: `@supabase/supabase-js` client
 - **After**: Custom database client with compatible API
 - **RPC**: Stored procedures maintained
@@ -63,26 +66,31 @@ MINIO_BUCKET=wee-adventure-photos
 The database includes these main tables:
 
 ### Core Tables
+
 - `journal_entries` - Adventure journal entries
 - `journal_comments` - Comments on entries
 - `journal_likes` - Entry likes/reactions
 
 ### Milestones & Progress
+
 - `milestone_categories` - Milestone groupings
 - `milestones` - Achievement definitions
 - `user_milestone_progress` - User progress tracking
 
 ### Statistics
+
 - `adventure_stats` - Tracked statistics
 - `app_settings` - Application configuration
 
 ### Locations & Activities
+
 - `castles` - Scottish castles data
 - `lochs` - Scottish lochs data
 - `hidden_gems` - Hidden location discoveries
 - `wishlist_items` - Adventure wishlist
 
 ### Views & Functions
+
 - `journal_entry_stats` - Comment/like aggregations
 - `milestone_leaderboard` - Progress summaries
 - `adventure_stats_summary` - Statistics views
@@ -91,12 +99,14 @@ The database includes these main tables:
 ## 🐳 Docker Services
 
 ### PostgreSQL
+
 - **Image**: `postgres:15-alpine`
 - **Port**: 5432
 - **Database**: `wee_adventure`
 - **Auto-initializes**: Schema loaded on startup
 
 ### Minio
+
 - **Image**: `minio/minio:latest`
 - **Ports**: 9000 (API), 9001 (Console)
 - **Bucket**: `wee-adventure-photos`
@@ -105,17 +115,20 @@ The database includes these main tables:
 ## 🔧 Development Workflow
 
 ### Start Services
+
 ```bash
 npm run docker:dev        # Start PostgreSQL + Minio
 ```
 
 ### Database Operations
+
 ```bash
 npm run db:init           # Initialize/reset database
 npm run db:reset          # Alias for db:init
 ```
 
 ### Stop Services
+
 ```bash
 npm run docker:down       # Stop all containers
 ```
@@ -123,20 +136,25 @@ npm run docker:down       # Stop all containers
 ## 📊 Monitoring & Admin
 
 ### Database Admin
+
 Use any PostgreSQL client:
+
 - **Host**: localhost:5432
 - **Database**: wee_adventure
 - **User**: postgres
 - **Password**: postgres
 
 Recommended tools:
+
 - pgAdmin
 - DBeaver
 - TablePlus
 - psql CLI
 
 ### Minio Console
+
 Access the Minio web interface:
+
 - **URL**: http://localhost:9001
 - **Username**: minioadmin
 - **Password**: minioadmin
@@ -144,7 +162,9 @@ Access the Minio web interface:
 ## 🚀 Production Deployment
 
 ### Database Options
+
 1. **Self-hosted PostgreSQL**
+
    - Docker container
    - Dedicated server
    - Cloud VM
@@ -156,7 +176,9 @@ Access the Minio web interface:
    - Azure Database
 
 ### Storage Options
+
 1. **Self-hosted Minio**
+
    - Docker container
    - Kubernetes deployment
    - Dedicated server
@@ -167,7 +189,9 @@ Access the Minio web interface:
    - DigitalOcean Spaces
 
 ### Environment Variables
+
 Set production values:
+
 ```bash
 DATABASE_HOST=your-db-host
 DATABASE_PASSWORD=strong-password
@@ -180,6 +204,7 @@ MINIO_USE_SSL=true
 ## 🔒 Security Considerations
 
 ### Database Security
+
 - Use strong passwords
 - Enable SSL connections
 - Restrict network access
@@ -187,6 +212,7 @@ MINIO_USE_SSL=true
 - Update PostgreSQL regularly
 
 ### Storage Security
+
 - Use strong access keys
 - Enable SSL/TLS
 - Configure proper bucket policies
@@ -194,6 +220,7 @@ MINIO_USE_SSL=true
 - Monitor access logs
 
 ### Application Security
+
 - Validate all inputs
 - Use parameterized queries (already implemented)
 - Sanitize file uploads
@@ -203,12 +230,14 @@ MINIO_USE_SSL=true
 ## 📈 Performance Optimization
 
 ### Database
+
 - Connection pooling (already configured)
 - Indexes on common queries (already created)
 - Query optimization
 - Regular VACUUM and ANALYZE
 
 ### Storage
+
 - CDN for photo delivery
 - Image optimization
 - Compression settings
@@ -217,6 +246,7 @@ MINIO_USE_SSL=true
 ## 🐛 Troubleshooting
 
 ### Database Connection Issues
+
 ```bash
 # Check if PostgreSQL is running
 docker ps | grep postgres
@@ -229,6 +259,7 @@ psql -h localhost -U postgres -d wee_adventure
 ```
 
 ### Minio Connection Issues
+
 ```bash
 # Check if Minio is running
 docker ps | grep minio
@@ -241,6 +272,7 @@ curl http://localhost:9000/minio/health/live
 ```
 
 ### Application Errors
+
 - Check server logs for database errors
 - Verify environment variables
 - Ensure database schema is initialized
@@ -251,6 +283,7 @@ curl http://localhost:9000/minio/health/live
 If you have existing data in Supabase:
 
 ### 1. Export Supabase Data
+
 ```sql
 -- In Supabase SQL editor, export each table
 COPY journal_entries TO '/tmp/journal_entries.csv' CSV HEADER;
@@ -259,6 +292,7 @@ COPY milestones TO '/tmp/milestones.csv' CSV HEADER;
 ```
 
 ### 2. Import to PostgreSQL
+
 ```bash
 # Copy CSV files to local PostgreSQL
 psql -h localhost -U postgres -d wee_adventure -c "
@@ -267,6 +301,7 @@ psql -h localhost -U postgres -d wee_adventure -c "
 ```
 
 ### 3. Migrate Photos
+
 - Download photos from Cloudflare R2
 - Upload to Minio bucket
 - Update photo URLs in database

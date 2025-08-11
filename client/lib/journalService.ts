@@ -1,8 +1,5 @@
 import { supabase, JournalEntry, isSupabaseConfigured } from "./supabase";
-import {
-  getEnvironmentInfo,
-  debugNetworkError,
-} from "./debug";
+import { getEnvironmentInfo, debugNetworkError } from "./debug";
 import { updateMilestonesFromJournalEntry } from "./milestoneTracker";
 
 /**

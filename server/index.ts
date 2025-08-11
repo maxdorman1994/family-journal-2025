@@ -15,7 +15,13 @@ import {
   uploadMultiplePhotosMiddleware,
 } from "./routes/photos";
 import { executeQuery, executeRPC } from "./routes/database.js";
-import { getStorageStatus, uploadFile, listFiles, deleteFile, getFileUrl } from "./routes/storage.js";
+import {
+  getStorageStatus,
+  uploadFile,
+  listFiles,
+  deleteFile,
+  getFileUrl,
+} from "./routes/storage.js";
 import { initializeDatabase, testDatabaseConnection } from "./db/init.js";
 import { storage } from "./lib/storage.js";
 
@@ -33,9 +39,9 @@ export async function createServer() {
   // Initialize database and storage
   try {
     await initializeDatabase();
-    console.log('✅ Database and storage initialized successfully');
+    console.log("✅ Database and storage initialized successfully");
   } catch (error) {
-    console.error('❌ Failed to initialize database and storage:', error);
+    console.error("❌ Failed to initialize database and storage:", error);
     // Continue anyway for development
   }
 
@@ -54,7 +60,11 @@ export async function createServer() {
 
   // Photo upload routes
   app.post("/api/photos/upload", uploadPhotoMiddleware, uploadPhoto);
-  app.post("/api/photos/upload-multiple", uploadMultiplePhotosMiddleware, uploadMultiplePhotos);
+  app.post(
+    "/api/photos/upload-multiple",
+    uploadMultiplePhotosMiddleware,
+    uploadMultiplePhotos,
+  );
   app.get("/api/photos/placeholder/:photoId", getPlaceholderPhoto);
   app.get("/api/photos", listPhotos);
   app.delete("/api/photos/:imageId", deletePhoto);
@@ -73,7 +83,9 @@ export async function createServer() {
     const dbConnected = await testDatabaseConnection();
     res.json({
       configured: dbConnected,
-      message: dbConnected ? "Database configured successfully" : "Database connection failed",
+      message: dbConnected
+        ? "Database configured successfully"
+        : "Database connection failed",
     });
   });
 
@@ -81,7 +93,9 @@ export async function createServer() {
     const storageConnected = await storage.testConnection();
     res.json({
       configured: storageConnected,
-      message: storageConnected ? "Storage configured successfully" : "Storage connection failed",
+      message: storageConnected
+        ? "Storage configured successfully"
+        : "Storage connection failed",
       endpoint: process.env.MINIO_ENDPOINT,
     });
   });
@@ -92,10 +106,10 @@ export async function createServer() {
     const storageConnected = await storage.testConnection();
 
     res.json({
-      status: dbConnected && storageConnected ? 'healthy' : 'partial',
+      status: dbConnected && storageConnected ? "healthy" : "partial",
       database: dbConnected,
       storage: storageConnected,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 

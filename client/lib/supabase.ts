@@ -1,5 +1,9 @@
 // Database client - migrated from Supabase to PostgreSQL + Minio
-import { database, isDatabaseConfigured, getDatabaseStatus } from "./database.js";
+import {
+  database,
+  isDatabaseConfigured,
+  getDatabaseStatus,
+} from "./database.js";
 import { storage, isStorageConfigured, getStorageStatus } from "./storage.js";
 
 // Re-export types for compatibility
@@ -73,11 +77,11 @@ export function getSupabaseStatus(): {
 } {
   const dbStatus = getDatabaseStatus();
   const storageStatus = getStorageStatus();
-  
+
   if (!dbStatus.configured || !storageStatus.configured) {
     return {
       configured: false,
-      message: `Configuration missing: ${!dbStatus.configured ? 'Database' : ''} ${!storageStatus.configured ? 'Storage' : ''}`,
+      message: `Configuration missing: ${!dbStatus.configured ? "Database" : ""} ${!storageStatus.configured ? "Storage" : ""}`,
     };
   }
 
