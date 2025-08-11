@@ -3,6 +3,9 @@ import { join } from 'path';
 import { db, testDatabaseConnection } from './config.js';
 import { storage } from '../lib/storage.js';
 
+// Re-export for convenience
+export { testDatabaseConnection };
+
 export async function initializeDatabase() {
   console.log('🔄 Initializing database...');
   
