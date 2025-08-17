@@ -146,9 +146,34 @@ export default function Journal() {
   const [entries, setEntries] = useState<JournalEntry[]>(journalEntriesData);
   const { subscribe } = useSync();
 
-  // Load entries from Supabase on mount, fallback to local data
+  // Load entries from database on mount, fallback to local data
   useEffect(() => {
     loadJournalEntries();
+  }, []);
+
+  // Auto-refresh data when page becomes visible (for cross-device sync)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log("🔄 Page visible - refreshing journal entries for sync");
+        loadJournalEntries();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Also refresh when window gets focus
+    const handleFocus = () => {
+      console.log("🔄 Window focused - refreshing journal entries for sync");
+      loadJournalEntries();
+    };
+
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleFocus);
+    };
   }, []);
 
   // Subscribe to real-time journal entry changes
