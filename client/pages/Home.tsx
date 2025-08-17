@@ -211,17 +211,7 @@ export default function Home() {
         "members",
       );
 
-      // Verify both dogs are included in real-time updates
-      const charlieExists = members.find((m) => m.name === "Charlie");
-      const fernExists = members.find((m) => m.name === "Fern");
-      if (charlieExists) {
-        console.log(
-          "🐕 Charlie sync confirmed - photos will sync across devices",
-        );
-      }
-      if (fernExists) {
-        console.log("🌿 Fern sync confirmed - photos will sync across devices");
-      }
+      // Real-time sync confirmed for family members
 
       setFamilyMembers(members);
       setSyncStatus("connected");
