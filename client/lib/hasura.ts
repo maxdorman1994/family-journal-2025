@@ -422,6 +422,209 @@ export const TOGGLE_WISHLIST_RESEARCH = `
   }
 `;
 
+// Castles and Lochs GraphQL Queries
+export const GET_CASTLES = `
+  query GetCastles {
+    castles(order_by: {rank: asc}) {
+      id
+      name
+      region
+      type
+      built_century
+      latitude
+      longitude
+      description
+      visiting_info
+      best_seasons
+      admission_fee
+      managed_by
+      accessibility
+      rank
+      is_custom
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_LOCHS = `
+  query GetLochs {
+    lochs(order_by: {rank: asc}) {
+      id
+      name
+      region
+      type
+      length_km
+      max_depth_m
+      latitude
+      longitude
+      description
+      activities
+      best_seasons
+      famous_for
+      nearest_town
+      rank
+      is_custom
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_CASTLE_VISITS = `
+  query GetCastleVisits {
+    castle_visits {
+      id
+      castle_id
+      visited_date
+      notes
+      photo_count
+      weather_conditions
+      visit_duration
+      favorite_part
+      would_recommend
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_LOCH_VISITS = `
+  query GetLochVisits {
+    loch_visits {
+      id
+      loch_id
+      visited_date
+      notes
+      photo_count
+      weather_conditions
+      activities_done
+      water_temperature
+      wildlife_spotted
+      would_recommend
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const INSERT_CASTLE_VISIT = `
+  mutation InsertCastleVisit($visit: castle_visits_insert_input!) {
+    insert_castle_visits_one(object: $visit, on_conflict: {constraint: castle_visits_castle_id_key, update_columns: [visited_date, notes, photo_count, weather_conditions, visit_duration, favorite_part, would_recommend, updated_at]}) {
+      id
+      castle_id
+      visited_date
+      notes
+      photo_count
+      weather_conditions
+      visit_duration
+      favorite_part
+      would_recommend
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const INSERT_LOCH_VISIT = `
+  mutation InsertLochVisit($visit: loch_visits_insert_input!) {
+    insert_loch_visits_one(object: $visit, on_conflict: {constraint: loch_visits_loch_id_key, update_columns: [visited_date, notes, photo_count, weather_conditions, activities_done, water_temperature, wildlife_spotted, would_recommend, updated_at]}) {
+      id
+      loch_id
+      visited_date
+      notes
+      photo_count
+      weather_conditions
+      activities_done
+      water_temperature
+      wildlife_spotted
+      would_recommend
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const DELETE_CASTLE_VISIT = `
+  mutation DeleteCastleVisit($castle_id: String!) {
+    delete_castle_visits(where: {castle_id: {_eq: $castle_id}}) {
+      affected_rows
+    }
+  }
+`;
+
+export const DELETE_LOCH_VISIT = `
+  mutation DeleteLochVisit($loch_id: String!) {
+    delete_loch_visits(where: {loch_id: {_eq: $loch_id}}) {
+      affected_rows
+    }
+  }
+`;
+
+export const INSERT_CUSTOM_CASTLE = `
+  mutation InsertCustomCastle($castle: castles_insert_input!) {
+    insert_castles_one(object: $castle) {
+      id
+      name
+      region
+      type
+      built_century
+      latitude
+      longitude
+      description
+      visiting_info
+      best_seasons
+      admission_fee
+      managed_by
+      accessibility
+      rank
+      is_custom
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const INSERT_CUSTOM_LOCH = `
+  mutation InsertCustomLoch($loch: lochs_insert_input!) {
+    insert_lochs_one(object: $loch) {
+      id
+      name
+      region
+      type
+      length_km
+      max_depth_m
+      latitude
+      longitude
+      description
+      activities
+      best_seasons
+      famous_for
+      nearest_town
+      rank
+      is_custom
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const DELETE_CUSTOM_CASTLE = `
+  mutation DeleteCustomCastle($id: String!) {
+    delete_castles_by_pk(id: $id) {
+      id
+    }
+  }
+`;
+
+export const DELETE_CUSTOM_LOCH = `
+  mutation DeleteCustomLoch($id: String!) {
+    delete_lochs_by_pk(id: $id) {
+      id
+    }
+  }
+`;
+
 /**
  * Check if Hasura is properly configured
  */
