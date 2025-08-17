@@ -10,41 +10,41 @@ export const homePageSyncService = {
       munros_completed: 0,
       family_photos_count: 0,
       recent_adventure_count: 0,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     },
     recent_adventures: [],
     family_members: [],
-    milestones: []
-  })
+    milestones: [],
+  }),
 };
 
 export const appSettingsService = {
   getAppSettings: async () => ({}),
-  updateAppSettings: async () => ({})
+  updateAppSettings: async () => ({}),
 };
 
 export const syncService = {
   syncData: async () => ({ success: true }),
-  isOnline: () => true
+  isOnline: () => true,
 };
 
 export const journalCommentsService = {
-  getComments: async () => ([]),
+  getComments: async () => [],
   addComment: async () => ({}),
-  getLikes: async () => ([])
+  getLikes: async () => [],
 };
 
 export const milestonesService = {
-  getMilestones: async () => ([]),
-  updateMilestone: async () => ({})
+  getMilestones: async () => [],
+  updateMilestone: async () => ({}),
 };
 
 export const milestoneTracker = {
   trackProgress: async () => ({}),
-  updateProgress: async () => ({})
+  updateProgress: async () => ({}),
 };
 
 export const realMilestonesService = {
-  getRealMilestones: async () => ([]),
-  updateRealMilestone: async () => ({})
+  getRealMilestones: async () => [],
+  updateRealMilestone: async () => ({}),
 };

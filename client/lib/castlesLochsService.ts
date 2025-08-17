@@ -532,14 +532,25 @@ export async function getLochVisitStats(): Promise<{
 export async function getCastleLochRegions(): Promise<string[]> {
   if (!isHasuraConfigured()) {
     console.warn("Hasura not configured, returning default regions");
-    return ["Highland", "Lowland", "Central", "Borders", "Grampian", "Strathclyde"];
+    return [
+      "Highland",
+      "Lowland",
+      "Central",
+      "Borders",
+      "Grampian",
+      "Strathclyde",
+    ];
   }
 
   try {
     // Fetch castles and lochs to extract regions
     const [castlesResponse, lochsResponse] = await Promise.all([
-      executeQuery<{ castles: { region: string }[] }>(`query { castles { region } }`),
-      executeQuery<{ lochs: { region: string }[] }>(`query { lochs { region } }`)
+      executeQuery<{ castles: { region: string }[] }>(
+        `query { castles { region } }`,
+      ),
+      executeQuery<{ lochs: { region: string }[] }>(
+        `query { lochs { region } }`,
+      ),
     ]);
 
     const allRegions = [
@@ -552,7 +563,14 @@ export async function getCastleLochRegions(): Promise<string[]> {
   } catch (error) {
     console.error("Error fetching regions from Hasura:", error);
     console.log("Returning default regions as fallback");
-    return ["Highland", "Lowland", "Central", "Borders", "Grampian", "Strathclyde"];
+    return [
+      "Highland",
+      "Lowland",
+      "Central",
+      "Borders",
+      "Grampian",
+      "Strathclyde",
+    ];
   }
 }
 
@@ -575,7 +593,7 @@ export async function testCastleLochConnection(): Promise<{
   try {
     const [castles, lochs] = await Promise.all([
       getAllCastlesWithVisits(),
-      getAllLochsWithVisits()
+      getAllLochsWithVisits(),
     ]);
 
     return {
@@ -1038,18 +1056,41 @@ export async function getHiddenGemVisitStats(): Promise<{
     // Get all hidden gems and visits to calculate stats client-side
     const gemsWithVisits = await getAllHiddenGemsWithVisits();
 
-    const visitedGems = gemsWithVisits.filter(gem => gem.visited);
-    const visits = gemsWithVisits.map(gem => gem.visit).filter(Boolean);
+    const visitedGems = gemsWithVisits.filter((gem) => gem.visited);
+    const visits = gemsWithVisits.map((gem) => gem.visit).filter(Boolean);
 
     const stats = {
       visited_count: visitedGems.length,
       total_gems: gemsWithVisits.length,
-      completion_percentage: gemsWithVisits.length > 0 ? Math.round((visitedGems.length / gemsWithVisits.length) * 100) : 0,
-      gems_with_photos: visits.filter(visit => (visit?.photo_count || 0) > 0).length,
-      total_photos: visits.reduce((sum, visit) => sum + (visit?.photo_count || 0), 0),
-      first_visit: visits.length > 0 ? visits.sort((a, b) => new Date(a?.visited_date || '').getTime() - new Date(b?.visited_date || '').getTime())[0]?.visited_date || null : null,
-      latest_visit: visits.length > 0 ? visits.sort((a, b) => new Date(b?.visited_date || '').getTime() - new Date(a?.visited_date || '').getTime())[0]?.visited_date || null : null,
-      recommended_count: visits.filter(visit => visit?.would_recommend !== false).length
+      completion_percentage:
+        gemsWithVisits.length > 0
+          ? Math.round((visitedGems.length / gemsWithVisits.length) * 100)
+          : 0,
+      gems_with_photos: visits.filter((visit) => (visit?.photo_count || 0) > 0)
+        .length,
+      total_photos: visits.reduce(
+        (sum, visit) => sum + (visit?.photo_count || 0),
+        0,
+      ),
+      first_visit:
+        visits.length > 0
+          ? visits.sort(
+              (a, b) =>
+                new Date(a?.visited_date || "").getTime() -
+                new Date(b?.visited_date || "").getTime(),
+            )[0]?.visited_date || null
+          : null,
+      latest_visit:
+        visits.length > 0
+          ? visits.sort(
+              (a, b) =>
+                new Date(b?.visited_date || "").getTime() -
+                new Date(a?.visited_date || "").getTime(),
+            )[0]?.visited_date || null
+          : null,
+      recommended_count: visits.filter(
+        (visit) => visit?.would_recommend !== false,
+      ).length,
     };
 
     console.log("✅ Hidden gem stats calculated successfully from Hasura data");
