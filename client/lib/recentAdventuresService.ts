@@ -149,7 +149,7 @@ export async function getAllAdventuresWithMetadata(): Promise<
     }
 
     console.log(
-      `✅ Loaded ${adventures?.length || 0} adventures with metadata`,
+      `��� Loaded ${adventures?.length || 0} adventures with metadata`,
     );
     return adventures || [];
   } catch (error) {
@@ -172,7 +172,9 @@ export async function getAdventureStats(): Promise<AdventureStats> {
   try {
     console.log("🔄 Fetching adventure statistics...");
 
-    const { data, error } = await supabase.rpc("refresh_recent_adventures");
+    // TODO: Implement refresh function for Hasura
+    const data = null;
+    const error = null;
 
     if (error) {
       console.error("Error fetching adventure stats:", error);
