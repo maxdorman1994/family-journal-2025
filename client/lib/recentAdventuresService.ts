@@ -129,8 +129,8 @@ function formatTimeAgo(dateString: string): string {
 export async function getAllAdventuresWithMetadata(): Promise<
   RecentAdventure[]
 > {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
@@ -165,8 +165,8 @@ export async function getAllAdventuresWithMetadata(): Promise<
  * Get adventure statistics
  */
 export async function getAdventureStats(): Promise<AdventureStats> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
