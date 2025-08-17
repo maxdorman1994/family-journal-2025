@@ -1579,9 +1579,8 @@ export default function Home() {
                   member.name === "Kira" ||
                   member.name === "Frankie" ||
                   member.name === "Iris") &&
-                member.position_index > 4 &&
-                member.name !== "Charlie" &&
-                member.name !== "Fern",
+                member.position_index > 4,
+                // Removed Charlie and Fern filtering
             )
             .sort((a, b) => {
               // Sort to put parents first, then children
