@@ -57,7 +57,21 @@ self.addEventListener("fetch", (event) => {
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      // Return cached version if available
+      // For HTML pages, always try network first (cache second)
+      if (event.request.headers.get("accept")?.includes("text/html")) {
+        return fetch(event.request)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              return networkResponse;
+            }
+            return cachedResponse || networkResponse;
+          })
+          .catch(() => {
+            return cachedResponse || new Response("Offline", { status: 503 });
+          });
+      }
+
+      // For other resources, return cached version if available
       if (cachedResponse) {
         return cachedResponse;
       }
