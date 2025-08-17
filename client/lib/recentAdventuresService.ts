@@ -248,9 +248,9 @@ export async function getRecentAdventuresWithFallback(): Promise<
   RecentAdventure[]
 > {
   try {
-    // First check if we can connect to Supabase at all
-    if (!isSupabaseConfigured()) {
-      console.log("📦 Supabase not configured, using fallback data");
+    // First check if we can connect to Hasura at all
+    if (!isHasuraConfigured()) {
+      console.log("📦 Hasura not configured, using fallback data");
       return getFallbackRecentAdventures();
     }
 
@@ -310,7 +310,7 @@ export function subscribeToAdventureUpdates(
       },
       async (payload) => {
         console.log(
-          "📡 Real-time journal change detected for recent adventures:",
+          "��� Real-time journal change detected for recent adventures:",
           payload.eventType,
           "Entry ID:",
           payload.new?.id || payload.old?.id,
