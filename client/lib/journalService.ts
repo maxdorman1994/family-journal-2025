@@ -1,4 +1,15 @@
-import { supabase, JournalEntry, isSupabaseConfigured } from "./supabase";
+import {
+  hasuraClient,
+  JournalEntry,
+  isHasuraConfigured,
+  executeQuery,
+  executeMutation,
+  GET_JOURNAL_ENTRIES,
+  GET_RECENT_ADVENTURES,
+  INSERT_JOURNAL_ENTRY,
+  UPDATE_JOURNAL_ENTRY,
+  DELETE_JOURNAL_ENTRY,
+} from "./hasura";
 import {
   getEnvironmentInfo,
   validateSupabaseConfig,
@@ -7,9 +18,9 @@ import {
 import { updateMilestonesFromJournalEntry } from "./milestoneTracker";
 
 /**
- * Supabase Journal Service
- * Handles all database operations for journal entries
- * Photos are stored in Cloudflare R2, URLs stored in Supabase
+ * Hasura Journal Service
+ * Handles all database operations for journal entries via GraphQL
+ * Photos are stored in Cloudflare R2, URLs stored in database
  */
 
 export interface CreateJournalEntryData {
@@ -32,402 +43,336 @@ export interface CreateJournalEntryData {
 }
 
 /**
- * Create a new journal entry in Supabase
+ * Create a new journal entry in Hasura
  */
 export async function createJournalEntry(
   data: CreateJournalEntryData,
 ): Promise<JournalEntry> {
-  if (!isSupabaseConfigured()) {
+  if (!isHasuraConfigured()) {
     throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
+      "Hasura not configured - please set VITE_HASURA_GRAPHQL_URL",
     );
   }
 
   try {
-    const { data: entry, error } = await supabase
-      .from("journal_entries")
-      .insert([data])
-      .select()
-      .single();
+    const result = await executeMutation(INSERT_JOURNAL_ENTRY, {
+      entry: data,
+    });
 
-    if (error) {
-      console.error("Supabase error creating journal entry:", error);
-      throw new Error(
-        `Supabase error: ${error.message || error.details || "Unknown database error"}`,
-      );
+    if (!result.insert_journal_entries_one) {
+      throw new Error("Failed to create journal entry");
     }
 
-    // Update milestones based on the new journal entry
+    const entry = result.insert_journal_entries_one as JournalEntry;
+
+    // Update milestones based on the new entry
     try {
-      await updateMilestonesFromJournalEntry(entry, "demo-user", true);
-      console.log("✅ Milestones updated from new journal entry");
+      await updateMilestonesFromJournalEntry(entry);
     } catch (milestoneError) {
-      console.error("Error updating milestones:", milestoneError);
+      console.warn("Failed to update milestones:", milestoneError);
       // Don't fail the journal creation if milestone update fails
     }
 
+    console.log("✅ Journal entry created successfully:", entry.id);
     return entry;
   } catch (error) {
-    console.error("Error in createJournalEntry:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to create journal entry: ${String(error)}`);
+    console.error("❌ Failed to create journal entry:", error);
+    debugNetworkError(error);
+    throw error;
   }
 }
 
 /**
- * Get all journal entries, ordered by date (newest first)
+ * Get all journal entries from Hasura
  */
 export async function getJournalEntries(): Promise<JournalEntry[]> {
-  // Debug environment configuration
-  const envInfo = getEnvironmentInfo();
-  const supabaseValidation = validateSupabaseConfig();
-
-  if (!isSupabaseConfigured()) {
-    console.error("❌ Supabase not configured:", {
-      environment: envInfo,
-      validation: supabaseValidation,
-    });
-    throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
-    );
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log("🔄 Attempting to fetch journal entries from Supabase...");
-    console.log("📊 Configuration status:", { envInfo, supabaseValidation });
+    console.log("🔄 Fetching journal entries from Hasura...");
 
-    const { data: entries, error } = await supabase
-      .from("journal_entries")
-      .select("*")
-      .order("date", { ascending: false });
+    const result = await executeQuery(GET_JOURNAL_ENTRIES);
 
-    if (error) {
-      console.error("Supabase error fetching journal entries:", error);
-
-      // More detailed error information
-      const errorMessage =
-        error.message ||
-        error.details ||
-        error.hint ||
-        "Unknown database error";
-      const errorCode = error.code || "UNKNOWN";
-
-      console.error("Error details:", {
-        message: errorMessage,
-        code: errorCode,
-        details: error.details,
-        hint: error.hint,
-      });
-
-      throw new Error(`Supabase error (${errorCode}): ${errorMessage}`);
+    if (!result.journal_entries) {
+      console.warn("No journal entries found in response");
+      return [];
     }
 
-    console.log(
-      `✅ Successfully fetched ${entries?.length || 0} journal entries`,
-    );
-    return entries || [];
+    const entries = result.journal_entries as JournalEntry[];
+    console.log(`✅ Loaded ${entries.length} journal entries from Hasura`);
+    return entries;
   } catch (error) {
-    console.error("Error in getJournalEntries:", error);
-
-    // Debug the network error
+    console.error("❌ Failed to fetch journal entries:", error);
     debugNetworkError(error);
-
-    // Check if it's a network error
-    if (
-      error instanceof TypeError &&
-      error.message.includes("Failed to fetch")
-    ) {
-      console.error("❌ Network error: Unable to connect to Supabase");
-      console.error("🔧 Possible causes:", [
-        "Internet connection issue",
-        "Supabase service is down",
-        "Invalid Supabase URL",
-        "Firewall blocking request",
-        "CORS configuration issue",
-      ]);
-      throw new Error(
-        "Network error: Unable to connect to database. Please check your internet connection and Supabase configuration.",
-      );
-    }
-
-    // Check if it's a CORS error
-    if (error instanceof TypeError && error.message.includes("CORS")) {
-      console.error("❌ CORS error: Invalid Supabase configuration");
-      throw new Error(
-        "CORS error: Invalid Supabase URL or configuration. Please check your environment variables.",
-      );
-    }
-
-    if (error instanceof Error) {
-      throw error;
-    }
-
-    throw new Error(`Failed to fetch journal entries: ${String(error)}`);
+    throw error;
   }
 }
 
 /**
- * Get a single journal entry by ID
+ * Get recent adventures (last 3 entries) from Hasura
  */
-export async function getJournalEntry(
-  id: string,
-): Promise<JournalEntry | null> {
-  const { data: entry, error } = await supabase
-    .from("journal_entries")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) {
-    if (error.code === "PGRST116") {
-      return null; // Entry not found
-    }
-    console.error("Error fetching journal entry:", error);
-    throw new Error(`Failed to fetch journal entry: ${error.message}`);
+export async function getRecentAdventures(): Promise<any[]> {
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
-  return entry;
+  try {
+    console.log("🔄 Fetching recent adventures from Hasura...");
+
+    const result = await executeQuery(GET_RECENT_ADVENTURES);
+
+    if (!result.recent_adventures) {
+      console.warn("No recent adventures found in response");
+      return [];
+    }
+
+    const adventures = result.recent_adventures;
+    console.log(`✅ Loaded ${adventures.length} recent adventures from Hasura`);
+    return adventures;
+  } catch (error) {
+    console.error("❌ Failed to fetch recent adventures:", error);
+    debugNetworkError(error);
+    throw error;
+  }
 }
 
 /**
- * Update a journal entry
+ * Update an existing journal entry in Hasura
  */
 export async function updateJournalEntry(
   id: string,
-  updates: Partial<CreateJournalEntryData>,
+  data: Partial<CreateJournalEntryData>,
 ): Promise<JournalEntry> {
-  const { data: entry, error } = await supabase
-    .from("journal_entries")
-    .update({ ...updates, updated_at: new Date().toISOString() })
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Error updating journal entry:", error);
-    throw new Error(`Failed to update journal entry: ${error.message}`);
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
-  // Update milestones based on the updated journal entry
   try {
-    await updateMilestonesFromJournalEntry(entry, "demo-user", false);
-    console.log("✅ Milestones updated from journal entry update");
-  } catch (milestoneError) {
-    console.error("Error updating milestones:", milestoneError);
-    // Don't fail the journal update if milestone update fails
-  }
+    console.log("🔄 Updating journal entry:", id);
 
-  return entry;
+    const result = await executeMutation(UPDATE_JOURNAL_ENTRY, {
+      id,
+      entry: data,
+    });
+
+    if (!result.update_journal_entries_by_pk) {
+      throw new Error("Failed to update journal entry - entry not found");
+    }
+
+    const updatedEntry = result.update_journal_entries_by_pk as JournalEntry;
+
+    // Update milestones based on the updated entry
+    try {
+      await updateMilestonesFromJournalEntry(updatedEntry);
+    } catch (milestoneError) {
+      console.warn("Failed to update milestones:", milestoneError);
+    }
+
+    console.log("✅ Journal entry updated successfully:", updatedEntry.id);
+    return updatedEntry;
+  } catch (error) {
+    console.error("❌ Failed to update journal entry:", error);
+    debugNetworkError(error);
+    throw error;
+  }
 }
 
 /**
- * Delete a journal entry
+ * Delete a journal entry from Hasura
  */
 export async function deleteJournalEntry(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("journal_entries")
-    .delete()
-    .eq("id", id);
-
-  if (error) {
-    console.error("Error deleting journal entry:", error);
-    throw new Error(`Failed to delete journal entry: ${error.message}`);
-  }
-}
-
-/**
- * Search journal entries by title, content, or location
- */
-export async function searchJournalEntries(
-  query: string,
-): Promise<JournalEntry[]> {
-  const { data: entries, error } = await supabase
-    .from("journal_entries")
-    .select("*")
-    .or(
-      `title.ilike.%${query}%,content.ilike.%${query}%,location.ilike.%${query}%`,
-    )
-    .order("date", { ascending: false });
-
-  if (error) {
-    console.error("Error searching journal entries:", error);
-    throw new Error(`Failed to search journal entries: ${error.message}`);
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
-  return entries || [];
-}
+  try {
+    console.log("🔄 Deleting journal entry:", id);
 
-/**
- * Filter journal entries by tag
- */
-export async function getJournalEntriesByTag(
-  tag: string,
-): Promise<JournalEntry[]> {
-  const { data: entries, error } = await supabase
-    .from("journal_entries")
-    .select("*")
-    .contains("tags", [tag])
-    .order("date", { ascending: false });
+    const result = await executeMutation(DELETE_JOURNAL_ENTRY, {
+      id,
+    });
 
-  if (error) {
-    console.error("Error filtering journal entries by tag:", error);
-    throw new Error(`Failed to filter journal entries: ${error.message}`);
+    if (!result.delete_journal_entries_by_pk) {
+      throw new Error("Failed to delete journal entry - entry not found");
+    }
+
+    console.log("✅ Journal entry deleted successfully:", id);
+  } catch (error) {
+    console.error("❌ Failed to delete journal entry:", error);
+    debugNetworkError(error);
+    throw error;
   }
-
-  return entries || [];
 }
 
 /**
  * Get all unique tags from journal entries
  */
 export async function getAllTags(): Promise<string[]> {
-  const { data: entries, error } = await supabase
-    .from("journal_entries")
-    .select("tags");
-
-  if (error) {
-    console.error("Error fetching tags:", error);
-    throw new Error(`Failed to fetch tags: ${error.message}`);
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
-  // Flatten and deduplicate tags
-  const allTags = entries?.flatMap((entry) => entry.tags || []) || [];
-  return Array.from(new Set(allTags)).sort();
+  try {
+    const entries = await getJournalEntries();
+    const allTags = entries.flatMap((entry) => entry.tags || []);
+    const uniqueTags = Array.from(new Set(allTags)).sort();
+
+    console.log(`✅ Found ${uniqueTags.length} unique tags`);
+    return uniqueTags;
+  } catch (error) {
+    console.error("❌ Failed to get tags:", error);
+    throw error;
+  }
 }
+
+/**
+ * Search journal entries by query
+ */
+export async function searchJournalEntries(query: string): Promise<JournalEntry[]> {
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
+  }
+
+  try {
+    console.log("🔍 Searching journal entries for:", query);
+
+    const SEARCH_QUERY = `
+      query SearchJournalEntries($query: String!) {
+        search_journal_entries(args: {search_query: $query}) {
+          id
+          title
+          content
+          date
+          location
+          weather
+          mood
+          miles_traveled
+          parking
+          dog_friendly
+          paid_activity
+          adult_tickets
+          child_tickets
+          other_tickets
+          pet_notes
+          tags
+          photos
+          created_at
+          updated_at
+          rank
+        }
+      }
+    `;
+
+    const result = await executeQuery(SEARCH_QUERY, { query });
+
+    if (!result.search_journal_entries) {
+      console.warn("No search results found");
+      return [];
+    }
+
+    const entries = result.search_journal_entries as JournalEntry[];
+    console.log(`✅ Found ${entries.length} matching entries`);
+    return entries;
+  } catch (error) {
+    console.error("❌ Failed to search journal entries:", error);
+    // Fallback to basic filtering
+    const allEntries = await getJournalEntries();
+    return allEntries.filter((entry) =>
+      entry.title.toLowerCase().includes(query.toLowerCase()) ||
+      entry.content.toLowerCase().includes(query.toLowerCase()) ||
+      entry.location.toLowerCase().includes(query.toLowerCase())
+    );
+  }
+}
+
+/**
+ * Test Hasura connection for journal entries
+ */
+export async function testHasuraConnection(): Promise<{
+  success: boolean;
+  message: string;
+  error?: string;
+}> {
+  if (!isHasuraConfigured()) {
+    return {
+      success: false,
+      message: "Hasura not configured",
+      error: "Please set VITE_HASURA_GRAPHQL_URL",
+    };
+  }
+
+  try {
+    console.log("🔄 Testing Hasura connection...");
+
+    const TEST_QUERY = `
+      query TestConnection {
+        journal_entries(limit: 1) {
+          id
+        }
+      }
+    `;
+
+    const result = await executeQuery(TEST_QUERY);
+
+    console.log("✅ Hasura connection test successful");
+    return {
+      success: true,
+      message: "Hasura connection working",
+    };
+  } catch (error) {
+    console.error("❌ Hasura connection test failed:", error);
+    return {
+      success: false,
+      message: "Connection failed",
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+// Legacy function name for compatibility
+export const testSupabaseConnection = testHasuraConnection;
 
 /**
  * Get journal statistics
  */
 export async function getJournalStats(): Promise<{
-  totalEntries: number;
-  totalPhotos: number;
-  totalTags: number;
-  totalPlaces: number;
+  total_entries: number;
+  total_places: number;
+  total_photos: number;
+  total_tags: number;
 }> {
-  const { data: entries, error } = await supabase
-    .from("journal_entries")
-    .select("tags, photos, location");
-
-  if (error) {
-    console.error("Error fetching journal stats:", error);
-    throw new Error(`Failed to fetch journal stats: ${error.message}`);
-  }
-
-  const stats = {
-    totalEntries: entries?.length || 0,
-    totalPhotos:
-      entries?.reduce((sum, entry) => sum + (entry.photos?.length || 0), 0) ||
-      0,
-    totalTags: new Set(entries?.flatMap((entry) => entry.tags || [])).size || 0,
-    totalPlaces:
-      new Set(entries?.map((entry) => entry.location).filter(Boolean)).size ||
-      0,
-  };
-
-  return stats;
-}
-
-/**
- * Subscribe to real-time changes in journal entries
- */
-export function subscribeToJournalEntries(
-  callback: (entries: JournalEntry[]) => void,
-) {
-  const subscription = supabase
-    .channel("journal_entries_changes")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "journal_entries",
-      },
-      async () => {
-        // Refetch all entries when any change occurs
-        try {
-          const entries = await getJournalEntries();
-          callback(entries);
-        } catch (error) {
-          console.error("Error in real-time subscription:", error);
-        }
-      },
-    )
-    .subscribe();
-
-  return () => {
-    subscription.unsubscribe();
-  };
-}
-
-/**
- * Check if Supabase is working properly
- */
-export async function testSupabaseConnection(): Promise<{
-  success: boolean;
-  message: string;
-  error?: string;
-}> {
-  console.log("🧪 Testing Supabase connection...");
-
-  // First check configuration
-  const envInfo = getEnvironmentInfo();
-  const validation = validateSupabaseConfig();
-
-  console.log("📋 Environment check:", { envInfo, validation });
-
-  if (!isSupabaseConfigured()) {
-    return {
-      success: false,
-      message: "Configuration missing",
-      error: "VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY not set",
-    };
-  }
-
-  if (!validation.urlValid) {
-    return {
-      success: false,
-      message: "Invalid Supabase URL",
-      error: "URL must start with https:// and contain supabase",
-    };
-  }
-
-  if (!validation.keyValid) {
-    return {
-      success: false,
-      message: "Invalid Supabase key",
-      error: "Anon key appears to be too short or invalid",
-    };
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    const { data, error, count } = await supabase
-      .from("journal_entries")
-      .select("*", { count: "exact", head: true });
+    const STATS_QUERY = `
+      query GetJournalStats {
+        journal_stats {
+          total_entries
+          total_places
+          total_photos
+          total_tags
+        }
+      }
+    `;
 
-    if (error) {
-      console.error("❌ Supabase query error:", error);
+    const result = await executeQuery(STATS_QUERY);
+
+    if (!result.journal_stats || result.journal_stats.length === 0) {
       return {
-        success: false,
-        message: "Database query failed",
-        error: `${error.code || "UNKNOWN"}: ${error.message}`,
+        total_entries: 0,
+        total_places: 0,
+        total_photos: 0,
+        total_tags: 0,
       };
     }
 
-    console.log("✅ Supabase connection successful");
-    return {
-      success: true,
-      message: `Connected successfully! Found ${count || 0} entries.`,
-    };
+    return result.journal_stats[0];
   } catch (error) {
-    console.error("❌ Connection test failed:", error);
-    debugNetworkError(error);
-
-    return {
-      success: false,
-      message: "Connection test failed",
-      error: error instanceof Error ? error.message : "Unknown network error",
-    };
+    console.error("❌ Failed to get journal stats:", error);
+    throw error;
   }
 }

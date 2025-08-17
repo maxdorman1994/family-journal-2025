@@ -28,6 +28,8 @@
     "browser-image-compression": "^2.0.2",
     "dotenv": "^17.2.0",
     "express": "^4.18.2",
+    "graphql": "^16.11.0",
+    "graphql-request": "^7.2.0",
     "mapbox-gl": "^3.14.0",
     "multer": "^2.0.2",
     "react-map-gl": "^7.1.0",
