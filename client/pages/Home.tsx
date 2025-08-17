@@ -778,7 +778,7 @@ export default function Home() {
       setIsLoading(true);
       setError(null);
 
-      console.log("🔄 Loading family members from Supabase...");
+      console.log("🔄 Loading family members from database...");
       const members = await getFamilyMembers();
 
       setFamilyMembers(members);
@@ -1111,7 +1111,7 @@ export default function Home() {
 
       if (result.success) {
         setSyncStatus("connected");
-        setError(`✅ ${result.message}`);
+        setError(`��� ${result.message}`);
 
         // Reload data after successful connection
         await loadFamilyMembersData();
