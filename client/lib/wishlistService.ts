@@ -1,4 +1,14 @@
-import { supabase, isSupabaseConfigured } from "./supabase";
+import {
+  executeQuery,
+  executeMutation,
+  GET_WISHLIST_ITEMS,
+  INSERT_WISHLIST_ITEM,
+  UPDATE_WISHLIST_ITEM,
+  DELETE_WISHLIST_ITEM,
+  INCREMENT_WISHLIST_VOTES,
+  TOGGLE_WISHLIST_RESEARCH,
+  isHasuraConfigured
+} from "./hasura";
 
 /**
  * Supabase Wishlist Service
@@ -53,69 +63,43 @@ export interface CreateWishlistItemData {
 }
 
 /**
- * Get all wishlist items
+ * Get all wishlist items from Hasura
  */
 export async function getWishlistItems(): Promise<WishlistItem[]> {
-  if (!isSupabaseConfigured()) {
-    throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
-    );
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning empty wishlist");
+    return [];
   }
 
   try {
-    console.log("🔄 Fetching wishlist items...");
+    console.log("🔄 Fetching wishlist items from Hasura...");
 
-    const { data: items, error } = await supabase
-      .from("wishlist_items")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const response = await executeQuery<{ wishlist_items: WishlistItem[] }>(
+      GET_WISHLIST_ITEMS
+    );
 
-    if (error) {
-      console.error("Error fetching wishlist items:", error);
-      // Check if it's a table not found error
-      if (
-        error.message.includes("Could not find the table") ||
-        error.message.includes('relation "wishlist_items" does not exist')
-      ) {
-        throw new Error("SCHEMA_MISSING: Database tables not found");
-      }
-      throw new Error(`Failed to fetch wishlist items: ${error.message}`);
-    }
-
-    console.log(`✅ Loaded ${items?.length || 0} wishlist items`);
-    return items || [];
+    const items = response.wishlist_items || [];
+    console.log(`✅ Loaded ${items.length} wishlist items from Hasura`);
+    return items;
   } catch (error) {
-    console.error("Error in getWishlistItems:", error);
-
-    // Check if it's a network error
-    if (
-      error instanceof TypeError &&
-      error.message.includes("Failed to fetch")
-    ) {
-      throw new Error(
-        "Network connection failed. Please check your internet connection and try again.",
-      );
-    }
-
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch wishlist items: ${String(error)}`);
+    console.error("❌ Error fetching wishlist items from Hasura:", error);
+    console.log("��� Returning empty array as fallback");
+    return [];
   }
 }
 
 /**
- * Create a new wishlist item
+ * Create a new wishlist item in Hasura
  */
 export async function createWishlistItem(
   data: CreateWishlistItemData,
 ): Promise<WishlistItem> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log(`🎯 Creating wishlist item: ${data.title}...`);
+    console.log(`🎯 Creating wishlist item in Hasura: ${data.title}...`);
 
     const itemData = {
       title: data.title,
@@ -133,126 +117,84 @@ export async function createWishlistItem(
       researched: false,
     };
 
-    const { data: item, error } = await supabase
-      .from("wishlist_items")
-      .insert(itemData)
-      .select()
-      .single();
+    const response = await executeMutation<{ insert_wishlist_items_one: WishlistItem }>(
+      INSERT_WISHLIST_ITEM,
+      { item: itemData }
+    );
 
-    if (error) {
-      console.error("Error creating wishlist item:", error);
-      throw new Error(`Failed to create wishlist item: ${error.message}`);
+    if (!response.insert_wishlist_items_one) {
+      throw new Error("Failed to create wishlist item");
     }
 
-    console.log(`✅ Wishlist item created successfully: ${data.title}`);
-    return item;
+    console.log(`✅ Wishlist item created successfully in Hasura: ${data.title}`);
+    return response.insert_wishlist_items_one;
   } catch (error) {
-    console.error("Error in createWishlistItem:", error);
-
-    // Check if it's a network error
-    if (
-      error instanceof TypeError &&
-      error.message.includes("Failed to fetch")
-    ) {
-      throw new Error(
-        "Network connection failed. Please check your internet connection and try again.",
-      );
-    }
-
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to create wishlist item: ${String(error)}`);
+    console.error("❌ Error creating wishlist item in Hasura:", error);
+    throw error;
   }
 }
 
 /**
- * Update a wishlist item
+ * Update a wishlist item in Hasura
  */
 export async function updateWishlistItem(
   id: string,
   updates: Partial<WishlistItem>,
 ): Promise<WishlistItem> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log(`🔄 Updating wishlist item: ${id}...`);
+    console.log(`🔄 Updating wishlist item in Hasura: ${id}...`);
 
-    const { data: item, error } = await supabase
-      .from("wishlist_items")
-      .update(updates)
-      .eq("id", id)
-      .select()
-      .single();
+    const response = await executeMutation<{ update_wishlist_items_by_pk: WishlistItem }>(
+      UPDATE_WISHLIST_ITEM,
+      {
+        id,
+        item: {
+          ...updates,
+          updated_at: new Date().toISOString()
+        }
+      }
+    );
 
-    if (error) {
-      console.error("Error updating wishlist item:", error);
-      throw new Error(`Failed to update wishlist item: ${error.message}`);
+    if (!response.update_wishlist_items_by_pk) {
+      throw new Error(`Failed to update wishlist item with ID: ${id}`);
     }
 
-    console.log(`✅ Wishlist item updated successfully: ${id}`);
-    return item;
+    console.log(`✅ Wishlist item updated successfully in Hasura: ${id}`);
+    return response.update_wishlist_items_by_pk;
   } catch (error) {
-    console.error("Error in updateWishlistItem:", error);
-
-    // Check if it's a network error
-    if (
-      error instanceof TypeError &&
-      error.message.includes("Failed to fetch")
-    ) {
-      throw new Error(
-        "Network connection failed. Please check your internet connection and try again.",
-      );
-    }
-
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to update wishlist item: ${String(error)}`);
+    console.error("❌ Error updating wishlist item in Hasura:", error);
+    throw error;
   }
 }
 
 /**
- * Delete a wishlist item
+ * Delete a wishlist item from Hasura
  */
 export async function deleteWishlistItem(id: string): Promise<void> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log(`🗑️ Deleting wishlist item: ${id}...`);
+    console.log(`🗑️ Deleting wishlist item from Hasura: ${id}...`);
 
-    const { error } = await supabase
-      .from("wishlist_items")
-      .delete()
-      .eq("id", id);
+    const response = await executeMutation<{ delete_wishlist_items_by_pk: { id: string } }>(
+      DELETE_WISHLIST_ITEM,
+      { id }
+    );
 
-    if (error) {
-      console.error("Error deleting wishlist item:", error);
-      throw new Error(`Failed to delete wishlist item: ${error.message}`);
+    if (!response.delete_wishlist_items_by_pk) {
+      throw new Error(`Failed to delete wishlist item with ID: ${id}`);
     }
 
-    console.log(`✅ Wishlist item deleted successfully: ${id}`);
+    console.log(`✅ Wishlist item deleted successfully from Hasura: ${id}`);
   } catch (error) {
-    console.error("Error in deleteWishlistItem:", error);
-
-    // Check if it's a network error
-    if (
-      error instanceof TypeError &&
-      error.message.includes("Failed to fetch")
-    ) {
-      throw new Error(
-        "Network connection failed. Please check your internet connection and try again.",
-      );
-    }
-
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to delete wishlist item: ${String(error)}`);
+    console.error("❌ Error deleting wishlist item from Hasura:", error);
+    throw error;
   }
 }
 
