@@ -55,13 +55,8 @@ export async function getRecentAdventures(): Promise<RecentAdventure[]> {
 
     const journalEntries = result.recent_adventures;
 
-    if (error) {
-      console.error("Error fetching journal entries:", error);
-      throw new Error(`Failed to fetch journal entries: ${error.message}`);
-    }
-
     if (!journalEntries || journalEntries.length === 0) {
-      console.log("📦 No journal entries found, returning empty array");
+      console.log("📦 No journal entries found in Hasura, returning empty array");
       return [];
     }
 
