@@ -302,7 +302,7 @@ export async function toggleResearchStatus(id: string): Promise<WishlistItem> {
 }
 
 /**
- * Get wishlist statistics
+ * Get wishlist statistics from Hasura
  */
 export async function getWishlistStats(): Promise<{
   total_items: number;
@@ -333,222 +333,101 @@ export async function getWishlistStats(): Promise<{
     highest_votes: 0,
   };
 
-  if (!isSupabaseConfigured()) {
-    console.warn("Supabase not configured, returning default wishlist stats");
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning default wishlist stats");
     return defaultStats;
   }
 
   try {
-    console.log("📊 Fetching wishlist statistics...");
+    console.log("📊 Calculating wishlist statistics from items...");
 
-    const { data, error } = await supabase
-      .from("wishlist_stats")
-      .select("*")
-      .single();
+    // Get all items and calculate stats client-side
+    const items = await getWishlistItems();
 
-    if (error) {
-      console.error("Error fetching wishlist stats:", error);
-      // Check if it's a table not found error or network error
-      if (
-        error.message.includes("Could not find the table") ||
-        error.message.includes('relation "wishlist_stats" does not exist') ||
-        error.message.includes("Failed to fetch") ||
-        error.code === "PGRST116"
-      ) {
-        console.warn("Stats view not available, returning default stats");
-        return defaultStats;
-      }
-      console.warn(
-        "Stats fetch error, returning default stats:",
-        error.message,
-      );
-      return defaultStats;
-    }
+    const stats = {
+      total_items: items.length,
+      high_priority: items.filter(item => item.priority === "High").length,
+      medium_priority: items.filter(item => item.priority === "Medium").length,
+      low_priority: items.filter(item => item.priority === "Low").length,
+      planning_items: items.filter(item => item.status === "Planning").length,
+      researching_items: items.filter(item => item.status === "Researching").length,
+      ready_items: items.filter(item => item.status === "Ready").length,
+      booked_items: items.filter(item => item.status === "Booked").length,
+      total_categories: [...new Set(items.map(item => item.category))].length,
+      total_budget: items.reduce((sum, item) => sum + (item.estimated_cost || 0), 0),
+      average_votes: items.length > 0 ? Math.round(items.reduce((sum, item) => sum + (item.family_votes || 0), 0) / items.length) : 0,
+      highest_votes: Math.max(0, ...items.map(item => item.family_votes || 0))
+    };
 
-    console.log("✅ Wishlist stats loaded successfully");
-    return data || defaultStats;
+    console.log("✅ Wishlist stats calculated successfully from Hasura data");
+    return stats;
   } catch (error) {
-    console.error("Error in getWishlistStats:", error);
+    console.error("❌ Error calculating wishlist stats:", error);
     console.warn("Falling back to default stats due to error");
     return defaultStats;
   }
 }
 
 /**
- * Subscribe to real-time changes in wishlist items
- * Provides robust cross-device synchronization
+ * Subscribe to real-time changes in wishlist items (polling-based for Hasura)
  */
 export function subscribeToWishlistItems(
   callback: (items: WishlistItem[]) => void,
 ) {
-  if (!isSupabaseConfigured()) {
-    console.warn("Supabase not configured, skipping real-time subscription");
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, skipping real-time subscription");
     return () => {}; // Return empty unsubscribe function
   }
 
-  console.log("🔄 Setting up real-time wishlist sync...");
+  console.log("🔄 Setting up real-time wishlist sync (polling-based)...");
 
-  const subscription = supabase
-    .channel("wishlist_items_changes")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "wishlist_items",
-      },
-      async (payload) => {
-        console.log(
-          "📡 Real-time wishlist change detected:",
-          payload.eventType,
-        );
+  // Initial fetch
+  getWishlistItems().then(callback).catch(console.error);
 
-        // Refetch all wishlist items when any change occurs
-        try {
-          const items = await getWishlistItems();
-          callback(items);
-          console.log("✅ Wishlist sync updated with latest data");
-        } catch (error) {
-          console.error("Error in real-time wishlist subscription:", error);
-        }
-      },
-    )
-    .subscribe((status) => {
-      console.log("📡 Wishlist subscription status:", status);
-    });
+  // Set up polling for real-time-like updates
+  const pollInterval = setInterval(() => {
+    console.log("🔄 Polling for wishlist updates...");
+    getWishlistItems().then(callback).catch(console.error);
+  }, 7000); // Poll every 7 seconds
 
-  console.log("✅ Real-time wishlist sync enabled");
+  console.log("✅ Real-time wishlist sync enabled (polling)");
 
   return () => {
-    console.log("🔌 Unsubscribing from wishlist changes");
-    subscription.unsubscribe();
+    console.log("🔌 Stopping wishlist polling");
+    clearInterval(pollInterval);
   };
 }
 
 /**
- * Test Supabase connection for wishlist data
+ * Test Hasura connection for wishlist data
  */
 export async function testWishlistConnection(): Promise<{
   success: boolean;
   message: string;
   error?: string;
-  details?: {
-    tables_exist: boolean;
-    can_read: boolean;
-    can_write: boolean;
-    real_time_enabled: boolean;
-  };
 }> {
-  if (!isSupabaseConfigured()) {
+  if (!isHasuraConfigured()) {
     return {
       success: false,
-      message: "Supabase not configured",
-      error: "Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
+      message: "Hasura not configured",
+      error: "Please set VITE_HASURA_GRAPHQL_URL and VITE_HASURA_ADMIN_SECRET",
     };
   }
 
-  const details = {
-    tables_exist: false,
-    can_read: false,
-    can_write: false,
-    real_time_enabled: false,
-  };
-
   try {
-    console.log("🔍 Testing wishlist database connection...");
+    console.log("🔍 Testing wishlist Hasura connection...");
 
-    // Test 1: Check if tables exist and can read
-    const { data, error, count } = await supabase
-      .from("wishlist_items")
-      .select("*", { count: "exact", head: true });
+    const items = await getWishlistItems();
 
-    if (error) {
-      if (
-        error.message.includes("Could not find the table") ||
-        error.message.includes('relation "wishlist_items" does not exist')
-      ) {
-        return {
-          success: false,
-          message: "Database tables not found - please run wishlist-schema.sql",
-          error: "Tables missing: wishlist_items, wishlist_stats",
-          details,
-        };
-      }
-      return {
-        success: false,
-        message: "Database connection failed",
-        error: error.message,
-        details,
-      };
-    }
-
-    details.tables_exist = true;
-    details.can_read = true;
-
-    // Test 2: Check write permissions by attempting to insert/delete a test item
-    try {
-      const testItem = {
-        title: "__test_connection__",
-        location: "__test__",
-        description: "Connection test item",
-        priority: "Low" as const,
-        status: "Planning" as const,
-        estimated_cost: 1,
-        best_seasons: ["Summer"],
-        duration: "1 day",
-        category: "Activity" as const,
-        family_votes: 0,
-        notes: "Test item - will be deleted",
-        researched: false,
-      };
-
-      // Insert test item
-      const { data: insertData, error: insertError } = await supabase
-        .from("wishlist_items")
-        .insert(testItem)
-        .select()
-        .single();
-
-      if (insertError) {
-        return {
-          success: false,
-          message: "Write permission denied",
-          error: insertError.message,
-          details,
-        };
-      }
-
-      details.can_write = true;
-
-      // Clean up test item
-      if (insertData?.id) {
-        await supabase.from("wishlist_items").delete().eq("id", insertData.id);
-      }
-    } catch (writeError) {
-      console.warn("Write test failed:", writeError);
-    }
-
-    // Test 3: Check real-time functionality
-    try {
-      const testChannel = supabase.channel("connection_test");
-      details.real_time_enabled = true;
-      testChannel.unsubscribe();
-    } catch (realtimeError) {
-      console.warn("Real-time test failed:", realtimeError);
-    }
-
-    const itemCount = count || 0;
     return {
       success: true,
-      message: `✅ Full connection verified! Found ${itemCount} adventure${itemCount !== 1 ? "s" : ""}.`,
-      details,
+      message: `✅ Wishlist Hasura connected! Found ${items.length} adventure${items.length !== 1 ? "s" : ""}.`,
     };
   } catch (error) {
     return {
       success: false,
-      message: "Connection test failed",
+      message: "Hasura connection test failed",
       error: error instanceof Error ? error.message : "Unknown error",
-      details,
     };
   }
 }
