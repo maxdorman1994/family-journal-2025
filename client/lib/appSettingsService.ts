@@ -179,44 +179,8 @@ export async function updateLogoUrl(logoUrl: string): Promise<void> {
 export function subscribeToAppSettings(
   callback: (settings: AppSettings) => void,
 ): () => void {
-  console.log("🔄 Setting up real-time app settings sync...");
-
-  const subscription = supabase
-    .channel("app_settings_changes")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "app_settings",
-      },
-      (payload) => {
-        console.log("🔄 App settings changed:", payload);
-
-        if (payload.new) {
-          // Update localStorage cache
-          localStorage.setItem("app_settings", JSON.stringify(payload.new));
-
-          // Update legacy logo cache
-          if (
-            payload.new.logo_url &&
-            payload.new.logo_url !== "/placeholder.svg"
-          ) {
-            localStorage.setItem("family_logo_url", payload.new.logo_url);
-          } else {
-            localStorage.removeItem("family_logo_url");
-          }
-
-          callback(payload.new as AppSettings);
-        }
-      },
-    )
-    .subscribe();
-
-  // Return cleanup function
-  return () => {
-    supabase.removeChannel(subscription);
-  };
+  console.warn("Real-time subscriptions not available in simplified setup");
+  return () => {}; // Return empty cleanup function
 }
 
 /**
