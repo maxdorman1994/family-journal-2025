@@ -297,6 +297,9 @@ export default function Layout({ children }: LayoutProps) {
       {/* Main Content */}
       <main className="pb-20">{children}</main>
 
+      {/* Refresh Helper for debugging cache issues */}
+      <RefreshHelper />
+
       {/* Authentication Footer */}
       <AuthFooter />
 
