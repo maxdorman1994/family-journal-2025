@@ -352,51 +352,9 @@ export async function uploadFamilyMemberAvatar(
 export function subscribeToFamilyMembers(
   callback: (members: FamilyMember[]) => void,
 ) {
-  if (!isSupabaseConfigured()) {
-    console.warn("Supabase not configured, skipping real-time subscription");
-    return () => {}; // Return empty unsubscribe function
-  }
-
-  console.log("🔄 Setting up real-time family members sync...");
-
-  const subscription = supabase
-    .channel("family_members_changes")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "family_members",
-      },
-      async (payload) => {
-        console.log(
-          "📡 Real-time family member change detected:",
-          payload.eventType,
-        );
-
-        // Refetch all family members when any change occurs
-        try {
-          const members = await getFamilyMembers();
-          callback(members);
-          console.log("✅ Family members sync updated with latest data");
-        } catch (error) {
-          console.error(
-            "Error in real-time family members subscription:",
-            error,
-          );
-        }
-      },
-    )
-    .subscribe((status) => {
-      console.log("📡 Family members subscription status:", status);
-    });
-
-  console.log("✅ Real-time family members sync enabled");
-
-  return () => {
-    console.log("🔌 Unsubscribing from family members changes");
-    subscription.unsubscribe();
-  };
+  // Real-time subscriptions disabled in simplified setup
+  console.warn("Real-time subscriptions not available in simplified setup");
+  return () => {}; // Return empty unsubscribe function
 }
 
 /**
