@@ -136,12 +136,9 @@ export async function getAllAdventuresWithMetadata(): Promise<
   try {
     console.log("🔄 Fetching all adventures with metadata...");
 
-    const { data: adventures, error } = await supabase
-      .from("adventures_with_metadata")
-      .select(
-        "id, title, location, formatted_date, featured_image, tags, adventure_type, photo_count, excerpt, time_ago",
-      )
-      .limit(10); // Get latest 10
+    // TODO: Implement adventures_with_metadata view in Hasura
+    const adventures: any[] = [];
+    const error = null;
 
     if (error) {
       console.error("Error fetching adventures metadata:", error);
