@@ -83,7 +83,7 @@ export async function getWishlistItems(): Promise<WishlistItem[]> {
     return items;
   } catch (error) {
     console.error("❌ Error fetching wishlist items from Hasura:", error);
-    console.log("��� Returning empty array as fallback");
+    console.log("🔄 Returning empty array as fallback");
     return [];
   }
 }
@@ -199,167 +199,105 @@ export async function deleteWishlistItem(id: string): Promise<void> {
 }
 
 /**
- * Add a family vote to a wishlist item
+ * Add a family vote to a wishlist item in Hasura
  */
 export async function addVoteToItem(id: string): Promise<WishlistItem> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log(`👍 Adding vote to wishlist item: ${id}...`);
+    console.log(`👍 Adding vote to wishlist item in Hasura: ${id}...`);
 
-    // First get current votes
-    const { data: currentItem, error: fetchError } = await supabase
-      .from("wishlist_items")
-      .select("family_votes")
-      .eq("id", id)
-      .single();
+    const response = await executeMutation<{ update_wishlist_items_by_pk: WishlistItem }>(
+      INCREMENT_WISHLIST_VOTES,
+      {
+        id,
+        increment: 1
+      }
+    );
 
-    if (fetchError) {
-      throw new Error(`Failed to fetch current votes: ${fetchError.message}`);
+    if (!response.update_wishlist_items_by_pk) {
+      throw new Error(`Failed to add vote to wishlist item with ID: ${id}`);
     }
 
-    const newVotes = (currentItem.family_votes || 0) + 1;
-
-    const { data: item, error } = await supabase
-      .from("wishlist_items")
-      .update({ family_votes: newVotes })
-      .eq("id", id)
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error adding vote:", error);
-      throw new Error(`Failed to add vote: ${error.message}`);
-    }
-
-    console.log(`✅ Vote added successfully: ${id}`);
-    return item;
+    console.log(`✅ Vote added successfully in Hasura: ${id}`);
+    return response.update_wishlist_items_by_pk;
   } catch (error) {
-    console.error("Error in addVoteToItem:", error);
-
-    // Check if it's a network error
-    if (
-      error instanceof TypeError &&
-      error.message.includes("Failed to fetch")
-    ) {
-      throw new Error(
-        "Network connection failed. Please check your internet connection and try again.",
-      );
-    }
-
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to add vote: ${String(error)}`);
+    console.error("❌ Error adding vote in Hasura:", error);
+    throw error;
   }
 }
 
 /**
- * Remove a family vote from a wishlist item
+ * Remove a family vote from a wishlist item in Hasura
  */
 export async function removeVoteFromItem(id: string): Promise<WishlistItem> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log(`👎 Removing vote from wishlist item: ${id}...`);
+    console.log(`👎 Removing vote from wishlist item in Hasura: ${id}...`);
 
-    // First get current votes
-    const { data: currentItem, error: fetchError } = await supabase
-      .from("wishlist_items")
-      .select("family_votes")
-      .eq("id", id)
-      .single();
+    const response = await executeMutation<{ update_wishlist_items_by_pk: WishlistItem }>(
+      INCREMENT_WISHLIST_VOTES,
+      {
+        id,
+        increment: -1
+      }
+    );
 
-    if (fetchError) {
-      throw new Error(`Failed to fetch current votes: ${fetchError.message}`);
+    if (!response.update_wishlist_items_by_pk) {
+      throw new Error(`Failed to remove vote from wishlist item with ID: ${id}`);
     }
 
-    const newVotes = Math.max(0, (currentItem.family_votes || 0) - 1);
-
-    const { data: item, error } = await supabase
-      .from("wishlist_items")
-      .update({ family_votes: newVotes })
-      .eq("id", id)
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error removing vote:", error);
-      throw new Error(`Failed to remove vote: ${error.message}`);
-    }
-
-    console.log(`✅ Vote removed successfully: ${id}`);
-    return item;
+    console.log(`✅ Vote removed successfully in Hasura: ${id}`);
+    return response.update_wishlist_items_by_pk;
   } catch (error) {
-    console.error("Error in removeVoteFromItem:", error);
-
-    // Check if it's a network error
-    if (
-      error instanceof TypeError &&
-      error.message.includes("Failed to fetch")
-    ) {
-      throw new Error(
-        "Network connection failed. Please check your internet connection and try again.",
-      );
-    }
-
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to remove vote: ${String(error)}`);
+    console.error("❌ Error removing vote in Hasura:", error);
+    throw error;
   }
 }
 
 /**
- * Toggle research status of a wishlist item
+ * Toggle research status of a wishlist item in Hasura
  */
 export async function toggleResearchStatus(id: string): Promise<WishlistItem> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log(`🔍 Toggling research status: ${id}...`);
+    console.log(`🔍 Toggling research status in Hasura: ${id}...`);
 
-    // First get current status
-    const { data: currentItem, error: fetchError } = await supabase
-      .from("wishlist_items")
-      .select("researched")
-      .eq("id", id)
-      .single();
+    // First get current item to check research status
+    const items = await getWishlistItems();
+    const currentItem = items.find(item => item.id === id);
 
-    if (fetchError) {
-      throw new Error(
-        `Failed to fetch current research status: ${fetchError.message}`,
-      );
+    if (!currentItem) {
+      throw new Error(`Wishlist item not found: ${id}`);
     }
 
     const newStatus = !currentItem.researched;
 
-    const { data: item, error } = await supabase
-      .from("wishlist_items")
-      .update({ researched: newStatus })
-      .eq("id", id)
-      .select()
-      .single();
+    const response = await executeMutation<{ update_wishlist_items_by_pk: WishlistItem }>(
+      TOGGLE_WISHLIST_RESEARCH,
+      {
+        id,
+        researched: newStatus
+      }
+    );
 
-    if (error) {
-      console.error("Error toggling research status:", error);
-      throw new Error(`Failed to toggle research status: ${error.message}`);
+    if (!response.update_wishlist_items_by_pk) {
+      throw new Error(`Failed to toggle research status for wishlist item with ID: ${id}`);
     }
 
-    console.log(`✅ Research status toggled successfully: ${id}`);
-    return item;
+    console.log(`✅ Research status toggled successfully in Hasura: ${id}`);
+    return response.update_wishlist_items_by_pk;
   } catch (error) {
-    console.error("Error in toggleResearchStatus:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to toggle research status: ${String(error)}`);
+    console.error("❌ Error toggling research status in Hasura:", error);
+    throw error;
   }
 }
 
