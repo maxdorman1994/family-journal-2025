@@ -1,4 +1,4 @@
-const CACHE_NAME = "a-wee-adventure-v1";
+const CACHE_NAME = "a-wee-adventure-v2-hasura";
 const STATIC_ASSETS = [
   "/",
   "/manifest.json",
