@@ -226,6 +226,8 @@ export const INSERT_JOURNAL_ENTRY = `
       pet_notes
       tags
       photos
+      is_scenic_drive
+      scenic_stops
       created_at
       updated_at
     }
