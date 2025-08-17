@@ -211,17 +211,7 @@ export default function Home() {
         "members",
       );
 
-      // Verify both dogs are included in real-time updates
-      const charlieExists = members.find((m) => m.name === "Charlie");
-      const fernExists = members.find((m) => m.name === "Fern");
-      if (charlieExists) {
-        console.log(
-          "🐕 Charlie sync confirmed - photos will sync across devices",
-        );
-      }
-      if (fernExists) {
-        console.log("🌿 Fern sync confirmed - photos will sync across devices");
-      }
+      // Real-time sync confirmed for family members
 
       setFamilyMembers(members);
       setSyncStatus("connected");
@@ -254,6 +244,33 @@ export default function Home() {
       unsubscribeFamilyMembers();
       unsubscribeAdventures();
       unsubscribeMilestones();
+    };
+  }, []);
+
+  // Auto-refresh data when page becomes visible (for cross-device sync)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log("🔄 Page visible - refreshing home page data for sync");
+        loadFamilyMembersData();
+        loadRecentAdventures();
+        loadRealStats();
+      }
+    };
+
+    const handleFocus = () => {
+      console.log("🔄 Window focused - refreshing home page data for sync");
+      loadFamilyMembersData();
+      loadRecentAdventures();
+      loadRealStats();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleFocus);
     };
   }, []);
 
@@ -778,35 +795,14 @@ export default function Home() {
       setIsLoading(true);
       setError(null);
 
-      console.log("🔄 Loading family members from Supabase...");
+      console.log("🔄 Loading family members from database...");
       const members = await getFamilyMembers();
 
       setFamilyMembers(members);
       setSyncStatus("connected");
       setError(null);
 
-      // Check if our dogs are loaded for sync verification
-      const charlieExists = members.find((m) => m.name === "Charlie");
-      const fernExists = members.find((m) => m.name === "Fern");
       console.log(`✅ Loaded ${members.length} family members successfully`);
-
-      if (charlieExists) {
-        console.log(
-          `🐕 Charlie loaded successfully with ID: ${charlieExists.id}`,
-        );
-      } else {
-        console.warn(
-          "⚠️ Charlie not found in family members - may need to run SQL",
-        );
-      }
-
-      if (fernExists) {
-        console.log(`🌿 Fern loaded successfully with ID: ${fernExists.id}`);
-      } else {
-        console.warn(
-          "⚠️ Fern not found in family members - may need to run SQL",
-        );
-      }
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
@@ -1111,7 +1107,7 @@ export default function Home() {
 
       if (result.success) {
         setSyncStatus("connected");
-        setError(`✅ ${result.message}`);
+        setError(`��� ${result.message}`);
 
         // Reload data after successful connection
         await loadFamilyMembersData();
@@ -1583,9 +1579,8 @@ export default function Home() {
                   member.name === "Kira" ||
                   member.name === "Frankie" ||
                   member.name === "Iris") &&
-                member.position_index > 4 &&
-                member.name !== "Charlie" &&
-                member.name !== "Fern",
+                member.position_index > 4,
+                // Removed Charlie and Fern filtering
             )
             .sort((a, b) => {
               // Sort to put parents first, then children

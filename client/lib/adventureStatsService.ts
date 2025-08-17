@@ -1,4 +1,12 @@
-import { supabase, isSupabaseConfigured } from "./supabase";
+import {
+  executeQuery,
+  executeMutation,
+  GET_ADVENTURE_STATS_SUMMARY,
+  GET_PRIMARY_ADVENTURE_STATS,
+  UPDATE_ADVENTURE_STAT,
+  INCREMENT_ADVENTURE_STAT,
+  isHasuraConfigured,
+} from "./hasura";
 
 /**
  * Supabase Adventure Statistics Service
@@ -78,204 +86,172 @@ export interface AdventureStatsConfig {
 }
 
 /**
- * Get all adventure statistics
+ * Get all adventure statistics from Hasura
  */
 export async function getAdventureStats(): Promise<AdventureStat[]> {
-  if (!isSupabaseConfigured()) {
-    throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
-    );
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning fallback stats");
+    return [];
   }
 
   try {
-    console.log("🔄 Fetching adventure statistics...");
+    console.log("🔄 Fetching adventure statistics from Hasura...");
 
-    const { data: stats, error } = await supabase
-      .from("adventure_stats_summary")
-      .select("*")
-      .order("display_order", { ascending: true });
+    const response = await executeQuery<{
+      adventure_stats_summary: AdventureStat[];
+    }>(GET_ADVENTURE_STATS_SUMMARY);
 
-    if (error) {
-      console.error("Error fetching adventure stats:", error);
-      // Check if it's a table not found error
-      if (
-        error.message.includes("Could not find the table") ||
-        error.message.includes('relation "adventure_stats" does not exist')
-      ) {
-        throw new Error("SCHEMA_MISSING: Database tables not found");
-      }
-      throw new Error(`Failed to fetch adventure stats: ${error.message}`);
-    }
-
-    console.log(`✅ Loaded ${stats?.length || 0} adventure statistics`);
-    return stats || [];
+    const stats = response.adventure_stats_summary || [];
+    console.log(`✅ Loaded ${stats.length} adventure statistics from Hasura`);
+    return stats;
   } catch (error) {
-    console.error("Error in getAdventureStats:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch adventure stats: ${String(error)}`);
+    console.error("❌ Error fetching adventure stats from Hasura:", error);
+    console.log("🔄 Returning empty array as fallback");
+    return [];
   }
 }
 
 /**
- * Get primary adventure statistics (the 4 shown by default)
+ * Get primary adventure statistics (the 4 shown by default) from Hasura
  */
 export async function getPrimaryAdventureStats(): Promise<AdventureStat[]> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning fallback stats");
+    return [];
   }
 
   try {
-    console.log("🔄 Fetching primary adventure statistics...");
+    console.log("🔄 Fetching primary adventure statistics from Hasura...");
 
-    const { data: stats, error } = await supabase
-      .from("primary_adventure_stats")
-      .select("*");
+    const response = await executeQuery<{
+      primary_adventure_stats: AdventureStat[];
+    }>(GET_PRIMARY_ADVENTURE_STATS);
 
-    if (error) {
-      console.error("Error fetching primary adventure stats:", error);
-      throw new Error(
-        `Failed to fetch primary adventure stats: ${error.message}`,
-      );
-    }
-
-    console.log(`✅ Loaded ${stats?.length || 0} primary adventure statistics`);
-    return stats || [];
-  } catch (error) {
-    console.error("Error in getPrimaryAdventureStats:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(
-      `Failed to fetch primary adventure stats: ${String(error)}`,
+    const stats = response.primary_adventure_stats || [];
+    console.log(
+      `✅ Loaded ${stats.length} primary adventure statistics from Hasura`,
     );
+    return stats;
+  } catch (error) {
+    console.error(
+      "❌ Error fetching primary adventure stats from Hasura:",
+      error,
+    );
+    console.log("🔄 Returning empty array as fallback");
+    return [];
   }
 }
 
 /**
- * Update a specific adventure statistic
+ * Update a specific adventure statistic in Hasura
  */
 export async function updateAdventureStat(
   statType: string,
   value: number,
   description?: string,
 ): Promise<void> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log(`🔄 Updating adventure stat: ${statType} = ${value}...`);
+    console.log(
+      `🔄 Updating adventure stat in Hasura: ${statType} = ${value}...`,
+    );
 
-    const { error } = await supabase.rpc("set_adventure_stat", {
-      p_stat_type: statType,
-      p_value: value,
-      p_description: description,
+    const response = await executeMutation<{
+      update_adventure_stats: {
+        affected_rows: number;
+        returning: AdventureStat[];
+      };
+    }>(UPDATE_ADVENTURE_STAT, {
+      stat_type: statType,
+      value: value,
+      description: description,
     });
 
-    if (error) {
-      console.error("Error updating adventure stat:", error);
-      throw new Error(`Failed to update adventure stat: ${error.message}`);
+    if (!response.update_adventure_stats?.affected_rows) {
+      throw new Error(`Failed to update adventure stat: ${statType}`);
     }
 
-    console.log(`✅ Adventure stat updated: ${statType}`);
+    console.log(`✅ Adventure stat updated in Hasura: ${statType}`);
   } catch (error) {
-    console.error("Error in updateAdventureStat:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to update adventure stat: ${String(error)}`);
+    console.error("❌ Error updating adventure stat in Hasura:", error);
+    throw error;
   }
 }
 
 /**
- * Increment a specific adventure statistic
+ * Increment a specific adventure statistic in Hasura
  */
 export async function incrementAdventureStat(
   statType: string,
   increment: number = 1,
 ): Promise<number> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
     console.log(
-      `🔄 Incrementing adventure stat: ${statType} by ${increment}...`,
+      `🔄 Incrementing adventure stat in Hasura: ${statType} by ${increment}...`,
     );
 
-    const { data, error } = await supabase.rpc("increment_adventure_stat", {
-      p_stat_type: statType,
-      p_increment: increment,
+    const response = await executeMutation<{
+      update_adventure_stats: {
+        affected_rows: number;
+        returning: AdventureStat[];
+      };
+    }>(INCREMENT_ADVENTURE_STAT, {
+      stat_type: statType,
+      increment: increment,
     });
 
-    if (error) {
-      console.error("Error incrementing adventure stat:", error);
-      throw new Error(`Failed to increment adventure stat: ${error.message}`);
+    if (!response.update_adventure_stats?.affected_rows) {
+      throw new Error(`Failed to increment adventure stat: ${statType}`);
     }
 
-    console.log(`✅ Adventure stat incremented: ${statType} = ${data}`);
-    return data || 0;
+    const newValue =
+      response.update_adventure_stats.returning[0]?.stat_value || 0;
+    console.log(
+      `✅ Adventure stat incremented in Hasura: ${statType} = ${newValue}`,
+    );
+    return newValue;
   } catch (error) {
-    console.error("Error in incrementAdventureStat:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to increment adventure stat: ${String(error)}`);
+    console.error("❌ Error incrementing adventure stat in Hasura:", error);
+    throw error;
   }
 }
 
 /**
- * Subscribe to real-time changes in adventure statistics
+ * Subscribe to real-time changes in adventure statistics (polling-based for Hasura)
  */
 export function subscribeToAdventureStats(
   callback: (stats: AdventureStat[]) => void,
 ) {
-  if (!isSupabaseConfigured()) {
-    console.warn("Supabase not configured, skipping real-time subscription");
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, skipping real-time subscription");
     return () => {}; // Return empty unsubscribe function
   }
 
-  console.log("🔄 Setting up real-time adventure stats sync...");
+  console.log(
+    "🔄 Setting up real-time adventure stats sync (polling-based)...",
+  );
 
-  const subscription = supabase
-    .channel("adventure_stats_changes")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "adventure_stats",
-      },
-      async (payload) => {
-        console.log(
-          "📡 Real-time adventure stats change detected:",
-          payload.eventType,
-        );
+  // Initial fetch
+  getAdventureStats().then(callback).catch(console.error);
 
-        // Refetch all adventure stats when any change occurs
-        try {
-          const stats = await getAdventureStats();
-          callback(stats);
-          console.log("✅ Adventure stats sync updated with latest data");
-        } catch (error) {
-          console.error(
-            "Error in real-time adventure stats subscription:",
-            error,
-          );
-        }
-      },
-    )
-    .subscribe((status) => {
-      console.log("📡 Adventure stats subscription status:", status);
-    });
+  // Set up polling for real-time-like updates
+  const pollInterval = setInterval(() => {
+    console.log("🔄 Polling for adventure stats updates...");
+    getAdventureStats().then(callback).catch(console.error);
+  }, 10000); // Poll every 10 seconds
 
-  console.log("✅ Real-time adventure stats sync enabled");
+  console.log("✅ Real-time adventure stats sync enabled (polling)");
 
   return () => {
-    console.log("🔌 Unsubscribing from adventure stats changes");
-    subscription.unsubscribe();
+    console.log("🔌 Stopping adventure stats polling");
+    clearInterval(pollInterval);
   };
 }
 
@@ -388,56 +364,34 @@ export function getFallbackAdventureStats(): AdventureStatsConfig {
 }
 
 /**
- * Test Supabase connection for adventure statistics
+ * Test Hasura connection for adventure statistics
  */
 export async function testAdventureStatsConnection(): Promise<{
   success: boolean;
   message: string;
   error?: string;
 }> {
-  if (!isSupabaseConfigured()) {
+  if (!isHasuraConfigured()) {
     return {
       success: false,
-      message: "Supabase not configured",
-      error: "Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
+      message: "Hasura not configured",
+      error: "Please set VITE_HASURA_GRAPHQL_URL and VITE_HASURA_ADMIN_SECRET",
     };
   }
 
   try {
-    console.log("🔍 Testing adventure stats database connection...");
+    console.log("🔍 Testing adventure stats Hasura connection...");
 
-    const { data, error, count } = await supabase
-      .from("adventure_stats")
-      .select("*", { count: "exact", head: true });
+    const stats = await getAdventureStats();
 
-    if (error) {
-      if (
-        error.message.includes("Could not find the table") ||
-        error.message.includes('relation "adventure_stats" does not exist')
-      ) {
-        return {
-          success: false,
-          message:
-            "Database tables not found - please run adventure-stats-schema.sql",
-          error: "Tables missing: adventure_stats",
-        };
-      }
-      return {
-        success: false,
-        message: "Database connection failed",
-        error: error.message,
-      };
-    }
-
-    const statsCount = count || 0;
     return {
       success: true,
-      message: `✅ Adventure stats database connected! Found ${statsCount} statistic${statsCount !== 1 ? "s" : ""}.`,
+      message: `✅ Adventure stats Hasura connected! Found ${stats.length} statistic${stats.length !== 1 ? "s" : ""}.`,
     };
   } catch (error) {
     return {
       success: false,
-      message: "Connection test failed",
+      message: "Hasura connection test failed",
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }

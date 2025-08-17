@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import AuthFooter from "./AuthFooter";
 import PWAInstaller from "./PWAInstaller";
 import SyncStatus from "./SyncStatus";
+import RefreshHelper from "./RefreshHelper";
 import { useAuth } from "@/hooks/useAuth";
 import { useSync } from "@/lib/syncService";
 import {
@@ -295,6 +296,9 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Main Content */}
       <main className="pb-20">{children}</main>
+
+      {/* Refresh Helper for debugging cache issues */}
+      <RefreshHelper />
 
       {/* Authentication Footer */}
       <AuthFooter />

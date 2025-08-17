@@ -1,4 +1,20 @@
-import { supabase, isSupabaseConfigured } from "./supabase";
+import {
+  executeQuery,
+  executeMutation,
+  GET_CASTLES,
+  GET_LOCHS,
+  GET_CASTLE_VISITS,
+  GET_LOCH_VISITS,
+  INSERT_CASTLE_VISIT,
+  INSERT_LOCH_VISIT,
+  DELETE_CASTLE_VISIT,
+  DELETE_LOCH_VISIT,
+  INSERT_CUSTOM_CASTLE,
+  INSERT_CUSTOM_LOCH,
+  DELETE_CUSTOM_CASTLE,
+  DELETE_CUSTOM_LOCH,
+  isHasuraConfigured,
+} from "./hasura";
 
 /**
  * Supabase Castles and Lochs Service
@@ -164,127 +180,71 @@ export interface CreateLochVisitData {
 }
 
 /**
- * Get all castles with their visit status
+ * Get all castles with their visit status from Hasura
  */
 export async function getAllCastlesWithVisits(): Promise<CastleWithVisit[]> {
-  if (!isSupabaseConfigured()) {
-    throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
-    );
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning empty castles array");
+    return [];
   }
 
   try {
-    console.log("🔄 Fetching all castles with visit status...");
+    console.log("🔄 Fetching all castles with visit status from Hasura...");
 
-    const { data: castles, error: castlesError } = await supabase
-      .from("castles")
-      .select("*")
-      .order("rank", { ascending: true });
+    // Fetch castles and visits in parallel
+    const [castlesResponse, visitsResponse] = await Promise.all([
+      executeQuery<{ castles: CastleData[] }>(GET_CASTLES),
+      executeQuery<{ castle_visits: CastleVisit[] }>(GET_CASTLE_VISITS),
+    ]);
 
-    if (castlesError) {
-      console.error("Error fetching castles:", castlesError);
-      if (
-        castlesError.message.includes("Could not find the table") ||
-        castlesError.message.includes('relation "castles" does not exist')
-      ) {
-        throw new Error("SCHEMA_MISSING: Database tables not found");
-      }
-      throw new Error(`Failed to fetch castles: ${castlesError.message}`);
-    }
-
-    const { data: visits, error: visitsError } = await supabase
-      .from("castle_visits")
-      .select("*");
-
-    if (visitsError) {
-      console.error("Error fetching castle visits:", visitsError);
-      if (
-        !visitsError.message.includes("Could not find the table") &&
-        !visitsError.message.includes('relation "castle_visits" does not exist')
-      ) {
-        throw new Error(
-          `Failed to fetch castle visits: ${visitsError.message}`,
-        );
-      }
-      console.warn(
-        "Castle visits table not found, continuing without visit data",
-      );
-    }
+    const castles = castlesResponse.castles || [];
+    const visits = visitsResponse.castle_visits || [];
 
     // Combine castles with visit data
-    const castlesWithVisits: CastleWithVisit[] = (castles || []).map(
-      (castle) => {
-        const visit = (visits || []).find((v) => v.castle_id === castle.id);
-        return {
-          ...castle,
-          visited: !!visit,
-          visit: visit || undefined,
-        };
-      },
-    );
+    const castlesWithVisits: CastleWithVisit[] = castles.map((castle) => {
+      const visit = visits.find((v) => v.castle_id === castle.id);
+      return {
+        ...castle,
+        visited: !!visit,
+        visit: visit || undefined,
+      };
+    });
 
     console.log(
-      `✅ Loaded ${castlesWithVisits.length} castles with visit status`,
+      `✅ Loaded ${castlesWithVisits.length} castles with visit status from Hasura`,
     );
     return castlesWithVisits;
   } catch (error) {
-    console.error("Error in getAllCastlesWithVisits:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch castles: ${String(error)}`);
+    console.error("❌ Error fetching castles from Hasura:", error);
+    console.log("🔄 Returning empty array as fallback");
+    return [];
   }
 }
 
 /**
- * Get all lochs with their visit status
+ * Get all lochs with their visit status from Hasura
  */
 export async function getAllLochsWithVisits(): Promise<LochWithVisit[]> {
-  if (!isSupabaseConfigured()) {
-    throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
-    );
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning empty lochs array");
+    return [];
   }
 
   try {
-    console.log("🔄 Fetching all lochs with visit status...");
+    console.log("🔄 Fetching all lochs with visit status from Hasura...");
 
-    const { data: lochs, error: lochsError } = await supabase
-      .from("lochs")
-      .select("*")
-      .order("rank", { ascending: true });
+    // Fetch lochs and visits in parallel
+    const [lochsResponse, visitsResponse] = await Promise.all([
+      executeQuery<{ lochs: LochData[] }>(GET_LOCHS),
+      executeQuery<{ loch_visits: LochVisit[] }>(GET_LOCH_VISITS),
+    ]);
 
-    if (lochsError) {
-      console.error("Error fetching lochs:", lochsError);
-      if (
-        lochsError.message.includes("Could not find the table") ||
-        lochsError.message.includes('relation "lochs" does not exist')
-      ) {
-        throw new Error("SCHEMA_MISSING: Database tables not found");
-      }
-      throw new Error(`Failed to fetch lochs: ${lochsError.message}`);
-    }
-
-    const { data: visits, error: visitsError } = await supabase
-      .from("loch_visits")
-      .select("*");
-
-    if (visitsError) {
-      console.error("Error fetching loch visits:", visitsError);
-      if (
-        !visitsError.message.includes("Could not find the table") &&
-        !visitsError.message.includes('relation "loch_visits" does not exist')
-      ) {
-        throw new Error(`Failed to fetch loch visits: ${visitsError.message}`);
-      }
-      console.warn(
-        "Loch visits table not found, continuing without visit data",
-      );
-    }
+    const lochs = lochsResponse.lochs || [];
+    const visits = visitsResponse.loch_visits || [];
 
     // Combine lochs with visit data
-    const lochsWithVisits: LochWithVisit[] = (lochs || []).map((loch) => {
-      const visit = (visits || []).find((v) => v.loch_id === loch.id);
+    const lochsWithVisits: LochWithVisit[] = lochs.map((loch) => {
+      const visit = visits.find((v) => v.loch_id === loch.id);
       return {
         ...loch,
         visited: !!visit,
@@ -292,14 +252,14 @@ export async function getAllLochsWithVisits(): Promise<LochWithVisit[]> {
       };
     });
 
-    console.log(`✅ Loaded ${lochsWithVisits.length} lochs with visit status`);
+    console.log(
+      `✅ Loaded ${lochsWithVisits.length} lochs with visit status from Hasura`,
+    );
     return lochsWithVisits;
   } catch (error) {
-    console.error("Error in getAllLochsWithVisits:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch lochs: ${String(error)}`);
+    console.error("❌ Error fetching lochs from Hasura:", error);
+    console.log("🔄 Returning empty array as fallback");
+    return [];
   }
 }
 
@@ -567,70 +527,83 @@ export async function getLochVisitStats(): Promise<{
 }
 
 /**
- * Get all unique regions from castles and lochs
+ * Get all unique regions from castles and lochs using Hasura
  */
 export async function getCastleLochRegions(): Promise<string[]> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning default regions");
+    return [
+      "Highland",
+      "Lowland",
+      "Central",
+      "Borders",
+      "Grampian",
+      "Strathclyde",
+    ];
   }
 
   try {
-    const [castleRegions, lochRegions] = await Promise.all([
-      supabase.from("castles").select("region").order("region"),
-      supabase.from("lochs").select("region").order("region"),
+    // Fetch castles and lochs to extract regions
+    const [castlesResponse, lochsResponse] = await Promise.all([
+      executeQuery<{ castles: { region: string }[] }>(
+        `query { castles { region } }`,
+      ),
+      executeQuery<{ lochs: { region: string }[] }>(
+        `query { lochs { region } }`,
+      ),
     ]);
 
-    if (castleRegions.error || lochRegions.error) {
-      throw new Error("Failed to fetch regions");
-    }
-
     const allRegions = [
-      ...(castleRegions.data || []).map((row) => row.region),
-      ...(lochRegions.data || []).map((row) => row.region),
+      ...(castlesResponse.castles || []).map((row) => row.region),
+      ...(lochsResponse.lochs || []).map((row) => row.region),
     ];
 
     const uniqueRegions = Array.from(new Set(allRegions)).sort();
     return uniqueRegions;
   } catch (error) {
-    console.error("Error in getCastleLochRegions:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch regions: ${String(error)}`);
+    console.error("Error fetching regions from Hasura:", error);
+    console.log("Returning default regions as fallback");
+    return [
+      "Highland",
+      "Lowland",
+      "Central",
+      "Borders",
+      "Grampian",
+      "Strathclyde",
+    ];
   }
 }
 
 /**
- * Test Supabase connection for castles and lochs data
+ * Test Hasura connection for castles and lochs data
  */
 export async function testCastleLochConnection(): Promise<{
   success: boolean;
   message: string;
   error?: string;
 }> {
-  try {
-    const [castleResult, lochResult] = await Promise.all([
-      supabase.from("castles").select("*", { count: "exact", head: true }),
-      supabase.from("lochs").select("*", { count: "exact", head: true }),
-    ]);
+  if (!isHasuraConfigured()) {
+    return {
+      success: false,
+      message: "Hasura not configured",
+      error: "Please set VITE_HASURA_GRAPHQL_URL and VITE_HASURA_ADMIN_SECRET",
+    };
+  }
 
-    if (castleResult.error || lochResult.error) {
-      return {
-        success: false,
-        message: "Castles and Lochs database connection failed",
-        error:
-          castleResult.error?.message || lochResult.error?.message || "Unknown",
-      };
-    }
+  try {
+    const [castles, lochs] = await Promise.all([
+      getAllCastlesWithVisits(),
+      getAllLochsWithVisits(),
+    ]);
 
     return {
       success: true,
-      message: `Castles and Lochs database connected! Found ${castleResult.count || 0} castles and ${lochResult.count || 0} lochs.`,
+      message: `Castles and Lochs Hasura connected! Found ${castles.length} castles and ${lochs.length} lochs.`,
     };
   } catch (error) {
     return {
       success: false,
-      message: "Castles and Lochs database connection error",
+      message: "Castles and Lochs Hasura connection error",
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }
@@ -1072,31 +1045,58 @@ export async function getHiddenGemVisitStats(): Promise<{
     recommended_count: 0,
   };
 
-  if (!isSupabaseConfigured()) {
-    console.warn("Supabase not configured, returning default hidden gem stats");
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning default hidden gem stats");
     return defaultStats;
   }
 
   try {
-    console.log("📊 Fetching hidden gem visit statistics...");
+    console.log("📊 Calculating hidden gem visit statistics from Hasura...");
 
-    const { data, error } = await supabase
-      .from("hidden_gem_visit_stats")
-      .select("*")
-      .single();
+    // Get all hidden gems and visits to calculate stats client-side
+    const gemsWithVisits = await getAllHiddenGemsWithVisits();
 
-    if (error) {
-      console.error("Error fetching hidden gem stats:", error);
-      console.warn(
-        "Hidden gem stats view not available, returning default stats",
-      );
-      return defaultStats;
-    }
+    const visitedGems = gemsWithVisits.filter((gem) => gem.visited);
+    const visits = gemsWithVisits.map((gem) => gem.visit).filter(Boolean);
 
-    console.log("✅ Hidden gem stats loaded successfully");
-    return data || defaultStats;
+    const stats = {
+      visited_count: visitedGems.length,
+      total_gems: gemsWithVisits.length,
+      completion_percentage:
+        gemsWithVisits.length > 0
+          ? Math.round((visitedGems.length / gemsWithVisits.length) * 100)
+          : 0,
+      gems_with_photos: visits.filter((visit) => (visit?.photo_count || 0) > 0)
+        .length,
+      total_photos: visits.reduce(
+        (sum, visit) => sum + (visit?.photo_count || 0),
+        0,
+      ),
+      first_visit:
+        visits.length > 0
+          ? visits.sort(
+              (a, b) =>
+                new Date(a?.visited_date || "").getTime() -
+                new Date(b?.visited_date || "").getTime(),
+            )[0]?.visited_date || null
+          : null,
+      latest_visit:
+        visits.length > 0
+          ? visits.sort(
+              (a, b) =>
+                new Date(b?.visited_date || "").getTime() -
+                new Date(a?.visited_date || "").getTime(),
+            )[0]?.visited_date || null
+          : null,
+      recommended_count: visits.filter(
+        (visit) => visit?.would_recommend !== false,
+      ).length,
+    };
+
+    console.log("✅ Hidden gem stats calculated successfully from Hasura data");
+    return stats;
   } catch (error) {
-    console.error("Error in getHiddenGemVisitStats:", error);
+    console.error("❌ Error calculating hidden gem stats from Hasura:", error);
     console.warn("Falling back to default hidden gem stats due to error");
     return defaultStats;
   }

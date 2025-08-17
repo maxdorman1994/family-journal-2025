@@ -1,4 +1,14 @@
-import { supabase, isSupabaseConfigured } from "./supabase";
+import {
+  executeQuery,
+  executeMutation,
+  GET_MUNROS,
+  GET_MUNRO_COMPLETIONS,
+  INSERT_MUNRO_COMPLETION,
+  UPDATE_MUNRO_COMPLETION,
+  DELETE_MUNRO_COMPLETION,
+  INSERT_CUSTOM_MUNRO,
+  isHasuraConfigured,
+} from "./hasura";
 
 /**
  * Supabase Munro Service
@@ -62,98 +72,63 @@ export interface CreateMunroData {
 }
 
 /**
- * Get all Munros with their completion status
+ * Get all Munros with their completion status from Hasura
  */
 export async function getAllMunrosWithCompletion(): Promise<
   MunroWithCompletion[]
 > {
-  if (!isSupabaseConfigured()) {
-    throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
-    );
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning empty Munros array");
+    return [];
   }
 
   try {
-    console.log("🔄 Fetching all Munros with completion status...");
+    console.log("🔄 Fetching all Munros with completion status from Hasura...");
 
-    const { data: munros, error: munrosError } = await supabase
-      .from("munros")
-      .select("*")
-      .order("rank", { ascending: true });
+    // Fetch munros and completions in parallel
+    const [munrosResponse, completionsResponse] = await Promise.all([
+      executeQuery<{ munros: MunroData[] }>(GET_MUNROS),
+      executeQuery<{ munro_completions: MunroCompletion[] }>(
+        GET_MUNRO_COMPLETIONS,
+      ),
+    ]);
 
-    if (munrosError) {
-      console.error("Error fetching Munros:", munrosError);
-      // Check if it's a table not found error
-      if (
-        munrosError.message.includes("Could not find the table") ||
-        munrosError.message.includes('relation "munros" does not exist')
-      ) {
-        throw new Error("SCHEMA_MISSING: Database tables not found");
-      }
-      throw new Error(`Failed to fetch Munros: ${munrosError.message}`);
-    }
-
-    const { data: completions, error: completionsError } = await supabase
-      .from("munro_completions")
-      .select("*");
-
-    if (completionsError) {
-      console.error("Error fetching completions:", completionsError);
-      // For completions, we can continue without them if the table doesn't exist
-      if (
-        !completionsError.message.includes("Could not find the table") &&
-        !completionsError.message.includes(
-          'relation "munro_completions" does not exist',
-        )
-      ) {
-        throw new Error(
-          `Failed to fetch completions: ${completionsError.message}`,
-        );
-      }
-      console.warn(
-        "Completions table not found, continuing without completion data",
-      );
-    }
+    const munros = munrosResponse.munros || [];
+    const completions = completionsResponse.munro_completions || [];
 
     // Combine Munros with completion data
-    const munrosWithCompletion: MunroWithCompletion[] = (munros || []).map(
-      (munro) => {
-        const completion = (completions || []).find(
-          (c) => c.munro_id === munro.id,
-        );
-        return {
-          ...munro,
-          completed: !!completion,
-          completion: completion || undefined,
-        };
-      },
-    );
+    const munrosWithCompletion: MunroWithCompletion[] = munros.map((munro) => {
+      const completion = completions.find((c) => c.munro_id === munro.id);
+      return {
+        ...munro,
+        completed: !!completion,
+        completion: completion || undefined,
+      };
+    });
 
     console.log(
-      `✅ Loaded ${munrosWithCompletion.length} Munros with completion status`,
+      `✅ Loaded ${munrosWithCompletion.length} Munros with completion status from Hasura`,
     );
     return munrosWithCompletion;
   } catch (error) {
-    console.error("Error in getAllMunrosWithCompletion:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch Munros: ${String(error)}`);
+    console.error("❌ Error fetching Munros from Hasura:", error);
+    console.log("🔄 Returning empty array as fallback");
+    return [];
   }
 }
 
 /**
- * Mark a Munro as completed
+ * Mark a Munro as completed in Hasura
  */
 export async function completeMunro(
   data: CreateMunroCompletionData,
 ): Promise<MunroCompletion> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log(`🎯 Marking Munro ${data.munro_id} as completed...`);
+    console.log(`🎯 Marking Munro ${data.munro_id} as completed in Hasura...`);
 
     const completionData = {
       munro_id: data.munro_id,
@@ -165,59 +140,45 @@ export async function completeMunro(
       climbing_time: data.climbing_time || "",
     };
 
-    const { data: completion, error } = await supabase
-      .from("munro_completions")
-      .upsert(completionData, {
-        onConflict: "munro_id",
-        ignoreDuplicates: false,
-      })
-      .select()
-      .single();
+    const response = await executeMutation<{
+      insert_munro_completions_one: MunroCompletion;
+    }>(INSERT_MUNRO_COMPLETION, { completion: completionData });
 
-    if (error) {
-      console.error("Error completing Munro:", error);
-      throw new Error(`Failed to complete Munro: ${error.message}`);
+    if (!response.insert_munro_completions_one) {
+      throw new Error("Failed to complete Munro");
     }
 
-    console.log(`✅ Munro completed successfully: ${data.munro_id}`);
-    return completion;
+    console.log(`✅ Munro completed successfully in Hasura: ${data.munro_id}`);
+    return response.insert_munro_completions_one;
   } catch (error) {
-    console.error("Error in completeMunro:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to complete Munro: ${String(error)}`);
+    console.error("❌ Error completing Munro in Hasura:", error);
+    throw error;
   }
 }
 
 /**
- * Remove a Munro completion (mark as not completed)
+ * Remove a Munro completion (mark as not completed) in Hasura
  */
 export async function uncompleteMunro(munroId: string): Promise<void> {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase not configured");
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
   }
 
   try {
-    console.log(`🔄 Removing completion for Munro ${munroId}...`);
+    console.log(`🔄 Removing completion for Munro ${munroId} from Hasura...`);
 
-    const { error } = await supabase
-      .from("munro_completions")
-      .delete()
-      .eq("munro_id", munroId);
+    const response = await executeMutation<{
+      delete_munro_completions: { affected_rows: number };
+    }>(DELETE_MUNRO_COMPLETION, { munro_id: munroId });
 
-    if (error) {
-      console.error("Error uncompleting Munro:", error);
-      throw new Error(`Failed to uncomplete Munro: ${error.message}`);
+    if (!response.delete_munro_completions?.affected_rows) {
+      throw new Error(`Failed to remove completion for Munro: ${munroId}`);
     }
 
-    console.log(`✅ Munro completion removed: ${munroId}`);
+    console.log(`✅ Munro completion removed from Hasura: ${munroId}`);
   } catch (error) {
-    console.error("Error in uncompleteMunro:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to uncomplete Munro: ${String(error)}`);
+    console.error("❌ Error removing Munro completion from Hasura:", error);
+    throw error;
   }
 }
 
