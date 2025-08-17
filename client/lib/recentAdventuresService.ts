@@ -291,8 +291,8 @@ export async function getRecentAdventuresWithFallback(): Promise<
 export function subscribeToAdventureUpdates(
   callback: (adventures: RecentAdventure[]) => void,
 ) {
-  if (!isSupabaseConfigured()) {
-    console.warn("Supabase not configured, skipping real-time subscription");
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, skipping real-time subscription");
     return () => {}; // Return empty unsubscribe function
   }
 
