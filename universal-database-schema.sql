@@ -750,6 +750,7 @@ BEGIN
     RAISE NOTICE '   • castles & lochs (tracking progress)';
     RAISE NOTICE '   • castle_visits & loch_visits (visit logs)';
     RAISE NOTICE '   • wishlist_items (trip planning)';
+    RAISE NOTICE '   • map_pins (adventure map markers)';
     RAISE NOTICE '';
     RAISE NOTICE '✅ Created Views:';
     RAISE NOTICE '   • Statistics and analytics views';
