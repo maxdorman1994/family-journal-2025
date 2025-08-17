@@ -29,12 +29,29 @@ if (!supabaseUrl || !supabaseAnonKey) {
   });
 }
 
-// Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: false,
-  },
-});
+// Create Supabase client (with fallback for when not configured)
+export const supabase = supabaseUrl && supabaseAnonKey
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false,
+      },
+    })
+  : {
+      // Mock client to prevent crashes when Supabase not configured
+      from: () => ({
+        select: () => Promise.resolve({ data: [], error: null }),
+        insert: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+        update: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+        delete: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+        single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      }),
+      channel: () => ({
+        on: () => ({}),
+        subscribe: () => ({}),
+      }),
+      removeChannel: () => {},
+      rpc: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+    };
 
 // Database types for Supabase tables
 export interface JournalEntry {
