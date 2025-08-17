@@ -802,28 +802,7 @@ export default function Home() {
       setSyncStatus("connected");
       setError(null);
 
-      // Check if our dogs are loaded for sync verification
-      const charlieExists = members.find((m) => m.name === "Charlie");
-      const fernExists = members.find((m) => m.name === "Fern");
       console.log(`✅ Loaded ${members.length} family members successfully`);
-
-      if (charlieExists) {
-        console.log(
-          `🐕 Charlie loaded successfully with ID: ${charlieExists.id}`,
-        );
-      } else {
-        console.warn(
-          "⚠️ Charlie not found in family members - may need to run SQL",
-        );
-      }
-
-      if (fernExists) {
-        console.log(`🌿 Fern loaded successfully with ID: ${fernExists.id}`);
-      } else {
-        console.warn(
-          "⚠️ Fern not found in family members - may need to run SQL",
-        );
-      }
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
