@@ -48,11 +48,16 @@ export interface CreateJournalEntryData {
 export async function createJournalEntry(
   data: CreateJournalEntryData,
 ): Promise<JournalEntry> {
+  console.log("🔧 Hasura configured:", isHasuraConfigured());
+  console.log("🔧 Hasura URL:", import.meta.env.VITE_HASURA_GRAPHQL_URL);
+
   if (!isHasuraConfigured()) {
     throw new Error(
       "Hasura not configured - please set VITE_HASURA_GRAPHQL_URL",
     );
   }
+
+  console.log("📝 Creating journal entry with data:", data);
 
   try {
     const result = await executeMutation(INSERT_JOURNAL_ENTRY, {
