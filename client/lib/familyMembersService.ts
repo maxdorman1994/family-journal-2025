@@ -208,3 +208,58 @@ export async function testFamilyMembersConnection(): Promise<{
 
 // Legacy function name for compatibility
 export const testSupabaseConnection = testFamilyMembersConnection;
+
+/**
+ * Subscribe to family members changes (placeholder - not implemented for Hasura yet)
+ */
+export function subscribeToFamilyMembers(callback: (members: FamilyMember[]) => void): () => void {
+  console.log("🔄 Family members subscription not implemented for Hasura yet");
+  // Return empty unsubscribe function
+  return () => {};
+}
+
+/**
+ * Upload family member avatar (placeholder)
+ */
+export async function uploadFamilyMemberAvatar(
+  memberId: string,
+  photo: ProcessedPhoto,
+): Promise<FamilyMember> {
+  return updateFamilyMemberAvatar(memberId, photo);
+}
+
+/**
+ * Remove family member avatar (placeholder)
+ */
+export async function removeFamilyMemberAvatar(memberId: string): Promise<FamilyMember> {
+  if (!isHasuraConfigured()) {
+    throw new Error("Hasura not configured");
+  }
+
+  const UPDATE_AVATAR = `
+    mutation RemoveFamilyMemberAvatar($id: uuid!) {
+      update_family_members_by_pk(
+        pk_columns: {id: $id},
+        _set: {avatar_url: null}
+      ) {
+        id
+        name
+        role
+        avatar_url
+        bio
+        position_index
+        colors
+      }
+    }
+  `;
+
+  const result = await executeMutation(UPDATE_AVATAR, {
+    id: memberId,
+  });
+
+  if (!result.update_family_members_by_pk) {
+    throw new Error("Failed to remove family member avatar");
+  }
+
+  return result.update_family_members_by_pk as FamilyMember;
+}
