@@ -60,9 +60,11 @@ export async function createJournalEntry(
   console.log("📝 Creating journal entry with data:", data);
 
   try {
+    console.log("🚀 Attempting to insert journal entry via GraphQL...");
     const result = await executeMutation(INSERT_JOURNAL_ENTRY, {
       entry: data,
     });
+    console.log("✅ GraphQL mutation result:", result);
 
     if (!result.insert_journal_entries_one) {
       throw new Error("Failed to create journal entry");
