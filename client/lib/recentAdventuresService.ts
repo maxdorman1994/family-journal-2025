@@ -34,23 +34,26 @@ export interface AdventureStats {
  * Get recent adventures from the database (latest 3 journal entries)
  */
 export async function getRecentAdventures(): Promise<RecentAdventure[]> {
-  if (!isSupabaseConfigured()) {
+  if (!isHasuraConfigured()) {
     throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
+      "Hasura not configured - please set VITE_HASURA_GRAPHQL_URL",
     );
   }
 
   try {
     console.log(
-      "🔄 Fetching latest 3 journal entries for recent adventures...",
+      "🔄 Fetching latest 3 journal entries for recent adventures from Hasura...",
     );
 
-    // Directly query journal_entries for the latest 3 entries
-    const { data: journalEntries, error } = await supabase
-      .from("journal_entries")
-      .select("*")
-      .order("date", { ascending: false })
-      .limit(3);
+    // Use Hasura GraphQL query for recent adventures
+    const result = await executeQuery(GET_RECENT_ADVENTURES);
+
+    if (!result.recent_adventures) {
+      console.log("📦 No recent adventures found in Hasura response");
+      return [];
+    }
+
+    const journalEntries = result.recent_adventures;
 
     if (error) {
       console.error("Error fetching journal entries:", error);
