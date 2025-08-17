@@ -1,4 +1,9 @@
-import { supabase, isSupabaseConfigured } from "./supabase";
+import {
+  hasuraClient,
+  isHasuraConfigured,
+  executeQuery,
+  GET_RECENT_ADVENTURES
+} from "./hasura";
 
 /**
  * Recent Adventures Service
