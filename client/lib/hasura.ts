@@ -268,6 +268,59 @@ export const DELETE_JOURNAL_ENTRY = `
   }
 `;
 
+// Adventure Stats GraphQL Queries
+export const GET_ADVENTURE_STATS_SUMMARY = `
+  query GetAdventureStatsSummary {
+    adventure_stats_summary(order_by: {display_order: asc}) {
+      stat_type
+      stat_value
+      stat_description
+      last_updated
+      is_primary_stat
+      display_order
+    }
+  }
+`;
+
+export const GET_PRIMARY_ADVENTURE_STATS = `
+  query GetPrimaryAdventureStats {
+    primary_adventure_stats {
+      stat_type
+      stat_value
+      stat_description
+      last_updated
+    }
+  }
+`;
+
+export const UPDATE_ADVENTURE_STAT = `
+  mutation UpdateAdventureStat($stat_type: String!, $value: numeric!, $description: String) {
+    update_adventure_stats(where: {stat_type: {_eq: $stat_type}}, _set: {stat_value: $value, stat_description: $description, last_updated: "now()"}) {
+      affected_rows
+      returning {
+        stat_type
+        stat_value
+        stat_description
+        last_updated
+      }
+    }
+  }
+`;
+
+export const INCREMENT_ADVENTURE_STAT = `
+  mutation IncrementAdventureStat($stat_type: String!, $increment: numeric!) {
+    update_adventure_stats(where: {stat_type: {_eq: $stat_type}}, _inc: {stat_value: $increment}, _set: {last_updated: "now()"}) {
+      affected_rows
+      returning {
+        stat_type
+        stat_value
+        stat_description
+        last_updated
+      }
+    }
+  }
+`;
+
 /**
  * Check if Hasura is properly configured
  */
