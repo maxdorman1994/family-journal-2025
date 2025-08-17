@@ -1,5 +1,8 @@
--- Add map_pins table to existing Hasura database
--- Run this SQL in your Hasura console or database client
+-- ============================================
+-- MAP PINS TABLE (ALREADY IN UNIVERSAL SCHEMA)
+-- ============================================
+-- NOTE: The map_pins table is already included in universal-database-schema.sql
+-- You only need to run this if you missed it or want to add it separately
 
 -- Create map_pins table for storing adventure map pins
 CREATE TABLE IF NOT EXISTS map_pins (
