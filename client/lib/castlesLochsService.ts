@@ -180,127 +180,71 @@ export interface CreateLochVisitData {
 }
 
 /**
- * Get all castles with their visit status
+ * Get all castles with their visit status from Hasura
  */
 export async function getAllCastlesWithVisits(): Promise<CastleWithVisit[]> {
-  if (!isSupabaseConfigured()) {
-    throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
-    );
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning empty castles array");
+    return [];
   }
 
   try {
-    console.log("🔄 Fetching all castles with visit status...");
+    console.log("🔄 Fetching all castles with visit status from Hasura...");
 
-    const { data: castles, error: castlesError } = await supabase
-      .from("castles")
-      .select("*")
-      .order("rank", { ascending: true });
+    // Fetch castles and visits in parallel
+    const [castlesResponse, visitsResponse] = await Promise.all([
+      executeQuery<{ castles: CastleData[] }>(GET_CASTLES),
+      executeQuery<{ castle_visits: CastleVisit[] }>(GET_CASTLE_VISITS)
+    ]);
 
-    if (castlesError) {
-      console.error("Error fetching castles:", castlesError);
-      if (
-        castlesError.message.includes("Could not find the table") ||
-        castlesError.message.includes('relation "castles" does not exist')
-      ) {
-        throw new Error("SCHEMA_MISSING: Database tables not found");
-      }
-      throw new Error(`Failed to fetch castles: ${castlesError.message}`);
-    }
-
-    const { data: visits, error: visitsError } = await supabase
-      .from("castle_visits")
-      .select("*");
-
-    if (visitsError) {
-      console.error("Error fetching castle visits:", visitsError);
-      if (
-        !visitsError.message.includes("Could not find the table") &&
-        !visitsError.message.includes('relation "castle_visits" does not exist')
-      ) {
-        throw new Error(
-          `Failed to fetch castle visits: ${visitsError.message}`,
-        );
-      }
-      console.warn(
-        "Castle visits table not found, continuing without visit data",
-      );
-    }
+    const castles = castlesResponse.castles || [];
+    const visits = visitsResponse.castle_visits || [];
 
     // Combine castles with visit data
-    const castlesWithVisits: CastleWithVisit[] = (castles || []).map(
-      (castle) => {
-        const visit = (visits || []).find((v) => v.castle_id === castle.id);
-        return {
-          ...castle,
-          visited: !!visit,
-          visit: visit || undefined,
-        };
-      },
-    );
+    const castlesWithVisits: CastleWithVisit[] = castles.map((castle) => {
+      const visit = visits.find((v) => v.castle_id === castle.id);
+      return {
+        ...castle,
+        visited: !!visit,
+        visit: visit || undefined,
+      };
+    });
 
     console.log(
-      `✅ Loaded ${castlesWithVisits.length} castles with visit status`,
+      `✅ Loaded ${castlesWithVisits.length} castles with visit status from Hasura`,
     );
     return castlesWithVisits;
   } catch (error) {
-    console.error("Error in getAllCastlesWithVisits:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch castles: ${String(error)}`);
+    console.error("❌ Error fetching castles from Hasura:", error);
+    console.log("🔄 Returning empty array as fallback");
+    return [];
   }
 }
 
 /**
- * Get all lochs with their visit status
+ * Get all lochs with their visit status from Hasura
  */
 export async function getAllLochsWithVisits(): Promise<LochWithVisit[]> {
-  if (!isSupabaseConfigured()) {
-    throw new Error(
-      "Supabase not configured - please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
-    );
+  if (!isHasuraConfigured()) {
+    console.warn("Hasura not configured, returning empty lochs array");
+    return [];
   }
 
   try {
-    console.log("🔄 Fetching all lochs with visit status...");
+    console.log("🔄 Fetching all lochs with visit status from Hasura...");
 
-    const { data: lochs, error: lochsError } = await supabase
-      .from("lochs")
-      .select("*")
-      .order("rank", { ascending: true });
+    // Fetch lochs and visits in parallel
+    const [lochsResponse, visitsResponse] = await Promise.all([
+      executeQuery<{ lochs: LochData[] }>(GET_LOCHS),
+      executeQuery<{ loch_visits: LochVisit[] }>(GET_LOCH_VISITS)
+    ]);
 
-    if (lochsError) {
-      console.error("Error fetching lochs:", lochsError);
-      if (
-        lochsError.message.includes("Could not find the table") ||
-        lochsError.message.includes('relation "lochs" does not exist')
-      ) {
-        throw new Error("SCHEMA_MISSING: Database tables not found");
-      }
-      throw new Error(`Failed to fetch lochs: ${lochsError.message}`);
-    }
-
-    const { data: visits, error: visitsError } = await supabase
-      .from("loch_visits")
-      .select("*");
-
-    if (visitsError) {
-      console.error("Error fetching loch visits:", visitsError);
-      if (
-        !visitsError.message.includes("Could not find the table") &&
-        !visitsError.message.includes('relation "loch_visits" does not exist')
-      ) {
-        throw new Error(`Failed to fetch loch visits: ${visitsError.message}`);
-      }
-      console.warn(
-        "Loch visits table not found, continuing without visit data",
-      );
-    }
+    const lochs = lochsResponse.lochs || [];
+    const visits = visitsResponse.loch_visits || [];
 
     // Combine lochs with visit data
-    const lochsWithVisits: LochWithVisit[] = (lochs || []).map((loch) => {
-      const visit = (visits || []).find((v) => v.loch_id === loch.id);
+    const lochsWithVisits: LochWithVisit[] = lochs.map((loch) => {
+      const visit = visits.find((v) => v.loch_id === loch.id);
       return {
         ...loch,
         visited: !!visit,
@@ -308,14 +252,12 @@ export async function getAllLochsWithVisits(): Promise<LochWithVisit[]> {
       };
     });
 
-    console.log(`✅ Loaded ${lochsWithVisits.length} lochs with visit status`);
+    console.log(`✅ Loaded ${lochsWithVisits.length} lochs with visit status from Hasura`);
     return lochsWithVisits;
   } catch (error) {
-    console.error("Error in getAllLochsWithVisits:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch lochs: ${String(error)}`);
+    console.error("❌ Error fetching lochs from Hasura:", error);
+    console.log("🔄 Returning empty array as fallback");
+    return [];
   }
 }
 
