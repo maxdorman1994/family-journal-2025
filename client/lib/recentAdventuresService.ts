@@ -253,6 +253,15 @@ export async function getRecentAdventuresWithFallback(): Promise<
 }
 
 /**
+ * Subscribe to adventure updates (alias for compatibility)
+ */
+export function subscribeToAdventureUpdates(
+  callback: (adventures: RecentAdventure[]) => void,
+): () => void {
+  return subscribeToRecentAdventures(callback);
+}
+
+/**
  * Subscribe to recent adventures changes (placeholder for future implementation)
  */
 export function subscribeToRecentAdventures(
