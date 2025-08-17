@@ -625,6 +625,108 @@ export const DELETE_CUSTOM_LOCH = `
   }
 `;
 
+// Munro GraphQL Queries
+export const GET_MUNROS = `
+  query GetMunros {
+    munros(order_by: {rank: asc}) {
+      id
+      name
+      height
+      region
+      difficulty
+      latitude
+      longitude
+      description
+      estimated_time
+      best_seasons
+      os_grid_ref
+      rank
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_MUNRO_COMPLETIONS = `
+  query GetMunroCompletions {
+    munro_completions {
+      id
+      munro_id
+      completed_date
+      notes
+      photo_count
+      weather_conditions
+      climbing_time
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const INSERT_MUNRO_COMPLETION = `
+  mutation InsertMunroCompletion($completion: munro_completions_insert_input!) {
+    insert_munro_completions_one(object: $completion, on_conflict: {constraint: munro_completions_munro_id_key, update_columns: [completed_date, notes, photo_count, weather_conditions, climbing_time, updated_at]}) {
+      id
+      munro_id
+      completed_date
+      notes
+      photo_count
+      weather_conditions
+      climbing_time
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_MUNRO_COMPLETION = `
+  mutation UpdateMunroCompletion($munro_id: String!, $completion: munro_completions_set_input!) {
+    update_munro_completions(where: {munro_id: {_eq: $munro_id}}, _set: $completion) {
+      affected_rows
+      returning {
+        id
+        munro_id
+        completed_date
+        notes
+        photo_count
+        weather_conditions
+        climbing_time
+        created_at
+        updated_at
+      }
+    }
+  }
+`;
+
+export const DELETE_MUNRO_COMPLETION = `
+  mutation DeleteMunroCompletion($munro_id: String!) {
+    delete_munro_completions(where: {munro_id: {_eq: $munro_id}}) {
+      affected_rows
+    }
+  }
+`;
+
+export const INSERT_CUSTOM_MUNRO = `
+  mutation InsertCustomMunro($munro: munros_insert_input!) {
+    insert_munros_one(object: $munro) {
+      id
+      name
+      height
+      region
+      difficulty
+      latitude
+      longitude
+      description
+      estimated_time
+      best_seasons
+      os_grid_ref
+      rank
+      created_at
+      updated_at
+    }
+  }
+`;
+
 /**
  * Check if Hasura is properly configured
  */
