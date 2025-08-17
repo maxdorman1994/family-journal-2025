@@ -1,4 +1,20 @@
-import { supabase, isSupabaseConfigured } from "./supabase";
+import {
+  executeQuery,
+  executeMutation,
+  GET_CASTLES,
+  GET_LOCHS,
+  GET_CASTLE_VISITS,
+  GET_LOCH_VISITS,
+  INSERT_CASTLE_VISIT,
+  INSERT_LOCH_VISIT,
+  DELETE_CASTLE_VISIT,
+  DELETE_LOCH_VISIT,
+  INSERT_CUSTOM_CASTLE,
+  INSERT_CUSTOM_LOCH,
+  DELETE_CUSTOM_CASTLE,
+  DELETE_CUSTOM_LOCH,
+  isHasuraConfigured
+} from "./hasura";
 
 /**
  * Supabase Castles and Lochs Service
