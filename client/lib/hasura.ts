@@ -1,4 +1,4 @@
-import { GraphQLClient } from 'graphql-request';
+import { GraphQLClient } from "graphql-request";
 
 // Hasura configuration
 const hasuraUrl = import.meta.env.VITE_HASURA_GRAPHQL_URL || "";
@@ -24,7 +24,7 @@ if (!hasuraUrl) {
 export const hasuraClient = new GraphQLClient(hasuraUrl, {
   headers: hasuraAdminSecret
     ? {
-        'x-hasura-admin-secret': hasuraAdminSecret,
+        "x-hasura-admin-secret": hasuraAdminSecret,
       }
     : {},
 });
@@ -78,8 +78,8 @@ export interface WishlistItem {
   title: string;
   location: string;
   description: string;
-  priority: 'High' | 'Medium' | 'Low';
-  status: 'Planning' | 'Researching' | 'Ready' | 'Booked';
+  priority: "High" | "Medium" | "Low";
+  status: "Planning" | "Researching" | "Ready" | "Booked";
   estimated_cost: number;
   best_seasons: string[];
   duration: string;
@@ -762,13 +762,13 @@ export function getHasuraStatus(): {
  */
 export async function executeQuery<T = any>(
   query: string,
-  variables?: any
+  variables?: any,
 ): Promise<T> {
   try {
     const data = await hasuraClient.request<T>(query, variables);
     return data;
   } catch (error) {
-    console.error('GraphQL query error:', error);
+    console.error("GraphQL query error:", error);
     throw error;
   }
 }
@@ -778,13 +778,13 @@ export async function executeQuery<T = any>(
  */
 export async function executeMutation<T = any>(
   mutation: string,
-  variables?: any
+  variables?: any,
 ): Promise<T> {
   try {
     const data = await hasuraClient.request<T>(mutation, variables);
     return data;
   } catch (error) {
-    console.error('GraphQL mutation error:', error);
+    console.error("GraphQL mutation error:", error);
     throw error;
   }
 }

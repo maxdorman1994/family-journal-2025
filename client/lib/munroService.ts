@@ -7,7 +7,7 @@ import {
   UPDATE_MUNRO_COMPLETION,
   DELETE_MUNRO_COMPLETION,
   INSERT_CUSTOM_MUNRO,
-  isHasuraConfigured
+  isHasuraConfigured,
 } from "./hasura";
 
 /**
@@ -88,7 +88,9 @@ export async function getAllMunrosWithCompletion(): Promise<
     // Fetch munros and completions in parallel
     const [munrosResponse, completionsResponse] = await Promise.all([
       executeQuery<{ munros: MunroData[] }>(GET_MUNROS),
-      executeQuery<{ munro_completions: MunroCompletion[] }>(GET_MUNRO_COMPLETIONS)
+      executeQuery<{ munro_completions: MunroCompletion[] }>(
+        GET_MUNRO_COMPLETIONS,
+      ),
     ]);
 
     const munros = munrosResponse.munros || [];
@@ -138,10 +140,9 @@ export async function completeMunro(
       climbing_time: data.climbing_time || "",
     };
 
-    const response = await executeMutation<{ insert_munro_completions_one: MunroCompletion }>(
-      INSERT_MUNRO_COMPLETION,
-      { completion: completionData }
-    );
+    const response = await executeMutation<{
+      insert_munro_completions_one: MunroCompletion;
+    }>(INSERT_MUNRO_COMPLETION, { completion: completionData });
 
     if (!response.insert_munro_completions_one) {
       throw new Error("Failed to complete Munro");
@@ -166,10 +167,9 @@ export async function uncompleteMunro(munroId: string): Promise<void> {
   try {
     console.log(`🔄 Removing completion for Munro ${munroId} from Hasura...`);
 
-    const response = await executeMutation<{ delete_munro_completions: { affected_rows: number } }>(
-      DELETE_MUNRO_COMPLETION,
-      { munro_id: munroId }
-    );
+    const response = await executeMutation<{
+      delete_munro_completions: { affected_rows: number };
+    }>(DELETE_MUNRO_COMPLETION, { munro_id: munroId });
 
     if (!response.delete_munro_completions?.affected_rows) {
       throw new Error(`Failed to remove completion for Munro: ${munroId}`);

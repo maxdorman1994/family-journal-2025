@@ -5,7 +5,7 @@ import {
   GET_PRIMARY_ADVENTURE_STATS,
   UPDATE_ADVENTURE_STAT,
   INCREMENT_ADVENTURE_STAT,
-  isHasuraConfigured
+  isHasuraConfigured,
 } from "./hasura";
 
 /**
@@ -97,9 +97,9 @@ export async function getAdventureStats(): Promise<AdventureStat[]> {
   try {
     console.log("🔄 Fetching adventure statistics from Hasura...");
 
-    const response = await executeQuery<{ adventure_stats_summary: AdventureStat[] }>(
-      GET_ADVENTURE_STATS_SUMMARY
-    );
+    const response = await executeQuery<{
+      adventure_stats_summary: AdventureStat[];
+    }>(GET_ADVENTURE_STATS_SUMMARY);
 
     const stats = response.adventure_stats_summary || [];
     console.log(`✅ Loaded ${stats.length} adventure statistics from Hasura`);
@@ -123,15 +123,20 @@ export async function getPrimaryAdventureStats(): Promise<AdventureStat[]> {
   try {
     console.log("🔄 Fetching primary adventure statistics from Hasura...");
 
-    const response = await executeQuery<{ primary_adventure_stats: AdventureStat[] }>(
-      GET_PRIMARY_ADVENTURE_STATS
-    );
+    const response = await executeQuery<{
+      primary_adventure_stats: AdventureStat[];
+    }>(GET_PRIMARY_ADVENTURE_STATS);
 
     const stats = response.primary_adventure_stats || [];
-    console.log(`✅ Loaded ${stats.length} primary adventure statistics from Hasura`);
+    console.log(
+      `✅ Loaded ${stats.length} primary adventure statistics from Hasura`,
+    );
     return stats;
   } catch (error) {
-    console.error("❌ Error fetching primary adventure stats from Hasura:", error);
+    console.error(
+      "❌ Error fetching primary adventure stats from Hasura:",
+      error,
+    );
     console.log("🔄 Returning empty array as fallback");
     return [];
   }
@@ -150,21 +155,20 @@ export async function updateAdventureStat(
   }
 
   try {
-    console.log(`🔄 Updating adventure stat in Hasura: ${statType} = ${value}...`);
+    console.log(
+      `🔄 Updating adventure stat in Hasura: ${statType} = ${value}...`,
+    );
 
     const response = await executeMutation<{
       update_adventure_stats: {
         affected_rows: number;
         returning: AdventureStat[];
-      }
-    }>(
-      UPDATE_ADVENTURE_STAT,
-      {
-        stat_type: statType,
-        value: value,
-        description: description
-      }
-    );
+      };
+    }>(UPDATE_ADVENTURE_STAT, {
+      stat_type: statType,
+      value: value,
+      description: description,
+    });
 
     if (!response.update_adventure_stats?.affected_rows) {
       throw new Error(`Failed to update adventure stat: ${statType}`);
@@ -197,21 +201,21 @@ export async function incrementAdventureStat(
       update_adventure_stats: {
         affected_rows: number;
         returning: AdventureStat[];
-      }
-    }>(
-      INCREMENT_ADVENTURE_STAT,
-      {
-        stat_type: statType,
-        increment: increment
-      }
-    );
+      };
+    }>(INCREMENT_ADVENTURE_STAT, {
+      stat_type: statType,
+      increment: increment,
+    });
 
     if (!response.update_adventure_stats?.affected_rows) {
       throw new Error(`Failed to increment adventure stat: ${statType}`);
     }
 
-    const newValue = response.update_adventure_stats.returning[0]?.stat_value || 0;
-    console.log(`✅ Adventure stat incremented in Hasura: ${statType} = ${newValue}`);
+    const newValue =
+      response.update_adventure_stats.returning[0]?.stat_value || 0;
+    console.log(
+      `✅ Adventure stat incremented in Hasura: ${statType} = ${newValue}`,
+    );
     return newValue;
   } catch (error) {
     console.error("❌ Error incrementing adventure stat in Hasura:", error);
@@ -230,7 +234,9 @@ export function subscribeToAdventureStats(
     return () => {}; // Return empty unsubscribe function
   }
 
-  console.log("🔄 Setting up real-time adventure stats sync (polling-based)...");
+  console.log(
+    "🔄 Setting up real-time adventure stats sync (polling-based)...",
+  );
 
   // Initial fetch
   getAdventureStats().then(callback).catch(console.error);

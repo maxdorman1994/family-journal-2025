@@ -13,7 +13,7 @@ import {
   INSERT_CUSTOM_LOCH,
   DELETE_CUSTOM_CASTLE,
   DELETE_CUSTOM_LOCH,
-  isHasuraConfigured
+  isHasuraConfigured,
 } from "./hasura";
 
 /**
@@ -194,7 +194,7 @@ export async function getAllCastlesWithVisits(): Promise<CastleWithVisit[]> {
     // Fetch castles and visits in parallel
     const [castlesResponse, visitsResponse] = await Promise.all([
       executeQuery<{ castles: CastleData[] }>(GET_CASTLES),
-      executeQuery<{ castle_visits: CastleVisit[] }>(GET_CASTLE_VISITS)
+      executeQuery<{ castle_visits: CastleVisit[] }>(GET_CASTLE_VISITS),
     ]);
 
     const castles = castlesResponse.castles || [];
@@ -236,7 +236,7 @@ export async function getAllLochsWithVisits(): Promise<LochWithVisit[]> {
     // Fetch lochs and visits in parallel
     const [lochsResponse, visitsResponse] = await Promise.all([
       executeQuery<{ lochs: LochData[] }>(GET_LOCHS),
-      executeQuery<{ loch_visits: LochVisit[] }>(GET_LOCH_VISITS)
+      executeQuery<{ loch_visits: LochVisit[] }>(GET_LOCH_VISITS),
     ]);
 
     const lochs = lochsResponse.lochs || [];
@@ -252,7 +252,9 @@ export async function getAllLochsWithVisits(): Promise<LochWithVisit[]> {
       };
     });
 
-    console.log(`✅ Loaded ${lochsWithVisits.length} lochs with visit status from Hasura`);
+    console.log(
+      `✅ Loaded ${lochsWithVisits.length} lochs with visit status from Hasura`,
+    );
     return lochsWithVisits;
   } catch (error) {
     console.error("❌ Error fetching lochs from Hasura:", error);

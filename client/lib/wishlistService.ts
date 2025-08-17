@@ -7,7 +7,7 @@ import {
   DELETE_WISHLIST_ITEM,
   INCREMENT_WISHLIST_VOTES,
   TOGGLE_WISHLIST_RESEARCH,
-  isHasuraConfigured
+  isHasuraConfigured,
 } from "./hasura";
 
 /**
@@ -75,7 +75,7 @@ export async function getWishlistItems(): Promise<WishlistItem[]> {
     console.log("🔄 Fetching wishlist items from Hasura...");
 
     const response = await executeQuery<{ wishlist_items: WishlistItem[] }>(
-      GET_WISHLIST_ITEMS
+      GET_WISHLIST_ITEMS,
     );
 
     const items = response.wishlist_items || [];
@@ -117,16 +117,17 @@ export async function createWishlistItem(
       researched: false,
     };
 
-    const response = await executeMutation<{ insert_wishlist_items_one: WishlistItem }>(
-      INSERT_WISHLIST_ITEM,
-      { item: itemData }
-    );
+    const response = await executeMutation<{
+      insert_wishlist_items_one: WishlistItem;
+    }>(INSERT_WISHLIST_ITEM, { item: itemData });
 
     if (!response.insert_wishlist_items_one) {
       throw new Error("Failed to create wishlist item");
     }
 
-    console.log(`✅ Wishlist item created successfully in Hasura: ${data.title}`);
+    console.log(
+      `✅ Wishlist item created successfully in Hasura: ${data.title}`,
+    );
     return response.insert_wishlist_items_one;
   } catch (error) {
     console.error("❌ Error creating wishlist item in Hasura:", error);
@@ -148,16 +149,15 @@ export async function updateWishlistItem(
   try {
     console.log(`🔄 Updating wishlist item in Hasura: ${id}...`);
 
-    const response = await executeMutation<{ update_wishlist_items_by_pk: WishlistItem }>(
-      UPDATE_WISHLIST_ITEM,
-      {
-        id,
-        item: {
-          ...updates,
-          updated_at: new Date().toISOString()
-        }
-      }
-    );
+    const response = await executeMutation<{
+      update_wishlist_items_by_pk: WishlistItem;
+    }>(UPDATE_WISHLIST_ITEM, {
+      id,
+      item: {
+        ...updates,
+        updated_at: new Date().toISOString(),
+      },
+    });
 
     if (!response.update_wishlist_items_by_pk) {
       throw new Error(`Failed to update wishlist item with ID: ${id}`);
@@ -182,10 +182,9 @@ export async function deleteWishlistItem(id: string): Promise<void> {
   try {
     console.log(`🗑️ Deleting wishlist item from Hasura: ${id}...`);
 
-    const response = await executeMutation<{ delete_wishlist_items_by_pk: { id: string } }>(
-      DELETE_WISHLIST_ITEM,
-      { id }
-    );
+    const response = await executeMutation<{
+      delete_wishlist_items_by_pk: { id: string };
+    }>(DELETE_WISHLIST_ITEM, { id });
 
     if (!response.delete_wishlist_items_by_pk) {
       throw new Error(`Failed to delete wishlist item with ID: ${id}`);
@@ -209,13 +208,12 @@ export async function addVoteToItem(id: string): Promise<WishlistItem> {
   try {
     console.log(`👍 Adding vote to wishlist item in Hasura: ${id}...`);
 
-    const response = await executeMutation<{ update_wishlist_items_by_pk: WishlistItem }>(
-      INCREMENT_WISHLIST_VOTES,
-      {
-        id,
-        increment: 1
-      }
-    );
+    const response = await executeMutation<{
+      update_wishlist_items_by_pk: WishlistItem;
+    }>(INCREMENT_WISHLIST_VOTES, {
+      id,
+      increment: 1,
+    });
 
     if (!response.update_wishlist_items_by_pk) {
       throw new Error(`Failed to add vote to wishlist item with ID: ${id}`);
@@ -240,16 +238,17 @@ export async function removeVoteFromItem(id: string): Promise<WishlistItem> {
   try {
     console.log(`👎 Removing vote from wishlist item in Hasura: ${id}...`);
 
-    const response = await executeMutation<{ update_wishlist_items_by_pk: WishlistItem }>(
-      INCREMENT_WISHLIST_VOTES,
-      {
-        id,
-        increment: -1
-      }
-    );
+    const response = await executeMutation<{
+      update_wishlist_items_by_pk: WishlistItem;
+    }>(INCREMENT_WISHLIST_VOTES, {
+      id,
+      increment: -1,
+    });
 
     if (!response.update_wishlist_items_by_pk) {
-      throw new Error(`Failed to remove vote from wishlist item with ID: ${id}`);
+      throw new Error(
+        `Failed to remove vote from wishlist item with ID: ${id}`,
+      );
     }
 
     console.log(`✅ Vote removed successfully in Hasura: ${id}`);
@@ -273,7 +272,7 @@ export async function toggleResearchStatus(id: string): Promise<WishlistItem> {
 
     // First get current item to check research status
     const items = await getWishlistItems();
-    const currentItem = items.find(item => item.id === id);
+    const currentItem = items.find((item) => item.id === id);
 
     if (!currentItem) {
       throw new Error(`Wishlist item not found: ${id}`);
@@ -281,16 +280,17 @@ export async function toggleResearchStatus(id: string): Promise<WishlistItem> {
 
     const newStatus = !currentItem.researched;
 
-    const response = await executeMutation<{ update_wishlist_items_by_pk: WishlistItem }>(
-      TOGGLE_WISHLIST_RESEARCH,
-      {
-        id,
-        researched: newStatus
-      }
-    );
+    const response = await executeMutation<{
+      update_wishlist_items_by_pk: WishlistItem;
+    }>(TOGGLE_WISHLIST_RESEARCH, {
+      id,
+      researched: newStatus,
+    });
 
     if (!response.update_wishlist_items_by_pk) {
-      throw new Error(`Failed to toggle research status for wishlist item with ID: ${id}`);
+      throw new Error(
+        `Failed to toggle research status for wishlist item with ID: ${id}`,
+      );
     }
 
     console.log(`✅ Research status toggled successfully in Hasura: ${id}`);
@@ -346,17 +346,31 @@ export async function getWishlistStats(): Promise<{
 
     const stats = {
       total_items: items.length,
-      high_priority: items.filter(item => item.priority === "High").length,
-      medium_priority: items.filter(item => item.priority === "Medium").length,
-      low_priority: items.filter(item => item.priority === "Low").length,
-      planning_items: items.filter(item => item.status === "Planning").length,
-      researching_items: items.filter(item => item.status === "Researching").length,
-      ready_items: items.filter(item => item.status === "Ready").length,
-      booked_items: items.filter(item => item.status === "Booked").length,
-      total_categories: [...new Set(items.map(item => item.category))].length,
-      total_budget: items.reduce((sum, item) => sum + (item.estimated_cost || 0), 0),
-      average_votes: items.length > 0 ? Math.round(items.reduce((sum, item) => sum + (item.family_votes || 0), 0) / items.length) : 0,
-      highest_votes: Math.max(0, ...items.map(item => item.family_votes || 0))
+      high_priority: items.filter((item) => item.priority === "High").length,
+      medium_priority: items.filter((item) => item.priority === "Medium")
+        .length,
+      low_priority: items.filter((item) => item.priority === "Low").length,
+      planning_items: items.filter((item) => item.status === "Planning").length,
+      researching_items: items.filter((item) => item.status === "Researching")
+        .length,
+      ready_items: items.filter((item) => item.status === "Ready").length,
+      booked_items: items.filter((item) => item.status === "Booked").length,
+      total_categories: [...new Set(items.map((item) => item.category))].length,
+      total_budget: items.reduce(
+        (sum, item) => sum + (item.estimated_cost || 0),
+        0,
+      ),
+      average_votes:
+        items.length > 0
+          ? Math.round(
+              items.reduce((sum, item) => sum + (item.family_votes || 0), 0) /
+                items.length,
+            )
+          : 0,
+      highest_votes: Math.max(
+        0,
+        ...items.map((item) => item.family_votes || 0),
+      ),
     };
 
     console.log("✅ Wishlist stats calculated successfully from Hasura data");
