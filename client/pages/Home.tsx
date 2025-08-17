@@ -257,6 +257,33 @@ export default function Home() {
     };
   }, []);
 
+  // Auto-refresh data when page becomes visible (for cross-device sync)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log("🔄 Page visible - refreshing home page data for sync");
+        loadFamilyMembersData();
+        loadRecentAdventures();
+        loadRealStats();
+      }
+    };
+
+    const handleFocus = () => {
+      console.log("🔄 Window focused - refreshing home page data for sync");
+      loadFamilyMembersData();
+      loadRecentAdventures();
+      loadRealStats();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, []);
+
   // Subscribe to cross-device sync events
   useEffect(() => {
     const unsubscribeFamilySync = subscribe("family_members", (event) => {
