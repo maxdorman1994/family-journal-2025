@@ -762,6 +762,7 @@ BEGIN
     RAISE NOTICE '   • 3 Sample journal entries';
     RAISE NOTICE '   • 10 Adventure statistics';
     RAISE NOTICE '   • 4 Wishlist items';
+    RAISE NOTICE '   • 4 Map pins (Ben Nevis, Cairngorms, Edinburgh, Loch Lomond)';
     RAISE NOTICE '';
     RAISE NOTICE '🎯 Ready for your Scottish adventures!';
     RAISE NOTICE '📱 Database works with any PostgreSQL provider!';
