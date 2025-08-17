@@ -321,6 +321,107 @@ export const INCREMENT_ADVENTURE_STAT = `
   }
 `;
 
+// Wishlist GraphQL Queries
+export const INSERT_WISHLIST_ITEM = `
+  mutation InsertWishlistItem($item: wishlist_items_insert_input!) {
+    insert_wishlist_items_one(object: $item) {
+      id
+      title
+      location
+      description
+      priority
+      status
+      estimated_cost
+      best_seasons
+      duration
+      category
+      family_votes
+      notes
+      target_date
+      researched
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_WISHLIST_ITEM = `
+  mutation UpdateWishlistItem($id: uuid!, $item: wishlist_items_set_input!) {
+    update_wishlist_items_by_pk(pk_columns: {id: $id}, _set: $item) {
+      id
+      title
+      location
+      description
+      priority
+      status
+      estimated_cost
+      best_seasons
+      duration
+      category
+      family_votes
+      notes
+      target_date
+      researched
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const DELETE_WISHLIST_ITEM = `
+  mutation DeleteWishlistItem($id: uuid!) {
+    delete_wishlist_items_by_pk(id: $id) {
+      id
+    }
+  }
+`;
+
+export const INCREMENT_WISHLIST_VOTES = `
+  mutation IncrementWishlistVotes($id: uuid!, $increment: Int!) {
+    update_wishlist_items_by_pk(pk_columns: {id: $id}, _inc: {family_votes: $increment}) {
+      id
+      title
+      location
+      description
+      priority
+      status
+      estimated_cost
+      best_seasons
+      duration
+      category
+      family_votes
+      notes
+      target_date
+      researched
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const TOGGLE_WISHLIST_RESEARCH = `
+  mutation ToggleWishlistResearch($id: uuid!, $researched: Boolean!) {
+    update_wishlist_items_by_pk(pk_columns: {id: $id}, _set: {researched: $researched}) {
+      id
+      title
+      location
+      description
+      priority
+      status
+      estimated_cost
+      best_seasons
+      duration
+      category
+      family_votes
+      notes
+      target_date
+      researched
+      created_at
+      updated_at
+    }
+  }
+`;
+
 /**
  * Check if Hasura is properly configured
  */
